@@ -40,7 +40,7 @@ const Hero: React.FC = () => {
         </h1>
         <p className="mb-8 max-w-xl">
           We provide professional laptop repairs and upgrades. Use the request
-          button below to submit a service form, or log in if you are an employee.
+          button below to submit a service form.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           {!isLoggedIn && (
