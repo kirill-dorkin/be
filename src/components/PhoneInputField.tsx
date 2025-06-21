@@ -13,6 +13,11 @@ import {
 } from '@/components/ui/form'
 import { Control, FieldValues, Path } from 'react-hook-form'
 
+const InputComponent = React.forwardRef<HTMLInputElement, any>((props, ref) => (
+  <Input ref={ref} {...props} className="flex-1 bg-transparent outline-none" />
+))
+InputComponent.displayName = 'PhoneInputCustomInput'
+
 interface PhoneInputFieldProps<TFieldValues extends FieldValues = FieldValues> {
   control: Control<TFieldValues>
   name: Path<TFieldValues>
@@ -26,10 +31,6 @@ const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>({
   label,
   defaultCountry,
 }: PhoneInputFieldProps<TFieldValues>) => {
-  const InputComponent = React.forwardRef<HTMLInputElement, any>((props, ref) => (
-    <Input ref={ref} {...props} className="flex-1 bg-transparent outline-none" />
-  ))
-  InputComponent.displayName = 'PhoneInputCustomInput'
   return (
     <FormField
       control={control}
