@@ -94,7 +94,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`h-screen py-12 shadow bg-background w-full text-white px-6 fixed z-10 top-0 transition-all duration-300 max-w-[300px] ${isExpanded ? "w-[300px]" : "w-0 hidden"}`}
+      className={`h-screen py-12 shadow bg-background text-white px-6 fixed left-0 z-10 top-0 transition-transform duration-300 w-[300px] max-w-[300px] ${isExpanded ? "translate-x-0" : "-translate-x-full"}`}
     >
       <div
         className={`mb-12 text-foreground flex items-center justify-center gap-6 ${!isExpanded && "pt-0"}`}
