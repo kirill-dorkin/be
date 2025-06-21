@@ -44,6 +44,8 @@ cd be.kg
 npm install
 # or
 yarn install
+# or
+bun i
 ```
 3. **Run the Development Server:**
 
@@ -53,6 +55,8 @@ Start the server locally to test the system.
 npm run dev
 # or
 yarn dev
+# or
+bun run dev
 ```
 
 4. **Access the System:**
