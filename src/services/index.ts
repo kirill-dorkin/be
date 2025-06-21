@@ -8,6 +8,9 @@ export async function checkUserPermission(requiredRole: UserRole) {
     const user = session?.user;
 
     if (!user) {
+      if (requiredRole === "user") {
+        return { status: "success" };
+      }
       return {
         status: "error",
         message: "User not authenticated",
@@ -16,7 +19,7 @@ export async function checkUserPermission(requiredRole: UserRole) {
 
     const userRole = user.role as UserRole;
 
-    if (userRole !== requiredRole) {
+    if (requiredRole !== "user" && userRole !== requiredRole) {
       return {
         status: "error",
         message: `Forbidden: You do not have permission to perform this action as a ${requiredRole}`,

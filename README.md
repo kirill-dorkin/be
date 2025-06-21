@@ -21,6 +21,9 @@ The **Laptop Service Management System** is a comprehensive solution designed to
 
 Built with **Next.js, TypeScript, Tailwind CSS, and MongoDB**, the system provides a fast, scalable, and user-friendly solution for laptop repair management.
 
+## Authentication
+Regular visitors do not need to register. When they open the site, they automatically have the `user` role and can submit repair requests. Administrators and workers sign in with an email and password on the `/login` page.
+
 ## How to Use This Laptop Service Management System
 
 ### Prerequisites
