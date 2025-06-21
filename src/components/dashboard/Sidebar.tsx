@@ -63,7 +63,7 @@ const getLinksByRole = (role: string) => {
 };
 
 const Sidebar = () => {
-  const { isExpanded, toggleSidebar } = useAppContext();
+  const { isExpanded, toggleSidebar, setIsExpanded } = useAppContext();
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
   const [links, setLinks] = useState(workerLinks);
@@ -76,6 +76,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     signOut();
+    setIsExpanded(false);
   };
 
   useEffect(() => {
@@ -91,6 +92,10 @@ const Sidebar = () => {
   }, [isExpanded]);
 
   const pathname = usePathname();
+
+  const handleLinkClick = () => {
+    setIsExpanded(false);
+  };
 
   return (
     <aside
@@ -120,6 +125,7 @@ const Sidebar = () => {
           <li key={index} className="group active:scale-95">
             <Link
               href={href}
+              onClick={handleLinkClick}
               className={`flex hover:after:hidden items-center px-8 py-4 rounded-lg space-x-4 w-full transition-all duration-500 ease-in-out ${pathname?.includes(href)
                 ? "bg-primary text-primary-foreground"
                 : "bg-transparent text-muted-foreground hover:bg-primary/85 group-hover:text-primary-foreground/85"
