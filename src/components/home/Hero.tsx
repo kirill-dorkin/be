@@ -24,9 +24,6 @@ const Hero: React.FC = () => {
     }
   };
 
-  const handleLogin = () => {
-    router.push("/login");
-  };
 
   const handleLogout = () => {
     signOut();
@@ -45,7 +42,7 @@ const Hero: React.FC = () => {
           and upgrades, and optimize team efficiency – all in one platform!
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <>
               <Button size="lg" className="w-fit" onClick={handleGoToDashboard}>
                 Go to Dashboard
@@ -59,10 +56,6 @@ const Hero: React.FC = () => {
                 Logout
               </Button>
             </>
-          ) : (
-            <Button size="lg" className="w-fit" onClick={handleLogin}>
-              Login
-            </Button>
           )}
         </div>
       </div>

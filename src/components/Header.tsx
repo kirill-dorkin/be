@@ -3,7 +3,6 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import Link from "next/link";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import SignInLink from "./SignInLink";
 import BaseContainer from "@/components/BaseContainer";
 import AvatarMenu from "./AvatarMenu";
 import { useSession } from "next-auth/react";
@@ -34,7 +33,7 @@ export default function Header() {
         </Link>
       </div>
       <div className="flex items-center gap-6 md:hidden">
-        {session ? <AvatarMenu /> : <SignInLink />}
+        {session && <AvatarMenu />}
         <Sheet>
           <SheetTrigger asChild>
             <div className="cursor-pointer">
