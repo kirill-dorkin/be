@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/dbConnect";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { checkUserPermission } from "@/services";
+import { revalidateTag } from "next/cache";
 
 const addUserAction = async (
   name: string,
@@ -32,6 +33,7 @@ const addUserAction = async (
       passwordHash,
     });
     await user.save();
+    revalidateTag('/admin');
 
     return { status: "success", message: "User created successfully." };
   } catch (error) {

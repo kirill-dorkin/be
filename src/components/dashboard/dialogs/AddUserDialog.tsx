@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ type UserForm = z.infer<typeof UserSchema>;
 export function AddUserDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
+  const router = useRouter();
 
   const methods = useForm<UserForm>({
     resolver: zodResolver(UserSchema),
@@ -50,6 +52,7 @@ export function AddUserDialog() {
         showErrorToast({ title: "Error", description: response.message });
       } else {
         showSuccessToast({ title: "Success", description: response.message });
+        router.refresh();
         reset();
       }
     } catch (error) {
