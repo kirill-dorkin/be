@@ -1,5 +1,5 @@
 "use client";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -25,7 +25,7 @@ const Hero: React.FC = () => {
   };
 
   const handleLogin = () => {
-    signIn("google");
+    router.push("/login");
   };
 
   const handleLogout = () => {
@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
             </>
           ) : (
             <Button size="lg" className="w-fit" onClick={handleLogin}>
-              Login with Google
+              Login
             </Button>
           )}
         </div>

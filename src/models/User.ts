@@ -5,6 +5,7 @@ export interface IUser extends Document {
   email: string;
   role: 'admin' | 'worker' | 'user';
   image: string;
+  passwordHash?: string;
   tasks?: mongoose.Types.ObjectId[];
 }
 
@@ -14,6 +15,7 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     role: { type: String, enum: ['admin', 'user', 'worker'], required: true },
     image: { type: String, required: true },
+    passwordHash: { type: String, required: false },
     tasks: [{ type: mongoose.Types.ObjectId, ref: 'Task', default: undefined }],
   },
   {

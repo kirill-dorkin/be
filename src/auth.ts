@@ -1,40 +1,45 @@
 import { NextAuthOptions, getServerSession } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { saveUser } from "./lib/dbUtils";
-import Role from "@/models/Role";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { getUserByEmail } from "./lib/dbUtils";
+import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/dbConnect";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials) return null;
+        try {
+          await connectToDatabase();
+          const user = await getUserByEmail(credentials.email);
+          if (!user || !user.passwordHash) {
+            return null;
+          }
+          const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
+          if (!isValid) {
+            return null;
+          }
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+          } as any;
+        } catch (error) {
+          console.error("Error during credentials authorize", error);
+          return null;
+        }
+      },
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      try {
-        await connectToDatabase();
-
-        const existingRole = await Role.findOne({ email: user.email });
-        const role = existingRole?.role || "user";
-
-        const savedUser = await saveUser({
-          name: user.name as string,
-          email: user.email as string,
-          image: user.image as string,
-          role,
-        });
-
-        user.role = role;
-        user.id = savedUser._id.toString();
-        return true;
-      } catch (error) {
-        console.error("Error during sign-in:", error);
-        return false;
-      }
-    },
 
     async jwt({ token, user }) {
       if (user) {
