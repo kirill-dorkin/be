@@ -31,11 +31,11 @@ export default function ServiceTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="min-w-[150px]">Category</TableHead>
-          <TableHead className="min-w-[200px]">Name</TableHead>
-          <TableHead className="min-w-[100px]">Cost</TableHead>
-          <TableHead className="min-w-[150px]">Duration</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="min-w-[150px]">Категория</TableHead>
+          <TableHead className="min-w-[200px]">Название</TableHead>
+          <TableHead className="min-w-[100px]">Стоимость</TableHead>
+          <TableHead className="min-w-[150px]">Длительность</TableHead>
+          <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -52,7 +52,7 @@ export default function ServiceTable({
         ))}
         <TableRow>
           <TableCell className="bg-background text-muted-foreground pb-0" colSpan={4}>
-            Total Items: {totalItemsLength}
+            Всего записей: {totalItemsLength}
           </TableCell>
           <TableCell className="bg-background pb-0" colSpan={1}>
             <PaginationControls

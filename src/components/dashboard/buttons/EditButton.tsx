@@ -30,8 +30,8 @@ export default function EditButton({
   const handleSaveRole = async () => {
     if (!role) {
       showErrorToast({
-        title: "Error",
-        description: "Please select a role.",
+        title: "Ошибка",
+        description: "Пожалуйста, выберите роль.",
       });
       return;
     }
@@ -44,12 +44,12 @@ export default function EditButton({
 
     if (result.status === "success") {
       showSuccessToast({
-        title: "Success",
+        title: "Успешно",
         description: result.message as string,
       });
     } else {
       showErrorToast({
-        title: "Error",
+        title: "Ошибка",
         description: result.message as string,
       });
     }
@@ -70,29 +70,29 @@ export default function EditButton({
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Role</DialogTitle>
+            <DialogTitle>Изменить роль</DialogTitle>
             <DialogDescription>
-              Update the role of the user here. Click save when you're done.
+              Измените роль пользователя и нажмите сохранить.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
-                Role
+                Роль
               </Label>
               <Select
                 value={role}
                 onValueChange={setRole}
               >
                 <SelectTrigger className="col-span-3 w-full">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder="Выберите роль" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Roles</SelectLabel>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="worker">Worker</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
+                    <SelectLabel>Роли</SelectLabel>
+                    <SelectItem value="admin">Администратор</SelectItem>
+                    <SelectItem value="worker">Сотрудник</SelectItem>
+                    <SelectItem value="user">Пользователь</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -104,7 +104,7 @@ export default function EditButton({
               onClick={handleSaveRole}
               disabled={loading}
             >
-              {loading ? "Saving..." : "Save changes"}
+              {loading ? "Сохранение..." : "Сохранить"}
             </Button>
           </DialogFooter>
         </DialogContent>

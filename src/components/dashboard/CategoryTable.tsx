@@ -31,8 +31,8 @@ export default function CategoryTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="min-w-[200px]">Name</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="min-w-[200px]">Название</TableHead>
+          <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -46,7 +46,7 @@ export default function CategoryTable({
         ))}
         <TableRow>
           <TableCell className="bg-background text-muted-foreground pb-0" colSpan={1}>
-            Total Items: {totalItemsLength}
+            Всего записей: {totalItemsLength}
           </TableCell>
           <TableCell className="bg-background pb-0" colSpan={1}>
             <PaginationControls

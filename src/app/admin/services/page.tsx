@@ -18,7 +18,7 @@ const ServicesPage = async ({ searchParams }: SearchParams) => {
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
-        <DashboardTitle>Services</DashboardTitle>
+        <DashboardTitle>Услуги</DashboardTitle>
         <div className="flex gap-4">
           <SelectShowing />
           <AddServiceDialog />

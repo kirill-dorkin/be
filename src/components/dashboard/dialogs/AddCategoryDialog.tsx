@@ -18,7 +18,7 @@ import InputFormField from "@/components/InputFormField";
 import addCategoryAction from "@/actions/dashboard/addCategoryAction";
 
 const CategorySchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }).max(100),
+  name: z.string().min(1, { message: "Название обязательно" }).max(100),
 });
 
 export function AddCategoryDialog() {
@@ -43,15 +43,15 @@ export function AddCategoryDialog() {
     try {
       const response = await addCategoryAction(data.name);
       if (response.status === "error") {
-        showErrorToast({ title: "Error", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message });
       } else {
-        showSuccessToast({ title: "Success", description: response.message });
+        showSuccessToast({ title: "Успешно", description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add category",
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Не удалось добавить категорию",
       });
     } finally {
       setLoading(false);
@@ -61,25 +61,25 @@ export function AddCategoryDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add Category</Button>
+        <Button>Добавить категорию</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Category</DialogTitle>
-          <DialogDescription>Specify category name</DialogDescription>
+          <DialogTitle>Добавить категорию</DialogTitle>
+          <DialogDescription>Укажите название категории</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField
               name="name"
-              label="Name"
+              label="Название"
               type="text"
               control={control}
               errors={errors}
             />
           </FormProvider>
           <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>Save</Button>
+            <Button type="submit" disabled={loading}>Сохранить</Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -26,7 +26,7 @@ const MyTasksPage = async ({
   return (
     <DashboardContainer className="w-full min-h-svh py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex max-md:flex-col gap-6 justify-between">
-        <DashboardTitle>My Tasks</DashboardTitle>
+        <DashboardTitle>Мои задачи</DashboardTitle>
         <div className="flex gap-6">
           <SelectShowing />
         </div>

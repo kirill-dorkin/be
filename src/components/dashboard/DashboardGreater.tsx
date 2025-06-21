@@ -10,9 +10,9 @@ const DashboardGreater = () => {
   const userNickname = session?.user?.name?.split(" ")[0];
 
   return isClient ? (
-    <DashboardTitle>Welcome {userNickname} 🥳👋</DashboardTitle>
+    <DashboardTitle>Добро пожаловать, {userNickname} 🥳👋</DashboardTitle>
   ) : (
-    <DashboardTitle>Hi 🥳👋</DashboardTitle>
+    <DashboardTitle>Привет 🥳👋</DashboardTitle>
   );
 };
 

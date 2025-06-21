@@ -27,9 +27,9 @@ export default function TaskReport({
     <Card className="bg-background shadow">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <span className="flex flex-col gap-2">
-          <CardTitle className="my-0">Task Report</CardTitle>
+          <CardTitle className="my-0">Отчет о задачах</CardTitle>
           <CardDescription className="mt-1.5 sm:mt-0">
-            Summary of current tasks and their status
+            Сводка текущих задач и их статусов
           </CardDescription>
         </span>
         <SelectShowing />

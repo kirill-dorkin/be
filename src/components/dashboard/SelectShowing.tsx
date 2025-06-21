@@ -41,7 +41,7 @@ export default function SelectShowing({ className }: { className?: string }): Re
   return (
     <Suspense>
       <div className={`flex gap-6 items-center ${className}`}>
-        <p className="mt-0">Showing</p>
+        <p className="mt-0">Показать</p>
         <Select
           defaultValue={totalItemsPerPage}
           onValueChange={handleSelectOnchange}
@@ -52,7 +52,7 @@ export default function SelectShowing({ className }: { className?: string }): Re
           <SelectContent>
             {selectShowingItems.map(({ value }, index) => (
               <SelectItem key={index} value={`${value}`}>
-                {value + " Items"}
+                {value + " элементов"}
               </SelectItem>
             ))}
           </SelectContent>

@@ -14,7 +14,7 @@ const AdminProfileHeader: React.FC = () => {
       <span className="font-semibold text-muted-foreground">{name}</span>
 
       <Avatar className="w-10 h-10">
-        <AvatarImage src={image as string} alt={`${name}'s profile picture`} />
+        <AvatarImage src={image as string} alt={`Фото профиля ${name}`} />
         <AvatarFallback>{name?.charAt(0) as string}</AvatarFallback>
       </Avatar>
     </div>

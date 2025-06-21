@@ -34,12 +34,12 @@ export default function UserTable({
       <TableHeader>
         <TableRow>
           <TableHead className="min-w-[150px]">ID</TableHead>
-          <TableHead className="min-w-[200px]">Name</TableHead>
+          <TableHead className="min-w-[200px]">Имя</TableHead>
           <TableHead className="min-w-[250px]">Email</TableHead>
-          <TableHead className="min-w-[150px]">Role</TableHead>
-          <TableHead className="min-w-[150px]">Image</TableHead>
-          <TableHead className="min-w-[150px] text-center">Total Tasks</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="min-w-[150px]">Роль</TableHead>
+          <TableHead className="min-w-[150px]">Фото</TableHead>
+          <TableHead className="min-w-[150px] text-center">Всего задач</TableHead>
+          <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -57,7 +57,11 @@ export default function UserTable({
                     : "text-gray-500"
               }
             >
-              {role}
+              {{
+                admin: "Администратор",
+                worker: "Сотрудник",
+                user: "Пользователь",
+              }[role as 'admin' | 'worker' | 'user'] ?? role}
             </TableCell>
             <TableCell>
               <Image
@@ -84,7 +88,7 @@ export default function UserTable({
             className="bg-background text-muted-foreground pb-0"
             colSpan={5}
           >
-            Total Users: {totalItemsLength}
+            Всего пользователей: {totalItemsLength}
           </TableCell>
           <TableCell className="bg-background pb-0" colSpan={2}>
             <PaginationControls

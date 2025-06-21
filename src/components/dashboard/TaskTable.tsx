@@ -40,13 +40,13 @@ export default function TaskTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="min-w-[150px]">Task Description</TableHead>
-          <TableHead className="min-w-[150px]">Customer Name</TableHead>
-          <TableHead className="min-w-[150px]">Customer Phone</TableHead>
-          <TableHead className="min-w-[100px]">Brand</TableHead>
-          <TableHead className="min-w-[150px]">Model</TableHead>
-          <TableHead className="min-w-[120px]">Status</TableHead>
-          <TableHead className={role === "admin" && !hideActions ? "" : "text-right"}>Cost</TableHead>
+          <TableHead className="min-w-[150px]">Описание</TableHead>
+          <TableHead className="min-w-[150px]">Имя клиента</TableHead>
+          <TableHead className="min-w-[150px]">Телефон клиента</TableHead>
+          <TableHead className="min-w-[100px]">Бренд</TableHead>
+          <TableHead className="min-w-[150px]">Модель</TableHead>
+          <TableHead className="min-w-[120px]">Статус</TableHead>
+          <TableHead className={role === "admin" && !hideActions ? "" : "text-right"}>Стоимость</TableHead>
           {(role === "admin" || role === "worker") && !hideActions && (
             <TableHead className="text-right">Actions</TableHead>
           )}
@@ -79,7 +79,11 @@ export default function TaskTable({
                       : "text-red-500"
                 }
               >
-                {status}
+                {{
+                  Pending: "В ожидании",
+                  "In Progress": "В процессе",
+                  Completed: "Завершено",
+                }[status as "Pending" | "In Progress" | "Completed"] ?? status}
               </TableCell>
               <TableCell className={role === "admin" && !hideActions ? "" : "text-right"}>
                 ${totalCost}
@@ -106,7 +110,7 @@ export default function TaskTable({
             className="bg-background text-muted-foreground pb-0"
             colSpan={4}
           >
-            Total Items: {totalItemsLength}
+            Всего записей: {totalItemsLength}
           </TableCell>
           <TableCell
             className="bg-background pb-0"

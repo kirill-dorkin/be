@@ -25,29 +25,29 @@ import addTaskAction from "@/actions/dashboard/addTaskAction";
 const TaskSchema = z.object({
   description: z
     .string()
-    .min(1, { message: "Description is required" })
-    .max(255, { message: "Description cannot exceed 255 characters" }),
+    .min(1, { message: "Описание обязательно" })
+    .max(255, { message: "Описание не может превышать 255 символов" }),
   customerName: z
     .string()
-    .min(1, { message: "Customer name is required" })
-    .max(100, { message: "Customer name cannot exceed 100 characters" }),
+    .min(1, { message: "Имя клиента обязательно" })
+    .max(100, { message: "Имя клиента не может превышать 100 символов" }),
   customerPhone: z
     .string()
-    .min(1, { message: "Customer phone is required" })
-    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+    .min(1, { message: "Телефон клиента обязателен" })
+    .refine(isValidPhoneNumber, { message: "Неверный номер телефона" }),
   laptopBrand: z
     .string()
-    .min(1, { message: "Laptop brand is required" })
-    .max(100, { message: "Laptop brand cannot exceed 100 characters" }),
+    .min(1, { message: "Марка ноутбука обязательна" })
+    .max(100, { message: "Марка ноутбука не может превышать 100 символов" }),
   laptopModel: z
     .string()
-    .min(1, { message: "Laptop model is required" })
-    .max(100, { message: "Laptop model cannot exceed 100 characters" }),
+    .min(1, { message: "Модель ноутбука обязательна" })
+    .max(100, { message: "Модель ноутбука не может превышать 100 символов" }),
   totalCost: z
     .string()
     .transform((value) => parseFloat(value))
     .refine((value) => !isNaN(value) && value >= 0, {
-      message: "Total cost must be a positive number",
+      message: "Стоимость должна быть положительным числом",
     }),
 });
 
@@ -77,17 +77,17 @@ export function AddTaskDialog() {
       const response = await addTaskAction(data);
 
       if (response.status === "error") {
-        showErrorToast({ title: "Error", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message });
       } else {
         showSuccessToast({
-          title: "Success",
+          title: "Успешно",
           description: response.message,
         });
       }
     } catch (error) {
       showErrorToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "An unknown error occurred.",
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
       });
     } finally {
       setLoading(false);
@@ -95,24 +95,24 @@ export function AddTaskDialog() {
   };
 
   const taskFields = [
-    { name: "description", label: "Description", type: "text" },
-    { name: "customerName", label: "Customer Name", type: "text" },
-    { name: "customerPhone", label: "Customer Phone", type: "text" },
-    { name: "laptopBrand", label: "Laptop Brand", type: "text" },
-    { name: "laptopModel", label: "Laptop Model", type: "text" },
-    { name: "totalCost", label: "Total Cost", type: "number" },
+    { name: "description", label: "Описание", type: "text" },
+    { name: "customerName", label: "Имя клиента", type: "text" },
+    { name: "customerPhone", label: "Телефон клиента", type: "text" },
+    { name: "laptopBrand", label: "Марка ноутбука", type: "text" },
+    { name: "laptopModel", label: "Модель ноутбука", type: "text" },
+    { name: "totalCost", label: "Стоимость", type: "number" },
   ];
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="lg">Add New Task</Button>
+        <Button size="lg">Добавить задачу</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] w-full max-w-lg px-6 py-4 overflow-y-auto max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
+          <DialogTitle>Добавить задачу</DialogTitle>
           <DialogDescription>
-            Fill in the details for the new task. Click save when you&apos;re done.
+            Заполните данные новой задачи и нажмите сохранить.
           </DialogDescription>
         </DialogHeader>
 
@@ -145,7 +145,7 @@ export function AddTaskDialog() {
 
             <DialogFooter>
               <Button type="submit" disabled={loading} className="w-full py-2">
-                {loading ? "Saving..." : "Save Task"}
+              {loading ? "Сохранение..." : "Сохранить"}
               </Button>
             </DialogFooter>
           </form>
