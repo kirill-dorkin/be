@@ -27,6 +27,7 @@ Regular visitors do not need to register. When they open the site, they automati
 ## Requesting a Repair
 Visit the home page and click **Request Repair** to open the request page. You can fill out the online form or contact us by phone to schedule service.
 
+
 ## How to Use This Laptop Service Management System
 
 ### Prerequisites
