@@ -1,6 +1,6 @@
-# Laptop Service Management System
+# Best Electronics Service Management
 
-The **Laptop Service Management System** is a comprehensive solution designed to help service centers manage repair requests, track repair progress, optimize technician assignments, and maintain customer satisfaction. The system offers seamless integration for managing customer orders and invoicing.
+**Best Electronics (be.kg)** provides a comprehensive system for managing repair requests, tracking progress and keeping customers up to date. The platform helps streamline technician assignments and integrates customer orders and invoicing.
 
 ## Key Features
 
@@ -25,10 +25,11 @@ Built with **Next.js, TypeScript, Tailwind CSS, and MongoDB**, the system provid
 Regular visitors do not need to register. When they open the site, they automatically have the `user` role and can submit repair requests. The `/login` page is reserved for employees and administrators.
 
 ## Requesting a Repair
-Visit the home page and click **Request Repair** to open the request page. You can fill out the online form or contact us by phone to schedule service.
+Visit the home page and click **Request Repair** to open the request page. You can fill out the online form or reach us by phone at **+996 501‑31‑31‑14** or **+996 557‑31‑31‑14**.
+Our service center is located at **Кулатова&nbsp;8/1, Bishkek** (find us on [2GIS](https://go.2gis.com/)). You can also message us on Instagram [@best___electronics](https://instagram.com/best___electronics).
 
 
-## How to Use This Laptop Service Management System
+## How to Use the Best Electronics Service System
 
 ### Prerequisites
 Ensure you have Node.js and npm installed on your machine. You can download them from [here](https://nodejs.org/).

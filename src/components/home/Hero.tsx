@@ -36,10 +36,10 @@ const Hero: React.FC = () => {
     >
       <div className="relative flex flex-col items-center text-center px-6 z-10">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
-          Laptop Service Management System
+          Best Electronics Service System
         </h1>
         <p className="mb-8 max-w-xl">
-          We provide professional laptop repairs and upgrades. Use the request
+          We provide professional electronics repairs and upgrades. Use the request
           button below to submit a service form.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">

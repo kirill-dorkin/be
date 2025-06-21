@@ -43,7 +43,7 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
   status: "Pending" | "In Progress" | "Completed";
 }) {
   const apiKey = process.env.TEXTMEBOT_API_KEY;
-  const companyName = "Servy";
+  const companyName = "Best Electronics";
 
   if (!apiKey) {
     console.error("API key is missing!");
