@@ -34,8 +34,8 @@ Ensure you have Node.js and npm installed on your machine. You can download them
 1. **Clone the Repository:**
 
 ``` 
-git clone https://github.com/rendi12345678/laptop-service-management-system.git
-cd laptop-service-management-system
+git clone https://github.com/kirill-dorkin/be.kg.git
+cd be.kg
 ```
 
 2. **Install Dependencies:**
