@@ -37,7 +37,6 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
   customerPhone: string;
   laptopBrand: string;
   laptopModel: string;
-  serialNumber: string;
   totalCost: number;
   description: string;
   status: "Pending" | "In Progress" | "Completed";
@@ -55,7 +54,6 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
     customerPhone,
     laptopBrand,
     laptopModel,
-    serialNumber,
     totalCost,
     description,
     status,
@@ -69,7 +67,6 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
 
     *Laptop Brand:* ${laptopBrand}
     *Laptop Model:* ${laptopModel}
-    *Serial Number:* ${serialNumber}
 
     *Service Description:* ${description}
     *Status:* ${status}

@@ -31,7 +31,6 @@ interface AddTaskActionParams {
   totalCost: number;
   customerName: string;
   customerPhone: string;
-  serialNumber: string;
   laptopBrand: string;
   laptopModel: string;
 }

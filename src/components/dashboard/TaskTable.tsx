@@ -46,7 +46,6 @@ export default function TaskTable({
           <TableHead className="min-w-[100px]">Brand</TableHead>
           <TableHead className="min-w-[150px]">Model</TableHead>
           <TableHead className="min-w-[120px]">Status</TableHead>
-          <TableHead>Serial Number</TableHead>
           <TableHead className={role === "admin" && !hideActions ? "" : "text-right"}>Cost</TableHead>
           {(role === "admin" || role === "worker") && !hideActions && (
             <TableHead className="text-right">Actions</TableHead>
@@ -62,7 +61,6 @@ export default function TaskTable({
             status,
             laptopBrand,
             laptopModel,
-            serialNumber,
             _id,
             totalCost,
           }) => (
@@ -83,7 +81,6 @@ export default function TaskTable({
               >
                 {status}
               </TableCell>
-              <TableCell>{serialNumber}</TableCell>
               <TableCell className={role === "admin" && !hideActions ? "" : "text-right"}>
                 ${totalCost}
               </TableCell>
