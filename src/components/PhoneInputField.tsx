@@ -9,7 +9,6 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage,
 } from '@/components/ui/form'
 import { Control, FieldValues, Path } from 'react-hook-form'
 
@@ -51,7 +50,6 @@ const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>({
               countryCallingCodeEditable={false}
             />
           </FormControl>
-          <FormMessage />
         </FormItem>
       )}
     />
