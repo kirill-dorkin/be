@@ -1,0 +1,15 @@
+{
+  "Hero": {
+    "title": "Best Electronics Service System",
+    "description": "We provide professional electronics repairs and upgrades. Use the request button below to submit a service form.",
+    "request": "Request Repair",
+    "dashboard": "Go to Dashboard",
+    "logout": "Logout"
+  },
+  "Login": {
+    "email": "Email",
+    "password": "Password",
+    "button": "Login",
+    "error": "Invalid credentials"
+  }
+}
