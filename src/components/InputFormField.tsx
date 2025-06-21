@@ -7,14 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
 import { TbPhotoCirclePlus } from "react-icons/tb";
+import type {
+  Control,
+  FieldErrors,
+  FieldValues,
+  Path,
+  ControllerRenderProps,
+} from "react-hook-form";
 
-interface InputFormFieldProps {
-  control: any;
-  name: string;
+interface InputFormFieldProps<TFieldValues extends FieldValues = FieldValues> {
+  control: Control<TFieldValues>;
+  name: Path<TFieldValues>;
   id: string;
   placeholder?: string;
   label: string;
-  errors: any;
+  errors: FieldErrors<TFieldValues>;
   type?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   imageSrc?: string;
@@ -22,7 +29,7 @@ interface InputFormFieldProps {
   rows?: number; // Optional for Textarea size
 }
 
-const InputFormField = ({
+const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
   id,
@@ -34,10 +41,12 @@ const InputFormField = ({
   imageSrc,
   isImageField = false, // Default is false, meaning it's a regular field
   rows = 4, // Default textarea size
-}: InputFormFieldProps): ReactElement => {
+}: InputFormFieldProps<TFieldValues>): ReactElement => {
 
   // Render Textarea if the field is of type "description" or if specified
-  const renderTextarea = (field: any) => (
+  const renderTextarea = (
+    field: ControllerRenderProps<TFieldValues, Path<TFieldValues>>,
+  ) => (
     <Textarea
       key={id + name}
       id={id}
@@ -49,12 +58,16 @@ const InputFormField = ({
   );
 
   // Render regular Input field
-  const renderInput = (field: any) => (
+  const renderInput = (
+    field: ControllerRenderProps<TFieldValues, Path<TFieldValues>>,
+  ) => (
     <Input key={id + name} id={id} placeholder={placeholder} type={type} {...field} />
   );
 
   // Render the image input for profile image field
-  const renderImageInput = (field: any) => (
+  const renderImageInput = (
+    field: ControllerRenderProps<TFieldValues, Path<TFieldValues>>,
+  ) => (
     <FormItem className="col-span-2">
       <Label
         htmlFor={id}
@@ -76,10 +89,12 @@ const InputFormField = ({
           type="file"
           className="opacity-0 size-0 absolute"
           accept="image/*"
-          onChange={(event) => {
-            field.onChange(event?.target?.files ? event.target.files[0] : null);
-            onChange && onChange(event);
-          }}
+            onChange={(event) => {
+              field.onChange(event?.target?.files ? event.target.files[0] : null);
+              if (onChange) {
+                onChange(event);
+              }
+            }}
           onBlur={field.onBlur}
           name={field.name}
           ref={field.ref}
