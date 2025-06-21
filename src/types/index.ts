@@ -6,16 +6,24 @@ type Status = 'Pending' | 'In Progress' | 'Completed';
 
 type UserRole = "admin" | "user" | "worker";
 
-interface Device {
+interface Category {
   _id?: string;
   name: string;
 }
 
+interface Device {
+  _id?: string;
+  category: string;
+  brand: string;
+  model?: string;
+}
+
 interface Service {
   _id?: string;
-  device: string;
+  category: string;
   name: string;
   cost: number;
+  duration?: string;
 }
 
 interface AddTaskActionParams {
@@ -28,5 +36,4 @@ interface AddTaskActionParams {
   laptopModel: string;
 }
 
-export type { SearchParams, AddTaskActionParams, Status, UserRole, Device, Service };
-
+export type { SearchParams, AddTaskActionParams, Status, UserRole, Device, Service, Category };

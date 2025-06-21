@@ -7,7 +7,7 @@ const getDevicesAction = async (page: number = 1, limit: number = 5) => {
   try {
     const skip = (page - 1) * limit;
     await connectToDatabase();
-    const devices = await Device.find().skip(skip).limit(limit).lean();
+    const devices = await Device.find().populate('category').skip(skip).limit(limit).lean();
     const totalItemsLength = await Device.countDocuments();
     return { status: "success", items: serializeData(devices), totalItemsLength };
   } catch (error) {

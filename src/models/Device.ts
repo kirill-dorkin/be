@@ -1,12 +1,16 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IDevice extends Document {
-  name: string;
+  category: mongoose.Types.ObjectId;
+  brand: string;
+  model?: string;
 }
 
 const DeviceSchema: Schema<IDevice> = new Schema(
   {
-    name: { type: String, required: true, unique: true },
+    category: { type: mongoose.Types.ObjectId, ref: 'Category', required: true },
+    brand: { type: String, required: true },
+    model: { type: String },
   },
   {
     timestamps: true,

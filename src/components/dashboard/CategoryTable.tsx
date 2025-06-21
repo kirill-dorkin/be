@@ -1,5 +1,5 @@
 "use client";
-import { IService } from "@/models/Service";
+import { ICategory } from "@/models/Category";
 import DeleteButton from "@/components/dashboard/buttons/DeleteButton";
 import {
   Table,
@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/table";
 import PaginationControls from "./PaginationControls";
 
-export default function ServiceTable({
+export default function CategoryTable({
   items,
   totalItemsLength,
   page,
   per_page,
   deleteAction,
 }: {
-  items: IService[];
+  items: ICategory[];
   totalItemsLength: number;
   page: string | string[];
   per_page: string | string[];
@@ -31,27 +31,21 @@ export default function ServiceTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="min-w-[150px]">Category</TableHead>
           <TableHead className="min-w-[200px]">Name</TableHead>
-          <TableHead className="min-w-[100px]">Cost</TableHead>
-          <TableHead className="min-w-[150px]">Duration</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {items?.map(({ _id, category, name, cost, duration }) => (
+        {items?.map(({ _id, name }) => (
           <TableRow key={_id?.toString() as string}>
-            <TableCell>{typeof category === 'string' ? category : (category as any)?.name}</TableCell>
             <TableCell>{name}</TableCell>
-            <TableCell>${cost}</TableCell>
-            <TableCell>{duration}</TableCell>
             <TableCell className="text-right">
               <DeleteButton action={deleteAction} id={_id as string} />
             </TableCell>
           </TableRow>
         ))}
         <TableRow>
-          <TableCell className="bg-background text-muted-foreground pb-0" colSpan={4}>
+          <TableCell className="bg-background text-muted-foreground pb-0" colSpan={1}>
             Total Items: {totalItemsLength}
           </TableCell>
           <TableCell className="bg-background pb-0" colSpan={1}>

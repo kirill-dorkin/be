@@ -31,24 +31,25 @@ export default function DeviceTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="min-w-[200px]">Name</TableHead>
+          <TableHead className="min-w-[150px]">Category</TableHead>
+          <TableHead className="min-w-[150px]">Brand</TableHead>
+          <TableHead className="min-w-[150px]">Model</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {items?.map(({ _id, name }) => (
+        {items?.map(({ _id, category, brand, model }) => (
           <TableRow key={_id?.toString() as string}>
-            <TableCell>{name}</TableCell>
+            <TableCell>{typeof category === 'string' ? category : (category as any)?.name}</TableCell>
+            <TableCell>{brand}</TableCell>
+            <TableCell>{model}</TableCell>
             <TableCell className="text-right">
               <DeleteButton action={deleteAction} id={_id as string} />
             </TableCell>
           </TableRow>
         ))}
         <TableRow>
-          <TableCell
-            className="bg-background text-muted-foreground pb-0"
-            colSpan={1}
-          >
+          <TableCell className="bg-background text-muted-foreground pb-0" colSpan={3}>
             Total Items: {totalItemsLength}
           </TableCell>
           <TableCell className="bg-background pb-0" colSpan={1}>
