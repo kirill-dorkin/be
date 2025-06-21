@@ -69,7 +69,7 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
         <section className="flex flex-col col-span-1 sm:col-span-2 lg:col-span-2 gap-6">
           <ListCard
             title="Worker Report"
-            description="A detailed list of all workers at Servy with key information."
+            description="A detailed list of all workers at Best Electronics with key information."
           >
             <UserList users={users} />
           </ListCard>

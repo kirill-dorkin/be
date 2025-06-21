@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <BaseContainer className="flex items-center justify-between py-6 bg-secondary">
       <Link href="#" className="flex items-center gap-2" prefetch={false}>
-        <span className="text-2xl font-semibold">Homestay</span>
+        <span className="text-2xl font-semibold">Best Electronics</span>
       </Link>
       <div className="hidden md:flex gap-4">
         <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>

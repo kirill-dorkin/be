@@ -7,8 +7,8 @@ export default function Footer() {
       <div className="w-full mx-auto max-w-screen-xl pb-10 md:flex md:items-center md:justify-between">
         <span className="text-sm text-muted-foreground sm:text-center">
           © 2024{' '}
-          <Link href="https://homestay.com/" className="hover:underline">
-            Homestay
+          <Link href="#" className="hover:underline">
+            Best Electronics
           </Link>
           . All Rights Reserved.
         </span>

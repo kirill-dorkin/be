@@ -19,8 +19,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Servy",
-  description: "Laptop Service Management",
+  title: "Best Electronics",
+  description: "Electronics Service Management",
 };
 
 export default async function RootLayout({
