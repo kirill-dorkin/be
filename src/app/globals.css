@@ -314,4 +314,11 @@
   .phone-input .PhoneInputInput {
     @apply flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
   }
+  .phone-input .PhoneInputCountryIcon--border {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  .phone-input .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon--border {
+    box-shadow: none;
+  }
 }
