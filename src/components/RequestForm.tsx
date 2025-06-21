@@ -9,6 +9,13 @@ import PhoneInputField from '@/components/PhoneInputField'
 import useGeoCountry from '@/hooks/useGeoCountry'
 import { isValidPhoneNumber } from 'react-phone-number-input'
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import addTaskAction from '@/actions/dashboard/addTaskAction'
 import useCustomToast from '@/hooks/useCustomToast'
 import { ITask } from '@/models/Task'
@@ -84,16 +91,16 @@ export default function RequestForm() {
     })
   }, [])
 
-  const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const device = devices.find((d) => d._id?.toString() === e.target.value)
+  const handleDeviceChange = (value: string) => {
+    const device = devices.find((d) => d._id?.toString() === value)
     if (device) {
       methods.setValue('laptopBrand', device.brand)
       methods.setValue('laptopModel', device.model || '')
     }
   }
 
-  const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const service = services.find((s) => s._id?.toString() === e.target.value)
+  const handleServiceChange = (value: string) => {
+    const service = services.find((s) => s._id?.toString() === value)
     if (service) {
       methods.setValue('totalCost', service.cost)
     }
@@ -137,26 +144,34 @@ export default function RequestForm() {
 
         <div className="flex flex-col gap-2">
           <label className="text-sm" htmlFor="device">Device</label>
-          <select id="device" onChange={handleDeviceChange} className="border rounded px-3 py-2">
-            <option value="">Select device</option>
-            {devices.map((d) => (
-              <option key={d._id?.toString()} value={d._id?.toString()}>
-                {d.brand} {d.model}
-              </option>
-            ))}
-          </select>
+          <Select onValueChange={handleDeviceChange}>
+            <SelectTrigger id="device">
+              <SelectValue placeholder="Select device" />
+            </SelectTrigger>
+            <SelectContent>
+              {devices.map((d) => (
+                <SelectItem key={d._id?.toString()} value={d._id?.toString()}>
+                  {d.brand} {d.model}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex flex-col gap-2">
           <label className="text-sm" htmlFor="service">Service</label>
-          <select id="service" onChange={handleServiceChange} className="border rounded px-3 py-2">
-            <option value="">Select service</option>
-            {services.map((s) => (
-              <option key={s._id?.toString()} value={s._id?.toString()}>
-                {s.name} - ${s.cost}
-              </option>
-            ))}
-          </select>
+          <Select onValueChange={handleServiceChange}>
+            <SelectTrigger id="service">
+              <SelectValue placeholder="Select service" />
+            </SelectTrigger>
+            <SelectContent>
+              {services.map((s) => (
+                <SelectItem key={s._id?.toString()} value={s._id?.toString()}>
+                  {s.name} - ${s.cost}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <InputFormField
