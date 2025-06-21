@@ -75,43 +75,51 @@
   /* Headings */
   h1 {
     @apply scroll-m-20 font-extrabold tracking-tight;
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl; /* Responsive text sizes for h1 */
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+    /* Responsive text sizes for h1 */
   }
 
   h2 {
     @apply mt-10 scroll-m-20 border-b pb-2 font-semibold tracking-tight transition-colors first:mt-0;
-    @apply text-2xl sm:text-3xl md:text-4xl; /* Responsive text sizes for h2 */
+    @apply text-2xl sm:text-3xl md:text-4xl;
+    /* Responsive text sizes for h2 */
   }
 
   h3 {
     @apply mt-8 scroll-m-20 font-semibold tracking-tight;
-    @apply text-xl sm:text-2xl md:text-3xl; /* Responsive text sizes for h3 */
+    @apply text-xl sm:text-2xl md:text-3xl;
+    /* Responsive text sizes for h3 */
   }
 
   h4 {
     @apply scroll-m-20 font-semibold tracking-tight mb-6;
-    @apply text-lg sm:text-xl; /* Responsive text sizes for h4 */
+    @apply text-lg sm:text-xl;
+    /* Responsive text sizes for h4 */
   }
 
   /* Text Elements */
   p {
     @apply leading-7 mt-6 text-muted-foreground;
-    @apply text-base sm:text-lg md:text-xl; /* Responsive paragraph sizes */
+    @apply text-base sm:text-lg md:text-xl;
+    /* Responsive paragraph sizes */
   }
 
   li {
     @apply text-muted-foreground;
-    @apply text-base sm:text-lg; /* Responsive list item sizes */
+    @apply text-base sm:text-lg;
+    /* Responsive list item sizes */
   }
 
   strong {
     @apply text-primary;
-    @apply text-lg sm:text-xl; /* Responsive strong text sizes */
+    @apply text-lg sm:text-xl;
+    /* Responsive strong text sizes */
   }
 
   a {
     @apply font-medium relative text-foreground transition;
-    @apply text-base sm:text-lg; /* Responsive text sizes for links */
+    @apply text-base sm:text-lg;
+    /* Responsive text sizes for links */
   }
 
   blockquote {
@@ -211,9 +219,12 @@
   }
 
   .chart-canvas {
-    width: 100% !important; /* Ensures the canvas takes the full width of its container */
-    height: 100% !important; /* Maintains the aspect ratio */
-    max-width: 100%; /* Ensures the canvas doesn't exceed the width of the container */
+    width: 100% !important;
+    /* Ensures the canvas takes the full width of its container */
+    height: 100% !important;
+    /* Maintains the aspect ratio */
+    max-width: 100%;
+    /* Ensures the canvas doesn't exceed the width of the container */
     @apply bg-background;
   }
 
@@ -248,10 +259,7 @@
   .cart-item {
     display: grid;
     grid:
-      "image ." 1fr
-      "detail close-btn" auto
-      "price qty-btn" auto
-      / 1fr 1fr;
+      "image ." 1fr "detail close-btn" auto "price qty-btn" auto / 1fr 1fr;
   }
 
   .cart-item .image {
@@ -277,12 +285,10 @@
     @apply justify-self-end place-self-start h-min;
   }
 
-@media (width > 1024px) {
+  @media (width > 1024px) {
     .cart-item {
       grid:
-        "image detail qty-btn price" auto
-        "image . . close-btn" 1fr
-        / auto 1fr auto auto;
+        "image detail qty-btn price" auto "image . . close-btn" 1fr / auto 1fr auto auto;
     }
 
     .cart-item .image {
@@ -308,17 +314,7 @@
 }
 
 @layer components {
-  .phone-input {
-    @apply flex h-10 w-full items-center rounded-md border border-input bg-background px-3 py-2 ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
-  }
   .phone-input .PhoneInputInput {
     @apply flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
-  }
-  .phone-input .PhoneInputCountryIcon--border {
-    box-shadow: none;
-    background-color: transparent;
-  }
-  .phone-input .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon--border {
-    box-shadow: none;
   }
 }
