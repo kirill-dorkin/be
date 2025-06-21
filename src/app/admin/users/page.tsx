@@ -25,7 +25,7 @@ const UsersPage = async ({
     <Suspense>
       <DashboardContainer className="w-full min-h-svh py-12 px-10 overflow-y-auto">
         <DashboardHeader className="flex justify-between">
-          <DashboardTitle>Users</DashboardTitle>
+          <DashboardTitle>Пользователи</DashboardTitle>
           <div className="flex gap-6">
             <SelectShowing />
             <AddUserDialog />

@@ -32,14 +32,14 @@ export default function UserList({ users }: UserListProps): ReactElement {
                     {worker.name}
                   </h5>
                   <p className="text-sm text-muted-foreground m-0">
-                    Total Tasks: {worker?.tasks?.length}
+                    Всего задач: {worker?.tasks?.length}
                   </p>
                 </div>
               </div>
             </li>
           ))
         ) : (
-          <CardDescription className="text-center">No workers found.</CardDescription>
+          <CardDescription className="text-center">Сотрудники не найдены.</CardDescription>
         )}
       </ul>
     </div>

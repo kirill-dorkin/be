@@ -42,18 +42,22 @@ export default function UpdateStatusButton({ taskId }: { taskId: string }) {
 
       if (response.status === "success") {
         showSuccessToast({
-          title: "Success",
-          description: `Task status updated to ${status} successfully.`,
+          title: "Успешно",
+          description: `Статус задачи успешно изменен на ${{
+            Pending: "В ожидании",
+            "In Progress": "В процессе",
+            Completed: "Завершено",
+          }[status]}`,
         });
       } else {
         showErrorToast({
-          title: "Error",
+          title: "Ошибка",
           description: response.message as string,
         });
       }
     } catch (error) {
       showErrorToast({
-        title: "Error",
+        title: "Ошибка",
         description: error instanceof Error ? error.message : "An unknown error occurred.",
       });
     } finally {
@@ -66,14 +70,14 @@ export default function UpdateStatusButton({ taskId }: { taskId: string }) {
     <div>
       <Select onValueChange={handleStatusChange} value={status}>
         <SelectTrigger>
-          <SelectValue placeholder="Select status" />
+          <SelectValue placeholder="Выберите статус" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Status</SelectLabel>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="In Progress">In Progress</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
+            <SelectLabel>Статус</SelectLabel>
+            <SelectItem value="Pending">В ожидании</SelectItem>
+            <SelectItem value="In Progress">В процессе</SelectItem>
+            <SelectItem value="Completed">Завершено</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -81,15 +85,19 @@ export default function UpdateStatusButton({ taskId }: { taskId: string }) {
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to change the status?</AlertDialogTitle>
+            <AlertDialogTitle>Вы уверены, что хотите изменить статус?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action will update the task status to <span className="font-bold text-primary">{status}</span>.
+              Это действие обновит статус задачи на <span className="font-bold text-primary">{{
+                Pending: "В ожидании",
+                "In Progress": "В процессе",
+                Completed: "Завершено",
+              }[status]}</span>.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setOpenDialog(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setOpenDialog(false)}>Отмена</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmChange}>
-              {loading ? "Updating..." : "Confirm"}
+              {loading ? "Обновление..." : "Подтвердить"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

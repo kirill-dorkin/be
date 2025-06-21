@@ -20,17 +20,17 @@ export default function DeleteButton({
     try {
       const response = await action(id);
 
-      if (response.status === "error") return showErrorToast({ title: "Error", description: response.message });
+      if (response.status === "error") return showErrorToast({ title: "Ошибка", description: response.message });
 
       showSuccessToast({
-        title: "Success",
+        title: "Успешно",
         description: response.message,
       });
     } catch (error) {
 
       showErrorToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "An unknown error occurred.",
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
       });
     }
   };

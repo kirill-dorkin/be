@@ -13,32 +13,32 @@ import { FaTasks, FaUsers } from 'react-icons/fa';
 const adminLinks = [
   {
     href: "/admin/dashboard",
-    label: "Dashboard",
+    label: "Панель",
     icon: <RiDashboardFill />,
   },
   {
     href: "/admin/tasks",
-    label: "Tasks",
+    label: "Задачи",
     icon: <FaTasks />,
   },
   {
     href: "/admin/users",
-    label: "Users",
+    label: "Пользователи",
     icon: <FaUsers />,
   },
   {
     href: "/admin/categories",
-    label: "Categories",
+    label: "Категории",
     icon: <FaTasks />,
   },
   {
     href: "/admin/devices",
-    label: "Devices",
+    label: "Устройства",
     icon: <FaTasks />,
   },
   {
     href: "/admin/services",
-    label: "Services",
+    label: "Услуги",
     icon: <FaTasks />,
   },
 ];
@@ -46,7 +46,7 @@ const adminLinks = [
 const workerLinks = [
   {
     href: "/worker/my-tasks",
-    label: "My Tasks",
+    label: "Мои задачи",
     icon: <FaTasks />,
   },
 ];
@@ -111,7 +111,7 @@ const Sidebar = () => {
             }`}
           style={{ display: isExpanded ? "block" : "none" }}
         >
-          Menu
+          Меню
         </h2>
         <span
           className="h-5 text-4xl w-6 cursor-pointer flex items-center justify-center"
@@ -159,7 +159,7 @@ const Sidebar = () => {
                 }`}
               style={{ display: isExpanded ? "block" : "none" }}
             >
-              Logout
+              Выйти
             </span>
           </button>
         </li>

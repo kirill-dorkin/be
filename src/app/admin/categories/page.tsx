@@ -18,7 +18,7 @@ const CategoriesPage = async ({ searchParams }: SearchParams) => {
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
-        <DashboardTitle>Categories</DashboardTitle>
+        <DashboardTitle>Категории</DashboardTitle>
         <div className="flex gap-4">
           <SelectShowing />
           <AddCategoryDialog />

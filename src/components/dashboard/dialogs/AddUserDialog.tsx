@@ -18,9 +18,9 @@ import InputFormField from "@/components/InputFormField";
 import addUserAction from "@/actions/dashboard/addUserAction";
 
 const UserSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }).max(100),
-  email: z.string().email({ message: "Invalid email" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  name: z.string().min(1, { message: "Имя обязательно" }).max(100),
+  email: z.string().email({ message: "Некорректный email" }),
+  password: z.string().min(6, { message: "Пароль должен быть не менее 6 символов" }),
 });
 
 type UserForm = z.infer<typeof UserSchema>;
@@ -47,15 +47,15 @@ export function AddUserDialog() {
     try {
       const response = await addUserAction(data.name, data.email, data.password);
       if (response.status === "error") {
-        showErrorToast({ title: "Error", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message });
       } else {
-        showSuccessToast({ title: "Success", description: response.message });
+        showSuccessToast({ title: "Успешно", description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add user",
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Не удалось добавить пользователя",
       });
     } finally {
       setLoading(false);
@@ -65,18 +65,18 @@ export function AddUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add Worker</Button>
+        <Button>Добавить сотрудника</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Worker</DialogTitle>
-          <DialogDescription>Provide worker credentials</DialogDescription>
+          <DialogTitle>Добавить сотрудника</DialogTitle>
+          <DialogDescription>Укажите данные сотрудника</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField
               name="name"
-              label="Name"
+              label="Имя"
               id="name"
               type="text"
               control={control}
@@ -92,7 +92,7 @@ export function AddUserDialog() {
             />
             <InputFormField
               name="password"
-              label="Password"
+              label="Пароль"
               id="password"
               type="password"
               control={control}
@@ -101,7 +101,7 @@ export function AddUserDialog() {
           </FormProvider>
           <DialogFooter className="pt-2">
             <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Сохранение..." : "Сохранить"}
             </Button>
           </DialogFooter>
         </form>

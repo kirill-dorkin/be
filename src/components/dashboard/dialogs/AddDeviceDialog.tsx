@@ -28,7 +28,7 @@ import { ICategory } from "@/models/Category";
 
 const DeviceSchema = z.object({
   category: z.string().min(1),
-  brand: z.string().min(1, { message: "Brand is required" }).max(100),
+  brand: z.string().min(1, { message: "Бренд обязателен" }).max(100),
   model: z.string().optional(),
 });
 
@@ -63,15 +63,15 @@ export function AddDeviceDialog() {
     try {
       const response = await addDeviceAction(data.category, data.brand, data.model || "");
       if (response.status === "error") {
-        showErrorToast({ title: "Error", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message });
       } else {
-        showSuccessToast({ title: "Success", description: response.message });
+        showSuccessToast({ title: "Успешно", description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add device",
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Не удалось добавить устройство",
       });
     } finally {
       setLoading(false);
@@ -81,37 +81,37 @@ export function AddDeviceDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add Device</Button>
+        <Button>Добавить устройство</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Device</DialogTitle>
-          <DialogDescription>Specify device details</DialogDescription>
+          <DialogTitle>Добавить устройство</DialogTitle>
+          <DialogDescription>Укажите параметры устройства</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField
               name="brand"
-              label="Brand"
+              label="Бренд"
               type="text"
               control={control}
               errors={errors}
             />
             <InputFormField
               name="model"
-              label="Model (optional)"
+              label="Модель (необязательно)"
               type="text"
               control={control}
               errors={errors}
             />
             <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="category">Category</label>
+              <label className="text-sm" htmlFor="category">Категория</label>
               <Select
                 value={methods.watch("category")}
                 onValueChange={(value) => methods.setValue("category", value)}
               >
                 <SelectTrigger id="category">
-                  <SelectValue placeholder="Select" />
+                  <SelectValue placeholder="Выбрать" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => (
@@ -122,7 +122,7 @@ export function AddDeviceDialog() {
             </div>
           </FormProvider>
           <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>Save</Button>
+            <Button type="submit" disabled={loading}>Сохранить</Button>
           </DialogFooter>
         </form>
       </DialogContent>

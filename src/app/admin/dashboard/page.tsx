@@ -28,22 +28,22 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
 
   const data = [
     {
-      label: "Active Tasks",
+      label: "Активные задачи",
       value: metrics?.metrics?.totalActiveTasks,
       icon: <FaTasks />,
     },
     {
-      label: "Pending Tasks",
+      label: "Задачи в ожидании",
       value: metrics?.metrics?.totalPendingTasks,
       icon: <FaExclamationCircle />,
     },
     {
-      label: "In Progress Tasks",
+      label: "Задачи в процессе",
       value: metrics?.metrics?.totalInProgressTasks,
       icon: <FaHourglassHalf />,
     },
     {
-      label: "Completed Tasks",
+      label: "Завершенные задачи",
       value: metrics?.metrics?.totalCompletedTasks,
       icon: <FaCheckCircle />,
     },
@@ -68,8 +68,8 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
         </section>
         <section className="flex flex-col col-span-1 sm:col-span-2 lg:col-span-2 gap-6">
           <ListCard
-            title="Worker Report"
-            description="A detailed list of all workers at Best Electronics with key information."
+            title="Список сотрудников"
+            description="Подробный список всех сотрудников Best Electronics с основной информацией."
           >
             <UserList users={users} />
           </ListCard>

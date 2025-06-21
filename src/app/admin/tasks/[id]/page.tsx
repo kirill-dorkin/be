@@ -22,18 +22,18 @@ export default async function TaskDetailsPage({ params }: PageProps) {
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader>
-        <DashboardTitle>Task Details</DashboardTitle>
+        <DashboardTitle>Детали задачи</DashboardTitle>
       </DashboardHeader>
       <DashboardContent>
         <div className="bg-background shadow p-6 rounded-lg space-y-3">
-          <p><span className="font-semibold">Description:</span> {task.description}</p>
-          <p><span className="font-semibold">Customer:</span> {task.customerName}</p>
-          <p><span className="font-semibold">Phone:</span> {task.customerPhone}</p>
-          <p><span className="font-semibold">Brand:</span> {task.laptopBrand}</p>
-          <p><span className="font-semibold">Model:</span> {task.laptopModel}</p>
-          <p><span className="font-semibold">Status:</span> {task.status}</p>
-          <p><span className="font-semibold">Cost:</span> ${task.totalCost}</p>
-          <p><span className="font-semibold">Created:</span> {new Date(task.createdAt).toLocaleString()}</p>
+          <p><span className="font-semibold">Описание:</span> {task.description}</p>
+          <p><span className="font-semibold">Клиент:</span> {task.customerName}</p>
+          <p><span className="font-semibold">Телефон:</span> {task.customerPhone}</p>
+          <p><span className="font-semibold">Бренд:</span> {task.laptopBrand}</p>
+          <p><span className="font-semibold">Модель:</span> {task.laptopModel}</p>
+          <p><span className="font-semibold">Статус:</span> {task.status}</p>
+          <p><span className="font-semibold">Стоимость:</span> ${task.totalCost}</p>
+          <p><span className="font-semibold">Создано:</span> {new Date(task.createdAt).toLocaleString()}</p>
         </div>
       </DashboardContent>
     </DashboardContainer>

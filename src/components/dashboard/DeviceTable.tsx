@@ -31,10 +31,10 @@ export default function DeviceTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="min-w-[150px]">Category</TableHead>
-          <TableHead className="min-w-[150px]">Brand</TableHead>
-          <TableHead className="min-w-[150px]">Model</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead className="min-w-[150px]">Категория</TableHead>
+          <TableHead className="min-w-[150px]">Бренд</TableHead>
+          <TableHead className="min-w-[150px]">Модель</TableHead>
+          <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -50,7 +50,7 @@ export default function DeviceTable({
         ))}
         <TableRow>
           <TableCell className="bg-background text-muted-foreground pb-0" colSpan={3}>
-            Total Items: {totalItemsLength}
+            Всего записей: {totalItemsLength}
           </TableCell>
           <TableCell className="bg-background pb-0" colSpan={1}>
             <PaginationControls
