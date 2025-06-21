@@ -23,17 +23,24 @@ export default async function addTaskAction({
     await connectToDatabase();
 
     const worker = await getWorkerWithLeastTasks();
-    if (!worker) {
-      return { status: 'error', message: 'No workers available to assign the task to.' };
+
+    const newTask = await createTask(
+      { description, totalCost, customerName, customerPhone, laptopBrand, laptopModel },
+      worker,
+    );
+
+    if (worker) {
+      await assignTaskToWorker(worker, newTask._id as mongoose.Types.ObjectId);
     }
-
-    const newTask = await createTask({ description, totalCost, customerName, customerPhone, laptopBrand, laptopModel }, worker);
-
-    await assignTaskToWorker(worker, newTask._id as mongoose.Types.ObjectId);
 
     revalidateTag('/admin');
 
-    return { status: 'success', message: 'Task created and assigned successfully!' };
+    return {
+      status: 'success',
+      message: worker
+        ? 'Task created and assigned successfully!'
+        : 'Task created successfully, but no worker was available for assignment.',
+    };
   } catch (error) {
     return { status: 'error', message: (error as Error).message || 'Internal server error.' };
   }

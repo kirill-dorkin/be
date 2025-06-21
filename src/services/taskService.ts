@@ -99,10 +99,13 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
   }
 }
 
-export const createTask = async (params: AddTaskActionParams, worker: IUser): Promise<ITask> => {
+export const createTask = async (
+  params: AddTaskActionParams,
+  worker?: IUser | null,
+): Promise<ITask> => {
   const newTask = new Task({
     ...params,
-    workerId: worker._id,
+    workerId: worker?._id ?? null,
     status: 'Pending',
   });
   await newTask.save();
