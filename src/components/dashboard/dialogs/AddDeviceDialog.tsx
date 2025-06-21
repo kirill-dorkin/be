@@ -3,6 +3,13 @@ import { useState, useEffect } from "react";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -99,13 +106,19 @@ export function AddDeviceDialog() {
             />
             <div className="flex flex-col gap-2">
               <label className="text-sm" htmlFor="category">Category</label>
-              <select id="category" {...methods.register("category")}
-                className="border rounded px-3 py-2">
-                <option value="">Select</option>
-                {categories.map((c) => (
-                  <option key={c._id} value={c._id}>{c.name}</option>
-                ))}
-              </select>
+              <Select
+                value={methods.watch("category")}
+                onValueChange={(value) => methods.setValue("category", value)}
+              >
+                <SelectTrigger id="category">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((c) => (
+                    <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </FormProvider>
           <DialogFooter className="pt-2">
