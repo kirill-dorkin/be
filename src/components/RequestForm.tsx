@@ -29,33 +29,33 @@ const serialNumberValidation = new RegExp(/^[A-Z0-9]{2,}-?[A-Z0-9]{2,}$/i)
 const TaskSchema = z.object({
   description: z
     .string()
-    .min(1, { message: 'Description is required' })
-    .max(255, { message: 'Description cannot exceed 255 characters' }),
+    .min(1, { message: 'Описание обязательно' })
+    .max(255, { message: 'Описание не должно превышать 255 символов' }),
   customerName: z
     .string()
-    .min(1, { message: 'Customer name is required' })
-    .max(100, { message: 'Customer name cannot exceed 100 characters' }),
+    .min(1, { message: 'Имя клиента обязательно' })
+    .max(100, { message: 'Имя клиента не должно превышать 100 символов' }),
   customerPhone: z
     .string()
-    .min(1, { message: 'Customer phone is required' })
-    .refine(isValidPhoneNumber, { message: 'Invalid phone number' }),
+    .min(1, { message: 'Телефон клиента обязателен' })
+    .refine(isValidPhoneNumber, { message: 'Некорректный номер телефона' }),
   serialNumber: z
     .string()
-    .min(1, { message: 'Serial number is required' })
-    .regex(serialNumberValidation, { message: 'Invalid serial number format' }),
+    .min(1, { message: 'Серийный номер обязателен' })
+    .regex(serialNumberValidation, { message: 'Неверный формат серийного номера' }),
   laptopBrand: z
     .string()
-    .min(1, { message: 'Laptop brand is required' })
-    .max(100, { message: 'Laptop brand cannot exceed 100 characters' }),
+    .min(1, { message: 'Марка ноутбука обязательна' })
+    .max(100, { message: 'Марка ноутбука не должна превышать 100 символов' }),
   laptopModel: z
     .string()
-    .min(1, { message: 'Laptop model is required' })
-    .max(100, { message: 'Laptop model cannot exceed 100 characters' }),
+    .min(1, { message: 'Модель ноутбука обязательна' })
+    .max(100, { message: 'Модель ноутбука не должна превышать 100 символов' }),
   totalCost: z
     .string()
     .transform((value) => parseFloat(value))
     .refine((value) => !isNaN(value) && value >= 0, {
-      message: 'Total cost must be a positive number',
+      message: 'Стоимость должна быть положительным числом',
     }),
 })
 
@@ -137,16 +137,16 @@ export default function RequestForm() {
           control={control}
           name="description"
           id="description"
-          label="Problem Description"
+          label="Описание проблемы"
           errors={errors}
           isTextarea
         />
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm" htmlFor="device">Device</label>
+          <label className="text-sm" htmlFor="device">Устройство</label>
           <Select onValueChange={handleDeviceChange}>
             <SelectTrigger id="device">
-              <SelectValue placeholder="Select device" />
+              <SelectValue placeholder="Выберите устройство" />
             </SelectTrigger>
             <SelectContent>
               {devices.map((d) => (
@@ -159,10 +159,10 @@ export default function RequestForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm" htmlFor="service">Service</label>
+          <label className="text-sm" htmlFor="service">Услуга</label>
           <Select onValueChange={handleServiceChange}>
             <SelectTrigger id="service">
-              <SelectValue placeholder="Select service" />
+              <SelectValue placeholder="Выберите услугу" />
             </SelectTrigger>
             <SelectContent>
               {services.map((s) => (
@@ -178,14 +178,14 @@ export default function RequestForm() {
           control={control}
           name="customerName"
           id="customerName"
-          label="Customer Name"
+          label="Имя клиента"
           errors={errors}
         />
 
         <PhoneInputField
           control={control}
           name="customerPhone"
-          label="Customer Phone"
+          label="Телефон клиента"
           defaultCountry={country}
         />
 
@@ -193,16 +193,16 @@ export default function RequestForm() {
           control={control}
           name="serialNumber"
           id="serialNumber"
-          label="Serial Number"
+          label="Серийный номер"
           errors={errors}
         />
 
         <div className="text-right font-medium">
-          Estimated Cost: ${methods.watch('totalCost')}
+          Примерная стоимость: ${methods.watch('totalCost')}
         </div>
 
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? 'Submitting...' : 'Submit Request'}
+          {loading ? 'Отправка...' : 'Отправить заявку'}
         </Button>
       </form>
     </FormProvider>

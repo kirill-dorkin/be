@@ -1,69 +1,67 @@
-# Best Electronics Service Management
+# Система управления сервисом Best Electronics
 
-**Best Electronics (be.kg)** provides a comprehensive system for managing repair requests, tracking progress and keeping customers up to date. The platform helps streamline technician assignments and integrates customer orders and invoicing.
+**Best Electronics (be.kg)** предоставляет комплексную систему для управления заявками на ремонт, отслеживания их выполнения и информирования клиентов. Платформа помогает распределять задачи между мастерами и интегрирует заказы клиентов с выставлением счетов.
 
-## Key Features
+## Основные возможности
 
-1. **Repair Request Management**  
-   Accept repair requests from customers, categorize issues, and generate repair tickets for efficient tracking.
+1. **Управление заявками на ремонт**
+   Приём запросов от клиентов, категоризация проблем и создание заявок для удобного отслеживания.
 
-2. **Technician Assignment**  
-   Automatically assign technicians based on their expertise and availability, ensuring balanced workloads and timely repair completion.
+2. **Назначение техников**
+   Автоматическое распределение задач между специалистами с учётом их загрузки и навыков.
 
-3. **Repair Progress Monitoring**  
-   Track the progress of ongoing repairs, update statuses, and notify customers when repairs are complete.
+3. **Отслеживание прогресса ремонта**
+   Мониторинг текущих ремонтов, обновление статусов и уведомление клиентов после завершения.
 
-4. **Billing & Invoicing**  
-   Generate invoices for completed repairs, including labor and parts costs, and manage payments efficiently.
+4. **Выставление счетов**
+   Формирование счетов за выполненный ремонт, включая стоимость работ и запчастей, а также удобное управление оплатами.
 
-5. **Customer Notifications**  
-   Integrate with **WhatsApp** to notify customers when their repair is completed and send the final invoice.
+5. **Уведомления клиентов**
+   Интеграция с **WhatsApp** для уведомления клиентов о готовности техники и отправки итогового счета.
 
-Built with **Next.js, TypeScript, Tailwind CSS, and MongoDB**, the system provides a fast, scalable, and user-friendly solution for laptop repair management.
+Платформа построена на **Next.js, TypeScript, Tailwind CSS и MongoDB**, что обеспечивает быструю и удобную работу сервиса.
 
-## Authentication
-Regular visitors do not need to register. When they open the site, they automatically have the `user` role and can submit repair requests. The `/login` page is reserved for employees and administrators.
+## Аутентификация
+Обычным посетителям регистрация не требуется. При первом заходе им автоматически присваивается роль `user`, позволяющая отправлять заявки на ремонт. Страница `/login` предназначена для сотрудников и администраторов.
 
-## Requesting a Repair
-Visit the home page and click **Request Repair** to open the request page. You can fill out the online form or reach us by phone at **+996 501‑31‑31‑14** or **+996 557‑31‑31‑14**.
-Our service center is located at **Кулатова&nbsp;8/1, Bishkek** (find us on [2GIS](https://go.2gis.com/)). You can also message us on Instagram [@best___electronics](https://instagram.com/best___electronics).
+## Оформление заявки
+Перейдите на главную страницу и нажмите **«Заказать ремонт»**, чтобы открыть форму заявки. Также можно связаться с нами по телефону **+996 501‑31‑31‑14** или **+996 557‑31‑31‑14**. Мастерская находится по адресу **Кулатова 8/1, Бишкек** (смотрите на [2GIS](https://go.2gis.com/)). Мы также отвечаем в Instagram [@best___electronics](https://instagram.com/best___electronics).
 
+## Как пользоваться системой Best Electronics Service
 
-## How to Use the Best Electronics Service System
+### Требования
+Убедитесь, что на компьютере установлены Node.js и npm. Скачать их можно [здесь](https://nodejs.org/).
 
-### Prerequisites
-Ensure you have Node.js and npm installed on your machine. You can download them from [here](https://nodejs.org/).
+### Начало работы
 
-### Getting Started
+1. **Клонируйте репозиторий:**
 
-1. **Clone the Repository:**
-
-``` 
+```
 git clone https://github.com/kirill-dorkin/be.kg.git
 cd be.kg
 ```
 
-2. **Install Dependencies:**
+2. **Установите зависимости:**
 
 ```
 npm install
-# or
+# или
 yarn install
-# or
+# или
 bun i
 ```
-3. **Run the Development Server:**
+3. **Запустите сервер разработки:**
 
-Start the server locally to test the system.
+Запустите сервер локально для тестирования системы.
 
 ```
 npm run dev
-# or
+# или
 yarn dev
-# or
+# или
 bun run dev
 ```
 
-4. **Access the System:**
+4. **Откройте приложение:**
 
-Open http://localhost:3000 in your browser to access the application.
+Перейдите по адресу http://localhost:3000 в вашем браузере.
