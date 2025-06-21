@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -9,6 +9,10 @@ import { Button } from '@/components/ui/button'
 import addTaskAction from '@/actions/dashboard/addTaskAction'
 import useCustomToast from '@/hooks/useCustomToast'
 import { ITask } from '@/models/Task'
+import getDevicesAction from '@/actions/dashboard/getDevicesAction'
+import getServicesAction from '@/actions/dashboard/getServicesAction'
+import { IDevice } from '@/models/Device'
+import { IService } from '@/models/Service'
 
 const phoneValidation = new RegExp(/^(?:\+62|62|0)[2-9]\d{7,11}$/)
 const serialNumberValidation = new RegExp(/^[A-Z0-9]{2,}-?[A-Z0-9]{2,}$/i)
@@ -49,6 +53,8 @@ const TaskSchema = z.object({
 export default function RequestForm() {
   const [loading, setLoading] = useState(false)
   const { showSuccessToast, showErrorToast } = useCustomToast()
+  const [devices, setDevices] = useState<IDevice[]>([])
+  const [services, setServices] = useState<IService[]>([])
 
   const methods = useForm<ITask>({
     resolver: zodResolver(TaskSchema),
@@ -65,6 +71,30 @@ export default function RequestForm() {
   })
 
   const { control, handleSubmit, formState: { errors }, reset } = methods
+
+  useEffect(() => {
+    getDevicesAction(1, 100).then((res) => {
+      if (res.status === 'success') setDevices(res.items)
+    })
+    getServicesAction(1, 100).then((res) => {
+      if (res.status === 'success') setServices(res.items)
+    })
+  }, [])
+
+  const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const device = devices.find((d) => d._id?.toString() === e.target.value)
+    if (device) {
+      methods.setValue('laptopBrand', device.brand)
+      methods.setValue('laptopModel', device.model || '')
+    }
+  }
+
+  const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const service = services.find((s) => s._id?.toString() === e.target.value)
+    if (service) {
+      methods.setValue('totalCost', service.cost)
+    }
+  }
 
   const handleSubmitAction = async (data: ITask) => {
     setLoading(true)
@@ -90,31 +120,71 @@ export default function RequestForm() {
     }
   }
 
-  const taskFields = [
-    { name: 'description', label: 'Description', type: 'text' },
-    { name: 'customerName', label: 'Customer Name', type: 'text' },
-    { name: 'customerPhone', label: 'Customer Phone', type: 'text' },
-    { name: 'serialNumber', label: 'Serial Number', type: 'text' },
-    { name: 'laptopBrand', label: 'Laptop Brand', type: 'text' },
-    { name: 'laptopModel', label: 'Laptop Model', type: 'text' },
-    { name: 'totalCost', label: 'Estimated Cost', type: 'number' },
-  ]
-
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleSubmitAction)} className='space-y-4 w-full max-w-lg'>
-        {taskFields.map((field) => (
-          <InputFormField
-            key={field.name}
-            control={control}
-            name={field.name as keyof ITask}
-            id={field.name}
-            label={field.label}
-            errors={errors}
-            type={field.type}
-          />
-        ))}
-        <Button type='submit' disabled={loading} className='w-full'>
+      <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4 w-full max-w-lg">
+        <InputFormField
+          control={control}
+          name="description"
+          id="description"
+          label="Problem Description"
+          errors={errors}
+          isTextarea
+        />
+
+        <div className="flex flex-col gap-2">
+          <label className="text-sm" htmlFor="device">Device</label>
+          <select id="device" onChange={handleDeviceChange} className="border rounded px-3 py-2">
+            <option value="">Select device</option>
+            {devices.map((d) => (
+              <option key={d._id?.toString()} value={d._id?.toString()}>
+                {d.brand} {d.model}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-sm" htmlFor="service">Service</label>
+          <select id="service" onChange={handleServiceChange} className="border rounded px-3 py-2">
+            <option value="">Select service</option>
+            {services.map((s) => (
+              <option key={s._id?.toString()} value={s._id?.toString()}>
+                {s.name} - ${s.cost}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <InputFormField
+          control={control}
+          name="customerName"
+          id="customerName"
+          label="Customer Name"
+          errors={errors}
+        />
+
+        <InputFormField
+          control={control}
+          name="customerPhone"
+          id="customerPhone"
+          label="Customer Phone"
+          errors={errors}
+        />
+
+        <InputFormField
+          control={control}
+          name="serialNumber"
+          id="serialNumber"
+          label="Serial Number"
+          errors={errors}
+        />
+
+        <div className="text-right font-medium">
+          Estimated Cost: ${methods.watch('totalCost')}
+        </div>
+
+        <Button type="submit" disabled={loading} className="w-full">
           {loading ? 'Submitting...' : 'Submit Request'}
         </Button>
       </form>

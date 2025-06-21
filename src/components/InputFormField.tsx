@@ -23,10 +23,13 @@ interface InputFormFieldProps<TFieldValues extends FieldValues = FieldValues> {
   label: string;
   errors?: FieldErrors<TFieldValues>;
   type?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   imageSrc?: string;
   isImageField?: boolean; // To determine if it's an image field
   rows?: number; // Optional for Textarea size
+  isTextarea?: boolean; // render textarea instead of input
 }
 
 const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
@@ -41,6 +44,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   imageSrc,
   isImageField = false, // Default is false, meaning it's a regular field
   rows = 4, // Default textarea size
+  isTextarea = false,
 }: InputFormFieldProps<TFieldValues>): ReactElement => {
 
   // Render Textarea if the field is of type "description" or if specified
@@ -115,7 +119,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
         <FormItem>
           <Label htmlFor={id}>{label}</Label>
           <FormControl>
-            {field.name === "description1" ? renderTextarea(field) : renderInput(field)}
+            {isTextarea ? renderTextarea(field) : renderInput(field)}
           </FormControl>
           <FormMessage className="empty:hidden mt-0">
             {errors?.[name]?.message}
