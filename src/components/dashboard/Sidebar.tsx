@@ -27,6 +27,11 @@ const adminLinks = [
     icon: <FaUsers />,
   },
   {
+    href: "/admin/categories",
+    label: "Categories",
+    icon: <FaTasks />,
+  },
+  {
     href: "/admin/devices",
     label: "Devices",
     icon: <FaTasks />,

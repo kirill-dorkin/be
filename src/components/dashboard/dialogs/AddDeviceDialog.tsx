@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,18 +16,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/components/InputFormField";
 import addDeviceAction from "@/actions/dashboard/addDeviceAction";
+import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
+import { ICategory } from "@/models/Category";
 
 const DeviceSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }).max(100),
+  category: z.string().min(1),
+  brand: z.string().min(1, { message: "Brand is required" }).max(100),
+  model: z.string().optional(),
 });
 
 export function AddDeviceDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
+  const [categories, setCategories] = useState<ICategory[]>([]);
 
-  const methods = useForm<{ name: string }>({
+  useEffect(() => {
+    getCategoriesAction(1, 100).then((res) => {
+      if (res.status === "success") {
+        setCategories(res.items);
+      }
+    });
+  }, []);
+
+  const methods = useForm<{ category: string; brand: string; model?: string }>({
     resolver: zodResolver(DeviceSchema),
-    defaultValues: { name: "" },
+    defaultValues: { category: "", brand: "", model: "" },
     mode: "onChange",
   });
 
@@ -38,10 +51,10 @@ export function AddDeviceDialog() {
     formState: { errors },
   } = methods;
 
-  const handleSubmitAction = async (data: { name: string }) => {
+  const handleSubmitAction = async (data: { category: string; brand: string; model?: string }) => {
     setLoading(true);
     try {
-      const response = await addDeviceAction(data.name);
+      const response = await addDeviceAction(data.category, data.brand, data.model || "");
       if (response.status === "error") {
         showErrorToast({ title: "Error", description: response.message });
       } else {
@@ -66,17 +79,34 @@ export function AddDeviceDialog() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Device</DialogTitle>
-          <DialogDescription>Specify device name</DialogDescription>
+          <DialogDescription>Specify device details</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField
-              name="name"
-              label="Name"
+              name="brand"
+              label="Brand"
               type="text"
               control={control}
               errors={errors}
             />
+            <InputFormField
+              name="model"
+              label="Model (optional)"
+              type="text"
+              control={control}
+              errors={errors}
+            />
+            <div className="flex flex-col gap-2">
+              <label className="text-sm" htmlFor="category">Category</label>
+              <select id="category" {...methods.register("category")}
+                className="border rounded px-3 py-2">
+                <option value="">Select</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
           </FormProvider>
           <DialogFooter className="pt-2">
             <Button type="submit" disabled={loading}>Save</Button>

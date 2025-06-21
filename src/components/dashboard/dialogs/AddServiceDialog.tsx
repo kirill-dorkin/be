@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,35 +16,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/components/InputFormField";
 import addServiceAction from "@/actions/dashboard/addServiceAction";
-import getDevicesAction from "@/actions/dashboard/getDevicesAction";
-import { useEffect, useState as useReactState } from "react";
-import { IDevice } from "@/models/Device";
+import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
+import { ICategory } from "@/models/Category";
 
 const ServiceSchema = z.object({
-  device: z.string().min(1),
+  category: z.string().min(1),
   name: z.string().min(1, { message: "Name is required" }).max(100),
   cost: z
     .string()
     .transform((v) => parseFloat(v))
     .refine((v) => !isNaN(v) && v >= 0, { message: "Cost must be positive" }),
+  duration: z.string().optional(),
 });
 
 export function AddServiceDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
-  const [devices, setDevices] = useReactState<IDevice[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
-    getDevicesAction(1, 100).then((res) => {
+    getCategoriesAction(1, 100).then((res) => {
       if (res.status === "success") {
-        setDevices(res.items);
+        setCategories(res.items);
       }
     });
-  }, [setDevices]);
+  }, []);
 
-  const methods = useForm<{ device: string; name: string; cost: number }>({
+  const methods = useForm<{ category: string; name: string; cost: number; duration?: string }>({
     resolver: zodResolver(ServiceSchema),
-    defaultValues: { device: "", name: "", cost: 0 },
+    defaultValues: { category: "", name: "", cost: 0, duration: "" },
     mode: "onChange",
   });
 
@@ -55,10 +55,10 @@ export function AddServiceDialog() {
     formState: { errors },
   } = methods;
 
-  const handleSubmitAction = async (data: { device: string; name: string; cost: number }) => {
+  const handleSubmitAction = async (data: { category: string; name: string; cost: number; duration?: string }) => {
     setLoading(true);
     try {
-      const response = await addServiceAction(data.device, data.name, data.cost);
+      const response = await addServiceAction(data.category, data.name, data.cost, data.duration || "");
       if (response.status === "error") {
         showErrorToast({ title: "Error", description: response.message });
       } else {
@@ -101,13 +101,20 @@ export function AddServiceDialog() {
               control={control}
               errors={errors}
             />
+            <InputFormField
+              name="duration"
+              label="Duration (e.g. 2 days)"
+              type="text"
+              control={control}
+              errors={errors}
+            />
             <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="device">Device</label>
-              <select id="device" {...methods.register("device")}
+              <label className="text-sm" htmlFor="category">Category</label>
+              <select id="category" {...methods.register("category")}
                 className="border rounded px-3 py-2">
                 <option value="">Select</option>
-                {devices.map((d) => (
-                  <option key={d._id} value={d._id}>{d.name}</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>{c.name}</option>
                 ))}
               </select>
             </div>

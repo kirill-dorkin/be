@@ -3,10 +3,10 @@ import { connectToDatabase } from "@/lib/dbConnect";
 import Service from "@/models/Service";
 import { revalidateTag } from "next/cache";
 
-const addServiceAction = async (device: string, name: string, cost: number) => {
+const addServiceAction = async (category: string, name: string, cost: number, duration: string) => {
   try {
     await connectToDatabase();
-    const service = new Service({ device, name, cost });
+    const service = new Service({ category, name, cost, duration });
     await service.save();
     revalidateTag('/admin/services');
     return { status: "success", message: "Service created" };

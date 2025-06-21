@@ -1,16 +1,18 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IService extends Document {
-  device: mongoose.Types.ObjectId;
+  category: mongoose.Types.ObjectId;
   name: string;
   cost: number;
+  duration?: string;
 }
 
 const ServiceSchema: Schema = new Schema(
   {
-    device: { type: mongoose.Types.ObjectId, ref: 'Device', required: true },
+    category: { type: mongoose.Types.ObjectId, ref: 'Category', required: true },
     name: { type: String, required: true },
     cost: { type: Number, required: true },
+    duration: { type: String },
   },
   {
     timestamps: true,

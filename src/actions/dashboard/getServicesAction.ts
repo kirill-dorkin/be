@@ -7,7 +7,7 @@ const getServicesAction = async (page: number = 1, limit: number = 5) => {
   try {
     const skip = (page - 1) * limit;
     await connectToDatabase();
-    const services = await Service.find().populate('device').skip(skip).limit(limit).lean();
+    const services = await Service.find().populate('category').skip(skip).limit(limit).lean();
     const totalItemsLength = await Service.countDocuments();
     return { status: "success", items: serializeData(services), totalItemsLength };
   } catch (error) {
