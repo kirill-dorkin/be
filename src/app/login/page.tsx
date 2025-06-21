@@ -16,7 +16,7 @@ export default function LoginPage() {
     setError('')
     const res = await signIn('credentials', { redirect: false, email, password })
     if (res?.error) {
-      setError('Invalid credentials')
+      setError('Неверные данные для входа')
     } else {
       router.push('/')
     }
@@ -25,10 +25,10 @@ export default function LoginPage() {
   return (
     <div className='flex items-center justify-center min-h-screen'>
       <form onSubmit={handleSubmit} className='space-y-4 w-80'>
-        <Input placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Input type='password' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input placeholder='Электронная почта' value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type='password' placeholder='Пароль' value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <p className='text-red-500 text-sm'>{error}</p>}
-        <Button type='submit' className='w-full'>Login</Button>
+        <Button type='submit' className='w-full'>Войти</Button>
       </form>
     </div>
   )

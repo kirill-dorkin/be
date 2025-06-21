@@ -17,19 +17,19 @@ export default function Header() {
       </Link>
       <div className="hidden md:flex gap-4">
         <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          Home
+          Главная
         </Link>
         <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          About
+          О нас
         </Link>
         <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          Services
+          Услуги
         </Link>
         <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          Portfolio
+          Портфолио
         </Link>
         <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          Contact
+          Контакты
         </Link>
       </div>
       <div className="flex items-center gap-6 md:hidden">
@@ -38,28 +38,28 @@ export default function Header() {
           <SheetTrigger asChild>
             <div className="cursor-pointer">
               <RxHamburgerMenu className="text-4xl" />
-              <span className="sr-only">Toggle navigation menu</span>
+              <span className="sr-only">Открыть меню навигации</span>
             </div>
           </SheetTrigger>
           <SheetContent side="left">
             <VisuallyHidden.Root>
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle>Меню</SheetTitle>
             </VisuallyHidden.Root>
             <div className="grid w-[200px] p-4">
               <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                Home
+                Главная
               </Link>
               <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                About
+                О нас
               </Link>
               <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                Services
+                Услуги
               </Link>
               <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                Portfolio
+                Портфолио
               </Link>
               <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                Contact
+                Контакты
               </Link>
             </div>
           </SheetContent>

@@ -36,22 +36,22 @@ const Hero: React.FC = () => {
     >
       <div className="relative flex flex-col items-center text-center px-6 z-10">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
-          Best Electronics Service System
+          Система сервиса Best Electronics
         </h1>
         <p className="mb-8 max-w-xl">
-          We provide professional electronics repairs and upgrades. Use the request
-          button below to submit a service form.
+          Мы предлагаем профессиональный ремонт и модернизацию электроники.
+          Используйте кнопку ниже, чтобы отправить заявку.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           {!isLoggedIn && (
             <Button size="lg" asChild className="w-fit">
-              <Link href="/request">Request Repair</Link>
+              <Link href="/request">Заказать ремонт</Link>
             </Button>
           )}
           {isLoggedIn && (
             <>
               <Button size="lg" className="w-fit" onClick={handleGoToDashboard}>
-                Go to Dashboard
+                Перейти в панель
               </Button>
               <Button
                 size="lg"
@@ -59,7 +59,7 @@ const Hero: React.FC = () => {
                 className="w-fit"
                 onClick={handleLogout}
               >
-                Logout
+                Выйти
               </Button>
             </>
           )}
