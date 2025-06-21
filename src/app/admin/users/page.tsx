@@ -8,7 +8,6 @@ import DashboardTitle from "@/components/dashboard/DashboardTitle";
 import getUsersAction from "@/actions/dashboard/getUsersAction"
 import { SearchParams } from "@/types"
 import deleteUserAction from "@/actions/dashboard/deleteUserAction";
-import { AddUserDialog } from "@/components/dashboard/dialogs/AddUserDialog";
 
 const UsersPage = async ({
   searchParams,
@@ -28,7 +27,6 @@ const UsersPage = async ({
           <DashboardTitle>Users</DashboardTitle>
           <div className="flex gap-6">
             <SelectShowing />
-            <AddUserDialog />
           </div>
         </DashboardHeader>
         <DashboardContent className="bg-background shadow p-6 rounded-lg">
