@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactElement, memo } from "react";
-import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -38,7 +38,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   id,
   placeholder,
   label,
-  errors,
+  errors: _errors,
   type = "text",
   onChange,
   imageSrc,
@@ -46,6 +46,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   rows = 4, // Default textarea size
   isTextarea = false,
 }: InputFormFieldProps<TFieldValues>): ReactElement => {
+  void _errors;
 
   // Render Textarea if the field is of type "description" or if specified
   const renderTextarea = (
@@ -121,9 +122,6 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
           <FormControl>
             {isTextarea ? renderTextarea(field) : renderInput(field)}
           </FormControl>
-          <FormMessage className="empty:hidden mt-0">
-            {errors?.[name]?.message}
-          </FormMessage>
         </FormItem>
       );
     }} />
