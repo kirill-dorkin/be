@@ -24,6 +24,10 @@ Built with **Next.js, TypeScript, Tailwind CSS, and MongoDB**, the system provid
 ## Authentication
 Regular visitors do not need to register. When they open the site, they automatically have the `user` role and can submit repair requests. The `/login` page is reserved for employees and administrators.
 
+## Requesting a Repair
+Visit the home page and click **Request Repair** to open the request page. You can fill out the online form or contact us by phone to schedule service.
+
+
 ## How to Use This Laptop Service Management System
 
 ### Prerequisites

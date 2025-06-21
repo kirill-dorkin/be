@@ -2,6 +2,7 @@
 import { signOut } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -37,11 +38,16 @@ const Hero: React.FC = () => {
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
           Laptop Service Management System
         </h1>
-        <p className="mb-8">
-          Streamline your laptop service workflow. Assign tasks, manage repairs
-          and upgrades, and optimize team efficiency – all in one platform!
+        <p className="mb-8 max-w-xl">
+          We provide professional laptop repairs and upgrades. Use the request
+          button below to submit a service form.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
+          {!isLoggedIn && (
+            <Button size="lg" asChild className="w-fit">
+              <Link href="/request">Request Repair</Link>
+            </Button>
+          )}
           {isLoggedIn && (
             <>
               <Button size="lg" className="w-fit" onClick={handleGoToDashboard}>
