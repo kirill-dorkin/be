@@ -21,7 +21,7 @@ interface InputFormFieldProps<TFieldValues extends FieldValues = FieldValues> {
   id: string;
   placeholder?: string;
   label: string;
-  errors: FieldErrors<TFieldValues>;
+  errors?: FieldErrors<TFieldValues>;
   type?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   imageSrc?: string;
@@ -118,7 +118,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
             {field.name === "description1" ? renderTextarea(field) : renderInput(field)}
           </FormControl>
           <FormMessage className="empty:hidden mt-0">
-            {errors[name]?.message}
+            {errors?.[name]?.message}
           </FormMessage>
         </FormItem>
       );
