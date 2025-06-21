@@ -24,8 +24,6 @@ import getServicesAction from '@/actions/dashboard/getServicesAction'
 import { IDevice } from '@/models/Device'
 import { IService } from '@/models/Service'
 
-const serialNumberValidation = new RegExp(/^[A-Z0-9]{2,}-?[A-Z0-9]{2,}$/i)
-
 const TaskSchema = z.object({
   description: z
     .string()
@@ -39,10 +37,6 @@ const TaskSchema = z.object({
     .string()
     .min(1, { message: 'Телефон клиента обязателен' })
     .refine(isValidPhoneNumber, { message: 'Некорректный номер телефона' }),
-  serialNumber: z
-    .string()
-    .min(1, { message: 'Серийный номер обязателен' })
-    .regex(serialNumberValidation, { message: 'Неверный формат серийного номера' }),
   laptopBrand: z
     .string()
     .min(1, { message: 'Марка ноутбука обязательна' })
@@ -72,7 +66,6 @@ export default function RequestForm() {
       description: '',
       customerName: '',
       customerPhone: '',
-      serialNumber: '',
       laptopBrand: '',
       laptopModel: '',
       totalCost: 0,
@@ -189,13 +182,6 @@ export default function RequestForm() {
           defaultCountry={country}
         />
 
-        <InputFormField
-          control={control}
-          name="serialNumber"
-          id="serialNumber"
-          label="Серийный номер"
-          errors={errors}
-        />
 
         <div className="text-right font-medium">
           {`Примерная стоимость: ${methods.watch('totalCost')} сом`}

@@ -31,7 +31,6 @@ export default async function TaskDetailsPage({ params }: PageProps) {
           <p><span className="font-semibold">Phone:</span> {task.customerPhone}</p>
           <p><span className="font-semibold">Brand:</span> {task.laptopBrand}</p>
           <p><span className="font-semibold">Model:</span> {task.laptopModel}</p>
-          <p><span className="font-semibold">Serial:</span> {task.serialNumber}</p>
           <p><span className="font-semibold">Status:</span> {task.status}</p>
           <p><span className="font-semibold">Cost:</span> ${task.totalCost}</p>
           <p><span className="font-semibold">Created:</span> {new Date(task.createdAt).toLocaleString()}</p>

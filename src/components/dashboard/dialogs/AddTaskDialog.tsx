@@ -22,8 +22,6 @@ import useGeoCountry from "@/hooks/useGeoCountry";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import addTaskAction from "@/actions/dashboard/addTaskAction";
 
-const serialNumberValidation = new RegExp(/^[A-Z0-9]{2,}-?[A-Z0-9]{2,}$/i);
-
 const TaskSchema = z.object({
   description: z
     .string()
@@ -37,10 +35,6 @@ const TaskSchema = z.object({
     .string()
     .min(1, { message: "Customer phone is required" })
     .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
-  serialNumber: z
-    .string()
-    .min(1, { message: "Serial number is required" })
-    .regex(serialNumberValidation, { message: "Invalid serial number format" }),
   laptopBrand: z
     .string()
     .min(1, { message: "Laptop brand is required" })
@@ -68,7 +62,6 @@ export function AddTaskDialog() {
       description: '',
       customerName: '',
       customerPhone: '',
-      serialNumber: '',
       laptopBrand: '',
       laptopModel: '',
       totalCost: 0,
@@ -105,7 +98,6 @@ export function AddTaskDialog() {
     { name: "description", label: "Description", type: "text" },
     { name: "customerName", label: "Customer Name", type: "text" },
     { name: "customerPhone", label: "Customer Phone", type: "text" },
-    { name: "serialNumber", label: "Serial Number", type: "text" },
     { name: "laptopBrand", label: "Laptop Brand", type: "text" },
     { name: "laptopModel", label: "Laptop Model", type: "text" },
     { name: "totalCost", label: "Total Cost", type: "number" },

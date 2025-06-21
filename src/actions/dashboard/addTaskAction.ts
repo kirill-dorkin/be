@@ -16,7 +16,6 @@ export default async function addTaskAction({
   totalCost,
   customerName,
   customerPhone,
-  serialNumber,
   laptopBrand,
   laptopModel,
 }: AddTaskActionParams): Promise<ApiResponse> {
@@ -28,7 +27,7 @@ export default async function addTaskAction({
       return { status: 'error', message: 'No workers available to assign the task to.' };
     }
 
-    const newTask = await createTask({ description, totalCost, customerName, customerPhone, serialNumber, laptopBrand, laptopModel }, worker);
+    const newTask = await createTask({ description, totalCost, customerName, customerPhone, laptopBrand, laptopModel }, worker);
 
     await assignTaskToWorker(worker, newTask._id as mongoose.Types.ObjectId);
 

@@ -8,7 +8,6 @@ export interface ITask {
   customerName: string;
   customerPhone: string;
   status: Status;
-  serialNumber: string;
   laptopBrand: string;
   laptopModel: string;
   totalCost: number;
@@ -21,7 +20,6 @@ const TaskSchema: Schema<ITask> = new Schema({
   customerName: { type: String, required: true },
   customerPhone: { type: String, required: true },
   status: { type: String, enum: ['Pending', 'In Progress', 'Completed'], default: 'Pending' },
-  serialNumber: { type: String, required: true },
   laptopBrand: { type: String, required: true },
   laptopModel: { type: String, required: true },
   totalCost: { type: Number, required: true, default: 0 },
