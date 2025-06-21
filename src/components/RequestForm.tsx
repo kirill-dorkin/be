@@ -167,7 +167,7 @@ export default function RequestForm() {
             <SelectContent>
               {services.map((s) => (
                 <SelectItem key={s._id?.toString()} value={s._id?.toString()}>
-                  {s.name} - ${s.cost}
+                  {s.name} - {s.cost} сом
                 </SelectItem>
               ))}
             </SelectContent>
@@ -198,7 +198,7 @@ export default function RequestForm() {
         />
 
         <div className="text-right font-medium">
-          Примерная стоимость: ${methods.watch('totalCost')}
+          {`Примерная стоимость: ${methods.watch('totalCost')} сом`}
         </div>
 
         <Button type="submit" disabled={loading} className="w-full">

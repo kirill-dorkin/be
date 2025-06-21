@@ -43,7 +43,7 @@ export default function ServiceTable({
           <TableRow key={_id?.toString() as string}>
             <TableCell>{typeof category === 'string' ? category : (category as any)?.name}</TableCell>
             <TableCell>{name}</TableCell>
-            <TableCell>${cost}</TableCell>
+            <TableCell>{cost} сом</TableCell>
             <TableCell>{duration}</TableCell>
             <TableCell className="text-right">
               <DeleteButton action={deleteAction} id={_id as string} />
