@@ -31,7 +31,12 @@ export function AddDeviceDialog() {
     mode: "onChange",
   });
 
-  const { handleSubmit, control, reset } = methods;
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = methods;
 
   const handleSubmitAction = async (data: { name: string }) => {
     setLoading(true);
@@ -65,7 +70,13 @@ export function AddDeviceDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
-            <InputFormField name="name" label="Name" type="text" control={control} />
+            <InputFormField
+              name="name"
+              label="Name"
+              type="text"
+              control={control}
+              errors={errors}
+            />
           </FormProvider>
           <DialogFooter className="pt-2">
             <Button type="submit" disabled={loading}>Save</Button>

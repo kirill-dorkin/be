@@ -48,7 +48,12 @@ export function AddServiceDialog() {
     mode: "onChange",
   });
 
-  const { handleSubmit, control, reset } = methods;
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = methods;
 
   const handleSubmitAction = async (data: { device: string; name: string; cost: number }) => {
     setLoading(true);
@@ -82,8 +87,20 @@ export function AddServiceDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
-            <InputFormField name="name" label="Name" type="text" control={control} />
-            <InputFormField name="cost" label="Cost" type="number" control={control} />
+            <InputFormField
+              name="name"
+              label="Name"
+              type="text"
+              control={control}
+              errors={errors}
+            />
+            <InputFormField
+              name="cost"
+              label="Cost"
+              type="number"
+              control={control}
+              errors={errors}
+            />
             <div className="flex flex-col gap-2">
               <label className="text-sm" htmlFor="device">Device</label>
               <select id="device" {...methods.register("device")}
