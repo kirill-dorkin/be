@@ -44,10 +44,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <AppProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AppProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
             <div className="absolute top-4 right-4">
               <LanguageSwitcher />
@@ -57,8 +57,8 @@ export default async function RootLayout({
               <Toaster />
             </Providers>
           </NextIntlClientProvider>
-        </body>
-      </AppProvider>
+        </AppProvider>
+      </body>
     </html>
   );
 }
