@@ -65,5 +65,9 @@ export default async function RootLayout({
 }
 
 export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'ru' }]
+  return [
+    { locale: 'ru' },
+    { locale: 'ky' },
+    { locale: 'en' },
+  ]
 }
