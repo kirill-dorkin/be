@@ -21,8 +21,6 @@
 
 Built with **Next.js, TypeScript, Tailwind CSS, and MongoDB**, the system provides a fast, scalable, and user-friendly solution for laptop repair management.
 
-The interface supports **Russian**, **Kyrgyz**, and **English**. Russian is the default language, and you can switch languages using the links in the top-right corner of the page.
-
 ## Authentication
 Regular visitors do not need to register. When they open the site, they automatically have the `user` role and can submit repair requests. The `/login` page is reserved for employees and administrators.
 

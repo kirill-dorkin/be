@@ -4,21 +4,19 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useTranslations } from 'next-intl'
 
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const t = useTranslations('Login')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     const res = await signIn('credentials', { redirect: false, email, password })
     if (res?.error) {
-      setError(t('error'))
+      setError('Invalid credentials')
     } else {
       router.push('/')
     }
@@ -27,10 +25,10 @@ export default function LoginPage() {
   return (
     <div className='flex items-center justify-center min-h-screen'>
       <form onSubmit={handleSubmit} className='space-y-4 w-80'>
-        <Input placeholder={t('email')} value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Input type='password' placeholder={t('password')} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type='password' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
         {error && <p className='text-red-500 text-sm'>{error}</p>}
-        <Button type='submit' className='w-full'>{t('button')}</Button>
+        <Button type='submit' className='w-full'>Login</Button>
       </form>
     </div>
   )

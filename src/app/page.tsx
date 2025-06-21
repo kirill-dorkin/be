@@ -1,6 +1,9 @@
-import { redirect } from 'next/navigation'
-import { defaultLocale } from '../../i18n'
+import Hero from "@/components/home/Hero";
 
-export default function Index() {
-  redirect(`/${defaultLocale}`)
+export default function Home() {
+  return (
+    <>
+      <Hero />
+    </>
+  );
 }

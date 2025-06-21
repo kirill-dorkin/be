@@ -1,14 +1,8 @@
 import { NextConfig } from "next";
-import { locales, defaultLocale } from "./i18n";
 
 const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
-  },
-  i18n: {
-    locales,
-    defaultLocale,
-    localeDetection: false,
   },
   images: {
     remotePatterns: [
