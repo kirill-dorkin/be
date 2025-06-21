@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { ITask } from "@/models/Task";
 import DeleteButton from "@/components/dashboard/buttons/DeleteButton";
+import ViewButton from "@/components/dashboard/buttons/ViewButton";
 import {
   Table,
   TableBody,
@@ -87,7 +88,7 @@ export default function TaskTable({
                 ${totalCost}
               </TableCell>
               {(role === "admin" || role === "worker") && !hideActions && (
-                <TableCell className="text-right">
+                <TableCell className="flex gap-2 justify-end">
                   {role === "admin" ? (
                     <DeleteButton
                       // @ts-ignore
@@ -97,6 +98,7 @@ export default function TaskTable({
                   ) : role === "worker" ? (
                     <UpdateStatusSelect taskId={_id as unknown as string} />
                   ) : null}
+                  <ViewButton href={`/admin/tasks/${_id?.toString()}`}/>
                 </TableCell>
               )}
             </TableRow>
