@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import '@/models/Category';
 
 export interface IService extends Document {
   category: mongoose.Types.ObjectId;
