@@ -4,8 +4,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const languages = [
-  { code: "en", label: "EN" },
   { code: "ru", label: "RU" },
+  { code: "ky", label: "KG" },
+  { code: "en", label: "EN" },
 ];
 
 export default function LanguageSwitcher() {
