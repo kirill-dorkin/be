@@ -26,6 +26,16 @@ const adminLinks = [
     label: "Users",
     icon: <FaUsers />,
   },
+  {
+    href: "/admin/devices",
+    label: "Devices",
+    icon: <FaTasks />,
+  },
+  {
+    href: "/admin/services",
+    label: "Services",
+    icon: <FaTasks />,
+  },
 ];
 
 const workerLinks = [

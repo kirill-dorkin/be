@@ -5,6 +5,7 @@ import AppProvider from "@/providers/AppProvider";
 import "./globals.css";
 import Providers from "./providers"
 import { getSession } from "@/auth"
+import { ensureDefaultAdmin } from "@/lib/initAdmin"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,6 +28,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await ensureDefaultAdmin()
   const session = await getSession()
 
   return (
