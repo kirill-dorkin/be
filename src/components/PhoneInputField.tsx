@@ -2,6 +2,8 @@
 
 import PhoneInput, { type Country } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
+import { Input } from '@/components/ui/input'
+import React from 'react'
 import {
   FormField,
   FormItem,
@@ -24,6 +26,10 @@ const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>({
   label,
   defaultCountry,
 }: PhoneInputFieldProps<TFieldValues>) => {
+  const InputComponent = React.forwardRef<HTMLInputElement, any>((props, ref) => (
+    <Input ref={ref} {...props} className="flex-1 bg-transparent outline-none" />
+  ))
+  InputComponent.displayName = 'PhoneInputCustomInput'
   return (
     <FormField
       control={control}
@@ -36,8 +42,9 @@ const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>({
               {...field}
               defaultCountry={defaultCountry as Country | undefined}
               onChange={field.onChange}
-              className="border rounded px-3 py-2"
-              international
+              className="phone-input"
+              inputComponent={InputComponent}
+              limitMaxLength
             />
           </FormControl>
           <FormMessage />
