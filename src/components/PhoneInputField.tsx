@@ -45,6 +45,9 @@ const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>({
               className="phone-input"
               inputComponent={InputComponent}
               limitMaxLength
+              international
+              withCountryCallingCode
+              countryCallingCodeEditable={false}
             />
           </FormControl>
           <FormMessage />
