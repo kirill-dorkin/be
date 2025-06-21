@@ -28,12 +28,8 @@ export const assignTaskToWorker = async (worker: IUser, taskId: mongoose.Types.O
   await worker.save();
 };
 
-function convertToIndonesianPhoneNumber(phoneNumber: string) {
-  // Check if the phone number starts with '0' and replace it with '62'
-  if (phoneNumber.startsWith("0")) {
-    return "62" + phoneNumber.slice(1);
-  }
-  return phoneNumber;  // If the number already starts with '62', return it as is
+function normalizePhoneNumber(phoneNumber: string) {
+  return phoneNumber.replace(/\D/g, "");
 }
 
 export async function sendInvoiceToWhatsApp(invoiceDetails: {
@@ -88,7 +84,7 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
 
   const encodedMessage = encodeURIComponent(message);
 
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${convertToIndonesianPhoneNumber(customerPhone)}&text=${encodedMessage}&apikey=${apiKey}`;
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${normalizePhoneNumber(customerPhone)}&text=${encodedMessage}&apikey=${apiKey}`;
 
   try {
     const response = await axios.get(url);

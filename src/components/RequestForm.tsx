@@ -5,6 +5,9 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import InputFormField from '@/components/InputFormField'
+import PhoneInputField from '@/components/PhoneInputField'
+import useGeoCountry from '@/hooks/useGeoCountry'
+import { isValidPhoneNumber } from 'react-phone-number-input'
 import { Button } from '@/components/ui/button'
 import addTaskAction from '@/actions/dashboard/addTaskAction'
 import useCustomToast from '@/hooks/useCustomToast'
@@ -14,7 +17,6 @@ import getServicesAction from '@/actions/dashboard/getServicesAction'
 import { IDevice } from '@/models/Device'
 import { IService } from '@/models/Service'
 
-const phoneValidation = new RegExp(/^(?:\+62|62|0)[2-9]\d{7,11}$/)
 const serialNumberValidation = new RegExp(/^[A-Z0-9]{2,}-?[A-Z0-9]{2,}$/i)
 
 const TaskSchema = z.object({
@@ -29,7 +31,7 @@ const TaskSchema = z.object({
   customerPhone: z
     .string()
     .min(1, { message: 'Customer phone is required' })
-    .regex(phoneValidation, { message: 'Invalid phone number' }),
+    .refine(isValidPhoneNumber, { message: 'Invalid phone number' }),
   serialNumber: z
     .string()
     .min(1, { message: 'Serial number is required' })
@@ -55,6 +57,7 @@ export default function RequestForm() {
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const [devices, setDevices] = useState<IDevice[]>([])
   const [services, setServices] = useState<IService[]>([])
+  const country = useGeoCountry()
 
   const methods = useForm<ITask>({
     resolver: zodResolver(TaskSchema),
@@ -164,12 +167,11 @@ export default function RequestForm() {
           errors={errors}
         />
 
-        <InputFormField
+        <PhoneInputField
           control={control}
           name="customerPhone"
-          id="customerPhone"
           label="Customer Phone"
-          errors={errors}
+          defaultCountry={country}
         />
 
         <InputFormField

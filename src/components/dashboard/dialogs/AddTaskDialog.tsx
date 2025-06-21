@@ -17,9 +17,11 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/components/InputFormField";
+import PhoneInputField from "@/components/PhoneInputField";
+import useGeoCountry from "@/hooks/useGeoCountry";
+import { isValidPhoneNumber } from "react-phone-number-input";
 import addTaskAction from "@/actions/dashboard/addTaskAction";
 
-const phoneValidation = new RegExp(/^(?:\+62|62|0)[2-9]\d{7,11}$/);
 const serialNumberValidation = new RegExp(/^[A-Z0-9]{2,}-?[A-Z0-9]{2,}$/i);
 
 const TaskSchema = z.object({
@@ -34,7 +36,7 @@ const TaskSchema = z.object({
   customerPhone: z
     .string()
     .min(1, { message: "Customer phone is required" })
-    .regex(phoneValidation, { message: "Invalid Indonesian phone number" }),
+    .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
   serialNumber: z
     .string()
     .min(1, { message: "Serial number is required" })
@@ -58,6 +60,7 @@ const TaskSchema = z.object({
 export function AddTaskDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
+  const country = useGeoCountry();
 
   const methods = useForm<ITask>({
     resolver: zodResolver(TaskSchema),
@@ -117,7 +120,7 @@ export function AddTaskDialog() {
         <DialogHeader>
           <DialogTitle>Add New Task</DialogTitle>
           <DialogDescription>
-            Fill in the details for the new task. Click save when you're done.
+            Fill in the details for the new task. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
 
@@ -127,15 +130,25 @@ export function AddTaskDialog() {
             className="space-y-4"
           >
             {taskFields.map((field) => (
-              <InputFormField
-                key={field.name}
-                control={control}
-                name={field.name as keyof ITask}
-                id={field.name}
-                label={field.label}
-                errors={errors}
-                type={field.type}
-              />
+              field.name === "customerPhone" ? (
+                <PhoneInputField
+                  key={field.name}
+                  control={control}
+                  name={field.name as keyof ITask}
+                  label={field.label}
+                  defaultCountry={country}
+                />
+              ) : (
+                <InputFormField
+                  key={field.name}
+                  control={control}
+                  name={field.name as keyof ITask}
+                  id={field.name}
+                  label={field.label}
+                  errors={errors}
+                  type={field.type}
+                />
+              )
             ))}
 
             <DialogFooter>
