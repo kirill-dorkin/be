@@ -32,7 +32,8 @@ const TaskSchema = z.object({
   customerName: z
     .string()
     .min(1, { message: 'Имя клиента обязательно' })
-    .max(100, { message: 'Имя клиента не должно превышать 100 символов' }),
+    .max(100, { message: 'Имя клиента не должно превышать 100 символов' })
+    .regex(/^[^0-9]*$/, { message: 'Имя клиента не должно содержать цифры' }),
   customerPhone: z
     .string()
     .min(1, { message: 'Телефон клиента обязателен' })
@@ -173,6 +174,9 @@ export default function RequestForm() {
           id="customerName"
           label="Имя клиента"
           errors={errors}
+          onChange={(e) => {
+            e.target.value = e.target.value.replace(/\d+/g, '')
+          }}
         />
 
         <PhoneInputField

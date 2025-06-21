@@ -59,6 +59,12 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
       className="resize-none"
       rows={rows}
       {...field}
+      onChange={(event) => {
+        if (onChange) {
+          onChange(event)
+        }
+        field.onChange(event)
+      }}
     />
   );
 
@@ -66,7 +72,19 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   const renderInput = (
     field: ControllerRenderProps<TFieldValues, Path<TFieldValues>>,
   ) => (
-    <Input key={id + name} id={id} placeholder={placeholder} type={type} {...field} />
+    <Input
+      key={id + name}
+      id={id}
+      placeholder={placeholder}
+      type={type}
+      {...field}
+      onChange={(event) => {
+        if (onChange) {
+          onChange(event)
+        }
+        field.onChange(event)
+      }}
+    />
   );
 
   // Render the image input for profile image field
@@ -95,10 +113,10 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
           className="opacity-0 size-0 absolute"
           accept="image/*"
             onChange={(event) => {
-              field.onChange(event?.target?.files ? event.target.files[0] : null);
               if (onChange) {
                 onChange(event);
               }
+              field.onChange(event?.target?.files ? event.target.files[0] : null);
             }}
           onBlur={field.onBlur}
           name={field.name}
