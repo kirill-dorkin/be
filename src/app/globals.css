@@ -277,7 +277,7 @@
     @apply justify-self-end place-self-start h-min;
   }
 
-  @media (width > 1024px) {
+@media (width > 1024px) {
     .cart-item {
       grid:
         "image detail qty-btn price" auto
@@ -304,5 +304,14 @@
     .cart-item .close-btn {
       @apply place-self-end justify-self-end;
     }
+  }
+}
+
+@layer components {
+  .phone-input {
+    @apply flex h-10 w-full items-center rounded-md border border-input bg-background px-3 py-2 ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2;
+  }
+  .phone-input .PhoneInputInput {
+    @apply flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
   }
 }
