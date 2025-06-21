@@ -18,6 +18,7 @@ import InputFormField from "@/components/InputFormField";
 import addServiceAction from "@/actions/dashboard/addServiceAction";
 import getDevicesAction from "@/actions/dashboard/getDevicesAction";
 import { useEffect, useState as useReactState } from "react";
+import { IDevice } from "@/models/Device";
 
 const ServiceSchema = z.object({
   device: z.string().min(1),
@@ -31,7 +32,7 @@ const ServiceSchema = z.object({
 export function AddServiceDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
-  const [devices, setDevices] = useReactState<any[]>([]);
+  const [devices, setDevices] = useReactState<IDevice[]>([]);
 
   useEffect(() => {
     getDevicesAction(1, 100).then((res) => {
@@ -39,7 +40,7 @@ export function AddServiceDialog() {
         setDevices(res.items);
       }
     });
-  }, []);
+  }, [setDevices]);
 
   const methods = useForm<{ device: string; name: string; cost: number }>({
     resolver: zodResolver(ServiceSchema),
@@ -59,8 +60,11 @@ export function AddServiceDialog() {
         showSuccessToast({ title: "Success", description: response.message });
         reset();
       }
-    } catch (err) {
-      showErrorToast({ title: "Error", description: "Failed to add service" });
+    } catch (error) {
+      showErrorToast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to add service",
+      });
     } finally {
       setLoading(false);
     }

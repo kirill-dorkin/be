@@ -6,7 +6,7 @@ export interface IService extends Document {
   cost: number;
 }
 
-const ServiceSchema: Schema<IService> = new Schema(
+const ServiceSchema: Schema = new Schema(
   {
     device: { type: mongoose.Types.ObjectId, ref: 'Device', required: true },
     name: { type: String, required: true },

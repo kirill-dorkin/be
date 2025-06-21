@@ -22,7 +22,7 @@ export default function ServiceTable({
   totalItemsLength: number;
   page: string | string[];
   per_page: string | string[];
-  deleteAction: (id: string) => void;
+  deleteAction: (id: string) => Promise<{ message: string; status: string }>;
 }) {
   const start = (Number(page) - 1) * Number(per_page);
   const totalPages = Math.ceil(totalItemsLength / Number(per_page));

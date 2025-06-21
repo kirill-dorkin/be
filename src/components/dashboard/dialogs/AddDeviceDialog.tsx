@@ -43,8 +43,11 @@ export function AddDeviceDialog() {
         showSuccessToast({ title: "Success", description: response.message });
         reset();
       }
-    } catch (err) {
-      showErrorToast({ title: "Error", description: "Failed to add device" });
+    } catch (error) {
+      showErrorToast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to add device",
+      });
     } finally {
       setLoading(false);
     }
