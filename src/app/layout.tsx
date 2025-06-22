@@ -6,6 +6,8 @@ import "./globals.css";
 import Providers from "./providers"
 import { getSession } from "@/auth"
 import { ensureDefaultAdmin } from "@/lib/initAdmin"
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,7 +40,9 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Providers session={session}>
+            <Header />
             <div className="w-svw">{children}</div>
+            <Footer />
             <Toaster />
           </Providers>
         </body>
