@@ -86,7 +86,7 @@ export default function TaskTable({
                 }[status as "Pending" | "In Progress" | "Completed"] ?? status}
               </TableCell>
               <TableCell className={role === "admin" && !hideActions ? "" : "text-right"}>
-                ${totalCost}
+                {totalCost} сом
               </TableCell>
               {(role === "admin" || role === "worker") && !hideActions && (
                 <TableCell className="flex gap-2 justify-end">

@@ -32,7 +32,7 @@ export default async function TaskDetailsPage({ params }: PageProps) {
           <p><span className="font-semibold">Бренд:</span> {task.laptopBrand}</p>
           <p><span className="font-semibold">Модель:</span> {task.laptopModel}</p>
           <p><span className="font-semibold">Статус:</span> {task.status}</p>
-          <p><span className="font-semibold">Стоимость:</span> ${task.totalCost}</p>
+          <p><span className="font-semibold">Стоимость:</span> {task.totalCost} сом</p>
           <p><span className="font-semibold">Создано:</span> {new Date(task.createdAt).toLocaleString()}</p>
         </div>
       </DashboardContent>
