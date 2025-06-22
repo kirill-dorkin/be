@@ -49,11 +49,8 @@ const TaskSchema = z.object({
     .min(1, { message: 'Модель ноутбука обязательна' })
     .max(100, { message: 'Модель ноутбука не должна превышать 100 символов' }),
   totalCost: z
-    .string()
-    .transform((value) => parseFloat(value))
-    .refine((value) => !isNaN(value) && value >= 0, {
-      message: 'Стоимость должна быть положительным числом',
-    }),
+    .number()
+    .min(0, { message: 'Стоимость должна быть положительным числом' }),
 })
 
 export default function RequestForm() {
