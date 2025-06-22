@@ -1,10 +1,11 @@
-import User from '../models/User';
+import Task from '../models/Task';
+import { Socket } from 'socket.io';
 
-export const handleTaskEvents = (socket: any) => {
+export const handleTaskEvents = (socket: Socket) => {
   socket.on('getAllTasks', async () => {
     try {
-      const users = await User.find();
-      socket.emit('tasksList', users);
+      const tasks = await Task.find();
+      socket.emit('tasksList', tasks);
     } catch (error) {
       console.error('Error fetching tasks:', error);
       socket.emit('error', 'Failed to fetch tasks');
