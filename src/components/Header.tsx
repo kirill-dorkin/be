@@ -16,19 +16,16 @@ export default function Header() {
         <span className="text-2xl font-semibold">Best Electronics</span>
       </Link>
       <div className="hidden md:flex gap-4">
-        <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+        <Link href="#hero" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
           Главная
         </Link>
-        <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+        <Link href="#about" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
           О нас
         </Link>
-        <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          Услуги
+        <Link href="#reviews" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+          Отзывы
         </Link>
-        <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-          Портфолио
-        </Link>
-        <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+        <Link href="#contacts" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
           Контакты
         </Link>
       </div>
@@ -46,19 +43,16 @@ export default function Header() {
               <SheetTitle>Меню</SheetTitle>
             </VisuallyHidden.Root>
             <div className="grid w-[200px] p-4">
-              <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+              <Link href="#hero" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
                 Главная
               </Link>
-              <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+              <Link href="#about" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
                 О нас
               </Link>
-              <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                Услуги
+              <Link href="#reviews" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+                Отзывы
               </Link>
-              <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
-                Портфолио
-              </Link>
-              <Link href="#" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
+              <Link href="#contacts" className="text-lg font-medium hover:underline underline-offset-4" prefetch={false}>
                 Контакты
               </Link>
             </div>

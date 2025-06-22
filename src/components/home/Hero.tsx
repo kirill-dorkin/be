@@ -32,6 +32,7 @@ const Hero: React.FC = () => {
 
   return (
     <section
+      id="hero"
       className="relative bg-background h-screen flex items-center justify-center text-foreground bg-cover bg-center"
     >
       <div className="relative flex flex-col items-center text-center px-6 z-10">
