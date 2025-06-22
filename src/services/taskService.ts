@@ -71,7 +71,7 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
     *Service Description:* ${description}
     *Status:* ${status}
 
-    *Total Cost:* $${totalCost.toFixed(2)}
+    *Total Cost:* ${totalCost.toFixed(2)} сом
 
     Thank you for using our service!
 
