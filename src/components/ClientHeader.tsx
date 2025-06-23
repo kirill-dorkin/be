@@ -1,9 +1,5 @@
 "use client";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import Link from "next/link";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { AiOutlineClose } from "react-icons/ai";
-import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import BaseContainer from "@/components/BaseContainer";
 import AvatarMenu from "./AvatarMenu";
 import { useSession } from "next-auth/react";
@@ -38,40 +34,46 @@ export default function ClientHeader() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex items-center gap-4 md:hidden relative z-50">
           {session && <AvatarMenu />}
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <button className="p-2 rounded-md hover:bg-muted">
-                {open ? (
-                  <AiOutlineClose className="text-2xl" />
-                ) : (
-                  <RxHamburgerMenu className="text-2xl" />
-                )}
-                <span className="sr-only">Открыть меню</span>
-              </button>
-            </SheetTrigger>
-            <SheetContent side="top" className="w-full">
-              <VisuallyHidden.Root>
-                <SheetTitle>Меню</SheetTitle>
-              </VisuallyHidden.Root>
-              <div className="grid w-full p-4 gap-2" data-state={open ? "open" : "closed"}>
-                {links.map((link, index) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    prefetch={false}
-                    className="text-sm font-medium hover:underline underline-offset-4 opacity-0 animate-menu-slide-down"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+          <button
+            onClick={() => setOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+            className="relative w-8 h-6 focus:outline-none"
+          >
+            <span
+              className={`absolute left-0 h-0.5 w-full bg-current transition-all duration-300 ${
+                open ? "top-1/2 -translate-y-1/2 rotate-45" : "top-0"
+              }`}
+            />
+            <span
+              className={`absolute left-0 h-0.5 w-full bg-current transition-all duration-300 ${
+                open ? "opacity-0" : "top-1/2 -translate-y-1/2"
+              }`}
+            />
+            <span
+              className={`absolute left-0 h-0.5 w-full bg-current transition-all duration-300 ${
+                open ? "top-1/2 -translate-y-1/2 -rotate-45" : "bottom-0"
+              }`}
+            />
+          </button>
         </div>
       </BaseContainer>
+      <div
+        className={`fixed inset-0 z-40 bg-background flex flex-col items-center justify-center gap-6 text-xl transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}
+      >
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            prefetch={false}
+            onClick={() => setOpen(false)}
+            className="hover:underline"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
     </header>
   );
 }
