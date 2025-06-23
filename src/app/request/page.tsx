@@ -11,7 +11,7 @@ export default function RequestPage() {
       <p className="mb-6 max-w-xl">
         Заполните форму ниже или свяжитесь с нами по телефону <span className="font-medium">+996 501‑31‑31‑14</span>
         &nbsp;или <span className="font-medium">+996 557‑31‑31‑14</span>. Вы также можете написать нам в WhatsApp или посетить сервисный центр по адресу
-        <Link href="https://go.2gis.com/" className="underline" target="_blank">Кулатова 8/1, Bishkek</Link>.
+        Кулатова 8/1, Bishkek.
       </p>
       <RequestForm />
       <Button asChild size="lg" className="w-fit">
