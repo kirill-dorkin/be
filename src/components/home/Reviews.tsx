@@ -1,23 +1,44 @@
 import BaseContainer from "@/components/BaseContainer";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const data = [
   { id: 1, author: "Айзат", text: "Отличный сервис и быстрый ремонт." },
   { id: 2, author: "Бек", text: "Помогли вернуть ноутбук к жизни." },
+  {
+    id: 3,
+    author: "Мария",
+    text: "Качественно объяснили причину поломки и быстро исправили.",
+  },
 ];
 
 export default function Reviews() {
   return (
     <section id="reviews" className="py-20 bg-muted/50">
-      <BaseContainer>
+      <BaseContainer className="max-w-2xl">
         <h2 className="text-3xl font-bold text-center mb-6">Отзывы клиентов</h2>
-        <ul className="space-y-4">
-          {data.map((r) => (
-            <li key={r.id} className="p-4 bg-background rounded">
-              <p className="italic">"{r.text}"</p>
-              <p className="text-right font-semibold">— {r.author}</p>
-            </li>
-          ))}
-        </ul>
+        <Carousel className="relative">
+          <CarouselContent>
+            {data.map((r) => (
+              <CarouselItem
+                key={r.id}
+                className="basis-full flex justify-center"
+              >
+                <div className="p-6 bg-background rounded shadow max-w-md w-full">
+                  <p className="italic mb-2">&ldquo;{r.text}&rdquo;</p>
+                  <p className="text-right font-semibold">— {r.author}</p>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </BaseContainer>
     </section>
   );
