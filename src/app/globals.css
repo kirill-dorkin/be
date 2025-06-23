@@ -72,10 +72,6 @@
     @apply bg-background overflow-x-hidden text-foreground;
   }
 
-  html {
-    @apply scroll-smooth;
-  }
-
   /* Headings */
   h1 {
     @apply scroll-m-20 font-extrabold tracking-tight;
