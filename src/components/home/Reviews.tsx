@@ -1,45 +1,96 @@
+"use client";
 import BaseContainer from "@/components/BaseContainer";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import Image from "next/image";
 
-const data = [
-  { id: 1, author: "Айзат", text: "Отличный сервис и быстрый ремонт." },
-  { id: 2, author: "Бек", text: "Помогли вернуть ноутбук к жизни." },
+interface Review {
+  id: number;
+  name: string;
+  nick: string;
+  avatar: string;
+  text: string;
+}
+
+const reviews: Review[] = [
+  {
+    id: 1,
+    name: "Айзат",
+    nick: "@aizat",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    text: "Отличный сервис и быстрый ремонт.",
+  },
+  {
+    id: 2,
+    name: "Бек",
+    nick: "@bek",
+    avatar: "https://i.pravatar.cc/150?img=5",
+    text: "Помогли вернуть ноутбук к жизни.",
+  },
   {
     id: 3,
-    author: "Мария",
+    name: "Мария",
+    nick: "@maria",
+    avatar: "https://i.pravatar.cc/150?img=7",
     text: "Качественно объяснили причину поломки и быстро исправили.",
+  },
+  {
+    id: 4,
+    name: "Тимур",
+    nick: "@timur",
+    avatar: "https://i.pravatar.cc/150?img=8",
+    text: "Спасибо за профессиональный подход к ремонту!",
+  },
+  {
+    id: 5,
+    name: "Айдана",
+    nick: "@aidana",
+    avatar: "https://i.pravatar.cc/150?img=9",
+    text: "Дали полезные советы по уходу за техникой.",
   },
 ];
 
+function ReviewCard({ review }: { review: Review }) {
+  return (
+    <div className="bg-background rounded-lg shadow p-4 flex w-72 items-start gap-3 transform transition-transform hover:scale-105">
+      <Image
+        src={review.avatar}
+        alt={review.name}
+        width={40}
+        height={40}
+        className="rounded-full flex-shrink-0"
+      />
+      <div className="space-y-1 text-sm whitespace-normal">
+        <div className="font-bold leading-none">{review.name}</div>
+        <div className="text-muted-foreground text-xs">{review.nick}</div>
+        <p className="mt-2 text-sm text-foreground">{review.text}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Reviews() {
+  const doubled = [...reviews, ...reviews];
+
   return (
     <section id="reviews" className="py-20 bg-muted/50">
-      <BaseContainer className="max-w-2xl">
+      <BaseContainer>
         <h2 className="text-3xl font-bold text-center mb-6">Отзывы клиентов</h2>
-        <Carousel className="relative overflow-x-hidden">
-          <CarouselContent>
-            {data.map((r) => (
-              <CarouselItem
-                key={r.id}
-                className="basis-full sm:basis-1/2 lg:basis-1/3 flex justify-center"
-              >
-                <div className="p-6 bg-background rounded shadow max-w-md w-full">
-                  <p className="italic mb-2">&ldquo;{r.text}&rdquo;</p>
-                  <p className="text-right font-semibold">— {r.author}</p>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden sm:flex" />
-          <CarouselNext className="hidden sm:flex" />
-        </Carousel>
+        <div className="relative overflow-hidden rounded-lg group">
+          <div className="absolute inset-0 pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:rounded-l-lg before:[background:radial-gradient(farthest-side_at_left,theme(colors.background),transparent)] after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:rounded-r-lg after:[background:radial-gradient(farthest-side_at_right,theme(colors.background),transparent)]" />
+          <div className="space-y-4 py-4">
+            <div className="flex gap-4 whitespace-nowrap animate-marquee-right group-hover:[animation-play-state:paused] [animation-duration:26s]">
+              {doubled.map((review, idx) => (
+                <ReviewCard review={review} key={`top-${idx}`} />
+              ))}
+            </div>
+            <div className="flex gap-4 whitespace-nowrap animate-marquee-left group-hover:[animation-play-state:paused] [animation-duration:32s]">
+              {doubled.map((review, idx) => (
+                <ReviewCard review={review} key={`bottom-${idx}`} />
+              ))}
+            </div>
+          </div>
+        </div>
       </BaseContainer>
     </section>
   );
 }
+
