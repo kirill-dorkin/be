@@ -2,13 +2,16 @@
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import Link from "next/link";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { AiOutlineClose } from "react-icons/ai";
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import BaseContainer from "@/components/BaseContainer";
 import AvatarMenu from "./AvatarMenu";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 export default function ClientHeader() {
   const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
 
   const links = [
     { href: "#hero", label: "Главная" },
@@ -37,24 +40,29 @@ export default function ClientHeader() {
         </nav>
         <div className="flex items-center gap-4 md:hidden">
           {session && <AvatarMenu />}
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button className="p-2 rounded-md hover:bg-muted">
-                <RxHamburgerMenu className="text-2xl" />
+                {open ? (
+                  <AiOutlineClose className="text-2xl" />
+                ) : (
+                  <RxHamburgerMenu className="text-2xl" />
+                )}
                 <span className="sr-only">Открыть меню</span>
               </button>
             </SheetTrigger>
-            <SheetContent side="left">
+            <SheetContent side="top" className="w-full">
               <VisuallyHidden.Root>
                 <SheetTitle>Меню</SheetTitle>
               </VisuallyHidden.Root>
-              <div className="grid w-[200px] p-4 gap-2">
-                {links.map((link) => (
+              <div className="grid w-full p-4 gap-2" data-state={open ? "open" : "closed"}>
+                {links.map((link, index) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     prefetch={false}
-                    className="text-sm font-medium hover:underline underline-offset-4"
+                    className="text-sm font-medium hover:underline underline-offset-4 opacity-0 animate-menu-slide-down"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     {link.label}
                   </Link>
