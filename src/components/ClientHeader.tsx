@@ -2,6 +2,7 @@
 import Link from "next/link";
 import BaseContainer from "@/components/BaseContainer";
 import AvatarMenu from "./AvatarMenu";
+import ThemeToggle from "./ThemeToggle";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -18,7 +19,7 @@ export default function ClientHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full backdrop-blur bg-white/80 dark:bg-background/80 border-b border-border">
+      <header className="sticky top-0 z-50 w-full backdrop-blur-sm bg-white/80 dark:bg-background/80 border-b border-border shadow-sm">
         <BaseContainer className="flex items-center justify-between py-4">
         <Link href="#" prefetch={false} className="flex items-center gap-2 text-xl font-semibold">
           Best Electronics
@@ -35,8 +36,12 @@ export default function ClientHeader() {
             </Link>
           ))}
         </nav>
+        <div className="hidden md:block">
+          <ThemeToggle />
+        </div>
         <div className="flex items-center gap-4 md:hidden relative z-50">
           {session && <AvatarMenu />}
+          <ThemeToggle />
           <button
             onClick={() => setOpen((prev) => !prev)}
             aria-label="Toggle menu"
@@ -75,6 +80,7 @@ export default function ClientHeader() {
             {link.label}
           </Link>
         ))}
+        <ThemeToggle />
       </div>
     </>
   );

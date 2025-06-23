@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const Hero: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -33,8 +34,17 @@ const Hero: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative bg-background h-screen flex items-center justify-center text-foreground bg-cover bg-center"
+      className="relative h-screen flex items-center justify-center overflow-hidden text-white dark:text-foreground"
     >
+      <Image
+        src="/images/tranquil-haven.jpg"
+        alt="hero background"
+        fill
+        priority
+        className="object-cover object-center -z-20"
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/70 via-purple-600/60 to-indigo-700/50 -z-10" />
       <div className="relative flex flex-col items-center text-center px-6 z-10">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
           Система сервиса Best Electronics
