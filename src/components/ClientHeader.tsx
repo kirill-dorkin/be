@@ -40,7 +40,7 @@ export default function ClientHeader() {
           <button
             onClick={() => setOpen((prev) => !prev)}
             aria-label="Toggle menu"
-            className="relative w-8 h-6 focus:outline-none"
+            className="relative w-6 h-5 focus:outline-none"
           >
             <span
               className={`absolute left-0 h-0.5 w-full bg-current transition-all duration-300 ${
@@ -61,10 +61,9 @@ export default function ClientHeader() {
         </div>
       </BaseContainer>
       </header>
-      <div
-        className={`fixed inset-x-0 z-40 bg-background flex flex-col items-center justify-center gap-6 text-xl transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ top: "4rem", height: "calc(100vh - 4rem)" }}
-      >
+        <div
+          className={`fixed inset-0 z-40 bg-background flex flex-col items-center justify-center gap-6 text-xl transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}
+        >
         {links.map((link) => (
           <Link
             key={link.href}
