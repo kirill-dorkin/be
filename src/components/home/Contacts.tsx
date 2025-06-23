@@ -1,7 +1,6 @@
 "use client";
 
 import BaseContainer from "@/components/BaseContainer";
-import Map from "@/components/home/Map";
 
 
 export default function Contacts() {
@@ -21,9 +20,6 @@ export default function Contacts() {
                 +996 557‑31‑31‑14
               </a>
             </p>
-          </div>
-          <div className="h-72 lg:h-96">
-            <Map />
           </div>
         </div>
       </BaseContainer>
