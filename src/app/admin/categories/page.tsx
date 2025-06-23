@@ -10,7 +10,7 @@ import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
 import deleteCategoryAction from "@/actions/dashboard/deleteCategoryAction";
 
 const CategoriesPage = async ({ searchParams }: SearchParams) => {
-  const { page = 1, perPage = 5 } = await searchParams;
+  const { page = "1", perPage = "5" } = await searchParams;
   const { items, totalItemsLength } = await getCategoriesAction(
     Number(page),
     Number(perPage),
