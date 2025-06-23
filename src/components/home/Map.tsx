@@ -6,9 +6,14 @@ import { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 
 const position: [number, number] = [42.8585, 74.6169];
+const mapId = "home-map";
 
 export default function Map() {
   useEffect(() => {
+    const container = L.DomUtil.get(mapId);
+    if (container) {
+      (container as any)._leaflet_id = null;
+    }
     // Fix default icon paths when using Leaflet with Next.js
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
@@ -24,6 +29,7 @@ export default function Map() {
   return (
     <div className="w-full h-full rounded-lg overflow-hidden shadow-lg">
       <MapContainer
+        id={mapId}
         center={position}
         zoom={18}
         scrollWheelZoom={false}
