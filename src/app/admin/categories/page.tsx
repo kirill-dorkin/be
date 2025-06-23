@@ -5,16 +5,19 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardTitle from "@/components/dashboard/DashboardTitle";
 import CategoryTable from "@/components/dashboard/CategoryTable";
+import type { ICategory } from "@/models/Category";
 import { AddCategoryDialog } from "@/components/dashboard/dialogs/AddCategoryDialog";
 import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
 import deleteCategoryAction from "@/actions/dashboard/deleteCategoryAction";
 
 const CategoriesPage = async ({ searchParams }: SearchParams) => {
   const { page = "1", perPage = "5" } = await searchParams;
-  const { items, totalItemsLength } = await getCategoriesAction(
+  const categoriesResponse = (await getCategoriesAction(
     Number(page),
     Number(perPage),
-  );
+  )) as any;
+  const items: ICategory[] = categoriesResponse.items ?? [];
+  const totalItemsLength: number = categoriesResponse.totalItemsLength ?? 0;
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
@@ -29,7 +32,7 @@ const CategoriesPage = async ({ searchParams }: SearchParams) => {
           page={page}
           per_page={perPage}
           deleteAction={deleteCategoryAction}
-          items={items}
+          items={items as unknown as ICategory[]}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

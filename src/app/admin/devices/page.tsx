@@ -10,11 +10,13 @@ import getDevicesAction from "@/actions/dashboard/getDevicesAction";
 import deleteDeviceAction from "@/actions/dashboard/deleteDeviceAction";
 
 const DevicesPage = async ({ searchParams }: SearchParams) => {
-  const { page = 1, perPage = 5 } = await searchParams;
-  const { items, totalItemsLength } = await getDevicesAction(
+  const { page = "1", perPage = "5" } = await searchParams;
+  const devicesResponse = (await getDevicesAction(
     Number(page),
     Number(perPage),
-  );
+  )) as any;
+  const items = devicesResponse.items ?? [];
+  const totalItemsLength: number = devicesResponse.totalItemsLength ?? 0;
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
@@ -29,7 +31,7 @@ const DevicesPage = async ({ searchParams }: SearchParams) => {
           page={page}
           per_page={perPage}
           deleteAction={deleteDeviceAction}
-          items={items}
+          items={items as any}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

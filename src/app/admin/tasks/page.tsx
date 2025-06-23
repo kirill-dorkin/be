@@ -13,11 +13,13 @@ import deleteTaskAction from "@/actions/dashboard/deleteTaskAction";
 const TasksPage = async ({
   searchParams,
 }: SearchParams) => {
-  const { page = 1, perPage = 5 } = await searchParams;
-  const { items, totalItemsLength } = await getTasksAction(
+  const { page = "1", perPage = "5" } = await searchParams;
+  const tasksResponse = (await getTasksAction(
     Number(page),
     Number(perPage),
-  );
+  )) as any;
+  const items = tasksResponse.items ?? [];
+  const totalItemsLength: number = tasksResponse.totalItemsLength ?? 0;
 
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
@@ -33,7 +35,7 @@ const TasksPage = async ({
           page={page}
           deleteAction={deleteTaskAction}
           per_page={perPage}
-          items={items}
+          items={items as any}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

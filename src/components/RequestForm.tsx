@@ -77,10 +77,10 @@ export default function RequestForm() {
 
   useEffect(() => {
     getDevicesAction(1, 100).then((res) => {
-      if (res.status === 'success') setDevices(res.items)
+      if (res.status === 'success') setDevices(res.items as any)
     })
     getServicesAction(1, 100).then((res) => {
-      if (res.status === 'success') setServices(res.items)
+      if (res.status === 'success') setServices(res.items as any)
     })
   }, [])
 

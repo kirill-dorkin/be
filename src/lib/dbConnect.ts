@@ -1,10 +1,6 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-const DB_URL = process.env.DB_URL as string;
-
-if (!DB_URL) {
-  throw new Error("Please define the DB_URL environment variable inside .env");
-}
+const DB_URL = process.env.DB_URL || "mongodb://localhost:27017/test";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
