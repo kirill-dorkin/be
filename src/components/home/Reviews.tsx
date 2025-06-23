@@ -27,7 +27,7 @@ export default function Reviews() {
             {data.map((r) => (
               <CarouselItem
                 key={r.id}
-                className="basis-full flex justify-center"
+                className="basis-full sm:basis-1/2 lg:basis-1/3 flex justify-center"
               >
                 <div className="p-6 bg-background rounded shadow max-w-md w-full">
                   <p className="italic mb-2">&ldquo;{r.text}&rdquo;</p>
@@ -36,8 +36,8 @@ export default function Reviews() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="hidden sm:flex" />
+          <CarouselNext className="hidden sm:flex" />
         </Carousel>
       </BaseContainer>
     </section>
