@@ -96,6 +96,14 @@ const config = {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(50%)" },
         },
+        "marquee-left-slow": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+        "marquee-right-slow": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,6 +111,8 @@ const config = {
         "menu-slide-down": "menu-slide-down 0.3s ease forwards",
         "marquee-left": "marquee-left 30s linear infinite",
         "marquee-right": "marquee-right 30s linear infinite",
+        "marquee-left-slow": "marquee-left 45s linear infinite",
+        "marquee-right-slow": "marquee-right 60s linear infinite",
       },
     },
   },
