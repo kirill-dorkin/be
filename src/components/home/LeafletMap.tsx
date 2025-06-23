@@ -1,16 +1,44 @@
 'use client';
 
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import { useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 export default function LeafletMap() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const position: [number, number] = [42.85848, 74.61693];
 
   useEffect(() => {
-    L.Icon.Default.mergeOptions({
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Clean up any previous Leaflet instance on this container
+    if ((container as any)._leaflet_id) {
+      try {
+        delete (container as any)._leaflet_id;
+      } catch {
+        (container as any)._leaflet_id = undefined;
+      }
+    }
+
+    if (mapRef.current) {
+      mapRef.current.off();
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
+
+    const map = L.map(container).setView(position, 16);
+
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      }
+    ).addTo(map);
+
+    L.icon({
       iconRetinaUrl:
         'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
       iconUrl:
@@ -18,32 +46,17 @@ export default function LeafletMap() {
       shadowUrl:
         'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
     });
-  }, []);
+    L.marker(position).addTo(map);
 
-  useEffect(() => {
+    mapRef.current = map;
+
     return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-      }
+      map.off();
+      map.remove();
+      mapRef.current = null;
     };
   }, []);
 
-  return (
-    <MapContainer
-      whenCreated={(map) => {
-        mapRef.current = map;
-      }}
-      center={position}
-      zoom={16}
-      scrollWheelZoom={false}
-      style={{ height: '100%', width: '100%' }}
-      className="h-full w-full"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-      />
-      <Marker position={position} />
-    </MapContainer>
-  );
+  return <div ref={containerRef} className="h-full w-full" style={{ height: '100%', width: '100%' }} />;
 }
+
