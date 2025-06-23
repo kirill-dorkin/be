@@ -3,9 +3,10 @@
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function LeafletMap() {
+  const mapRef = useRef<L.Map | null>(null);
   const position: [number, number] = [42.85848, 74.61693];
 
   useEffect(() => {
@@ -19,8 +20,19 @@ export default function LeafletMap() {
     });
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+    };
+  }, []);
+
   return (
     <MapContainer
+      whenCreated={(map) => {
+        mapRef.current = map;
+      }}
       center={position}
       zoom={16}
       scrollWheelZoom={false}
