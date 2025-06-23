@@ -50,7 +50,7 @@ const reviews: Review[] = [
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <div className="bg-background rounded-lg shadow p-4 flex w-64 items-start gap-3 transform transition-transform hover:scale-105">
+    <div className="bg-background rounded-lg shadow p-4 flex w-80 items-start gap-3 transform transition-transform hover:scale-105">
       <Image
         src={review.avatar}
         alt={review.name}
@@ -75,14 +75,14 @@ export default function Reviews() {
       <BaseContainer>
         <h2 className="text-3xl font-bold text-center mb-6">Отзывы клиентов</h2>
         <div className="relative overflow-hidden rounded-lg group">
-          <div className="absolute inset-0 pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-12 before:bg-gradient-to-r before:from-background before:via-background/70 before:to-transparent before:rounded-l-lg after:absolute after:right-0 after:top-0 after:h-full after:w-12 after:bg-gradient-to-l after:from-background after:via-background/70 after:to-transparent after:rounded-r-lg" />
+        <div className="absolute inset-0 pointer-events-none before:absolute before:left-0 before:top-0 before:h-full before:w-16 before:bg-gradient-to-r before:from-background before:via-background/80 before:to-transparent before:rounded-l-lg after:absolute after:right-0 after:top-0 after:h-full after:w-16 after:bg-gradient-to-l after:from-background after:via-background/80 after:to-transparent after:rounded-r-lg" />
           <div className="space-y-4 py-4">
-            <div className="flex gap-4 whitespace-nowrap animate-marquee-right group-hover:[animation-play-state:paused]">
+            <div className="flex gap-4 whitespace-nowrap animate-marquee-right-slow group-hover:[animation-play-state:paused]">
               {doubled.map((review, idx) => (
                 <ReviewCard review={review} key={`top-${idx}`} />
               ))}
             </div>
-            <div className="flex gap-4 whitespace-nowrap animate-marquee-left group-hover:[animation-play-state:paused]">
+            <div className="flex gap-4 whitespace-nowrap animate-marquee-left-slow group-hover:[animation-play-state:paused]">
               {doubled.map((review, idx) => (
                 <ReviewCard review={review} key={`bottom-${idx}`} />
               ))}
