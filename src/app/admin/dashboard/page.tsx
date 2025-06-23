@@ -15,7 +15,7 @@ import getMetricsAction from "@/actions/dashboard/getMetricsAction";
 import getWorkersAction from "@/actions/dashboard/getWorkersAction";
 
 const DashboardPage = async ({ searchParams }: SearchParams) => {
-  const { page = 1, perPage = 5 } = await searchParams;
+  const { page = "1", perPage = "5" } = await searchParams;
 
   const [tasksResponse, metrics, workersResponse] = await Promise.all([
     getTasksAction(Number(page), Number(perPage)),
@@ -23,8 +23,9 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
     getWorkersAction(),
   ]);
 
-  const { items, totalItemsLength } = tasksResponse;
-  const { items: users } = workersResponse;
+  const items = (tasksResponse as any).items ?? [];
+  const totalItemsLength: number = (tasksResponse as any).totalItemsLength ?? 0;
+  const users = (workersResponse as any).items ?? [];
 
   const data = [
     {
@@ -62,7 +63,7 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
           <TaskReport
             page={page}
             per_page={perPage}
-            items={items}
+            items={items as any}
             totalItemsLength={totalItemsLength}
           />
         </section>

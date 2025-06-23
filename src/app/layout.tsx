@@ -30,7 +30,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await ensureDefaultAdmin()
+  if (process.env.DB_URL) {
+    await ensureDefaultAdmin()
+  }
   const session = await getSession()
 
   return (

@@ -13,13 +13,14 @@ import { AddUserDialog } from "@/components/dashboard/dialogs/AddUserDialog";
 const UsersPage = async ({
   searchParams,
 }: SearchParams) => {
-  const { page = 1, perPage = 5 } = await searchParams;
+  const { page = "1", perPage = "5" } = await searchParams;
 
-  // @ts-ignore
-  const { items, totalItemsLength } = await getUsersAction(
+  const usersResponse = (await getUsersAction(
     Number(page),
     Number(perPage),
-  );
+  )) as any;
+  const items: any[] = usersResponse.items ?? [];
+  const totalItemsLength: number = usersResponse.totalItemsLength ?? 0;
 
   return (
     <Suspense>
@@ -33,12 +34,10 @@ const UsersPage = async ({
         </DashboardHeader>
         <DashboardContent className="bg-background shadow p-6 rounded-lg">
           <UserTable
-            // @ts-ignore
             page={page}
             deleteAction={deleteUserAction}
-            // @ts-ignore
             per_page={perPage}
-            items={items}
+            items={items as any}
             totalItemsLength={totalItemsLength}
           />
         </DashboardContent>

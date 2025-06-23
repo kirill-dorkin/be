@@ -10,11 +10,13 @@ import getServicesAction from "@/actions/dashboard/getServicesAction";
 import deleteServiceAction from "@/actions/dashboard/deleteServiceAction";
 
 const ServicesPage = async ({ searchParams }: SearchParams) => {
-  const { page = 1, perPage = 5 } = await searchParams;
-  const { items, totalItemsLength } = await getServicesAction(
+  const { page = "1", perPage = "5" } = await searchParams;
+  const servicesResponse = (await getServicesAction(
     Number(page),
     Number(perPage),
-  );
+  )) as any;
+  const items = servicesResponse.items ?? [];
+  const totalItemsLength: number = servicesResponse.totalItemsLength ?? 0;
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
@@ -29,7 +31,7 @@ const ServicesPage = async ({ searchParams }: SearchParams) => {
           page={page}
           per_page={perPage}
           deleteAction={deleteServiceAction}
-          items={items}
+          items={items as any}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>
