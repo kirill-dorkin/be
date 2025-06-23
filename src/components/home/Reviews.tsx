@@ -22,7 +22,7 @@ export default function Reviews() {
     <section id="reviews" className="py-20 bg-muted/50">
       <BaseContainer className="max-w-2xl">
         <h2 className="text-3xl font-bold text-center mb-6">Отзывы клиентов</h2>
-        <Carousel className="relative">
+        <Carousel className="relative overflow-x-hidden">
           <CarouselContent>
             {data.map((r) => (
               <CarouselItem
