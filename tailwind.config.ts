@@ -88,11 +88,21 @@ const config = {
           from: { transform: "translateY(-10px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
         },
+        "marquee-left": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+        "marquee-right": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "menu-slide-down": "menu-slide-down 0.3s ease forwards",
+        "marquee-left": "marquee-left 30s linear infinite",
+        "marquee-right": "marquee-right 30s linear infinite",
       },
     },
   },
