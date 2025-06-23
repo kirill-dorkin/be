@@ -1,10 +1,12 @@
 "use client";
 import { signOut } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import Section from "@/components/launchui/Section";
+import Glow from "@/components/launchui/Glow";
 
 const Hero: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -31,15 +33,16 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section
+    <Section
       id="hero"
-      className="relative bg-background h-screen flex items-center justify-center text-foreground bg-cover bg-center"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      <div className="relative flex flex-col items-center text-center px-6 z-10">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold">
+      <Glow className="-z-10" variant="center" />
+      <div className="relative flex flex-col items-center text-center px-6 z-10 gap-6">
+        <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl">
           Система сервиса Best Electronics
         </h1>
-        <p className="mb-8 max-w-xl">
+        <p className="mb-8 max-w-xl text-muted-foreground">
           Мы предлагаем профессиональный ремонт и модернизацию электроники.
           Используйте кнопку ниже, чтобы отправить заявку.
         </p>
@@ -66,7 +69,7 @@ const Hero: React.FC = () => {
           )}
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 
