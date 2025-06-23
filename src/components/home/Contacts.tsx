@@ -1,5 +1,10 @@
+"use client";
+
 import BaseContainer from "@/components/BaseContainer";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const Map = dynamic(() => import("@/components/home/LeafletMap"), { ssr: false });
 
 export default function Contacts() {
   return (
@@ -29,13 +34,7 @@ export default function Contacts() {
             </p>
           </div>
           <div className="relative aspect-video rounded-lg overflow-hidden shadow">
-            <iframe
-              title="Карта проезда"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=74.6159%2C42.8575%2C74.6179%2C42.8595&layer=mapnik&marker=42.85848%2C74.61693"
-              className="absolute inset-0 w-full h-full border-0"
-              loading="lazy"
-              allowFullScreen
-            ></iframe>
+            <Map />
           </div>
         </div>
       </BaseContainer>
