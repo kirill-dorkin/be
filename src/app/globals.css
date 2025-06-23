@@ -163,14 +163,6 @@
     @apply shadow-sm shadow-muted-foreground/25;
   }
 
-  .mapWrap {
-    margin-inline: calc(-50svw - -50%);
-    @apply relative h-[300px] min-w-[100svw] lg:h-[400px] xl:h-[500px];
-  }
-
-  .map {
-    @apply h-full w-full absolute;
-  }
 
   .custom-list {
     @apply list-none flex flex-col gap-4 list-inside pl-0;

@@ -26,7 +26,7 @@ Regular visitors do not need to register. When they open the site, they automati
 
 ## Requesting a Repair
 Visit the home page and click **Request Repair** to open the request page. You can fill out the online form or reach us by phone at **+996 501‑31‑31‑14** or **+996 557‑31‑31‑14**.
-Our service center is located at **Кулатова&nbsp;8/1, Bishkek** (find us on [2GIS](https://go.2gis.com/)). You can also message us on Instagram [@best___electronics](https://instagram.com/best___electronics).
+Our service center is located at **Кулатова&nbsp;8/1, Bishkek**. You can also message us on Instagram [@best___electronics](https://instagram.com/best___electronics).
 
 
 ## How to Use the Best Electronics Service System

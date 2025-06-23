@@ -1,10 +1,7 @@
 "use client";
 
 import BaseContainer from "@/components/BaseContainer";
-import Link from "next/link";
-import dynamic from "next/dynamic";
 
-const Map = dynamic(() => import("@/components/home/LeafletMap"), { ssr: false });
 
 export default function Contacts() {
   return (
@@ -23,18 +20,6 @@ export default function Contacts() {
                 +996 557‑31‑31‑14
               </a>
             </p>
-            <p>
-              <Link
-                href="https://go.2gis.com/"
-                className="underline"
-                target="_blank"
-              >
-                Посмотреть на карте
-              </Link>
-            </p>
-          </div>
-          <div className="relative aspect-video rounded-lg overflow-hidden shadow">
-            <Map />
           </div>
         </div>
       </BaseContainer>
