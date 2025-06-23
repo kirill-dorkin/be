@@ -17,8 +17,9 @@ export default function ClientHeader() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur bg-white/80 dark:bg-background/80 border-b border-border">
-      <BaseContainer className="flex items-center justify-between py-4">
+    <>
+      <header className="sticky top-0 z-50 w-full backdrop-blur bg-white/80 dark:bg-background/80 border-b border-border">
+        <BaseContainer className="flex items-center justify-between py-4">
         <Link href="#" prefetch={false} className="flex items-center gap-2 text-xl font-semibold">
           Best Electronics
         </Link>
@@ -59,8 +60,10 @@ export default function ClientHeader() {
           </button>
         </div>
       </BaseContainer>
+      </header>
       <div
-        className={`fixed inset-0 z-40 bg-background flex flex-col items-center justify-center gap-6 text-xl transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-x-0 z-40 bg-background flex flex-col items-center justify-center gap-6 text-xl transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ top: "4rem", height: "calc(100vh - 4rem)" }}
       >
         {links.map((link) => (
           <Link
@@ -74,6 +77,6 @@ export default function ClientHeader() {
           </Link>
         ))}
       </div>
-    </header>
+    </>
   );
 }
