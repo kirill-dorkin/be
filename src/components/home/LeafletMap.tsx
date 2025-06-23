@@ -4,21 +4,25 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+interface LeafletDivElement extends HTMLDivElement {
+  _leaflet_id?: number;
+}
+
 export default function LeafletMap() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<LeafletDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const position: [number, number] = [42.85848, 74.61693];
+  const positionRef = useRef<[number, number]>([42.85848, 74.61693]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     // Clean up any previous Leaflet instance on this container
-    if ((container as any)._leaflet_id) {
+    if (container._leaflet_id) {
       try {
-        delete (container as any)._leaflet_id;
+        delete container._leaflet_id;
       } catch {
-        (container as any)._leaflet_id = undefined;
+        container._leaflet_id = undefined;
       }
     }
 
@@ -28,7 +32,7 @@ export default function LeafletMap() {
       mapRef.current = null;
     }
 
-    const map = L.map(container).setView(position, 16);
+    const map = L.map(container).setView(positionRef.current, 16);
 
     L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
@@ -46,7 +50,7 @@ export default function LeafletMap() {
       shadowUrl:
         'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
     });
-    L.marker(position).addTo(map);
+    L.marker(positionRef.current).addTo(map);
 
     mapRef.current = map;
 
