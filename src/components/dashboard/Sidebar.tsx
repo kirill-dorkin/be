@@ -99,7 +99,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`h-screen py-12 shadow bg-background text-white px-6 fixed left-0 z-10 top-0 transition-transform duration-300 w-[300px] max-w-[300px] ${isExpanded ? "translate-x-0" : "-translate-x-full"}`}
+      className={`h-screen py-12 bg-background text-white px-6 fixed left-0 z-10 top-0 transition-transform duration-300 w-[300px] max-w-[300px] ${isExpanded ? "translate-x-0" : "-translate-x-full"}`}
     >
       <div
         className={`mb-12 text-foreground flex items-center justify-center gap-6 ${!isExpanded && "pt-0"}`}
@@ -126,9 +126,9 @@ const Sidebar = () => {
             <Link
               href={href}
               onClick={handleLinkClick}
-              className={`flex hover:after:hidden items-center px-8 py-4 rounded-lg space-x-4 w-full transition-all duration-500 ease-in-out ${pathname?.includes(href)
-                ? "bg-primary text-primary-foreground"
-                : "bg-transparent text-muted-foreground hover:bg-primary/85 group-hover:text-primary-foreground/85"
+              className={`flex hover:after:hidden items-center px-8 py-4 rounded-lg space-x-4 w-full transition-all duration-500 ease-in-out bg-white ${pathname?.includes(href)
+                ? "text-primary"
+                : "text-muted-foreground hover:bg-gray-100"
                 } ${!isExpanded && "justify-center p-8"}`}
             >
               <span className="text-2xl">{icon}</span>
