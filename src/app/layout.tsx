@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+// import { Montserrat } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import AppProvider from "@/providers/AppProvider";
 import "./globals.css";
@@ -8,11 +8,14 @@ import { getSession } from "@/auth";
 import { ensureDefaultAdmin } from "@/lib/initAdmin";
 import ClientHeader from "@/components/ClientHeader";
 
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-});
+// Using system fonts due to Google Fonts connectivity issues during build
+// const montserrat = Montserrat({
+//   subsets: ['latin'],
+//   variable: '--font-montserrat',
+//   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+//   fallback: ['system-ui', 'arial'],
+//   display: 'swap',
+// });
 
 export const metadata: Metadata = {
   title: "Best Electronics",
@@ -33,7 +36,7 @@ export default async function RootLayout({
     <html lang="en">
       <AppProvider>
         <body
-          className={`${montserrat.variable} font-sans antialiased`}
+          className="font-sans antialiased"
         >
           <Providers session={session}>
             {(!session || session.user.role === "user") && <ClientHeader />}

@@ -88,7 +88,7 @@ OrderSchema.pre('save', async function(this: IOrder, next) {
 
 // Индексы
 OrderSchema.index({ userId: 1 });
-OrderSchema.index({ orderNumber: 1 });
+// orderNumber index is automatically created by unique: true constraint
 OrderSchema.index({ orderStatus: 1 });
 OrderSchema.index({ createdAt: -1 });
 
