@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { connectToDatabase } from '@/lib/dbConnect';
-import { Favorite } from '@/models/Favorite';
-import { authOptions } from '@/lib/auth';
+import Favorite from '@/models/Favorite';
+import { authOptions } from '@/auth';
 
 // DELETE - Очистить все избранные товары пользователя
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
     const session = await getServerSession(authOptions);
     

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { connectToDatabase } from '@/lib/dbConnect';
-import { Favorite } from '@/models/Favorite';
-import { Product } from '@/models/Product';
-import { authOptions } from '@/lib/auth';
+import Favorite from '@/models/Favorite';
+import Product from '@/models/Product';
+import { authOptions } from '@/auth';
 // GET - Получить список избранных товаров пользователя
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     
