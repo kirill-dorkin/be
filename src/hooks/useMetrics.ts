@@ -2,8 +2,16 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+interface Metrics {
+  totalUsers: number;
+  totalDevices: number;
+  totalServices: number;
+  totalOrders: number;
+  [key: string]: number;
+}
+
 const useMetrics = () => {
-  const [metrics, setMetrics] = useState<any>(null);
+  const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

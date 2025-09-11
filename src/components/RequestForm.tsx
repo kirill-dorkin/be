@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import addTaskAction from '@/actions/dashboard/addTaskAction'
 import useCustomToast from '@/hooks/useCustomToast'
-import { ITask } from '@/models/Task'
+
 import getDevicesAction from '@/actions/dashboard/getDevicesAction'
 import getServicesAction from '@/actions/dashboard/getServicesAction'
 import { IDevice } from '@/models/Device'
@@ -53,6 +53,8 @@ const TaskSchema = z.object({
     .min(0, { message: 'Стоимость должна быть положительным числом' }),
 })
 
+type TaskFormData = z.infer<typeof TaskSchema>
+
 export default function RequestForm() {
   const [loading, setLoading] = useState(false)
   const { showSuccessToast, showErrorToast } = useCustomToast()
@@ -60,7 +62,7 @@ export default function RequestForm() {
   const [services, setServices] = useState<IService[]>([])
   const country = useGeoCountry()
 
-  const methods = useForm<ITask>({
+  const methods = useForm<TaskFormData>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
       description: '',
@@ -77,10 +79,10 @@ export default function RequestForm() {
 
   useEffect(() => {
     getDevicesAction(1, 100).then((res) => {
-      if (res.status === 'success') setDevices(res.items as any)
+      if (res.status === 'success') setDevices(res.items as unknown as IDevice[])
     })
     getServicesAction(1, 100).then((res) => {
-      if (res.status === 'success') setServices(res.items as any)
+      if (res.status === 'success') setServices(res.items as unknown as IService[])
     })
   }, [])
 
@@ -88,7 +90,7 @@ export default function RequestForm() {
     const device = devices.find((d) => d._id?.toString() === value)
     if (device) {
       methods.setValue('laptopBrand', device.brand)
-      methods.setValue('laptopModel', device.model || '')
+      methods.setValue('laptopModel', device.deviceModel || '')
     }
   }
 
@@ -99,7 +101,7 @@ export default function RequestForm() {
     }
   }
 
-  const handleSubmitAction = async (data: ITask) => {
+  const handleSubmitAction = async (data: TaskFormData) => {
     setLoading(true)
     try {
       const response = await addTaskAction(data)
@@ -143,8 +145,8 @@ export default function RequestForm() {
             </SelectTrigger>
             <SelectContent>
               {devices.map((d) => (
-                <SelectItem key={d._id?.toString()} value={d._id?.toString()}>
-                  {d.brand} {d.model}
+                <SelectItem key={d._id?.toString()} value={d._id?.toString() || ''}>
+                  {d.brand} {d.deviceModel}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -159,7 +161,7 @@ export default function RequestForm() {
             </SelectTrigger>
             <SelectContent>
               {services.map((s) => (
-                <SelectItem key={s._id?.toString()} value={s._id?.toString()}>
+                <SelectItem key={s._id?.toString()} value={s._id?.toString() || ''}>
                   {s.name} - {s.cost} сом
                 </SelectItem>
               ))}

@@ -35,4 +35,53 @@ interface AddTaskActionParams {
   laptopModel: string;
 }
 
-export type { SearchParams, AddTaskActionParams, Status, UserRole, Device, Service, Category };
+// Типы для интернет-магазина
+interface ProductFilters {
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  inStock?: boolean;
+  search?: string;
+  brand?: string;
+  featured?: boolean;
+}
+
+interface CartItem {
+  _id?: string;
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  category?: string;
+  brand?: string;
+}
+
+interface ShippingAddress {
+  fullName: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+}
+
+type PaymentMethod = 'cash' | 'card' | 'online';
+type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+export type { 
+  SearchParams, 
+  AddTaskActionParams, 
+  Status, 
+  UserRole, 
+  Device, 
+  Service, 
+  Category,
+  ProductFilters,
+  CartItem,
+  ShippingAddress,
+  PaymentMethod,
+  PaymentStatus,
+  OrderStatus
+};

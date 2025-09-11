@@ -1,4 +1,4 @@
-@import "./reset.css";
+@import url("./reset.css");
 
 /* Import Tailwind CSS */
 @tailwind base;
@@ -53,7 +53,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9;
+    --ring: 212.7 26.8% 83.9%;
     --chart-1: 220 70% 50%;
     --chart-5: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -65,35 +65,71 @@
 /* Apply base styles */
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border);
   }
 
   body {
-    @apply bg-background overflow-x-hidden text-foreground;
+    background-color: hsl(var(--background));
+    overflow-x: hidden;
+    color: hsl(var(--foreground));
   }
 
   /* Headings */
   h1 {
-    @apply scroll-m-20 font-extrabold tracking-tight;
-    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+    scroll-margin-top: 5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-size: 1.875rem; /* text-3xl */
+    
+    @media (width >= 640px) {
+      font-size: 2.25rem; /* text-4xl */
+    }
+    
+    @media (width >= 768px) {
+      font-size: 3rem; /* text-5xl */
+    }
+    
+    @media (width >= 1024px) {
+      font-size: 3.75rem; /* text-6xl */
+    }
+
     /* Responsive text sizes for h1 */
   }
 
   h2 {
-    @apply mt-10 scroll-m-20 border-b pb-2 font-semibold tracking-tight transition-colors first:mt-0;
-    @apply text-2xl sm:text-3xl md:text-4xl;
+    margin-top: 2.5rem;
+    scroll-margin: 5rem;
+    border-bottom-width: 1px;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    font-size: 1.5rem; /* text-2xl */
+    
+    @media (width >= 640px) {
+      font-size: 1.875rem; /* text-3xl */
+    }
+    
+    @media (width >= 768px) {
+      font-size: 2.25rem; /* text-4xl */
+    }
+
     /* Responsive text sizes for h2 */
   }
 
   h3 {
     @apply mt-8 scroll-m-20 font-semibold tracking-tight;
     @apply text-xl sm:text-2xl md:text-3xl;
+
     /* Responsive text sizes for h3 */
   }
 
   h4 {
     @apply scroll-m-20 font-semibold tracking-tight mb-6;
     @apply text-lg sm:text-xl;
+
     /* Responsive text sizes for h4 */
   }
 
@@ -101,24 +137,28 @@
   p {
     @apply leading-7 mt-6 text-muted-foreground;
     @apply text-base sm:text-lg md:text-xl;
+
     /* Responsive paragraph sizes */
   }
 
   li {
     @apply text-muted-foreground;
     @apply text-base sm:text-lg;
+
     /* Responsive list item sizes */
   }
 
   strong {
     @apply text-primary;
     @apply text-lg sm:text-xl;
+
     /* Responsive strong text sizes */
   }
 
   a {
     @apply font-medium relative text-foreground transition;
     @apply text-base sm:text-lg;
+
     /* Responsive text sizes for links */
   }
 
@@ -159,10 +199,10 @@
 
 @layer utilities {
   .shadow {
-    border: 1px solid hsla(var(--border));
+    border: 1px solid hsl(var(--border));
+
     @apply shadow-sm shadow-muted-foreground/25;
   }
-
 
   .custom-list {
     @apply list-none flex flex-col gap-4 list-inside pl-0;
@@ -181,11 +221,11 @@
   }
 }
 
-.ql-editor {
-  @apply !max-h-[500px] !overflow-auto;
-}
-
 @layer components {
+  .ql-editor {
+    @apply !max-h-[500px] !overflow-auto;
+  }
+
   .navbar {
     @apply h-16 lg:h-20;
   }
@@ -212,10 +252,13 @@
 
   .chart-canvas {
     width: 100% !important;
+
     /* Ensures the canvas takes the full width of its container */
     height: 100% !important;
+
     /* Maintains the aspect ratio */
     max-width: 100%;
+
     /* Ensures the canvas doesn't exceed the width of the container */
     @apply bg-background;
   }
@@ -230,10 +273,6 @@
 
   .mb-navbar {
     @apply mb-16 lg:mb-20;
-  }
-
-  .py-navbar {
-    @apply py-16 lg:py-20;
   }
 
   .py-navbar {
@@ -264,16 +303,19 @@
 
   .cart-item .qty-btn {
     grid-area: qty-btn;
+
     @apply justify-self-end place-self-end h-min;
   }
 
   .cart-item .price {
     grid-area: price;
+
     @apply mb-0;
   }
 
   .cart-item .close-btn {
     grid-area: close-btn;
+
     @apply justify-self-end place-self-start h-min;
   }
 
@@ -307,6 +349,212 @@
 
 @layer components {
   .phone-input .PhoneInputInput {
-    @apply flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+    @apply flex-1 bg-transparent outline-none text-base
+           placeholder:text-muted-foreground
+           disabled:cursor-not-allowed disabled:opacity-50
+           md:text-sm;
+  }
+
+  .fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+}
+
+/* Apple Typography Styles */
+@layer base {
+  html {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.47059;
+    letter-spacing: -0.022em;
+  }
+
+  /* Apple Display Typography */
+  .apple-display-large {
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 4.5rem;
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  .apple-display-medium {
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 3rem;
+    line-height: 1.08333;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .apple-display-small {
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 2.25rem;
+    line-height: 1.11111;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* Apple Text Typography */
+  .apple-headline {
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 1.75rem;
+    line-height: 1.14286;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+
+  .apple-subheadline {
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    font-weight: 400;
+    letter-spacing: -0.003em;
+  }
+
+  .apple-body {
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.47059;
+    font-weight: 400;
+    letter-spacing: -0.022em;
+  }
+
+  .apple-caption {
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.28571;
+    font-weight: 400;
+    letter-spacing: -0.016em;
+  }
+
+  /* Apple Button Typography */
+  .apple-button {
+    font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.23529;
+    font-weight: 400;
+    letter-spacing: -0.022em;
+  }
+
+  /* Responsive Typography */
+  @media (max-width: 768px) {
+    .apple-display-large {
+      font-size: 3rem;
+      line-height: 1.08333;
+    }
+
+    .apple-display-medium {
+      font-size: 2.25rem;
+      line-height: 1.11111;
+    }
+
+    .apple-display-small {
+      font-size: 1.75rem;
+      line-height: 1.14286;
+    }
+  }
+
+  /* Apple-style Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Dark mode scrollbar */
+  @media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    * {
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollable containers */
+  .custom-scroll {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+
+  .custom-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
   }
 }

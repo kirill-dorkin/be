@@ -8,13 +8,19 @@ import ServiceTable from "@/components/dashboard/ServiceTable";
 import { AddServiceDialog } from "@/components/dashboard/dialogs/AddServiceDialog";
 import getServicesAction from "@/actions/dashboard/getServicesAction";
 import deleteServiceAction from "@/actions/dashboard/deleteServiceAction";
+import { IService } from "@/models/Service";
+
+interface ServicesResponse {
+  items: IService[];
+  totalItemsLength: number;
+}
 
 const ServicesPage = async ({ searchParams }: SearchParams) => {
   const { page = "1", perPage = "5" } = await searchParams;
   const servicesResponse = (await getServicesAction(
     Number(page),
     Number(perPage),
-  )) as any;
+  )) as unknown as ServicesResponse;
   const items = servicesResponse.items ?? [];
   const totalItemsLength: number = servicesResponse.totalItemsLength ?? 0;
   return (
@@ -31,7 +37,7 @@ const ServicesPage = async ({ searchParams }: SearchParams) => {
           page={page}
           per_page={perPage}
           deleteAction={deleteServiceAction}
-          items={items as any}
+          items={items}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ITask } from "@/models/Task";
+
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -48,12 +48,14 @@ const TaskSchema = z.object({
     .min(0, { message: "Стоимость должна быть положительным числом" }),
 });
 
+type TaskFormData = z.infer<typeof TaskSchema>;
+
 export function AddTaskDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const country = useGeoCountry();
 
-  const methods = useForm<ITask>({
+  const methods = useForm<TaskFormData>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
       description: '',
@@ -68,7 +70,7 @@ export function AddTaskDialog() {
 
   const { control, handleSubmit, formState: { errors } } = methods;
 
-  const handleSubmitAction = async (data: ITask) => {
+  const handleSubmitAction = async (data: TaskFormData) => {
     setLoading(true);
     try {
       const response = await addTaskAction(data);
@@ -123,7 +125,7 @@ export function AddTaskDialog() {
                 <PhoneInputField
                   key={field.name}
                   control={control}
-                  name={field.name as keyof ITask}
+                  name={field.name as keyof TaskFormData}
                   label={field.label}
                   defaultCountry={country}
                 />
@@ -131,7 +133,7 @@ export function AddTaskDialog() {
                 <InputFormField
                   key={field.name}
                   control={control}
-                  name={field.name as keyof ITask}
+                  name={field.name as keyof TaskFormData}
                   id={field.name}
                   label={field.label}
                   errors={errors}

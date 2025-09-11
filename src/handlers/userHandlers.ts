@@ -1,6 +1,7 @@
+import { Socket } from 'socket.io';
 import User from '../models/User';
 
-export const handleUserEvents = (socket: any) => {
+export const handleUserEvents = (socket: Socket) => {
   socket.on('getAllUsers', async () => {
     try {
       const users = await User.find();

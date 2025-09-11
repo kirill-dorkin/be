@@ -76,7 +76,7 @@ export default function UserTable({
             <TableCell className="flex justify-end text-right">
               <EditButton email={email} />
               <DeleteButton
-                // @ts-ignore
+                // @ts-expect-error - deleteAction prop type mismatch with DeleteButton component
                 action={deleteAction}
                 id={_id as string}
               />

@@ -1,6 +1,6 @@
 "use client"
 import BaseContainer from '@/components/BaseContainer'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import Image from 'next/image'
 import { FaStar } from 'react-icons/fa'
 

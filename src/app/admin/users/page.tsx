@@ -9,6 +9,12 @@ import getUsersAction from "@/actions/dashboard/getUsersAction"
 import { SearchParams } from "@/types"
 import deleteUserAction from "@/actions/dashboard/deleteUserAction";
 import { AddUserDialog } from "@/components/dashboard/dialogs/AddUserDialog";
+import { IUser } from "@/models/User";
+
+interface UsersResponse {
+  items: IUser[];
+  totalItemsLength: number;
+}
 
 const UsersPage = async ({
   searchParams,
@@ -18,8 +24,8 @@ const UsersPage = async ({
   const usersResponse = (await getUsersAction(
     Number(page),
     Number(perPage),
-  )) as any;
-  const items: any[] = usersResponse.items ?? [];
+  )) as unknown as UsersResponse;
+  const items = usersResponse.items ?? [];
   const totalItemsLength: number = usersResponse.totalItemsLength ?? 0;
 
   return (
@@ -37,7 +43,7 @@ const UsersPage = async ({
             page={page}
             deleteAction={deleteUserAction}
             per_page={perPage}
-            items={items as any}
+            items={items}
             totalItemsLength={totalItemsLength}
           />
         </DashboardContent>

@@ -92,7 +92,7 @@ export default function TaskTable({
                 <TableCell className="flex gap-2 justify-end">
                   {role === "admin" ? (
                     <DeleteButton
-                      // @ts-ignore
+                      // @ts-expect-error - deleteAction prop type mismatch with DeleteButton component
                       action={deleteAction}
                       id={_id as unknown as string}
                     />

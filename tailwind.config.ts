@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+import tailwindcssTypography from "@tailwindcss/typography";
 
 const config = {
   darkMode: ["class"],
@@ -18,6 +20,32 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'SF Pro Display',
+          'SF Pro Text',
+          'Helvetica Neue',
+          'Helvetica',
+          'Arial',
+          'sans-serif'
+        ],
+        display: [
+          'SF Pro Display',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Helvetica Neue',
+          'sans-serif'
+        ],
+        text: [
+          'SF Pro Text',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Helvetica Neue',
+          'sans-serif'
+        ],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -116,7 +144,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [tailwindcssAnimate, tailwindcssTypography],
 } satisfies Config;
 
 export default config;

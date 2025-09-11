@@ -2,7 +2,7 @@
 
 export default function Spinner() {
   return (
-    <div className="flex items-center justify-center w-full py-20">
+    <div className="flex items-center justify-center w-full h-screen">
       <svg
         className="animate-spin h-8 w-8 text-primary"
         xmlns="http://www.w3.org/2000/svg"

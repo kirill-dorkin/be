@@ -8,13 +8,19 @@ import DeviceTable from "@/components/dashboard/DeviceTable";
 import { AddDeviceDialog } from "@/components/dashboard/dialogs/AddDeviceDialog";
 import getDevicesAction from "@/actions/dashboard/getDevicesAction";
 import deleteDeviceAction from "@/actions/dashboard/deleteDeviceAction";
+import { IDevice } from "@/models/Device";
+
+interface DevicesResponse {
+  items: IDevice[];
+  totalItemsLength: number;
+}
 
 const DevicesPage = async ({ searchParams }: SearchParams) => {
   const { page = "1", perPage = "5" } = await searchParams;
   const devicesResponse = (await getDevicesAction(
     Number(page),
     Number(perPage),
-  )) as any;
+  )) as unknown as DevicesResponse;
   const items = devicesResponse.items ?? [];
   const totalItemsLength: number = devicesResponse.totalItemsLength ?? 0;
   return (
@@ -31,7 +37,7 @@ const DevicesPage = async ({ searchParams }: SearchParams) => {
           page={page}
           per_page={perPage}
           deleteAction={deleteDeviceAction}
-          items={items as any}
+          items={items}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

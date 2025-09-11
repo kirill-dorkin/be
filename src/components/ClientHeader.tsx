@@ -1,43 +1,37 @@
 "use client";
 import Link from "next/link";
 import BaseContainer from "@/components/BaseContainer";
-import AvatarMenu from "./AvatarMenu";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 export default function ClientHeader() {
-  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
 
   const links = [
-    { href: "#hero", label: "Главная" },
-    { href: "#about", label: "О нас" },
-    { href: "#reviews", label: "Отзывы" },
-    { href: "#contacts", label: "Контакты" },
+    { href: "/products", label: "Магазин" },
   ];
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full backdrop-blur bg-white/80 dark:bg-background/80 border-b border-border">
+      <header className="w-full">
         <BaseContainer className="flex items-center justify-between py-4">
-        <Link href="#" prefetch={false} className="flex items-center gap-2 text-xl font-semibold">
+        <Link href="/" prefetch={false} className="flex items-center gap-2 text-xl font-semibold">
           Best Electronics
         </Link>
-        <nav className="hidden md:flex gap-6 text-sm font-medium">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              prefetch={false}
-              className="hover:text-primary transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center gap-4 md:hidden relative z-50">
-          {session && <AvatarMenu />}
-          <button
+        <div className="flex items-center gap-4">
+          <nav className="hidden md:flex gap-6 text-sm font-medium">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                prefetch={false}
+                className="hover:text-primary transition-colors font-semibold"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="md:hidden relative z-50">
+            <button
             onClick={() => setOpen((prev) => !prev)}
             aria-label="Toggle menu"
             className="relative w-6 h-5 focus:outline-none"
@@ -57,7 +51,8 @@ export default function ClientHeader() {
                 open ? "top-1/2 -translate-y-1/2 -rotate-45" : "bottom-0"
               }`}
             />
-          </button>
+            </button>
+          </div>
         </div>
       </BaseContainer>
       </header>

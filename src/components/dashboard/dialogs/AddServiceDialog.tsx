@@ -29,12 +29,11 @@ import { ICategory } from "@/models/Category";
 const ServiceSchema = z.object({
   category: z.string().min(1),
   name: z.string().min(1, { message: "Название обязательно" }).max(100),
-  cost: z
-    .string()
-    .transform((v) => parseFloat(v))
-    .refine((v) => !isNaN(v) && v >= 0, { message: "Стоимость должна быть положительной" }),
+  cost: z.string().refine((v) => !isNaN(parseFloat(v)) && parseFloat(v) >= 0, { message: "Стоимость должна быть положительной" }),
   duration: z.string().optional(),
 });
+
+type ServiceFormData = z.infer<typeof ServiceSchema>;
 
 export function AddServiceDialog() {
   const [loading, setLoading] = useState(false);
@@ -44,14 +43,14 @@ export function AddServiceDialog() {
   useEffect(() => {
     getCategoriesAction(1, 100).then((res) => {
       if (res.status === "success") {
-        setCategories(res.items);
+        setCategories((res.items as unknown as ICategory[]) || []);
       }
     });
   }, []);
 
-  const methods = useForm<{ category: string; name: string; cost: number; duration?: string }>({
+  const methods = useForm<ServiceFormData>({
     resolver: zodResolver(ServiceSchema),
-    defaultValues: { category: "", name: "", cost: 0, duration: "" },
+    defaultValues: { category: "", name: "", cost: "0", duration: "" },
     mode: "onChange",
   });
 
@@ -62,10 +61,10 @@ export function AddServiceDialog() {
     formState: { errors },
   } = methods;
 
-  const handleSubmitAction = async (data: { category: string; name: string; cost: number; duration?: string }) => {
+  const handleSubmitAction = async (data: ServiceFormData) => {
     setLoading(true);
     try {
-      const response = await addServiceAction(data.category, data.name, data.cost, data.duration || "");
+      const response = await addServiceAction(data.category, data.name, parseFloat(data.cost), data.duration || "");
       if (response.status === "error") {
         showErrorToast({ title: "Ошибка", description: response.message });
       } else {
@@ -94,22 +93,25 @@ export function AddServiceDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
-            <InputFormField
+            <InputFormField<ServiceFormData>
               name="name"
+              id="name"
               label="Название"
               type="text"
               control={control}
               errors={errors}
             />
-            <InputFormField
+            <InputFormField<ServiceFormData>
               name="cost"
+              id="cost"
               label="Стоимость"
               type="number"
               control={control}
               errors={errors}
             />
-            <InputFormField
+            <InputFormField<ServiceFormData>
               name="duration"
+              id="duration"
               label="Длительность (например, 2 дня)"
               type="text"
               control={control}
@@ -126,7 +128,7 @@ export function AddServiceDialog() {
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => (
-                    <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                    <SelectItem key={c._id?.toString()} value={c._id?.toString() || ''}>{c.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

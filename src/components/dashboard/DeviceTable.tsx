@@ -38,11 +38,11 @@ export default function DeviceTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {items?.map(({ _id, category, brand, model }) => (
+        {items?.map(({ _id, category, brand, deviceModel }) => (
           <TableRow key={_id?.toString() as string}>
-            <TableCell>{typeof category === 'string' ? category : (category as any)?.name}</TableCell>
+            <TableCell>{typeof category === 'string' ? category : (category as unknown as { name: string })?.name}</TableCell>
             <TableCell>{brand}</TableCell>
-            <TableCell>{model}</TableCell>
+            <TableCell>{deviceModel}</TableCell>
             <TableCell className="text-right">
               <DeleteButton action={deleteAction} id={_id as string} />
             </TableCell>

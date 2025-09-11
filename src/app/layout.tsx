@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Montserrat } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import AppProvider from "@/providers/AppProvider";
 import "./globals.css";
@@ -7,17 +7,11 @@ import Providers from "./providers";
 import { getSession } from "@/auth";
 import { ensureDefaultAdmin } from "@/lib/initAdmin";
 import ClientHeader from "@/components/ClientHeader";
-import Footer from "@/components/Footer";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
 export const metadata: Metadata = {
@@ -39,12 +33,11 @@ export default async function RootLayout({
     <html lang="en">
       <AppProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${montserrat.variable} font-sans antialiased`}
         >
           <Providers session={session}>
             {(!session || session.user.role === "user") && <ClientHeader />}
             <div className="w-svw">{children}</div>
-            <Footer />
             <Toaster />
           </Providers>
         </body>

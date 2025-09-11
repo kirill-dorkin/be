@@ -41,7 +41,7 @@ export default function ServiceTable({
       <TableBody>
         {items?.map(({ _id, category, name, cost, duration }) => (
           <TableRow key={_id?.toString() as string}>
-            <TableCell>{typeof category === 'string' ? category : (category as any)?.name}</TableCell>
+            <TableCell>{typeof category === 'string' ? category : (category as unknown as { name: string })?.name}</TableCell>
             <TableCell>{name}</TableCell>
             <TableCell>{cost} сом</TableCell>
             <TableCell>{duration}</TableCell>

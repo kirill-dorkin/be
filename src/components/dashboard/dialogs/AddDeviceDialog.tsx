@@ -29,8 +29,10 @@ import { ICategory } from "@/models/Category";
 const DeviceSchema = z.object({
   category: z.string().min(1),
   brand: z.string().min(1, { message: "Бренд обязателен" }).max(100),
-  model: z.string().optional(),
+  deviceModel: z.string().optional(),
 });
+
+type DeviceFormData = z.infer<typeof DeviceSchema>;
 
 export function AddDeviceDialog() {
   const [loading, setLoading] = useState(false);
@@ -40,14 +42,14 @@ export function AddDeviceDialog() {
   useEffect(() => {
     getCategoriesAction(1, 100).then((res) => {
       if (res.status === "success") {
-        setCategories(res.items);
+        setCategories((res.items as unknown as ICategory[]) || []);
       }
     });
   }, []);
 
-  const methods = useForm<{ category: string; brand: string; model?: string }>({
+  const methods = useForm<DeviceFormData>({
     resolver: zodResolver(DeviceSchema),
-    defaultValues: { category: "", brand: "", model: "" },
+    defaultValues: { category: "", brand: "", deviceModel: "" },
     mode: "onChange",
   });
 
@@ -58,10 +60,10 @@ export function AddDeviceDialog() {
     formState: { errors },
   } = methods;
 
-  const handleSubmitAction = async (data: { category: string; brand: string; model?: string }) => {
+  const handleSubmitAction = async (data: DeviceFormData) => {
     setLoading(true);
     try {
-      const response = await addDeviceAction(data.category, data.brand, data.model || "");
+      const response = await addDeviceAction(data.category, data.brand, data.deviceModel || "");
       if (response.status === "error") {
         showErrorToast({ title: "Ошибка", description: response.message });
       } else {
@@ -90,15 +92,17 @@ export function AddDeviceDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
-            <InputFormField
+            <InputFormField<DeviceFormData>
               name="brand"
+              id="brand"
               label="Бренд"
               type="text"
               control={control}
               errors={errors}
             />
-            <InputFormField
-              name="model"
+            <InputFormField<DeviceFormData>
+              name="deviceModel"
+              id="deviceModel"
               label="Модель (необязательно)"
               type="text"
               control={control}
@@ -115,7 +119,7 @@ export function AddDeviceDialog() {
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => (
-                    <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                    <SelectItem key={c._id?.toString()} value={c._id?.toString() || ''}>{c.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

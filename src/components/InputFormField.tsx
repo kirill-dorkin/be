@@ -146,5 +146,5 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   );
 };
 
-export default memo(InputFormField);
+export default memo(InputFormField) as typeof InputFormField;
 

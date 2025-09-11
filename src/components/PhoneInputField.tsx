@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/form'
 import { Control, FieldValues, Path } from 'react-hook-form'
 
-const InputComponent = React.forwardRef<HTMLInputElement, any>((props, ref) => (
+const InputComponent = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>((props, ref) => (
   <Input ref={ref} {...props} className="flex-1 bg-transparent outline-none" />
 ))
 InputComponent.displayName = 'PhoneInputCustomInput'

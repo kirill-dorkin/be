@@ -21,11 +21,13 @@ const CategorySchema = z.object({
   name: z.string().min(1, { message: "Название обязательно" }).max(100),
 });
 
+type CategoryFormData = z.infer<typeof CategorySchema>;
+
 export function AddCategoryDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
 
-  const methods = useForm<{ name: string }>({
+  const methods = useForm<CategoryFormData>({
     resolver: zodResolver(CategorySchema),
     defaultValues: { name: "" },
     mode: "onChange",
@@ -38,7 +40,7 @@ export function AddCategoryDialog() {
     formState: { errors },
   } = methods;
 
-  const handleSubmitAction = async (data: { name: string }) => {
+  const handleSubmitAction = async (data: CategoryFormData) => {
     setLoading(true);
     try {
       const response = await addCategoryAction(data.name);
@@ -72,6 +74,7 @@ export function AddCategoryDialog() {
           <FormProvider {...methods}>
             <InputFormField
               name="name"
+              id="name"
               label="Название"
               type="text"
               control={control}

@@ -36,7 +36,7 @@ export default function SelectShowing({ className }: { className?: string }): Re
     params.set("per_page", totalItemsPerPage);
 
     router.push(`${pathname}?${params.toString()}`);
-  }, [totalItemsPerPage]);
+  }, [totalItemsPerPage, searchParams, pathname, router]);
 
   return (
     <Suspense>

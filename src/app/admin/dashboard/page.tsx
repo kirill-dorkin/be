@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FaTasks, FaHourglassHalf, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import TaskReport from "@/components/dashboard/TaskReport";
 import UserList from "@/components/dashboard/UserList";
@@ -13,6 +12,17 @@ import { SearchParams } from "@/types";
 import getTasksAction from "@/actions/dashboard/getTasksAction";
 import getMetricsAction from "@/actions/dashboard/getMetricsAction";
 import getWorkersAction from "@/actions/dashboard/getWorkersAction";
+import { ITask } from "@/models/Task";
+import { IUser } from "@/models/User";
+
+interface TasksResponse {
+  items: ITask[];
+  totalItemsLength: number;
+}
+
+interface WorkersResponse {
+  items: IUser[];
+}
 
 const DashboardPage = async ({ searchParams }: SearchParams) => {
   const { page = "1", perPage = "5" } = await searchParams;
@@ -23,29 +33,29 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
     getWorkersAction(),
   ]);
 
-  const items = (tasksResponse as any).items ?? [];
-  const totalItemsLength: number = (tasksResponse as any).totalItemsLength ?? 0;
-  const users = (workersResponse as any).items ?? [];
+  const items = (tasksResponse as unknown as TasksResponse).items ?? [];
+  const totalItemsLength: number = (tasksResponse as unknown as TasksResponse).totalItemsLength ?? 0;
+  const users = (workersResponse as unknown as WorkersResponse).items ?? [];
 
   const data = [
     {
       label: "Активные задачи",
-      value: metrics?.metrics?.totalActiveTasks,
+      value: metrics?.metrics?.totalActiveTasks ?? 0,
       icon: <FaTasks />,
     },
     {
       label: "Задачи в ожидании",
-      value: metrics?.metrics?.totalPendingTasks,
+      value: metrics?.metrics?.totalPendingTasks ?? 0,
       icon: <FaExclamationCircle />,
     },
     {
       label: "Задачи в процессе",
-      value: metrics?.metrics?.totalInProgressTasks,
+      value: metrics?.metrics?.totalInProgressTasks ?? 0,
       icon: <FaHourglassHalf />,
     },
     {
       label: "Завершенные задачи",
-      value: metrics?.metrics?.totalCompletedTasks,
+      value: metrics?.metrics?.totalCompletedTasks ?? 0,
       icon: <FaCheckCircle />,
     },
   ];
@@ -63,7 +73,7 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
           <TaskReport
             page={page}
             per_page={perPage}
-            items={items as any}
+            items={items}
             totalItemsLength={totalItemsLength}
           />
         </section>

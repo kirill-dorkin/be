@@ -16,7 +16,7 @@ const MyTasksPage = async ({
   const session = await getServerSession(authOptions);
   const user = session?.user;
   const workerId = user?.id as string;
-  // @ts-ignore
+  // @ts-expect-error - getWorkerTasksAction return type mismatch
   const { items = [], totalItemsLength = 0 } = await getWorkerTasksAction(
     workerId,
     Number(page),
@@ -33,11 +33,10 @@ const MyTasksPage = async ({
       </DashboardHeader>
       <DashboardContent className="bg-background shadow p-6 rounded-lg">
         <TaskTable
-          // @ts-ignore
+          // @ts-expect-error - page prop type mismatch
           page={page}
-          // @ts-ignore
+          // @ts-expect-error - per_page prop type mismatch
           per_page={perPage}
-          // @ts-ignore
           items={items}
           totalItemsLength={totalItemsLength}
         />

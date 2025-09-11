@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Section from "@/components/launchui/Section";
-import Glow from "@/components/launchui/Glow";
 
 const Hero: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -32,35 +31,86 @@ const Hero: React.FC = () => {
     signOut();
   };
 
+  // Защита от скриншотов
+  useEffect(() => {
+    const preventScreenshot = () => {
+      document.body.style.userSelect = 'none';
+      document.body.style.webkitUserSelect = 'none';
+      
+      // Блокировка контекстного меню
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+      
+      // Блокировка горячих клавиш для скриншотов
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'PrintScreen' || 
+            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+            (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+            (e.ctrlKey && e.key === 'u') ||
+            e.key === 'F12') {
+          e.preventDefault();
+          return false;
+        }
+      });
+    };
+    
+    preventScreenshot();
+    
+    return () => {
+      document.removeEventListener('contextmenu', (e) => e.preventDefault());
+    };
+  }, []);
+
   return (
     <Section
       id="hero"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden"
+      className="relative flex min-h-screen items-center justify-center bg-white"
     >
-      <Glow className="-z-10" variant="center" />
-      <div className="relative flex flex-col items-center text-center px-6 z-10 gap-6">
-        <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-4xl font-bold text-transparent sm:text-5xl md:text-6xl">
-          Система сервиса Best Electronics
+      {/* Минималистичный фон с тонким акцентом */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white" />
+      
+      {/* Тонкий декоративный элемент */}
+      <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-px h-32 bg-gradient-to-b from-transparent via-gray-200 to-transparent" />
+      
+      <div className="relative flex flex-col items-center text-center px-8 max-w-4xl mx-auto">
+        {/* Основной заголовок */}
+        <h1 className="apple-display-large text-gray-900 mb-8">
+          Best Electronics
         </h1>
-        <p className="mb-8 max-w-xl text-muted-foreground">
-          Мы предлагаем профессиональный ремонт и модернизацию электроники.
-          Используйте кнопку ниже, чтобы отправить заявку.
+        
+        {/* Подзаголовок */}
+        <h2 className="apple-headline text-gray-600 mb-12 max-w-2xl">
+          Профессиональный ремонт и модернизация электроники
+        </h2>
+        
+        {/* Описание */}
+        <p className="apple-body text-gray-500 mb-16 max-w-xl">
+          Доверьте свои устройства экспертам. Качественный сервис с гарантией результата.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        
+        {/* Кнопки действий */}
+        <div className="flex flex-col sm:flex-row items-center gap-6">
           {!isLoggedIn && (
-            <Button size="lg" asChild className="w-fit">
+            <Button 
+              size="lg" 
+              asChild 
+              className="apple-button bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 transition-all duration-200 border-0 shadow-sm hover:shadow-md"
+            >
               <Link href="/request">Заказать ремонт</Link>
             </Button>
           )}
           {isLoggedIn && (
             <>
-              <Button size="lg" className="w-fit" onClick={handleGoToDashboard}>
+              <Button 
+                size="lg" 
+                className="apple-button bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 transition-all duration-200 border-0 shadow-sm hover:shadow-md" 
+                onClick={handleGoToDashboard}
+              >
                 Перейти в панель
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="w-fit"
+                className="apple-button border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full px-8 py-3 transition-all duration-200 shadow-sm hover:shadow-md"
                 onClick={handleLogout}
               >
                 Выйти
@@ -68,6 +118,9 @@ const Hero: React.FC = () => {
             </>
           )}
         </div>
+        
+        {/* Тонкий акцент внизу */}
+        <div className="mt-20 w-12 h-px bg-gray-300" />
       </div>
     </Section>
   );

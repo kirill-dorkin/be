@@ -1,0 +1,11 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f0f0f0"/>
+  <rect x="50" y="50" width="300" height="200" rx="8" fill="#2c2c2c"/>
+  <rect x="60" y="60" width="280" height="160" fill="#000"/>
+  <rect x="70" y="70" width="260" height="140" fill="#1a1a1a"/>
+  <text x="200" y="150" text-anchor="middle" fill="#e74c3c" font-family="Arial" font-size="16">ThinkPad X1</text>
+  <circle cx="200" cy="240" r="3" fill="#e74c3c"/>
+  <rect x="190" y="225" width="20" height="8" fill="#2c2c2c"/>
+  <circle cx="320" cy="80" r="4" fill="#e74c3c"/>
+  <text x="80" y="90" fill="#999" font-family="Arial" font-size="10">ThinkPad</text>
+</svg>

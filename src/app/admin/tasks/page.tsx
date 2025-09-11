@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SearchParams } from "@/types"
 import { AddTaskDialog } from "@/components/dashboard/dialogs/AddTaskDialog";
 import SelectShowing from "@/components/dashboard/SelectShowing";
@@ -9,6 +8,12 @@ import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardTitle from "@/components/dashboard/DashboardTitle";
 import getTasksAction from "@/actions/dashboard/getTasksAction";
 import deleteTaskAction from "@/actions/dashboard/deleteTaskAction";
+import { ITask } from "@/models/Task";
+
+interface TasksResponse {
+  items: ITask[];
+  totalItemsLength: number;
+}
 
 const TasksPage = async ({
   searchParams,
@@ -17,7 +22,7 @@ const TasksPage = async ({
   const tasksResponse = (await getTasksAction(
     Number(page),
     Number(perPage),
-  )) as any;
+  )) as unknown as TasksResponse;
   const items = tasksResponse.items ?? [];
   const totalItemsLength: number = tasksResponse.totalItemsLength ?? 0;
 
@@ -35,7 +40,7 @@ const TasksPage = async ({
           page={page}
           deleteAction={deleteTaskAction}
           per_page={perPage}
-          items={items as any}
+          items={items}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

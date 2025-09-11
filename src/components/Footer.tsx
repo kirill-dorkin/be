@@ -12,7 +12,7 @@ export default function Footer() {
             <FaInstagram className="inline-block mr-2" />Instagram
           </Link>
           <Link href="tel:+996501313114" className="hover:text-foreground">
-            <FaPhone className="inline-block mr-2" />+996 501‑31‑31‑14
+            <FaPhone className="inline-block mr-2" />+996 501-31-31-14
           </Link>
         </div>
       </BaseContainer>

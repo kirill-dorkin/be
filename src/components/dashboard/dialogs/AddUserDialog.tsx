@@ -47,9 +47,9 @@ export function AddUserDialog() {
     try {
       const response = await addUserAction(data.name, data.email, data.password);
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
+        showSuccessToast({ title: "Успешно", description: response.message || "Операция выполнена успешно" });
         reset();
       }
     } catch (error) {
