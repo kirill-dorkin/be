@@ -98,7 +98,7 @@ export default function Checkout() {
     address: '',
     city: '',
     postalCode: '',
-    country: 'Россия',
+    country: 'Кыргызстан',
     deliveryMethod: 'standard',
     paymentMethod: 'card',
     comment: ''
@@ -432,7 +432,9 @@ export default function Checkout() {
                       <Input
                         id="country"
                         value={formData.country}
-                        onChange={(e) => handleInputChange('country', e.target.value)}
+                        readOnly
+                        disabled
+                        className="bg-gray-50 cursor-not-allowed"
                       />
                     </div>
                   </div>

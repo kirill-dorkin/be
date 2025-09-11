@@ -4,7 +4,7 @@ import Product from '@/models/Product';
 import ProductCatalog from '@/components/shop/ProductCatalog';
 import BaseContainer from '@/components/BaseContainer';
 import Spinner from '@/components/ui/spinner';
-import CartDropdown from '@/components/CartDropdown';
+import ButtonsWrapper from '@/components/ButtonsWrapper';
 
 interface SearchParams {
   search?: string;
@@ -110,7 +110,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-3xl font-bold">Каталог товаров</h1>
-            <CartDropdown />
+            <ButtonsWrapper />
           </div>
           <p className="text-gray-600">
             Найдено товаров: {productsData.totalCount}

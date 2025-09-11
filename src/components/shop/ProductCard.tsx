@@ -10,11 +10,13 @@ import { IProduct } from '@/models/Product';
 import useCustomToast from '@/hooks/useCustomToast';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
+import { useFavorites } from '@/hooks/useFavorites';
 
 interface ProductCardProps {
   product: IProduct;
   onViewDetails?: (productId: string) => void;
   onBuyNow?: (productId: string) => void;
+  onAddToCart?: (productId: string) => void;
   showBuyNow?: boolean;
   className?: string;
 }
@@ -23,20 +25,32 @@ export default function ProductCard({
   product,
   onViewDetails,
   onBuyNow,
+  onAddToCart,
   showBuyNow = false,
   className = ''
 }: ProductCardProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const { addToCart } = useCart();
+  const { addToFavorites, removeFromFavorites, isInFavorites } = useFavorites();
+  
+  const isFavorite = isInFavorites(String(product._id));
 
   const handleAddToCart = async () => {
+    if (onAddToCart) {
+      onAddToCart(String(product._id));
+      return;
+    }
+    
     setIsLoading(true);
     try {
       await addToCart(String(product._id), 1);
+      setIsAddedToCart(true);
       showSuccessToast({ title: 'Успех', description: 'Товар добавлен в корзину' });
+      // Сбросить состояние через 3 секунды
+      setTimeout(() => setIsAddedToCart(false), 3000);
     } catch {
       showErrorToast({ title: 'Ошибка', description: 'Ошибка при добавлении в корзину' });
     } finally {
@@ -56,12 +70,32 @@ export default function ProductCard({
     }
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    showSuccessToast({
-      title: 'Избранное',
-      description: isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное'
-    });
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await removeFromFavorites(String(product._id));
+        showSuccessToast({
+          title: 'Избранное',
+          description: 'Удалено из избранного'
+        });
+      } else {
+        await addToFavorites(String(product._id), {
+          name: product.name,
+          price: product.price,
+          images: product.images
+        });
+        showSuccessToast({
+          title: 'Избранное',
+          description: 'Добавлено в избранное'
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      showErrorToast({
+        title: 'Ошибка',
+        description: 'Не удалось обновить избранное'
+      });
+    }
   };
 
   const formatPrice = (price: number) => {
@@ -108,24 +142,24 @@ export default function ProductCard({
         </div>
         
         {/* Кнопки действий */}
-        <div className="absolute right-2 top-2 flex flex-col gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <div className="absolute right-2 top-2 flex flex-col gap-1 opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
           <Button
             size="sm"
             variant="secondary"
-            className="h-8 w-8 p-0"
+            className="h-10 w-10 md:h-8 md:w-8 p-0"
             onClick={toggleFavorite}
           >
             <Heart
-              className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`}
+              className={`h-6 w-6 md:h-4 md:w-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`}
             />
           </Button>
           <Button
             size="sm"
             variant="secondary"
-            className="h-8 w-8 p-0"
+            className="h-10 w-10 md:h-8 md:w-8 p-0"
             onClick={handleViewDetails}
           >
-            <Eye className="h-4 w-4" />
+            <Eye className="h-6 w-6 md:h-4 md:w-4" />
           </Button>
         </div>
       </div>
@@ -175,9 +209,9 @@ export default function ProductCard({
         <div className={`w-full ${showBuyNow && !isOutOfStock ? 'space-y-2' : ''}`}>
           <Button
             className="w-full"
-            onClick={handleAddToCart}
+            onClick={isAddedToCart ? () => router.push('/cart') : handleAddToCart}
             disabled={isOutOfStock || isLoading}
-            variant={isOutOfStock ? 'secondary' : 'default'}
+            variant={isOutOfStock ? 'secondary' : isAddedToCart ? 'outline' : 'default'}
           >
             {isLoading ? (
               <div className="flex items-center gap-2">
@@ -186,9 +220,14 @@ export default function ProductCard({
               </div>
             ) : isOutOfStock ? (
               'Нет в наличии'
+            ) : isAddedToCart ? (
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="h-5 w-5 md:h-4 md:w-4" />
+                Перейти в корзину
+              </div>
             ) : (
               <div className="flex items-center gap-2">
-                <ShoppingCart className="h-4 w-4" />
+                <ShoppingCart className="h-5 w-5 md:h-4 md:w-4" />
                 В корзину
               </div>
             )}
@@ -205,27 +244,7 @@ export default function ProductCard({
             </Button>
           )}
           
-          {/* Дополнительные кнопки для корзины и оформления заказа */}
-          <div className="flex gap-2 mt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              onClick={() => router.push('/cart')}
-            >
-              <ShoppingBag className="h-4 w-4 mr-1" />
-              Корзина
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              onClick={() => router.push('/checkout')}
-            >
-              <CreditCard className="h-4 w-4 mr-1" />
-              Оформить
-            </Button>
-          </div>
+
         </div>
       </CardFooter>
     </Card>

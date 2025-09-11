@@ -77,6 +77,8 @@ export default function CartDropdown({ className = '' }: CartDropdownProps) {
 
 
 
+
+
   // Закрытие при клике вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -100,7 +102,7 @@ export default function CartDropdown({ className = '' }: CartDropdownProps) {
       <Button 
         variant="outline" 
         size="sm" 
-        className="relative p-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+        className="relative p-2 transition-all duration-300"
         onClick={() => setIsOpen(!isOpen)}
       >
         <ShoppingCart className="h-5 w-5" />
@@ -116,8 +118,153 @@ export default function CartDropdown({ className = '' }: CartDropdownProps) {
 
       {/* Выпадающее меню корзины */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-96 z-50">
-          <Card className="shadow-lg border">
+        <>
+          {/* Мобильная версия - полноэкранная */}
+          <div 
+            className="fixed inset-0 z-50 bg-black/50 md:hidden animate-in fade-in duration-300" 
+            onClick={() => setIsOpen(false)} 
+          />
+          <div className="fixed inset-x-0 bottom-0 z-50 md:hidden animate-in slide-in-from-bottom duration-500 ease-out">
+            <Card className="rounded-t-lg border-t shadow-lg max-h-[80vh] flex flex-col transform transition-transform duration-500 ease-out">
+              <CardHeader className="pb-3 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ShoppingCart className="h-5 w-5" />
+                    Корзина ({cartCount})
+                  </CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="p-0 flex-1 overflow-hidden">
+                {loading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  </div>
+                ) : cartItems.length === 0 ? (
+                  <div className="text-center py-8 px-4">
+                    <ShoppingCart className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-500 mb-4">Корзина пуста</p>
+                    <Link href="/products">
+                      <Button size="sm" onClick={() => setIsOpen(false)}>
+                        Перейти к покупкам
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <>
+                    {/* Список товаров */}
+                    <div className="flex-1 overflow-y-auto px-4">
+                      {cartItems.map((item) => (
+                        <div key={String(item.productId)} className="flex gap-4 py-4 border-b last:border-b-0">
+                          {/* Изображение */}
+                          <div className="relative w-16 h-16 flex-shrink-0">
+                            {item.product.images && item.product.images.length > 0 ? (
+                              <Image
+                                src={item.product.images[0]}
+                                alt={item.product.name}
+                                fill
+                                className="object-cover rounded"
+                                sizes="64px"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center">
+                                <span className="text-gray-400 text-xs">Нет фото</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Информация о товаре */}
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-base line-clamp-2 mb-1">{item.product.name}</h4>
+                            <p className="text-sm text-gray-500 mb-2">{formatPrice(item.product.price)} за шт.</p>
+                            
+                            {/* Управление количеством */}
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-10 w-10 md:h-8 md:w-8 p-0"
+                                onClick={() => handleUpdateQuantity(String(item.productId), item.quantity - 1)}
+                                disabled={item.quantity <= 1 || updating === String(item.productId)}
+                              >
+                                <Minus className="h-5 w-5 md:h-4 md:w-4" />
+                              </Button>
+                              <span className="text-base font-medium w-12 md:w-10 text-center">{item.quantity}</span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-10 w-10 md:h-8 md:w-8 p-0"
+                                onClick={() => handleUpdateQuantity(String(item.productId), item.quantity + 1)}
+                                disabled={item.quantity >= item.product.stockQuantity || updating === String(item.productId)}
+                              >
+                                <Plus className="h-5 w-5 md:h-4 md:w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-10 w-10 md:h-8 md:w-8 p-0 ml-2"
+                                onClick={() => handleRemoveItem(String(item.productId))}
+                                disabled={updating === String(item.productId)}
+                              >
+                                <Trash2 className="h-5 w-5 md:h-4 md:w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          {/* Цена */}
+                          <div className="text-right">
+                            <p className="font-medium text-base">
+                              {formatPrice(item.product.price * item.quantity)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Итоги и кнопки */}
+                    <div className="p-4 border-t bg-gray-50 flex-shrink-0">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="font-medium text-lg">Итого:</span>
+                        <span className="font-bold text-xl">{formatPrice(totalAmount)}</span>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Link href="/cart" className="block">
+                          <Button 
+                            className="w-full h-12 text-base" 
+                            onClick={() => setIsOpen(false)}
+                          >
+                            Перейти в корзину
+                          </Button>
+                        </Link>
+                        <Link href="/checkout" className="block">
+                          <Button 
+                            variant="outline" 
+                            className="w-full h-12 text-base" 
+                            onClick={() => setIsOpen(false)}
+                          >
+                            Оформить заказ
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Десктопная версия */}
+          <div className="absolute right-0 top-full mt-2 w-96 z-50 hidden md:block">
+            <Card className="shadow-lg border">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -261,6 +408,7 @@ export default function CartDropdown({ className = '' }: CartDropdownProps) {
             </CardContent>
           </Card>
         </div>
+        </>
       )}
     </div>
   );

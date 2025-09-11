@@ -14,8 +14,18 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: "1.6rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+        xl: "2.5rem",
+        "2xl": "3rem",
+      },
       screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
         "2xl": "1400px",
       },
     },
@@ -95,7 +105,9 @@ const config = {
         dashboardLayout: "1.5fr 1fr",
       },
       screens: {
+        xs: "475px",
         smallerMobileScreen: "400px",
+        "3xl": "1600px",
       },
 
       borderRadius: {

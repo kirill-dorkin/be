@@ -9,6 +9,7 @@ import { ShoppingCart, Heart, Minus, Plus, ArrowLeft } from 'lucide-react';
 import { IProduct } from '@/models/Product';
 import useCustomToast from '@/hooks/useCustomToast';
 import { useRouter } from 'next/navigation';
+import { useFavorites } from '@/hooks/useFavorites';
 
 interface ProductDetailsProps {
   product: IProduct;
@@ -23,11 +24,13 @@ export default function ProductDetails({
 }: ProductDetailsProps) {
   const router = useRouter();
   const { showSuccessToast, showErrorToast } = useCustomToast();
+  const { addToFavorites, removeFromFavorites, isInFavorites } = useFavorites();
   
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  
+  const isFavorite = isInFavorites(String(product._id));
 
   const handleAddToCart = async () => {
     if (!onAddToCart) return;
@@ -53,12 +56,32 @@ export default function ProductDetails({
     }
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    showSuccessToast({
-      title: 'Избранное',
-      description: isFavorite ? 'Удалено из избранного' : 'Добавлено в избранное'
-    });
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await removeFromFavorites(String(product._id));
+        showSuccessToast({
+          title: 'Избранное',
+          description: 'Удалено из избранного'
+        });
+      } else {
+        await addToFavorites(String(product._id), {
+          name: product.name,
+          price: product.price,
+          images: product.images
+        });
+        showSuccessToast({
+          title: 'Избранное',
+          description: 'Добавлено в избранное'
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      showErrorToast({
+        title: 'Ошибка',
+        description: 'Не удалось обновить избранное'
+      });
+    }
   };
 
   const handleQuantityChange = (newQuantity: number) => {

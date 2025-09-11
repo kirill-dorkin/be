@@ -72,6 +72,11 @@
     background-color: hsl(var(--background));
     overflow-x: hidden;
     color: hsl(var(--foreground));
+    min-height: 100vh;
+  }
+
+  html {
+    height: 100%;
   }
 
   /* Headings */
@@ -79,18 +84,22 @@
     scroll-margin-top: 5rem;
     font-weight: 800;
     letter-spacing: -0.025em;
-    font-size: 1.875rem; /* text-3xl */
+    font-size: 1.5rem; /* text-2xl - уменьшено для мобильных */
+    
+    @media (width >= 480px) {
+      font-size: 1.875rem; /* text-3xl */
+    }
     
     @media (width >= 640px) {
       font-size: 2.25rem; /* text-4xl */
     }
     
     @media (width >= 768px) {
-      font-size: 3rem; /* text-5xl */
+      font-size: 2.5rem; /* уменьшено с 3rem */
     }
     
     @media (width >= 1024px) {
-      font-size: 3.75rem; /* text-6xl */
+      font-size: 3rem; /* уменьшено с 3.75rem */
     }
 
     /* Responsive text sizes for h1 */
@@ -106,14 +115,18 @@
     transition-property: color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
-    font-size: 1.5rem; /* text-2xl */
+    font-size: 1.25rem; /* text-xl - уменьшено для мобильных */
+    
+    @media (width >= 480px) {
+      font-size: 1.5rem; /* text-2xl */
+    }
     
     @media (width >= 640px) {
-      font-size: 1.875rem; /* text-3xl */
+      font-size: 1.75rem; /* уменьшено */
     }
     
     @media (width >= 768px) {
-      font-size: 2.25rem; /* text-4xl */
+      font-size: 2rem; /* уменьшено с 2.25rem */
     }
 
     /* Responsive text sizes for h2 */
@@ -121,45 +134,45 @@
 
   h3 {
     @apply mt-8 scroll-m-20 font-semibold tracking-tight;
-    @apply text-xl sm:text-2xl md:text-3xl;
+    @apply text-lg sm:text-xl md:text-2xl;
 
-    /* Responsive text sizes for h3 */
+    /* Responsive text sizes for h3 - уменьшено */
   }
 
   h4 {
     @apply scroll-m-20 font-semibold tracking-tight mb-6;
-    @apply text-lg sm:text-xl;
+    @apply text-base sm:text-lg md:text-xl;
 
-    /* Responsive text sizes for h4 */
+    /* Responsive text sizes for h4 - улучшено */
   }
 
   /* Text Elements */
   p {
     @apply leading-7 mt-6 text-muted-foreground;
-    @apply text-base sm:text-lg md:text-xl;
+    @apply text-sm sm:text-base md:text-lg;
 
-    /* Responsive paragraph sizes */
+    /* Responsive paragraph sizes - оптимизировано */
   }
 
   li {
     @apply text-muted-foreground;
-    @apply text-base sm:text-lg;
+    @apply text-sm sm:text-base md:text-lg;
 
-    /* Responsive list item sizes */
+    /* Responsive list item sizes - оптимизировано */
   }
 
   strong {
     @apply text-primary;
-    @apply text-lg sm:text-xl;
+    @apply text-base sm:text-lg;
 
-    /* Responsive strong text sizes */
+    /* Responsive strong text sizes - оптимизировано */
   }
 
   a {
     @apply font-medium relative text-foreground transition;
-    @apply text-base sm:text-lg;
+    @apply text-sm sm:text-base md:text-lg;
 
-    /* Responsive text sizes for links */
+    /* Responsive text sizes for links - оптимизировано */
   }
 
   blockquote {
@@ -194,6 +207,88 @@
 
   .price {
     @apply mt-0;
+  }
+
+  /* Responsive utility classes */
+  .text-responsive {
+    @apply text-sm sm:text-base md:text-lg;
+  }
+
+  .text-responsive-sm {
+    @apply text-xs sm:text-sm md:text-base;
+  }
+
+  .text-responsive-lg {
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl;
+  }
+
+  .padding-responsive {
+    @apply p-3 sm:p-4 md:p-6;
+  }
+
+  .margin-responsive {
+    @apply m-2 sm:m-3 md:m-4;
+  }
+
+  .gap-responsive {
+    @apply gap-2 sm:gap-3 md:gap-4;
+  }
+
+  /* Button responsive classes */
+  .btn-responsive {
+    @apply h-9 px-3 py-2 text-sm sm:h-10 sm:px-4 sm:text-base;
+  }
+
+  .btn-responsive-sm {
+    @apply h-8 px-2 py-1 text-xs sm:h-9 sm:px-3 sm:text-sm;
+  }
+
+  .btn-responsive-lg {
+    @apply h-10 px-4 py-2 text-sm sm:h-11 sm:px-6 sm:text-base md:h-12 md:px-8;
+  }
+
+  /* Mobile-first responsive utilities */
+  .mobile-optimized {
+    @apply text-sm leading-relaxed;
+  }
+
+  .mobile-padding {
+    @apply p-3 sm:p-4 md:p-6 lg:p-8;
+  }
+
+  .mobile-margin {
+    @apply m-2 sm:m-3 md:m-4 lg:m-6;
+  }
+
+  .mobile-gap {
+    @apply gap-2 sm:gap-3 md:gap-4 lg:gap-6;
+  }
+
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .touch-button {
+    @apply h-11 px-4 py-3 text-base sm:h-10 sm:px-4 sm:py-2 sm:text-sm;
+  }
+
+  /* Improved readability on small screens */
+  .mobile-text {
+    @apply text-base leading-relaxed sm:text-sm sm:leading-normal;
+  }
+
+  .mobile-heading {
+    @apply text-xl font-semibold sm:text-lg md:text-xl lg:text-2xl;
+  }
+
+  /* Container optimizations */
+  .mobile-container {
+    @apply px-4 sm:px-6 md:px-8 lg:px-12;
+  }
+
+  .mobile-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3;
   }
 }
 
@@ -458,6 +553,36 @@
   }
 
   /* Responsive Typography */
+  @media (max-width: 480px) {
+    .apple-display-large {
+      font-size: 2.25rem;
+      line-height: 1.11111;
+    }
+
+    .apple-display-medium {
+      font-size: 1.875rem;
+      line-height: 1.13333;
+    }
+
+    .apple-display-small {
+      font-size: 1.5rem;
+      line-height: 1.16667;
+    }
+
+    /* Дополнительная оптимизация для очень маленьких экранов */
+    h1 {
+      font-size: 1.25rem !important;
+    }
+
+    h2 {
+      font-size: 1.125rem !important;
+    }
+
+    h3 {
+      font-size: 1rem !important;
+    }
+  }
+
   @media (max-width: 768px) {
     .apple-display-large {
       font-size: 3rem;
