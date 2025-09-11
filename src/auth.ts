@@ -3,9 +3,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getUserByEmail } from "./lib/dbUtils";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/dbConnect";
+import { randomBytes } from "crypto";
+
+const authSecret =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  randomBytes(32).toString("hex");
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -31,7 +37,13 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             image: user.image,
             role: user.role,
-          } as any;
+          } as {
+            id: string;
+            email: string;
+            name: string;
+            image?: string;
+            role: string;
+          };
         } catch (error) {
           console.error("Error during credentials authorize", error);
           return null;
