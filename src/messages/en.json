@@ -119,6 +119,63 @@
   },
   "admin": {
     "dashboard": {
+      "title": "Admin Panel",
+      "subtitle": "E-commerce management",
+      "stats": {
+        "totalProducts": "Total Products",
+        "orders": "Orders",
+        "revenue": "Revenue",
+        "users": "Users",
+        "active": "Active: {count}",
+        "totalOrders": "Total orders",
+        "totalRevenue": "Total order amount",
+        "comingSoon": "Coming soon"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "users": {
+          "addUser": "Add Employee",
+          "userDetails": "Enter employee details",
+          "name": "Name",
+          "email": "Email",
+          "password": "Password",
+          "nameRequired": "Name is required",
+          "emailInvalid": "Invalid email",
+          "passwordMinLength": "Password must be at least 6 characters",
+          "addUserError": "Failed to add user",
+          "saving": "Saving..."
+        },
+        "productManagement": {
+          "title": "Product Management",
+          "description": "Add, edit or delete products",
+          "view": "View Products",
+          "add": "Add Product",
+          "edit": "Edit Product",
+          "delete": "Delete Product",
+          "manage": "Manage Products"
+        },
+        "orders": {
+          "title": "Orders",
+          "description": "View and manage orders",
+          "comingSoon": "Coming soon"
+        },
+        "settings": {
+          "title": "Settings",
+          "description": "Store configuration",
+          "comingSoon": "Coming soon"
+        }
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "activityLog": "Activity Log",
+        "description": "Recent system actions will be displayed here"
+      },
+      "errors": {
+        "loadStats": "Error loading statistics",
+        "loadStatsFailed": "Failed to load statistics",
+        "pageNotFound": "Page Not Found",
+        "pageNotFoundDescription": "The page you are looking for does not exist."
+      },
       "activeTasks": "Active Tasks",
       "pendingTasks": "Pending Tasks",
       "inProgressTasks": "In Progress Tasks",
@@ -128,20 +185,12 @@
         "description": "Detailed list of all Best Electronics employees with basic information."
       }
     },
-    "tasks": {
-      "title": "Tasks"
-    },
     "users": {
-      "title": "Users"
-    },
-    "categories": {
-      "title": "Categories"
-    },
-    "devices": {
-      "title": "Devices"
-    },
-    "services": {
-      "title": "Services"
+      "title": "Users",
+      "metadata": {
+        "title": "User Management - Admin Panel",
+        "description": "Manage users and their permissions in the system"
+      }
     },
     "products": {
       "title": "Products",
@@ -150,6 +199,17 @@
         "description": "Add, edit and delete products in the online store"
       }
     },
+    "orders": "Orders",
+    "categories": {
+      "title": "Categories",
+      "metadata": {
+        "title": "Category Management - Admin Panel",
+        "description": "Manage product categories and their organization"
+      }
+    },
+    "services": {
+      "title": "Services"
+    },
     "tasks": {
       "title": "Tasks",
       "metadata": {
@@ -157,20 +217,28 @@
         "description": "Manage and track tasks in the system"
       }
     },
-    "users": {
-      "title": "Users",
-      "metadata": {
-        "title": "User Management - Admin Panel",
-        "description": "Manage users and their permissions in the system"
-      }
+    "devices": {
+      "title": "Devices"
     },
-    "categories": {
-      "title": "Categories",
-      "metadata": {
-        "title": "Category Management - Admin Panel",
-        "description": "Manage product categories and their organization"
-      }
-    }
+    "management": "Management",
+    "addUser": "Add User",
+    "addProduct": "Add Product",
+    "addCategory": "Add Category",
+    "addService": "Add Service",
+    "addTask": "Add Task",
+    "addDevice": "Add Device",
+    "editUser": "Edit User",
+    "editProduct": "Edit Product",
+    "deleteUser": "Delete User",
+    "deleteProduct": "Delete Product",
+    "userRole": "User Role",
+    "setRole": "Set Role",
+    "status": "Status",
+    "updateStatus": "Update Status",
+    "totalUsers": "Total Users",
+    "totalProducts": "Total Products",
+    "totalOrders": "Total Orders",
+    "revenue": "Revenue"
   },
   "auth": {
     "login": "Login",
@@ -237,130 +305,16 @@
     "showAll": "Show All"
   },
   "cart": {
-    "title": "Shopping Cart",
-    "item": "Item",
-    "quantity": "Quantity",
-    "total": "Total",
-    "subtotal": "Subtotal",
-    "tax": "Tax",
-    "shipping": "Shipping",
-    "discount": "Discount",
-    "grandTotal": "Grand Total",
-    "empty": "Your cart is empty",
-    "addItem": "Add Item",
-    "removeItem": "Remove Item",
-    "updateQuantity": "Update Quantity",
-    "proceedToCheckout": "Proceed to Checkout",
-    "continueShopping": "Continue Shopping",
-    "itemAdded": "Item added to cart",
-    "itemRemoved": "Item removed from cart",
-    "quantityUpdated": "Quantity updated"
+    "metadata": {
+      "title": "Shopping Cart - Online Store",
+      "description": "View and manage items in your shopping cart"
+    }
   },
   "checkout": {
-    "title": "Checkout",
-    "billingAddress": "Billing Address",
-    "shippingAddress": "Shipping Address",
-    "paymentMethod": "Payment Method",
-    "orderSummary": "Order Summary",
-    "placeOrder": "Place Order",
-    "orderPlaced": "Order placed successfully",
-    "orderNumber": "Order Number",
-    "estimatedDelivery": "Estimated Delivery",
-    "address": "Address",
-    "city": "City",
-    "state": "State",
-    "zipCode": "ZIP Code",
-    "country": "Country",
-    "creditCard": "Credit Card",
-    "paypal": "PayPal",
-    "bankTransfer": "Bank Transfer"
-  },
-  "admin": {
-    "dashboard": {
-      "title": "Admin Panel",
-      "subtitle": "E-commerce management",
-      "stats": {
-        "totalProducts": "Total Products",
-        "orders": "Orders",
-        "revenue": "Revenue",
-        "users": "Users",
-        "active": "Active: {count}",
-        "totalOrders": "Total orders",
-        "totalRevenue": "Total order amount",
-        "comingSoon": "Coming soon"
-      },
-      "quickActions": {
-        "title": "Quick Actions",
-        "users": {
-    "addUser": "Add Employee",
-    "userDetails": "Enter employee details",
-    "name": "Name",
-    "email": "Email",
-    "password": "Password",
-    "nameRequired": "Name is required",
-    "emailInvalid": "Invalid email",
-    "passwordMinLength": "Password must be at least 6 characters",
-    "addUserError": "Failed to add user",
-    "saving": "Saving..."
-  },
-  "productManagement": {
-          "title": "Product Management",
-          "description": "Add, edit or delete products",
-          "view": "View Products",
-          "add": "Add Product",
-          "edit": "Edit Product",
-          "delete": "Delete Product",
-          "manage": "Manage Products"
-        },
-        "orders": {
-          "title": "Orders",
-          "description": "View and manage orders",
-          "comingSoon": "Coming soon"
-        },
-        "settings": {
-          "title": "Settings",
-          "description": "Store configuration",
-          "comingSoon": "Coming soon"
-        }
-      },
-      "recentActivity": {
-        "title": "Recent Activity",
-        "activityLog": "Activity Log",
-        "description": "Recent system actions will be displayed here"
-      },
-      "errors": {
-        "loadStats": "Error loading statistics",
-        "loadStatsFailed": "Failed to load statistics",
-        "pageNotFound": "Page Not Found",
-        "pageNotFoundDescription": "The page you are looking for does not exist."
-      }
-    },
-    "users": "Users",
-    "products": "Products",
-    "orders": "Orders",
-    "categories": "Categories",
-    "services": "Services",
-    "tasks": "Tasks",
-    "devices": "Devices",
-    "management": "Management",
-    "addUser": "Add User",
-    "addProduct": "Add Product",
-    "addCategory": "Add Category",
-    "addService": "Add Service",
-    "addTask": "Add Task",
-    "addDevice": "Add Device",
-    "editUser": "Edit User",
-    "editProduct": "Edit Product",
-    "deleteUser": "Delete User",
-    "deleteProduct": "Delete Product",
-    "userRole": "User Role",
-    "setRole": "Set Role",
-    "status": "Status",
-    "updateStatus": "Update Status",
-    "totalUsers": "Total Users",
-    "totalProducts": "Total Products",
-    "totalOrders": "Total Orders",
-    "revenue": "Revenue"
+    "metadata": {
+      "title": "Checkout - Online Store",
+      "description": "Complete your order and choose delivery method"
+    }
   },
   "contacts": {
     "title": "Contact Us",
@@ -469,18 +423,6 @@
     "name": "Name",
     "nameRequired": "Name is required",
     "addCategoryError": "Failed to add category"
-  },
-  "cart": {
-    "metadata": {
-      "title": "Shopping Cart - Online Store",
-      "description": "View and manage items in your shopping cart"
-    }
-  },
-  "checkout": {
-    "metadata": {
-      "title": "Checkout - Online Store",
-      "description": "Complete your order and choose delivery method"
-    }
   },
   "productManagement": {
     "title": "Product Management",
