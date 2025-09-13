@@ -40,4 +40,5 @@ FavoriteSchema.index({ addedAt: -1 });
 
 const Favorite = mongoose.models.Favorite || mongoose.model<IFavorite>('Favorite', FavoriteSchema);
 
+export { Favorite };
 export default Favorite;

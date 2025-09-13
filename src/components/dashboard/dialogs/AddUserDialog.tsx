@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,20 +18,21 @@ import { z } from "zod";
 import InputFormField from "@/components/InputFormField";
 import addUserAction from "@/actions/dashboard/addUserAction";
 
-const UserSchema = z.object({
-  name: z.string().min(1, { message: "Имя обязательно" }).max(100),
-  email: z.string().email({ message: "Некорректный email" }),
-  password: z.string().min(6, { message: "Пароль должен быть не менее 6 символов" }),
+const createUserSchema = (t: ReturnType<typeof useTranslations>) => z.object({
+  name: z.string().min(1, { message: t("users.nameRequired") }).max(100),
+  email: z.string().email({ message: t("users.emailInvalid") }),
+  password: z.string().min(6, { message: t("users.passwordMinLength") }),
 });
 
-type UserForm = z.infer<typeof UserSchema>;
+type UserForm = z.infer<ReturnType<typeof createUserSchema>>;
 
 export function AddUserDialog() {
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
 
   const methods = useForm<UserForm>({
-    resolver: zodResolver(UserSchema),
+    resolver: zodResolver(createUserSchema(t)),
     defaultValues: { name: "", email: "", password: "" },
     mode: "onChange",
   });
@@ -47,15 +49,15 @@ export function AddUserDialog() {
     try {
       const response = await addUserAction(data.name, data.email, data.password);
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
+        showErrorToast({ title: t("common.error"), description: response.message || t("common.errorOccurred") });
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message || "Операция выполнена успешно" });
+        showSuccessToast({ title: t("common.success"), description: response.message || t("common.operationSuccessful") });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить пользователя",
+        title: t("common.error"),
+        description: error instanceof Error ? error.message : t("users.addUserError"),
       });
     } finally {
       setLoading(false);
@@ -65,18 +67,18 @@ export function AddUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Добавить сотрудника</Button>
+        <Button>{t("users.addUser")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Добавить сотрудника</DialogTitle>
-          <DialogDescription>Укажите данные сотрудника</DialogDescription>
+          <DialogTitle>{t("users.addUser")}</DialogTitle>
+          <DialogDescription>{t("users.userDetails")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField
               name="name"
-              label="Имя"
+              label={t("users.name")}
               id="name"
               type="text"
               control={control}
@@ -84,7 +86,7 @@ export function AddUserDialog() {
             />
             <InputFormField
               name="email"
-              label="Email"
+              label={t("users.email")}
               id="email"
               type="text"
               control={control}
@@ -92,7 +94,7 @@ export function AddUserDialog() {
             />
             <InputFormField
               name="password"
-              label="Пароль"
+              label={t("users.password")}
               id="password"
               type="password"
               control={control}
@@ -101,7 +103,7 @@ export function AddUserDialog() {
           </FormProvider>
           <DialogFooter className="pt-2">
             <Button type="submit" disabled={loading}>
-              {loading ? "Сохранение..." : "Сохранить"}
+              {loading ? t("users.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </form>

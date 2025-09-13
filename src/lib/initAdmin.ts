@@ -5,12 +5,12 @@ import User from '../models/User';
 export async function ensureDefaultAdmin() {
   try {
     await connectToDatabase();
-    const existing = await User.findOne({ email: 'admin' });
+    const existing = await User.findOne({ email: 'admin@gmail.com' });
     if (!existing) {
       const passwordHash = await bcrypt.hash('admin123#', 10);
       const admin = new User({
         name: 'Administrator',
-        email: 'admin',
+        email: 'admin@gmail.com',
         role: 'admin',
         image: '/admin.png',
         passwordHash,

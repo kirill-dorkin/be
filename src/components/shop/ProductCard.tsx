@@ -5,12 +5,13 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-import { ShoppingCart, Heart, Eye, ShoppingBag, CreditCard } from 'lucide-react';
+import { ShoppingCart, Heart, Eye, ShoppingBag } from 'lucide-react';
 import { IProduct } from '@/models/Product';
 import useCustomToast from '@/hooks/useCustomToast';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useTranslations } from 'next-intl';
 
 interface ProductCardProps {
   product: IProduct;
@@ -35,6 +36,7 @@ export default function ProductCard({
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const { addToCart } = useCart();
   const { addToFavorites, removeFromFavorites, isInFavorites } = useFavorites();
+  const t = useTranslations('products');
   
   const isFavorite = isInFavorites(String(product._id));
 
@@ -48,11 +50,11 @@ export default function ProductCard({
     try {
       await addToCart(String(product._id), 1);
       setIsAddedToCart(true);
-      showSuccessToast({ title: 'Успех', description: 'Товар добавлен в корзину' });
+      showSuccessToast({ title: t('success'), description: t('addedToCart') });
       // Сбросить состояние через 3 секунды
       setTimeout(() => setIsAddedToCart(false), 3000);
     } catch {
-      showErrorToast({ title: 'Ошибка', description: 'Ошибка при добавлении в корзину' });
+      showErrorToast({ title: t('error'), description: t('addToCartError') });
     } finally {
       setIsLoading(false);
     }
@@ -75,8 +77,8 @@ export default function ProductCard({
       if (isFavorite) {
         await removeFromFavorites(String(product._id));
         showSuccessToast({
-          title: 'Избранное',
-          description: 'Удалено из избранного'
+          title: t('favorites'),
+          description: t('removedFromFavorites')
         });
       } else {
         await addToFavorites(String(product._id), {
@@ -85,15 +87,15 @@ export default function ProductCard({
           images: product.images
         });
         showSuccessToast({
-          title: 'Избранное',
-          description: 'Добавлено в избранное'
+          title: t('favorites'),
+          description: t('addedToFavorites')
         });
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось обновить избранное'
+        title: t('error'),
+        description: t('favoritesError')
       });
     }
   };
@@ -123,7 +125,7 @@ export default function ProductCard({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gray-100">
-            <span className="text-gray-400">Нет изображения</span>
+            <span className="text-gray-400">{t('noImage')}</span>
           </div>
         )}
         
@@ -131,12 +133,12 @@ export default function ProductCard({
         <div className="absolute left-2 top-2 flex flex-col gap-1">
           {isOutOfStock && (
             <span className="inline-flex items-center rounded-full border border-transparent bg-red-500 px-2.5 py-0.5 text-xs font-semibold text-white">
-              Нет в наличии
+              {t('outOfStock')}
             </span>
           )}
           {isLowStock && (
             <span className="inline-flex items-center rounded-full border border-transparent bg-gray-500 px-2.5 py-0.5 text-xs font-semibold text-white">
-              Мало товара
+              {t('lowStock')}
             </span>
           )}
         </div>
@@ -196,9 +198,9 @@ export default function ProductCard({
           {/* Количество в наличии */}
           <div className="text-xs text-gray-500">
             {isOutOfStock ? (
-              'Нет в наличии'
+              t('outOfStock')
             ) : (
-              `В наличии: ${product.stockQuantity} шт.`
+              t('inStock', { count: product.stockQuantity })
             )}
           </div>
         </div>
@@ -216,19 +218,19 @@ export default function ProductCard({
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                Добавление...
+                {t('adding')}
               </div>
             ) : isOutOfStock ? (
-              'Нет в наличии'
+              t('outOfStock')
             ) : isAddedToCart ? (
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-5 w-5 md:h-4 md:w-4" />
-                Перейти в корзину
+                {t('goToCart')}
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5 md:h-4 md:w-4" />
-                В корзину
+                {t('addToCart')}
               </div>
             )}
           </Button>
@@ -240,7 +242,7 @@ export default function ProductCard({
               variant="outline"
               disabled={isLoading}
             >
-              Купить сейчас
+              {t('buyNow')}
             </Button>
           )}
           

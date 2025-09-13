@@ -21,6 +21,7 @@ import {
 import { IProduct } from '@/models/Product';
 import useCustomToast from '@/hooks/useCustomToast';
 import Spinner from '@/components/ui/spinner';
+import { useTranslations } from 'next-intl';
 
 interface ProductFormData {
   name: string;
@@ -43,6 +44,7 @@ const initialFormData: ProductFormData = {
 };
 
 export default function ProductManagement() {
+  const t = useTranslations('productManagement');
   const { showSuccessToast, showErrorToast } = useCustomToast();
   
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -60,7 +62,7 @@ export default function ProductManagement() {
       const response = await fetch('/api/products');
       
       if (!response.ok) {
-        throw new Error('Ошибка при загрузке товаров');
+        throw new Error(t('messages.loadErrorDescription'));
       }
       
       const data = await response.json();
@@ -68,13 +70,13 @@ export default function ProductManagement() {
     } catch (error) {
       console.error('Error fetching products:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось загрузить товары'
+        title: t('messages.loadError'),
+        description: t('messages.loadErrorDescription')
       });
     } finally {
       setLoading(false);
     }
-  }, [showErrorToast]);
+  }, [showErrorToast, t]);
 
   // Фильтрация товаров
   const filteredProducts = products.filter(product =>
@@ -140,8 +142,8 @@ export default function ProductManagement() {
   const saveProduct = async () => {
     if (!formData.name.trim() || !formData.category.trim() || formData.price <= 0) {
       showErrorToast({
-        title: 'Ошибка валидации',
-        description: 'Заполните все обязательные поля'
+        title: t('messages.validationError'),
+        description: t('messages.validationErrorDescription')
       });
       return;
     }
@@ -160,7 +162,7 @@ export default function ProductManagement() {
       });
       
       if (!response.ok) {
-        throw new Error(editingProduct ? 'Ошибка при обновлении товара' : 'Ошибка при создании товара');
+        throw new Error(editingProduct ? t('messages.updateErrorDescription') : t('messages.createErrorDescription'));
       }
       
       const savedProduct = await response.json();
@@ -170,14 +172,14 @@ export default function ProductManagement() {
           prev.map(p => p._id === editingProduct._id ? savedProduct : p)
         );
         showSuccessToast({
-          title: 'Успех',
-          description: 'Товар обновлен'
+          title: t('messages.success'),
+          description: t('messages.productUpdated')
         });
       } else {
         setProducts(prev => [savedProduct, ...prev]);
         showSuccessToast({
-          title: 'Успех',
-          description: 'Товар создан'
+          title: t('messages.success'),
+          description: t('messages.productCreated')
         });
       }
       
@@ -185,8 +187,8 @@ export default function ProductManagement() {
     } catch (error) {
       console.error('Error saving product:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: editingProduct ? 'Не удалось обновить товар' : 'Не удалось создать товар'
+        title: editingProduct ? t('messages.updateError') : t('messages.createError'),
+        description: editingProduct ? t('messages.updateErrorDescription') : t('messages.createErrorDescription')
       });
     } finally {
       setSubmitting(false);
@@ -195,7 +197,7 @@ export default function ProductManagement() {
 
   // Удаление товара
   const deleteProduct = async (product: IProduct) => {
-    if (!confirm(`Вы уверены, что хотите удалить товар "${product.name}"?`)) {
+    if (!confirm(`${t('messages.deleteConfirm')} "${product.name}"?`)) {
       return;
     }
 
@@ -205,20 +207,20 @@ export default function ProductManagement() {
       });
       
       if (!response.ok) {
-        throw new Error('Ошибка при удалении товара');
+        throw new Error(t('messages.deleteErrorDescription'));
       }
       
       setProducts(prev => prev.filter(p => p._id !== product._id));
       
       showSuccessToast({
-        title: 'Успех',
-        description: 'Товар удален'
+        title: t('messages.success'),
+        description: t('messages.productDeleted')
       });
     } catch (error) {
       console.error('Error deleting product:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось удалить товар'
+        title: t('messages.deleteError'),
+        description: t('messages.deleteErrorDescription')
       });
     }
   };
@@ -238,7 +240,7 @@ export default function ProductManagement() {
       });
       
       if (!response.ok) {
-        throw new Error('Ошибка при изменении статуса товара');
+        throw new Error(t('messages.statusErrorDescription'));
       }
       
       const updatedProduct = await response.json();
@@ -248,14 +250,14 @@ export default function ProductManagement() {
       );
       
       showSuccessToast({
-        title: 'Успех',
-        description: `Товар ${updatedProduct.inStock ? 'активирован' : 'деактивирован'}`
+        title: t('messages.success'),
+        description: `${t('title')} ${updatedProduct.inStock ? t('messages.productActivated') : t('messages.productDeactivated')}`
       });
     } catch (error) {
       console.error('Error toggling product status:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось изменить статус товара'
+        title: t('messages.statusError'),
+        description: t('messages.statusErrorDescription')
       });
     }
   };
@@ -287,14 +289,14 @@ export default function ProductManagement() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Package className="h-8 w-8" />
-            Управление товарами
+            {t('title')}
           </h1>
-          <p className="text-gray-600 mt-1">Добавление, редактирование и удаление товаров</p>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         
         <Button onClick={openCreateForm} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Добавить товар
+          {t('addProduct')}
         </Button>
       </div>
 
@@ -304,7 +306,7 @@ export default function ProductManagement() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Поиск товаров по названию или категории..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -354,13 +356,13 @@ export default function ProductManagement() {
                 <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
                 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Категория:</span>
+                  <span className="text-gray-500">{t('labels.category')}</span>
                   <span className="font-medium">{product.category}</span>
                 </div>
                 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">В наличии:</span>
-                  <span className="font-medium">{product.stockQuantity} шт.</span>
+                  <span className="text-gray-500">{t('labels.inStock')}</span>
+                  <span className="font-medium">{product.stockQuantity} {t('labels.pieces')}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
@@ -372,16 +374,43 @@ export default function ProductManagement() {
                       variant="outline"
                       size="sm"
                       onClick={() => openEditForm(product)}
+                      className="flex items-center gap-1"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-3 w-3" />
+                      {t('editProduct')}
                     </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleProductStatus(product)}
+                      className={`flex items-center gap-1 ${
+                        product.inStock 
+                          ? 'text-orange-600 border-orange-600 hover:bg-orange-50' 
+                          : 'text-green-600 border-green-600 hover:bg-green-50'
+                      }`}
+                    >
+                      {product.inStock ? (
+                        <>
+                          <EyeOff className="h-3 w-3" />
+                          {t('deactivateProduct')}
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-3 w-3" />
+                          {t('activateProduct')}
+                        </>
+                      )}
+                    </Button>
+                    
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => deleteProduct(product)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="flex items-center gap-1 text-red-600 border-red-600 hover:bg-red-50"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3 w-3" />
+                      {t('deleteProduct')}
                     </Button>
                   </div>
                 </div>
@@ -395,20 +424,20 @@ export default function ProductManagement() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
-              <Package className="h-16 w-16 mx-auto text-gray-400" />
-              <div>
-                <h3 className="text-lg font-medium text-gray-900">
-                  {searchTerm ? 'Товары не найдены' : 'Нет товаров'}
-                </h3>
-                <p className="text-gray-500">
-                  {searchTerm ? 'Попробуйте изменить поисковый запрос' : 'Добавьте первый товар'}
-                </p>
-              </div>
-              {!searchTerm && (
-                <Button onClick={openCreateForm}>
-                  Добавить товар
-                </Button>
-              )}
+                <Package className="h-16 w-16 mx-auto text-gray-400" />
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {searchTerm ? t('noProductsFound') : t('noProducts')}
+                  </h3>
+                  <p className="text-gray-500">
+                    {searchTerm ? t('noProductsFoundDescription') : t('noProductsDescription')}
+                  </p>
+                </div>
+                {!searchTerm && (
+                  <Button onClick={openCreateForm}>
+                    {t('addProduct')}
+                  </Button>
+                )}
             </div>
           </CardContent>
         </Card>
@@ -421,7 +450,7 @@ export default function ProductManagement() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>
-                  {editingProduct ? 'Редактировать товар' : 'Добавить товар'}
+                  {editingProduct ? t('editProduct') : t('addProduct')}
                 </CardTitle>
                 <Button variant="ghost" size="sm" onClick={closeForm}>
                   <X className="h-4 w-4" />
@@ -431,23 +460,23 @@ export default function ProductManagement() {
             <CardContent className="space-y-4">
               {/* Название */}
               <div>
-                <Label htmlFor="name">Название *</Label>
+                <Label htmlFor="name">{t('form.name')} {t('form.required')}</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Введите название товара"
+                  placeholder={t('form.namePlaceholder')}
                 />
               </div>
               
               {/* Описание */}
               <div>
-                <Label htmlFor="description">Описание</Label>
+                <Label htmlFor="description">{t('form.description')}</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Введите описание товара"
+                  placeholder={t('form.descriptionPlaceholder')}
                   rows={3}
                 />
               </div>
@@ -455,7 +484,7 @@ export default function ProductManagement() {
               {/* Цена и количество */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="price">Цена *</Label>
+                  <Label htmlFor="price">{t('form.price')} {t('form.required')}</Label>
                   <Input
                     id="price"
                     type="number"
@@ -468,7 +497,7 @@ export default function ProductManagement() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="stockQuantity">Количество</Label>
+                  <Label htmlFor="stockQuantity">{t('form.stockQuantity')}</Label>
                   <Input
                     id="stockQuantity"
                     type="number"
@@ -482,24 +511,24 @@ export default function ProductManagement() {
               
               {/* Категория */}
               <div>
-                <Label htmlFor="category">Категория *</Label>
+                <Label htmlFor="category">{t('form.category')} {t('form.required')}</Label>
                 <Input
                   id="category"
                   value={formData.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  placeholder="Введите категорию товара"
+                  placeholder={t('form.categoryPlaceholder')}
                 />
               </div>
               
               {/* Изображения */}
               <div>
-                <Label>Изображения</Label>
+                <Label>{t('form.images')}</Label>
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <Input
                       value={imageInput}
                       onChange={(e) => setImageInput(e.target.value)}
-                      placeholder="URL изображения"
+                      placeholder={t('form.imagePlaceholder')}
                       onKeyPress={(e) => e.key === 'Enter' && addImage()}
                     />
                     <Button type="button" onClick={addImage} variant="outline">
@@ -514,7 +543,7 @@ export default function ProductManagement() {
                           <div className="relative h-20 bg-gray-100 rounded overflow-hidden">
                             <Image
                               src={image}
-                              alt={`Изображение ${index + 1}`}
+                              alt={`${t('form.images')} ${index + 1}`}
                               fill
                               className="object-cover"
                               sizes="100px"
@@ -545,7 +574,7 @@ export default function ProductManagement() {
                   onChange={(e) => handleInputChange('inStock', e.target.checked)}
                   className="w-4 h-4 text-blue-600"
                 />
-                <Label htmlFor="inStock">Товар в наличии</Label>
+                <Label htmlFor="inStock">{t('form.inStock')}</Label>
               </div>
               
               {/* Кнопки действий */}
@@ -558,12 +587,12 @@ export default function ProductManagement() {
                   {submitting ? (
                     <>
                       <Spinner />
-                      Сохранение...
+                      {t('form.saving')}
                     </>
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      {editingProduct ? 'Обновить' : 'Создать'}
+                      {editingProduct ? t('form.update') : t('form.create')}
                     </>
                   )}
                 </Button>
@@ -572,7 +601,7 @@ export default function ProductManagement() {
                   onClick={closeForm}
                   disabled={submitting}
                 >
-                  Отмена
+                  {t('form.cancel')}
                 </Button>
               </div>
             </CardContent>

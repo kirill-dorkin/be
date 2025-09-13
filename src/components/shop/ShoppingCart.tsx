@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +25,7 @@ export default function ShoppingCart({
   className = ''
 }: ShoppingCartProps) {
   const router = useRouter();
+  const t = useTranslations('cart');
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const { cartItems, loading, updateQuantity, removeFromCart, clearCart } = useCart();
   
@@ -42,14 +44,14 @@ export default function ShoppingCart({
     try {
       await updateQuantity(productId, newQuantity);
       showSuccessToast({
-        title: 'Успех',
-        description: 'Количество товара обновлено'
+        title: t('success'),
+        description: t('quantityUpdated')
       });
     } catch (error) {
       console.error('Error updating quantity:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось обновить количество товара'
+        title: t('error'),
+        description: t('quantityUpdateError')
       });
     } finally {
       setUpdating(null);
@@ -62,14 +64,14 @@ export default function ShoppingCart({
     try {
       await removeFromCart(productId);
       showSuccessToast({
-        title: 'Успех',
-        description: 'Товар удален из корзины'
+        title: t('success'),
+        description: t('itemRemoved')
       });
     } catch (error) {
       console.error('Error removing item:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось удалить товар'
+        title: t('error'),
+        description: t('removeError')
       });
     } finally {
       setUpdating(null);
@@ -81,14 +83,14 @@ export default function ShoppingCart({
     try {
       await clearCart();
       showSuccessToast({
-        title: 'Успех',
-        description: 'Корзина очищена'
+        title: t('success'),
+        description: t('cartCleared')
       });
     } catch (error) {
       console.error('Error clearing cart:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось очистить корзину'
+        title: t('error'),
+        description: t('clearError')
       });
     }
   };
@@ -145,7 +147,7 @@ export default function ShoppingCart({
             onClick={handleClearCart}
             disabled={loading}
           >
-            Очистить корзину
+            {t('clearCart')}
           </Button>
         )}
       </div>
@@ -157,11 +159,11 @@ export default function ShoppingCart({
               <div className="text-center space-y-4">
                 <ShoppingBag className="h-16 w-16 mx-auto text-gray-400" />
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">Корзина пуста</h3>
-                  <p className="text-gray-500">Добавьте товары в корзину для оформления заказа</p>
+                  <h3 className="text-lg font-medium text-gray-900">{t('empty')}</h3>
+                  <p className="text-gray-500">{t('emptyDescription')}</p>
                 </div>
                 <Button onClick={() => router.push('/products')}>
-                  Перейти к покупкам
+                  {t('continueShopping')}
                 </Button>
               </div>
             </CardContent>
@@ -187,7 +189,7 @@ export default function ShoppingCart({
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center">
-                          <span className="text-gray-400 text-sm">Нет фото</span>
+                          <span className="text-gray-400 text-sm">{t('noPhoto')}</span>
                         </div>
                       )}
                     </div>
@@ -257,7 +259,7 @@ export default function ShoppingCart({
                             {formatPrice(item.product.price * item.quantity)}
                           </p>
                           <p className="text-sm text-gray-500">
-                            {formatPrice(item.product.price)} за шт.
+                            {formatPrice(item.product.price)} {t('perItem')}
                           </p>
                         </div>
                       </div>
@@ -272,21 +274,21 @@ export default function ShoppingCart({
           <div className="lg:col-span-1 order-first lg:order-last">
             <Card className="lg:sticky lg:top-4">
               <CardHeader>
-                <CardTitle className="text-xl">Итоги заказа</CardTitle>
+                <CardTitle className="text-xl">{t('orderSummary')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex justify-between text-base">
-                    <span>Товары ({totalItems} шт.):</span>
+                    <span>{t('items')} ({totalItems} {t('pcs')}):</span>
                     <span>{formatPrice(totalAmount)}</span>
                   </div>
                   <div className="flex justify-between text-base">
-                    <span>Доставка:</span>
-                    <span className="text-green-600">Бесплатно</span>
+                    <span>{t('shipping')}:</span>
+                    <span className="text-green-600">{t('free')}</span>
                   </div>
                   <hr />
                   <div className="flex justify-between font-bold text-xl">
-                    <span>Итого:</span>
+                    <span>{t('total')}:</span>
                     <span>{formatPrice(totalAmount)}</span>
                   </div>
                 </div>
@@ -297,7 +299,7 @@ export default function ShoppingCart({
                   size="lg"
                   disabled={cartItems.length === 0}
                 >
-                  Оформить заказ
+                  {t('proceedToCheckout')}
                 </Button>
                 
                 <Button
@@ -305,7 +307,7 @@ export default function ShoppingCart({
                   onClick={() => router.push('/products')}
                   className="w-full h-12 text-base"
                 >
-                  Продолжить покупки
+                  {t('continueShopping')}
                 </Button>
               </CardContent>
             </Card>

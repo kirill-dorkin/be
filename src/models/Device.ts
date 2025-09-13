@@ -20,4 +20,5 @@ const DeviceSchema: Schema<IDevice> = new Schema(
 
 const Device = mongoose.models.Device || mongoose.model<IDevice>('Device', DeviceSchema);
 
+export { Device };
 export default Device;

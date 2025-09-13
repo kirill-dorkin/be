@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -38,52 +39,53 @@ interface CheckoutFormData {
   comment?: string;
 }
 
-const deliveryOptions = [
-  {
-    id: 'standard',
-    name: 'Стандартная доставка',
-    description: '3-5 рабочих дней',
-    price: 0,
-    icon: Truck
-  },
-  {
-    id: 'express',
-    name: 'Экспресс доставка',
-    description: '1-2 рабочих дня',
-    price: 500,
-    icon: Truck
-  },
-  {
-    id: 'pickup',
-    name: 'Самовывоз',
-    description: 'Забрать в магазине',
-    price: 0,
-    icon: MapPin
-  }
-];
-
-const paymentOptions = [
-  {
-    id: 'card',
-    name: 'Банковская карта',
-    description: 'Visa, MasterCard, МИР',
-    icon: CreditCard
-  },
-  {
-    id: 'cash',
-    name: 'Наличными при получении',
-    description: 'Оплата курьеру',
-    icon: User
-  },
-  {
-    id: 'online',
-    name: 'Онлайн оплата',
-    description: 'Через интернет-банк',
-    icon: CreditCard
-  }
-];
-
 export default function Checkout() {
+  const t = useTranslations('checkout');
+  
+  const deliveryOptions = [
+    {
+      id: 'standard',
+      name: t('delivery.standard'),
+      description: t('delivery.standardDesc'),
+      price: 0,
+      icon: Truck
+    },
+    {
+      id: 'express',
+      name: t('delivery.express'),
+      description: t('delivery.expressDesc'),
+      price: 500,
+      icon: Truck
+    },
+    {
+      id: 'pickup',
+      name: t('delivery.pickup'),
+      description: t('delivery.pickupDesc'),
+      price: 0,
+      icon: MapPin
+    }
+  ];
+
+  const paymentOptions = [
+    {
+      id: 'card',
+      name: t('payment.card'),
+      description: t('payment.cardDesc'),
+      icon: CreditCard
+    },
+    {
+      id: 'cash',
+      name: t('payment.cash'),
+      description: t('payment.cashDesc'),
+      icon: User
+    },
+    {
+      id: 'online',
+      name: t('payment.online'),
+      description: t('payment.onlineDesc'),
+      icon: CreditCard
+    }
+  ];
   const router = useRouter();
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const { cartItems, loading, clearCart } = useCart();
@@ -98,7 +100,7 @@ export default function Checkout() {
     address: '',
     city: '',
     postalCode: '',
-    country: 'Кыргызстан',
+    country: t('form.defaultCountry'),
     deliveryMethod: 'standard',
     paymentMethod: 'card',
     comment: ''
@@ -112,27 +114,27 @@ export default function Checkout() {
   const validateForm = (): boolean => {
     const newErrors: Partial<CheckoutFormData> = {};
     
-    if (!formData.firstName.trim()) newErrors.firstName = 'Введите имя';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Введите фамилию';
-    if (!formData.email.trim()) newErrors.email = 'Введите email';
-    if (!formData.phone.trim()) newErrors.phone = 'Введите телефон';
+    if (!formData.firstName.trim()) newErrors.firstName = t('validation.firstNameRequired');
+    if (!formData.lastName.trim()) newErrors.lastName = t('validation.lastNameRequired');
+    if (!formData.email.trim()) newErrors.email = t('validation.emailRequired');
+    if (!formData.phone.trim()) newErrors.phone = t('validation.phoneRequired');
     
     if (formData.deliveryMethod !== 'pickup') {
-      if (!formData.address.trim()) newErrors.address = 'Введите адрес';
-      if (!formData.city.trim()) newErrors.city = 'Введите город';
-      if (!formData.postalCode.trim()) newErrors.postalCode = 'Введите почтовый индекс';
+      if (!formData.address.trim()) newErrors.address = t('validation.addressRequired');
+      if (!formData.city.trim()) newErrors.city = t('validation.cityRequired');
+      if (!formData.postalCode.trim()) newErrors.postalCode = t('validation.postalCodeRequired');
     }
     
     // Валидация email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (formData.email && !emailRegex.test(formData.email)) {
-      newErrors.email = 'Введите корректный email';
+      newErrors.email = t('validation.emailInvalid');
     }
     
     // Валидация телефона
     const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
     if (formData.phone && !phoneRegex.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
-      newErrors.phone = 'Введите корректный номер телефона';
+      newErrors.phone = t('validation.phoneInvalid');
     }
     
     setErrors(newErrors);
@@ -173,8 +175,8 @@ export default function Checkout() {
     
     if (!validateForm()) {
       showErrorToast({
-        title: 'Ошибка валидации',
-        description: 'Пожалуйста, заполните все обязательные поля'
+        title: t('validation.error'),
+        description: t('validation.fillRequired')
       });
       return;
     }
@@ -215,14 +217,14 @@ export default function Checkout() {
       });
       
       if (!response.ok) {
-        throw new Error('Ошибка при создании заказа');
+        throw new Error(t('messages.orderError'));
       }
       
       const order = await response.json();
       
       showSuccessToast({
-        title: 'Заказ оформлен!',
-        description: `Номер заказа: ${order._id}`
+        title: t('messages.orderSuccess'),
+        description: `${t('messages.orderNumber')}: ${order._id}`
       });
       
       // Очищаем корзину и перенаправляем на страницу заказа
@@ -232,8 +234,8 @@ export default function Checkout() {
     } catch (error) {
       console.error('Error creating order:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось оформить заказ. Попробуйте еще раз.'
+        title: t('messages.error'),
+        description: t('messages.orderErrorDescription')
       });
     } finally {
       setSubmitting(false);
@@ -257,8 +259,8 @@ export default function Checkout() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold">Оформление заказа</h1>
-        <p className="text-gray-600 mt-2">Заполните данные для доставки и оплаты</p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-gray-600 mt-2">{t('subtitle')}</p>
       </div>
       
       <form onSubmit={handleSubmit}>
@@ -270,13 +272,13 @@ export default function Checkout() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5" />
-                  Контактная информация
+                  {t('personalInfo')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">Имя *</Label>
+                    <Label htmlFor="firstName">{t('firstName')} *</Label>
                     <Input
                       id="firstName"
                       value={formData.firstName}
@@ -289,7 +291,7 @@ export default function Checkout() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="lastName">Фамилия *</Label>
+                    <Label htmlFor="lastName">{t('lastName')} *</Label>
                     <Input
                       id="lastName"
                       value={formData.lastName}
@@ -304,7 +306,7 @@ export default function Checkout() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="email">Email *</Label>
+                    <Label htmlFor="email">{t('email')} *</Label>
                     <Input
                       id="email"
                       type="email"
@@ -318,7 +320,7 @@ export default function Checkout() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="phone">Телефон *</Label>
+                    <Label htmlFor="phone">{t('phone')} *</Label>
                     <Input
                       id="phone"
                       type="tel"
@@ -339,7 +341,7 @@ export default function Checkout() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Truck className="h-5 w-5" />
-                  Способ доставки
+                  {t('deliveryMethod')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -366,7 +368,7 @@ export default function Checkout() {
                         </div>
                         <div className="text-right">
                           <p className="font-medium">
-                            {option.price > 0 ? formatPrice(option.price) : 'Бесплатно'}
+                            {option.price > 0 ? formatPrice(option.price) : t('free')}
                           </p>
                         </div>
                       </div>
@@ -382,17 +384,17 @@ export default function Checkout() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MapPin className="h-5 w-5" />
-                    Адрес доставки
+                    {t('deliveryInfo')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="address">Адрес *</Label>
+                    <Label htmlFor="address">{t('address')} *</Label>
                     <Input
                       id="address"
                       value={formData.address}
                       onChange={(e) => handleInputChange('address', e.target.value)}
-                      placeholder="Улица, дом, квартира"
+                      placeholder={t('addressPlaceholder')}
                       className={errors.address ? 'border-red-500' : ''}
                     />
                     {errors.address && (
@@ -402,7 +404,7 @@ export default function Checkout() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="city">Город *</Label>
+                      <Label htmlFor="city">{t('city')} *</Label>
                       <Input
                         id="city"
                         value={formData.city}
@@ -415,7 +417,7 @@ export default function Checkout() {
                     </div>
                     
                     <div>
-                      <Label htmlFor="postalCode">Почтовый индекс *</Label>
+                      <Label htmlFor="postalCode">{t('postalCode')} *</Label>
                       <Input
                         id="postalCode"
                         value={formData.postalCode}
@@ -428,7 +430,7 @@ export default function Checkout() {
                     </div>
                     
                     <div>
-                      <Label htmlFor="country">Страна</Label>
+                      <Label htmlFor="country">{t('country')}</Label>
                       <Input
                         id="country"
                         value={formData.country}
@@ -447,7 +449,7 @@ export default function Checkout() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CreditCard className="h-5 w-5" />
-                  Способ оплаты
+                  {t('paymentMethod')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -482,13 +484,13 @@ export default function Checkout() {
             {/* Комментарий к заказу */}
             <Card>
               <CardHeader>
-                <CardTitle>Комментарий к заказу</CardTitle>
+                <CardTitle>{t('comment')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Textarea
                   value={formData.comment}
                   onChange={(e) => handleInputChange('comment', e.target.value)}
-                  placeholder="Дополнительные пожелания к заказу..."
+                  placeholder={t('commentPlaceholder')}
                   rows={3}
                 />
               </CardContent>
@@ -499,7 +501,7 @@ export default function Checkout() {
           <div className="lg:col-span-1">
             <Card className="sticky top-4">
               <CardHeader>
-                <CardTitle>Ваш заказ</CardTitle>
+                <CardTitle>{t('yourOrder')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Список товаров */}
@@ -522,21 +524,21 @@ export default function Checkout() {
                 {/* Расчет стоимости */}
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Товары:</span>
+                    <span>{t('items')}:</span>
                     <span>{formatPrice(subtotal)}</span>
                   </div>
                   
                   <div className="flex justify-between">
-                    <span>Доставка:</span>
+                    <span>{t('delivery')}:</span>
                     <span>
-                      {deliveryPrice > 0 ? formatPrice(deliveryPrice) : 'Бесплатно'}
+                      {deliveryPrice > 0 ? formatPrice(deliveryPrice) : t('free')}
                     </span>
                   </div>
                   
                   <hr className="border-gray-200" />
                   
                   <div className="flex justify-between font-bold text-lg">
-                    <span>Итого:</span>
+                    <span>{t('total')}:</span>
                     <span>{formatPrice(total)}</span>
                   </div>
                 </div>
@@ -550,10 +552,10 @@ export default function Checkout() {
                   {submitting ? (
                     <>
                       <Spinner />
-                      Оформляем заказ...
+                      {t('processing')}
                     </>
                   ) : (
-                    'Оформить заказ'
+                    t('placeOrder')
                   )}
                 </Button>
                 
@@ -564,7 +566,7 @@ export default function Checkout() {
                   className="w-full"
                   disabled={submitting}
                 >
-                  Вернуться в корзину
+                  {t('backToCart')}
                 </Button>
               </CardContent>
             </Card>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslations } from 'next-intl'
 import InputFormField from '@/components/InputFormField'
 import PhoneInputField from '@/components/PhoneInputField'
 import useGeoCountry from '@/hooks/useGeoCountry'
@@ -24,43 +25,45 @@ import getServicesAction from '@/actions/dashboard/getServicesAction'
 import { IDevice } from '@/models/Device'
 import { IService } from '@/models/Service'
 
-const TaskSchema = z.object({
+const createTaskSchema = (t: (key: string) => string) => z.object({
   description: z
     .string()
-    .min(1, { message: 'Описание обязательно' })
-    .max(255, { message: 'Описание не должно превышать 255 символов' }),
+    .min(1, { message: t('validation.descriptionRequired') })
+    .max(255, { message: t('validation.descriptionMaxLength') }),
   customerName: z
     .string()
-    .min(1, { message: 'Имя клиента обязательно' })
-    .max(100, { message: 'Имя клиента не должно превышать 100 символов' })
+    .min(1, { message: t('validation.customerNameRequired') })
+    .max(100, { message: t('validation.customerNameMaxLength') })
     .regex(/^[A-Za-zА-Яа-яЁё]+$/, {
-      message: 'Имя клиента должно содержать только буквы',
+      message: t('validation.customerNameLettersOnly'),
     }),
   customerPhone: z
     .string()
-    .min(1, { message: 'Телефон клиента обязателен' })
-    .refine(isValidPhoneNumber, { message: 'Некорректный номер телефона' }),
+    .min(1, { message: t('validation.customerPhoneRequired') })
+    .refine(isValidPhoneNumber, { message: t('validation.phoneInvalid') }),
   laptopBrand: z
     .string()
-    .min(1, { message: 'Марка ноутбука обязательна' })
-    .max(100, { message: 'Марка ноутбука не должна превышать 100 символов' }),
+    .min(1, { message: t('validation.laptopBrandRequired') })
+    .max(100, { message: t('validation.laptopBrandMaxLength') }),
   laptopModel: z
     .string()
-    .min(1, { message: 'Модель ноутбука обязательна' })
-    .max(100, { message: 'Модель ноутбука не должна превышать 100 символов' }),
+    .min(1, { message: t('validation.laptopModelRequired') })
+    .max(100, { message: t('validation.laptopModelMaxLength') }),
   totalCost: z
     .number()
-    .min(0, { message: 'Стоимость должна быть положительным числом' }),
+    .min(0, { message: t('validation.totalCostPositive') }),
 })
 
-type TaskFormData = z.infer<typeof TaskSchema>
-
 export default function RequestForm() {
+  const t = useTranslations('requestForm')
   const [loading, setLoading] = useState(false)
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const [devices, setDevices] = useState<IDevice[]>([])
   const [services, setServices] = useState<IService[]>([])
   const country = useGeoCountry()
+
+  const TaskSchema = createTaskSchema(t)
+  type TaskFormData = z.infer<typeof TaskSchema>
 
   const methods = useForm<TaskFormData>({
     resolver: zodResolver(TaskSchema),
@@ -107,18 +110,18 @@ export default function RequestForm() {
       const response = await addTaskAction(data)
 
       if (response.status === 'error') {
-        showErrorToast({ title: 'Error', description: response.message })
+        showErrorToast({ title: t('error'), description: response.message })
       } else {
         showSuccessToast({
-          title: 'Success',
+          title: t('success'),
           description: response.message,
         })
         reset()
       }
     } catch (error) {
       showErrorToast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'An unknown error occurred.',
+        title: t('error'),
+        description: error instanceof Error ? error.message : t('unknownError'),
       })
     } finally {
       setLoading(false)
@@ -132,16 +135,16 @@ export default function RequestForm() {
           control={control}
           name="description"
           id="description"
-          label="Описание проблемы"
+          label={t('problemDescription')}
           errors={errors}
           isTextarea
         />
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm" htmlFor="device">Устройство</label>
+          <label className="text-sm" htmlFor="device">{t('device')}</label>
           <Select onValueChange={handleDeviceChange}>
             <SelectTrigger id="device">
-              <SelectValue placeholder="Выберите устройство" />
+              <SelectValue placeholder={t('selectDevice')} />
             </SelectTrigger>
             <SelectContent>
               {devices.map((d) => (
@@ -154,15 +157,15 @@ export default function RequestForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-sm" htmlFor="service">Услуга</label>
+          <label className="text-sm" htmlFor="service">{t('service')}</label>
           <Select onValueChange={handleServiceChange}>
             <SelectTrigger id="service">
-              <SelectValue placeholder="Выберите услугу" />
+              <SelectValue placeholder={t('selectService')} />
             </SelectTrigger>
             <SelectContent>
               {services.map((s) => (
                 <SelectItem key={s._id?.toString()} value={s._id?.toString() || ''}>
-                  {s.name} - {s.cost} сом
+                  {s.name} - {s.cost} {t('currency')}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -173,7 +176,7 @@ export default function RequestForm() {
           control={control}
           name="customerName"
           id="customerName"
-          label="Имя клиента"
+          label={t('customerName')}
           errors={errors}
           onChange={(e) => {
             e.target.value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ]+/g, '')
@@ -183,17 +186,17 @@ export default function RequestForm() {
         <PhoneInputField
           control={control}
           name="customerPhone"
-          label="Телефон клиента"
+          label={t('customerPhone')}
           defaultCountry={country}
         />
 
 
         <div className="text-right font-medium">
-          {`Примерная стоимость: ${methods.watch('totalCost')} сом`}
+          {t('estimatedCost', { cost: methods.watch('totalCost') })}
         </div>
 
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? 'Отправка...' : 'Отправить заявку'}
+          {loading ? t('submitting') : t('submitRequest')}
         </Button>
       </form>
     </FormProvider>

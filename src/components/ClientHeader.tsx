@@ -2,17 +2,20 @@
 import Link from "next/link";
 import BaseContainer from "@/components/BaseContainer";
 import { useState } from "react";
+import { useTranslations } from 'next-intl';
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function ClientHeader() {
   const [open, setOpen] = useState(false);
+  const t = useTranslations('common');
 
   const links = [
-    { href: "/products", label: "Магазин" },
+    { href: "/products", label: t('navigation.products') },
   ];
 
   return (
     <>
-      <header className="w-full">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-sm">
         <BaseContainer className="flex items-center justify-between py-4">
         <Link href="/" prefetch={false} className="flex items-center gap-2 text-xl font-semibold">
           Best Electronics
@@ -30,6 +33,7 @@ export default function ClientHeader() {
               </Link>
             ))}
           </nav>
+          <LanguageSwitcher />
           <div className="md:hidden relative z-50">
             <button
             onClick={() => setOpen((prev) => !prev)}
@@ -70,6 +74,7 @@ export default function ClientHeader() {
             {link.label}
           </Link>
         ))}
+        <LanguageSwitcher />
       </div>
     </>
   );

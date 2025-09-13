@@ -25,20 +25,23 @@ import InputFormField from "@/components/InputFormField";
 import addServiceAction from "@/actions/dashboard/addServiceAction";
 import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
 import { ICategory } from "@/models/Category";
+import { useTranslations } from "next-intl";
+import { ServiceFormData } from "@/schemas/ServiceSchema";
 
-const ServiceSchema = z.object({
+const createServiceSchema = (t: ReturnType<typeof useTranslations>) => z.object({
   category: z.string().min(1),
-  name: z.string().min(1, { message: "Название обязательно" }).max(100),
-  cost: z.string().refine((v) => !isNaN(parseFloat(v)) && parseFloat(v) >= 0, { message: "Стоимость должна быть положительной" }),
+  name: z.string().min(1, { message: t("services.nameRequired") }).max(100),
+  cost: z.string().refine((v) => !isNaN(parseFloat(v)) && parseFloat(v) >= 0, { message: t("services.costMustBePositive") }),
   duration: z.string().optional(),
 });
-
-type ServiceFormData = z.infer<typeof ServiceSchema>;
 
 export function AddServiceDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const t = useTranslations();
+  
+  const ServiceSchema = createServiceSchema(t);
 
   useEffect(() => {
     getCategoriesAction(1, 100).then((res) => {
@@ -66,15 +69,15 @@ export function AddServiceDialog() {
     try {
       const response = await addServiceAction(data.category, data.name, parseFloat(data.cost), data.duration || "");
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showErrorToast({ title: t("common.error"), description: response.message });
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
+        showSuccessToast({ title: t("common.success"), description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить услугу",
+        title: t("common.error"),
+        description: error instanceof Error ? error.message : t("services.addServiceError"),
       });
     } finally {
       setLoading(false);
@@ -84,19 +87,19 @@ export function AddServiceDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Добавить услугу</Button>
+        <Button>{t("services.addService")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Добавить услугу</DialogTitle>
-          <DialogDescription>Детали услуги</DialogDescription>
+          <DialogTitle>{t("services.addService")}</DialogTitle>
+          <DialogDescription>{t("services.serviceDetails")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField<ServiceFormData>
               name="name"
               id="name"
-              label="Название"
+              label={t("services.name")}
               type="text"
               control={control}
               errors={errors}
@@ -104,7 +107,7 @@ export function AddServiceDialog() {
             <InputFormField<ServiceFormData>
               name="cost"
               id="cost"
-              label="Стоимость"
+              label={t("services.cost")}
               type="number"
               control={control}
               errors={errors}
@@ -112,19 +115,19 @@ export function AddServiceDialog() {
             <InputFormField<ServiceFormData>
               name="duration"
               id="duration"
-              label="Длительность (например, 2 дня)"
+              label={t("services.duration")}
               type="text"
               control={control}
               errors={errors}
             />
             <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="category">Категория</label>
+              <label className="text-sm" htmlFor="category">{t("services.category")}</label>
               <Select
                 value={methods.watch("category")}
                 onValueChange={(value) => methods.setValue("category", value)}
               >
                 <SelectTrigger id="category">
-                  <SelectValue placeholder="Выбрать" />
+                  <SelectValue placeholder={t("common.select")} />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => (
@@ -135,7 +138,7 @@ export function AddServiceDialog() {
             </div>
           </FormProvider>
           <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>Сохранить</Button>
+            <Button type="submit" disabled={loading}>{t("common.save")}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

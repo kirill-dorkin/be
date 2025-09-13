@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,18 +18,19 @@ import { z } from "zod";
 import InputFormField from "@/components/InputFormField";
 import addCategoryAction from "@/actions/dashboard/addCategoryAction";
 
-const CategorySchema = z.object({
-  name: z.string().min(1, { message: "Название обязательно" }).max(100),
+const createCategorySchema = (t: ReturnType<typeof useTranslations>) => z.object({
+  name: z.string().min(1, { message: t("categories.nameRequired") }).max(100),
 });
 
-type CategoryFormData = z.infer<typeof CategorySchema>;
+type CategoryFormData = z.infer<ReturnType<typeof createCategorySchema>>;
 
 export function AddCategoryDialog() {
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
 
   const methods = useForm<CategoryFormData>({
-    resolver: zodResolver(CategorySchema),
+    resolver: zodResolver(createCategorySchema(t)),
     defaultValues: { name: "" },
     mode: "onChange",
   });
@@ -45,15 +47,15 @@ export function AddCategoryDialog() {
     try {
       const response = await addCategoryAction(data.name);
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showErrorToast({ title: t("common.error"), description: response.message });
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
+        showSuccessToast({ title: t("common.success"), description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить категорию",
+        title: t("common.error"),
+        description: error instanceof Error ? error.message : t("categories.addCategoryError"),
       });
     } finally {
       setLoading(false);
@@ -63,26 +65,26 @@ export function AddCategoryDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Добавить категорию</Button>
+        <Button>{t("categories.addCategory")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Добавить категорию</DialogTitle>
-          <DialogDescription>Укажите название категории</DialogDescription>
+          <DialogTitle>{t("categories.addCategory")}</DialogTitle>
+          <DialogDescription>{t("categories.categoryDetails")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField
               name="name"
               id="name"
-              label="Название"
+              label={t("categories.name")}
               type="text"
               control={control}
               errors={errors}
             />
           </FormProvider>
           <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>Сохранить</Button>
+            <Button type="submit" disabled={loading}>{t("status.save")}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

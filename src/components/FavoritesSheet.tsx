@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, X, Trash2, ShoppingCart, Plus, Minus } from 'lucide-react';
+import { Heart, Trash2, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Sheet,
   SheetContent,
@@ -17,6 +16,7 @@ import {
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCart } from '@/hooks/useCart';
 import useCustomToast from '@/hooks/useCustomToast';
+import { useTranslations } from 'next-intl';
 
 interface FavoritesSheetProps {
   className?: string;
@@ -28,6 +28,7 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const { favoriteItems, favoriteCount, loading, removeFromFavorites } = useFavorites();
   const { addToCart } = useCart();
+  const t = useTranslations('favorites');
 
   // Форматирование цены
   const formatPrice = (price: number) => {
@@ -45,14 +46,14 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
     try {
       await removeFromFavorites(productId);
       showSuccessToast({
-        title: 'Успех',
-        description: 'Товар удален из избранного'
+        title: t('success'),
+        description: t('removedFromFavorites')
       });
     } catch (error) {
       console.error('Error removing from favorites:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось удалить товар из избранного'
+        title: t('error'),
+        description: t('removeError')
       });
     } finally {
       setUpdating(null);
@@ -65,14 +66,14 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
     try {
       await addToCart(productId, 1);
       showSuccessToast({
-        title: 'Успех',
-        description: 'Товар добавлен в корзину'
+        title: t('success'),
+        description: t('addedToCart')
       });
     } catch (error) {
       console.error('Error adding to cart:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось добавить товар в корзину'
+        title: t('error'),
+        description: t('addToCartError')
       });
     } finally {
       setUpdating(null);
@@ -102,12 +103,12 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
               <Heart className="h-6 w-6 text-pink-500" />
               <div>
                 <SheetTitle className="text-lg font-semibold text-left">
-                  Избранное
+                  {t('title')}
                 </SheetTitle>
                 <SheetDescription className="text-sm text-gray-600 text-left">
                   {favoriteCount === 0 
-                    ? 'Нет избранных товаров'
-                    : `Товаров: ${favoriteCount}`
+                    ? t('noFavorites')
+                    : t('itemsCount', { count: favoriteCount })
                   }
                 </SheetDescription>
               </div>
@@ -128,10 +129,10 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
             <div className="text-center py-12 px-4 animate-in fade-in duration-500">
               <Heart className="h-20 w-20 mx-auto text-gray-300 mb-4 animate-pulse" />
               <h3 className="text-xl font-semibold text-gray-600 mb-2">
-                Нет избранных товаров
+                {t('noFavorites')}
               </h3>
               <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-                Добавляйте товары в избранное, чтобы не потерять их и быстро найти позже
+                {t('emptyDescription')}
               </p>
               <Link href="/products">
                 <Button 
@@ -139,7 +140,7 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
                   onClick={() => setIsOpen(false)}
                   className="bg-pink-500 hover:bg-pink-600 transform hover:scale-105 transition-all duration-200"
                 >
-                  Перейти к покупкам
+                  {t('continueShopping')}
                 </Button>
               </Link>
             </div>
@@ -149,7 +150,7 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
                 {favoriteItems.map((item, index) => (
                   <div 
                     key={String(item.productId)} 
-                    className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-[1.02] animate-in slide-in-from-left duration-300"
+                    className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-[1.02] animate-in slide-in-from-left"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     {/* Изображение товара */}
@@ -164,7 +165,7 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
-                          <span className="text-gray-400 text-xs">Нет фото</span>
+                          <span className="text-gray-400 text-xs">{t('noPhoto')}</span>
                         </div>
                       )}
                     </div>
@@ -193,7 +194,7 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
                           disabled={updating === String(item.productId)}
                         >
                           <ShoppingCart className="h-4 w-4 mr-2" />
-                          В корзину
+                          {t('addToCart')}
                         </Button>
                         
                         <Button
@@ -219,7 +220,7 @@ export default function FavoritesSheet({ className = '' }: FavoritesSheetProps) 
                     size="lg"
                     onClick={() => setIsOpen(false)}
                   >
-                    Посмотреть все избранные
+                    {t('viewAll')}
                   </Button>
                 </Link>
               </div>

@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Section from "@/components/launchui/Section";
+import { useTranslations } from 'next-intl';
 
 const Hero: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const t = useTranslations('hero');
 
   useEffect(() => {
     if (session?.user) return setIsLoggedIn(true);
@@ -63,7 +65,7 @@ const Hero: React.FC = () => {
   return (
     <Section
       id="hero"
-      className="relative flex min-h-screen items-center justify-center bg-white"
+      className="relative flex h-screen items-center justify-center bg-white"
     >
       {/* Минималистичный фон с тонким акцентом */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white" />
@@ -74,17 +76,17 @@ const Hero: React.FC = () => {
       <div className="relative flex flex-col items-center text-center px-8 max-w-4xl mx-auto">
         {/* Основной заголовок */}
         <h1 className="apple-display-large text-gray-900 mb-8">
-          Best Electronics
+          {t('title')}
         </h1>
         
         {/* Подзаголовок */}
         <h2 className="apple-headline text-gray-600 mb-12 max-w-2xl">
-          Профессиональный ремонт и модернизация электроники
+          {t('subtitle')}
         </h2>
         
         {/* Описание */}
         <p className="apple-body text-gray-500 mb-16 max-w-xl">
-          Доверьте свои устройства экспертам. Качественный сервис с гарантией результата.
+          {t('description')}
         </p>
         
         {/* Кнопки действий */}
@@ -95,7 +97,7 @@ const Hero: React.FC = () => {
               asChild 
               className="apple-button bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 transition-all duration-200 border-0 shadow-sm hover:shadow-md"
             >
-              <Link href="/request">Заказать ремонт</Link>
+              <Link href="/request">{t('orderRepair')}</Link>
             </Button>
           )}
           {isLoggedIn && (
@@ -105,7 +107,7 @@ const Hero: React.FC = () => {
                 className="apple-button bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 transition-all duration-200 border-0 shadow-sm hover:shadow-md" 
                 onClick={handleGoToDashboard}
               >
-                Перейти в панель
+                {t('goToDashboard')}
               </Button>
               <Button
                 size="lg"
@@ -113,7 +115,7 @@ const Hero: React.FC = () => {
                 className="apple-button border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full px-8 py-3 transition-all duration-200 shadow-sm hover:shadow-md"
                 onClick={handleLogout}
               >
-                Выйти
+                {t('logout')}
               </Button>
             </>
           )}

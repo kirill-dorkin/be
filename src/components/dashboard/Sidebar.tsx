@@ -9,54 +9,61 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RiDashboardFill } from 'react-icons/ri';
 import { FaTasks, FaUsers } from 'react-icons/fa';
+import { useTranslations } from "next-intl";
 
-const adminLinks = [
+interface LinkItem {
+  href: string;
+  label: string;
+  icon: React.ReactElement;
+}
+
+const getAdminLinks = (t: ReturnType<typeof useTranslations>): LinkItem[] => [
   {
     href: "/admin/dashboard",
-    label: "Панель",
+    label: t("navigation.dashboard"),
     icon: <RiDashboardFill />,
   },
   {
     href: "/admin/tasks",
-    label: "Задачи",
+    label: t("navigation.tasks"),
     icon: <FaTasks />,
   },
   {
     href: "/admin/users",
-    label: "Пользователи",
+    label: t("navigation.users"),
     icon: <FaUsers />,
   },
   {
     href: "/admin/categories",
-    label: "Категории",
+    label: t("navigation.categories"),
     icon: <FaTasks />,
   },
   {
     href: "/admin/devices",
-    label: "Устройства",
+    label: t("navigation.devices"),
     icon: <FaTasks />,
   },
   {
     href: "/admin/services",
-    label: "Услуги",
+    label: t("navigation.services"),
     icon: <FaTasks />,
   },
 ];
 
-const workerLinks = [
+const getWorkerLinks = (t: ReturnType<typeof useTranslations>): LinkItem[] => [
   {
     href: "/worker/my-tasks",
-    label: "Мои задачи",
+    label: t("navigation.myTasks"),
     icon: <FaTasks />,
   },
 ];
 
-const getLinksByRole = (role: string) => {
+const getLinksByRole = (role: string, t: ReturnType<typeof useTranslations>): LinkItem[] => {
   switch (role) {
     case 'worker':
-      return workerLinks;
+      return getWorkerLinks(t);
     case 'admin':
-      return adminLinks;
+      return getAdminLinks(t);
     default:
       return [];
   }
@@ -66,13 +73,14 @@ const Sidebar = () => {
   const { isExpanded, toggleSidebar, setIsExpanded } = useAppContext();
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
-  const [links, setLinks] = useState(workerLinks);
+  const [links, setLinks] = useState<LinkItem[]>([]);
+  const t = useTranslations('common');
 
   useEffect(() => {
     if (session?.user) {
-      setLinks(getLinksByRole(session?.user?.role));
+      setLinks(getLinksByRole(session?.user?.role, t));
     }
-  }, [session?.user]);
+  }, [session?.user, t]);
 
   const handleLogout = () => {
     signOut();
@@ -111,7 +119,7 @@ const Sidebar = () => {
             }`}
           style={{ display: isExpanded ? "block" : "none" }}
         >
-          Меню
+          {t("navigation.menu")}
         </h2>
         <span
           className="h-5 text-4xl w-6 cursor-pointer flex items-center justify-center"
@@ -159,7 +167,7 @@ const Sidebar = () => {
                 }`}
               style={{ display: isExpanded ? "block" : "none" }}
             >
-              Выйти
+              {t("navigation.logout")}
             </span>
           </button>
         </li>

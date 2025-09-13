@@ -1,0 +1,306 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Сактоо",
+      "cancel": "Жокко чыгаруу",
+      "edit": "Өзгөртүү",
+      "delete": "Өчүрүү",
+      "add": "Кошуу",
+      "update": "Жаңыртуу",
+      "submit": "Жөнөтүү",
+      "close": "Жабуу",
+      "confirm": "Ырастоо",
+      "back": "Артка",
+      "next": "Кийинки",
+      "previous": "Мурунку",
+      "search": "Издөө",
+      "filter": "Чыпкалоо",
+      "clear": "Тазалоо",
+      "reset": "Баштапкы абалга келтирүү"
+    },
+    "navigation": {
+      "home": "Башкы бет",
+      "products": "Товарлар",
+      "cart": "Себет",
+      "checkout": "Төлөм",
+      "orders": "Заказдар",
+      "admin": "Администратор",
+      "dashboard": "Башкаруу панели",
+      "profile": "Профиль",
+      "settings": "Жөндөөлөр",
+      "logout": "Чыгуу",
+      "login": "Кирүү",
+      "register": "Катталуу",
+      "favorites": "Тандалмалар",
+      "menu": "Меню",
+      "tasks": "Тапшырмалар",
+      "users": "Колдонуучулар",
+      "categories": "Категориялар",
+      "devices": "Түзүлүштөр",
+      "services": "Кызматтар",
+      "myTasks": "Менин тапшырмаларым"
+    },
+    "error": "Ката",
+    "success": "Ийгиликтүү",
+    "unknownError": "Белгисиз ката пайда болду"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Сыр сөз",
+    "signIn": "Кирүү",
+    "invalidCredentials": "Туура эмес email же сыр сөз",
+    "title": "Кирүү",
+    "forgotPassword": "Сыр сөздү унуттуңузбу?",
+    "rememberMe": "Эстеп калуу"
+  },
+  "profile": {
+    "title": "Профиль",
+    "subtitle": "Жеке маалыматтарды башкаруу",
+    "name": "Аты",
+    "email": "Электрондук почта",
+    "role": "Ролу",
+    "memberSince": "Мүчө болгон убакыт",
+    "edit": "Профилди түзөтүү",
+    "save": "Өзгөртүүлөрдү сактоо",
+    "cancel": "Жокко чыгаруу",
+    "notLoggedIn": "Бул баракты көрүү үчүн системага кирүү керек",
+    "namePlaceholder": "Атыңызды киргизиңиз",
+    "emailPlaceholder": "Электрондук почтаңызды киргизиңиз",
+    "roles": {
+      "admin": "Администратор",
+      "worker": "Кызматкер",
+      "user": "Колдонуучу"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "activeTasks": "Активдүү тапшырмалар",
+      "pendingTasks": "Күтүлүп жаткан тапшырмалар",
+      "inProgressTasks": "Аткарылып жаткан тапшырмалар",
+      "completedTasks": "Аяктаган тапшырмалар",
+      "employeeList": {
+        "title": "Кызматкерлердин тизмеси",
+        "description": "Best Electronics компаниясынын бардык кызматкерлеринин негизги маалыматтары менен толук тизмеси."
+      }
+    },
+    "tasks": {
+      "title": "Тапшырмалар"
+    },
+    "users": {
+      "title": "Колдонуучулар"
+    },
+    "categories": {
+      "title": "Категориялар"
+    },
+    "devices": {
+      "title": "Түзүлүштөр"
+    },
+    "services": {
+      "title": "Кызматтар"
+    },
+    "products": {
+      "title": "Товарлар",
+      "metadata": {
+        "title": "Товарларды башкаруу - Админ панели",
+        "description": "Интернет дүкөндө товарларды кошуу, өзгөртүү жана өчүрүү"
+      }
+    },
+    "tasks": {
+      "title": "Тапшырмалар",
+      "metadata": {
+        "title": "Тапшырмаларды башкаруу - Админ панели",
+        "description": "Системадагы тапшырмаларды башкаруу жана көзөмөлдөө"
+      }
+    },
+    "users": {
+      "title": "Колдонуучулар",
+      "metadata": {
+        "title": "Колдонуучуларды башкаруу - Админ панели",
+        "description": "Системадагы колдонуучуларды жана алардын укуктарын башкаруу"
+      }
+    },
+    "categories": {
+      "title": "Категориялар",
+      "metadata": {
+        "title": "Категорияларды башкаруу - Админ панели",
+        "description": "Товар категорияларын жана алардын уюштурулушун башкаруу"
+      }
+    }
+  },
+  "users": {
+    "addUser": "Кызматкер кошуу",
+    "userDetails": "Кызматкердин маалыматтарын көрсөтүңүз",
+    "name": "Аты",
+    "email": "Email",
+    "password": "Сыр сөз",
+    "nameRequired": "Аты милдеттүү",
+    "emailInvalid": "Туура эмес email",
+    "passwordMinLength": "Сыр сөз кеминде 6 символдон турушу керек",
+    "addUserError": "Колдонуучуну кошуу мүмкүн болбоду",
+    "saving": "Сактоо..."
+  },
+  "products": {
+    "title": "Товарлар",
+    "catalog": "Товарлардын каталогу",
+    "foundProducts": "Табылган товарлар: {count}",
+    "product": "Товар",
+    "name": "Аталышы",
+    "price": "Баасы",
+    "category": "Категория",
+    "description": "Сүрөттөмө",
+    "image": "Сүрөт",
+    "brand": "Бренд",
+    "model": "Модель",
+    "stock": "Кампа",
+    "availability": "Жеткиликтүүлүк",
+    "inStock": "Бар",
+    "outOfStock": "Жок",
+    "lowStock": "Аз калды",
+    "addToCart": "Себетке кошуу",
+    "buyNow": "Азыр сатып алуу",
+    "addToFavorites": "Тандалмаларга кошуу",
+    "removeFromFavorites": "Тандалмалардан алып салуу",
+    "viewDetails": "Толук маалымат",
+    "relatedProducts": "Окшош товарлар",
+    "specifications": "Мүнөздөмөлөр",
+    "reviews": "Пикирлер",
+    "rating": "Рейтинг",
+    "noReviews": "Пикирлер жок",
+    "writeReview": "Пикир жазуу",
+    "noProducts": "Товарлар табылган жок",
+    "loading": "Жүктөлүүдө...",
+    "searchPlaceholder": "Товарларды издөө...",
+    "sortBy": "Иреттөө",
+    "sortByName": "Аталышы боюнча",
+    "sortByPrice": "Баасы боюнча",
+    "sortByDate": "Датасы боюнча",
+    "filterBy": "Чыпкалоо",
+    "filterByCategory": "Категория боюнча чыпкалоо",
+    "allCategories": "Бардык категориялар",
+    "priceRange": "Баа диапазону",
+    "from": "Башынан",
+    "to": "Чейин",
+    "apply": "Колдонуу",
+    "clear": "Тазалоо",
+    "showAll": "Баарын көрсөтүү"
+  },
+  "dashboard": {
+    "greeting": {
+      "welcome": "Кош келдиңиз",
+      "welcomeUser": "Кош келдиңиз, {name}",
+      "hello": "Салам"
+    }
+  },
+  "hero": {
+    "title": "Best Electronics",
+    "subtitle": "Электроникалык түзүлүштөрдү кесиптик оңдоо жана модернизациялоо",
+    "description": "Түзүлүштөрүңүздү адистерге ишениңиз. Натыйжасы кепилденген сапаттуу кызмат.",
+    "orderRepair": "Оңдоого заказ берүү",
+    "viewProducts": "Товарларды көрүү",
+    "goToDashboard": "Башкаруу панелине өтүү",
+    "logout": "Чыгуу"
+  },
+  "orders": {
+    "title": "Заказдар",
+    "myOrders": "Менин заказдарым",
+    "orderHistoryDescription": "Сиздин сатып алуулардын тарыхы жана учурдагы заказдар",
+    "order": "Заказ",
+    "orderDetails": "Заказдын деталдары",
+    "orderHistory": "Заказдардын тарыхы",
+    "orderNumber": "Заказдын номери",
+    "orderDate": "Заказдын датасы",
+    "orderStatus": "Заказдын статусу",
+    "orderTotal": "Жалпы",
+    "orderItems": "Заказдагы товарлар",
+    "quantity": "Саны",
+    "price": "Баасы",
+    "total": "Жалпы",
+    "subtotal": "Аралык жыйынтык",
+    "shipping": "Жеткирүү",
+    "tax": "Салык",
+    "discount": "Арзандатуу",
+    "status": {
+      "pending": "Күтүүдө",
+      "processing": "Иштетилүүдө",
+      "shipped": "Жөнөтүлдү",
+      "delivered": "Жеткирилди",
+      "cancelled": "Жокко чыгарылды"
+    },
+    "noOrders": "Азырынча заказдарыңыз жок",
+    "viewOrder": "Заказды көрүү",
+    "cancelOrder": "Заказды жокко чыгаруу",
+    "reorder": "Кайра заказ берүү",
+    "trackOrder": "Заказды көзөмөлдөө"
+  },
+  "cart": {
+    "metadata": {
+      "title": "Себет - Интернет дүкөн",
+      "description": "Себеттеги товарларды көрүү жана башкаруу"
+    }
+  },
+  "checkout": {
+    "metadata": {
+      "title": "Буйрутма берүү - Интернет дүкөн",
+      "description": "Буйрутма берүү жана жеткирүү ыкмасын тандоо"
+    }
+  },
+  "productManagement": {
+    "title": "Товарларды башкаруу",
+    "subtitle": "Товарларды кошуу, өзгөртүү жана өчүрүү",
+    "addProduct": "Товар кошуу",
+    "editProduct": "Товарды өзгөртүү",
+    "deleteProduct": "Товарды өчүрүү",
+    "activateProduct": "Товарды активдештирүү",
+    "deactivateProduct": "Товарды деактивдештирүү",
+    "searchPlaceholder": "Товарларды аталышы же категориясы боюнча издөө...",
+    "noProducts": "Товарлар жок",
+    "noProductsFound": "Товарлар табылган жок",
+    "noProductsDescription": "Биринчи товарыңызды кошуңуз",
+    "noProductsFoundDescription": "Издөө сөзүн өзгөртүп көрүңүз",
+    "form": {
+      "name": "Аталышы",
+      "namePlaceholder": "Товардын аталышын киргизиңиз",
+      "description": "Сыпаттамасы",
+      "descriptionPlaceholder": "Товардын сыпаттамасын киргизиңиз",
+      "price": "Баасы",
+      "category": "Категориясы",
+      "categoryPlaceholder": "Товардын категориясын киргизиңиз",
+      "stockQuantity": "Саны",
+      "images": "Сүрөттөр",
+      "imagePlaceholder": "Сүрөттүн URL дареги",
+      "inStock": "Товар бар",
+      "required": "*",
+      "save": "Сактоо",
+      "create": "Түзүү",
+      "update": "Жаңыртуу",
+      "cancel": "Жокко чыгаруу",
+      "saving": "Сакталууда..."
+    },
+    "labels": {
+      "category": "Категориясы:",
+      "inStock": "Бар:",
+      "pieces": "даана"
+    },
+    "messages": {
+      "loadError": "Ката",
+      "loadErrorDescription": "Товарларды жүктөөдө ката",
+      "createError": "Ката",
+      "createErrorDescription": "Товар түзүүдө ката",
+      "updateError": "Ката",
+      "updateErrorDescription": "Товарды жаңыртууда ката",
+      "deleteError": "Ката",
+      "deleteErrorDescription": "Товарды өчүрүүдө ката",
+      "statusError": "Ката",
+      "statusErrorDescription": "Товардын статусун өзгөртүүдө ката",
+      "validationError": "Текшерүү катасы",
+      "validationErrorDescription": "Милдеттүү талааларды толтуруңуз",
+      "success": "Ийгиликтүү",
+      "productCreated": "Товар түзүлдү",
+      "productUpdated": "Товар жаңыртылды",
+      "productDeleted": "Товар өчүрүлдү",
+      "productActivated": "активдештирилди",
+      "productDeactivated": "деактивдештирилди",
+      "deleteConfirm": "Товарды өчүрүүнү каалайсызбы"
+    }
+  }
+}

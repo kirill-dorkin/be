@@ -56,4 +56,5 @@ ProductSchema.index({ inStock: 1 });
 
 const Product = mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);
 
+export { Product };
 export default Product;
