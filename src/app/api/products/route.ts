@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/dbConnect';
 import Product from '@/models/Product';
 import { getSession } from '@/auth';
+import { getTranslations } from 'next-intl/server';
 
 
 // GET - Получить список товаров с фильтрацией
@@ -84,8 +85,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching products:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при получении товаров' },
+      { error: t('fetchingProducts') },
       { status: 500 }
     );
   }
@@ -94,11 +96,12 @@ export async function GET(request: NextRequest) {
 // POST - Создать новый товар (только для админов)
 export async function POST(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Доступ запрещен' },
+        { error: t('accessDenied') },
         { status: 403 }
       );
     }
@@ -124,7 +127,7 @@ export async function POST(request: NextRequest) {
     // Валидация обязательных полей
     if (!name || !description || !price || !images || !category || stockQuantity === undefined) {
       return NextResponse.json(
-        { error: 'Заполните все обязательные поля' },
+        { error: t('fillRequiredFields') },
         { status: 400 }
       );
     }
@@ -152,14 +155,16 @@ export async function POST(request: NextRequest) {
     console.error('Error creating product:', error);
     
     if (error && typeof error === 'object' && 'code' in error && error.code === 11000) {
+      const tError = await getTranslations('api.errors');
       return NextResponse.json(
-        { error: 'SKU уже существует' },
+        { error: tError('skuAlreadyExists') },
         { status: 400 }
       );
     }
     
+    const tError = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при создании товара' },
+      { error: tError('creatingProduct') },
       { status: 500 }
     );
   }

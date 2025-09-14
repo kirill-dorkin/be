@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/dbConnect';
 import Cart, { ICartItem } from '@/models/Cart';
 import { getSession } from '@/auth';
 import mongoose from 'mongoose';
+import { getTranslations } from 'next-intl/server';
 
 interface RouteParams {
   params: Promise<{ productId: string }>;
@@ -14,11 +15,13 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
+    const tMessages = await getTranslations('api.messages');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -29,7 +32,7 @@ export async function DELETE(
     
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return NextResponse.json(
-        { error: 'Неверный ID товара' },
+        { error: t('invalidProductId') },
         { status: 400 }
       );
     }
@@ -38,7 +41,7 @@ export async function DELETE(
     
     if (!cart) {
       return NextResponse.json(
-        { error: 'Корзина не найдена' },
+        { error: t('cartNotFound') },
         { status: 404 }
       );
     }
@@ -49,7 +52,7 @@ export async function DELETE(
     
     if (itemIndex === -1) {
       return NextResponse.json(
-        { error: 'Товар не найден в корзине' },
+        { error: t('itemNotFoundInCart') },
         { status: 404 }
       );
     }
@@ -58,13 +61,14 @@ export async function DELETE(
     await cart.save();
     
     return NextResponse.json(
-      { message: 'Товар удален из корзины' },
+      { message: tMessages('itemRemovedFromCart') },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error removing item from cart:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при удалении товара из корзины' },
+      { error: t('removingFromCart') },
       { status: 500 }
     );
   }

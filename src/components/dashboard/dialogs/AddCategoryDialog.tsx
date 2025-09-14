@@ -47,14 +47,14 @@ export function AddCategoryDialog() {
     try {
       const response = await addCategoryAction(data.name);
       if (response.status === "error") {
-        showErrorToast({ title: t("common.error"), description: response.message });
+        showErrorToast({ title: t("common.status.error"), description: response.message });
       } else {
-        showSuccessToast({ title: t("common.success"), description: response.message });
+        showSuccessToast({ title: t("common.status.success"), description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: t("common.error"),
+        title: t("common.status.error"),
         description: error instanceof Error ? error.message : t("categories.addCategoryError"),
       });
     } finally {
@@ -84,7 +84,7 @@ export function AddCategoryDialog() {
             />
           </FormProvider>
           <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>{t("status.save")}</Button>
+            <Button type="submit" disabled={loading}>{t("common.status.save")}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

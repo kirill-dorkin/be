@@ -38,7 +38,15 @@
       "categories": "Категории",
       "devices": "Устройства",
       "services": "Услуги",
-      "myTasks": "Мои задачи"
+      "myTasks": "Мои задачи",
+      "overview": "Обзор",
+      "management": "Управление",
+      "commerce": "Коммерция",
+      "work": "Работа",
+      "analytics": "Аналитика",
+      "projects": "Проекты",
+      "applications": "Приложения",
+      "notifications": "Уведомления"
     },
     "dashboard": {
       "addTask": {
@@ -101,7 +109,17 @@
       "requiredField": "Это поле обязательно для заполнения",
       "emailInvalid": "Пожалуйста, введите корректный email адрес",
       "passwordTooShort": "Пароль должен содержать не менее 8 символов"
-    }
+    },
+    "actions": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "table": {
+      "noData": "Нет данных для отображения",
+      "search": "Поиск..."
+    },
+    "today": "Сегодня"
   },
   "login": {
     "email": "Email",
@@ -168,12 +186,42 @@
         "orders": {
           "title": "Заказы",
           "description": "Просмотр и управление заказами",
-          "comingSoon": "Скоро доступно"
+          "comingSoon": "Скоро доступно",
+          "view": "Просмотр"
+        },
+        "tasks": {
+          "title": "Задачи",
+          "description": "Управление задачами и проектами",
+          "view": "Просмотр"
         },
         "settings": {
           "title": "Настройки",
           "description": "Конфигурация магазина",
           "comingSoon": "Скоро доступно"
+        },
+        "newTask": {
+          "title": "Новая задача",
+          "description": "Создать новую задачу"
+        },
+        "addUser": {
+          "title": "Добавить пользователя",
+          "description": "Добавить нового пользователя в систему"
+        },
+        "viewTasks": {
+          "title": "Просмотр задач",
+          "description": "Просмотреть все задачи"
+        },
+        "search": {
+          "title": "Поиск",
+          "description": "Поиск по системе"
+        },
+        "reports": {
+          "title": "Отчеты",
+          "description": "Просмотр отчетов и аналитики"
+        },
+        "notifications": {
+          "title": "Уведомления",
+          "description": "Управление уведомлениями"
         }
       },
       "recentActivity": {
@@ -191,7 +239,9 @@
       "completedTasks": "Завершенные задачи",
       "employeeList": {
         "title": "Список сотрудников",
-        "description": "Подробный список всех сотрудников Best Electronics с основной информацией."
+        "description": "Подробный список всех сотрудников Best Electronics с основной информацией.",
+        "totalTasks": "Всего задач",
+        "noEmployeesFound": "Сотрудники не найдены"
       }
     },
     "users": {
@@ -199,6 +249,26 @@
       "metadata": {
         "title": "Управление пользователями - Админ панель",
         "description": "Управление пользователями и их правами в системе"
+      },
+      "table": {
+        "name": "Имя",
+        "email": "Email",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Действия",
+        "createdAt": "Дата создания",
+        "lastLogin": "Последний вход",
+        "registrationDate": "Дата регистрации",
+        "never": "Никогда",
+        "noUsers": "Пользователи не найдены",
+        "noUsersFound": "Пользователи не найдены",
+        "loading": "Загрузка пользователей..."
+      },
+      "status": {
+        "active": "Активен",
+        "inactive": "Неактивен",
+        "pending": "В ожидании",
+        "suspended": "Заблокирован"
       }
     },
     "products": {
@@ -208,7 +278,15 @@
         "description": "Добавление, редактирование и удаление товаров в интернет-магазине"
       }
     },
-    "orders": "Заказы",
+    "orders": {
+      "title": "Заказы",
+      "description": "Просмотр и управление заказами",
+      "comingSoon": "Скоро доступно",
+      "metadata": {
+        "title": "Управление заказами",
+        "description": "Просмотр и управление заказами клиентов"
+      }
+    },
     "categories": {
       "title": "Категории",
       "metadata": {
@@ -500,6 +578,18 @@
     "viewAll": "Посмотреть все",
     "laptops": "Ноутбуки"
   },
+  "contacts": {
+    "title": "Свяжитесь с нами",
+    "address": "Кулатова 8/1, Бишкек",
+    "description": "Мы всегда рады ответить на ваши вопросы.",
+    "form": {
+      "namePlaceholder": "Ваше имя",
+      "emailPlaceholder": "Email",
+      "messagePlaceholder": "Ваше сообщение",
+      "submit": "Отправить",
+      "messageSent": "Сообщение отправлено!"
+    }
+  },
   "dashboard": {
     "greeting": {
       "welcome": "Добро пожаловать",
@@ -540,10 +630,122 @@
   "hero": {
     "title": "Best Electronics",
     "subtitle": "Профессиональный ремонт и модернизация электроники",
-    "description": "Доверьте свои устройства экспертам. Качественный сервис с гарантией результата.",
+    "description": "Доверьте свои устройства экспертам. Качественный сервис с гарантированным результатом.",
     "orderRepair": "Заказать ремонт",
     "viewProducts": "Посмотреть товары",
-    "goToDashboard": "Перейти в панель",
+    "goToDashboard": "Перейти в панель управления",
     "logout": "Выйти"
+  },
+  "features": {
+    "title": "Наши преимущества",
+    "items": {
+      "fastRepair": {
+        "title": "Скоростной ремонт",
+        "description": "Выполняем диагностику и ремонт в кратчайшие сроки."
+      },
+      "modernEquipment": {
+        "title": "Современное оборудование",
+        "description": "Используем профессиональные инструменты и оригинальные детали."
+      },
+      "qualityGuarantee": {
+        "title": "Гарантия качества",
+        "description": "Предоставляем гарантию на все виды работ и запчастей."
+      },
+      "affordablePrices": {
+        "title": "Доступные цены",
+        "description": "Честная стоимость ремонта без скрытых платежей."
+      }
+    }
+  },
+  "reviews": {
+    "title": "Отзывы клиентов",
+    "items": {
+      "review1": "Отличный сервис и быстрый ремонт.",
+      "review2": "Помогли вернуть ноутбук к жизни.",
+      "review3": "Качественно объяснили причину поломки и быстро исправили.",
+      "review4": "Спасибо за профессиональный подход!"
+    }
+  },
+  "api": {
+    "errors": {
+      "unauthorized": "Необходима авторизация",
+      "accessDenied": "Доступ запрещен",
+      "invalidId": "Неверный ID",
+      "invalidProductId": "Неверный ID товара",
+      "invalidOrderId": "Неверный ID заказа",
+      "productNotFound": "Товар не найден",
+      "orderNotFound": "Заказ не найден",
+      "cartNotFound": "Корзина не найдена",
+      "itemNotFoundInCart": "Товар не найден в корзине",
+      "favoriteNotFound": "Товар не найден в избранном",
+      "quantityMustBePositive": "Количество должно быть больше 0",
+      "insufficientStock": "Недостаточно товара на складе",
+      "productAlreadyInFavorites": "Товар уже в избранном",
+      "skuAlreadyExists": "SKU уже существует",
+      "fillRequiredFields": "Заполните все обязательные поля",
+      "fillDeliveryAddress": "Заполните адрес доставки",
+      "cartIsEmpty": "Корзина пуста",
+      "cannotCancelOrder": "Заказ нельзя отменить в текущем статусе",
+      "productIdRequired": "ID товара обязателен",
+      "fetchingProducts": "Ошибка при получении товаров",
+      "fetchingProduct": "Ошибка при получении товара",
+      "updatingProduct": "Ошибка при обновлении товара",
+      "deletingProduct": "Ошибка при удалении товара",
+      "creatingProduct": "Ошибка при создании товара",
+      "fetchingOrders": "Ошибка при получении заказов",
+      "fetchingOrder": "Ошибка при получении заказа",
+      "updatingOrder": "Ошибка при обновлении заказа",
+      "cancellingOrder": "Ошибка при отмене заказа",
+      "creatingOrder": "Ошибка при создании заказа",
+      "fetchingCart": "Ошибка при получении корзины",
+      "addingToCart": "Ошибка при добавлении в корзину",
+      "updatingCart": "Ошибка при обновлении корзины",
+      "clearingCart": "Ошибка при очистке корзины",
+      "removingFromCart": "Ошибка при удалении товара из корзины",
+      "fetchingFavorites": "Ошибка при получении избранного",
+      "addingToFavorites": "Ошибка при добавлении в избранное",
+      "removingFromFavorites": "Ошибка при удалении из избранного",
+      "clearingFavorites": "Ошибка при очистке избранного"
+    },
+    "messages": {
+      "productAddedToFavorites": "Товар добавлен в избранное",
+      "itemRemovedFromCart": "Товар удален из корзины",
+      "orderCancelled": "Заказ отменен",
+      "cartCleared": "Корзина очищена",
+      "itemRemovedFromFavorites": "Товар удален из избранного",
+      "favoritesCleared": "Удалено {count} товаров из избранного"
+    }
+  },
+  "orderManagement": {
+    "title": "Управление заказами",
+    "filters": {
+      "title": "Фильтры",
+      "searchPlaceholder": "Поиск по ID заказа, имени или email...",
+      "statusPlaceholder": "Выберите статус",
+      "allStatuses": "Все статусы"
+    },
+    "status": {
+      "pending": "Ожидает",
+      "processing": "В обработке",
+      "shipped": "Отправлен",
+      "delivered": "Доставлен",
+      "cancelled": "Отменен"
+    },
+    "noOrders": "Заказы не найдены",
+    "unknownUser": "Неизвестный пользователь",
+    "noEmail": "Email не указан",
+    "items": "Товары",
+    "viewDetails": "Подробнее",
+    "messages": {
+      "loadError": "Ошибка загрузки",
+      "loadErrorDescription": "Не удалось загрузить заказы",
+      "updateError": "Ошибка обновления",
+      "updateErrorDescription": "Не удалось обновить статус заказа",
+      "updateSuccess": "Успешно обновлено",
+      "updateSuccessDescription": "Статус заказа успешно обновлен"
+    }
+  },
+  "validation": {
+    "customerNameLettersOnly": "Имя клиента должно содержать только буквы"
   }
 }

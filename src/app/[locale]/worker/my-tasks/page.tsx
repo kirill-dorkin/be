@@ -8,6 +8,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardTitle from "@/components/dashboard/DashboardTitle";
 import getWorkerTasksAction from "@/actions/dashboard/getWorkerTasksAction";
+import { getTranslations } from 'next-intl/server';
 
 const MyTasksPage = async ({
   searchParams,
@@ -16,6 +17,7 @@ const MyTasksPage = async ({
   const session = await getServerSession(authOptions);
   const user = session?.user;
   const workerId = user?.id as string;
+  const t = await getTranslations('worker');
   // @ts-expect-error - getWorkerTasksAction return type mismatch
   const { items = [], totalItemsLength = 0 } = await getWorkerTasksAction(
     workerId,
@@ -26,7 +28,7 @@ const MyTasksPage = async ({
   return (
     <DashboardContainer className="w-full min-h-svh py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex max-md:flex-col gap-6 justify-between">
-        <DashboardTitle>Мои задачи</DashboardTitle>
+        <DashboardTitle>{t('myTasks.title')}</DashboardTitle>
         <div className="flex gap-6">
           <SelectShowing />
         </div>

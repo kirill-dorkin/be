@@ -38,7 +38,11 @@
       "categories": "Categories",
       "devices": "Devices",
       "services": "Services",
-      "myTasks": "My Tasks"
+      "myTasks": "My Tasks",
+      "overview": "Overview",
+      "management": "Management",
+      "commerce": "Commerce",
+      "work": "Work"
     }
   },
   "dashboard": {
@@ -68,6 +72,7 @@
         "descriptionMaxLength": "Description cannot exceed 255 characters",
         "customerNameRequired": "Customer name is required",
         "customerNameMaxLength": "Customer name cannot exceed 100 characters",
+        "customerNameLettersOnly": "Customer name must contain only letters",
         "customerPhoneRequired": "Customer phone is required",
         "invalidPhoneNumber": "Invalid phone number",
         "laptopBrandRequired": "Laptop brand is required",
@@ -89,6 +94,16 @@
     "emailInvalid": "Please enter a valid email address",
     "passwordTooShort": "Password must be at least 8 characters long"
   },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "table": {
+    "noData": "No data available",
+    "search": "Search..."
+  },
+  "today": "Today",
   "login": {
     "email": "Email",
     "password": "Password",
@@ -133,6 +148,34 @@
       },
       "quickActions": {
         "title": "Quick Actions",
+        "newTask": {
+          "title": "New Task",
+          "description": "Create a new task"
+        },
+        "addUser": {
+          "title": "Add User",
+          "description": "Add a new user"
+        },
+        "viewTasks": {
+          "title": "View Tasks",
+          "description": "View all tasks"
+        },
+        "search": {
+          "title": "Search",
+          "description": "Search through data"
+        },
+        "settings": {
+          "title": "Settings",
+          "description": "System settings"
+        },
+        "reports": {
+          "title": "Reports",
+          "description": "View reports"
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "View notifications"
+        },
         "users": {
           "addUser": "Add Employee",
           "userDetails": "Enter employee details",
@@ -157,7 +200,11 @@
         "orders": {
           "title": "Orders",
           "description": "View and manage orders",
-          "comingSoon": "Coming soon"
+          "comingSoon": "Coming soon",
+          "metadata": {
+            "title": "Order Management",
+            "description": "View and manage customer orders"
+          }
         },
         "settings": {
           "title": "Settings",
@@ -182,7 +229,9 @@
       "completedTasks": "Completed Tasks",
       "employeeList": {
         "title": "Employee List",
-        "description": "Detailed list of all Best Electronics employees with basic information."
+        "description": "Detailed list of all Best Electronics employees with basic information.",
+        "totalTasks": "Total Tasks",
+        "noEmployeesFound": "No employees found"
       }
     },
     "users": {
@@ -190,6 +239,23 @@
       "metadata": {
         "title": "User Management - Admin Panel",
         "description": "Manage users and their permissions in the system"
+      },
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions",
+        "createdAt": "Created At",
+        "lastLogin": "Last Login",
+        "noUsers": "No users found",
+        "loading": "Loading users..."
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "pending": "Pending",
+        "suspended": "Suspended"
       }
     },
     "products": {
@@ -489,6 +555,18 @@
     "viewAll": "View All",
     "laptops": "Laptops"
   },
+  "contacts": {
+    "title": "Contact Us",
+    "address": "Kulatova 8/1, Bishkek",
+    "description": "We are always happy to answer your questions.",
+    "form": {
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "Email",
+      "messagePlaceholder": "Your message",
+      "submit": "Send",
+      "messageSent": "Message sent!"
+    }
+  },
   "hero": {
     "title": "Best Electronics",
     "subtitle": "Professional electronics repair and upgrade",
@@ -497,5 +575,115 @@
     "viewProducts": "View Products",
     "goToDashboard": "Go to Dashboard",
     "logout": "Logout"
+  },
+  "features": {
+    "title": "Our Advantages",
+    "items": {
+      "fastRepair": {
+        "title": "Fast Repair",
+        "description": "We perform diagnostics and repairs in the shortest possible time."
+      },
+      "modernEquipment": {
+        "title": "Modern Equipment",
+        "description": "We use professional tools and original parts."
+      },
+      "qualityGuarantee": {
+        "title": "Quality Guarantee",
+        "description": "We provide warranty on all types of work and spare parts."
+      },
+      "affordablePrices": {
+        "title": "Affordable Prices",
+        "description": "Fair repair cost without hidden fees."
+      }
+    }
+  },
+  "reviews": {
+    "title": "Customer Reviews",
+    "items": {
+      "review1": "Excellent service and fast repair.",
+      "review2": "Helped bring the laptop back to life.",
+      "review3": "Quality explanation of the cause of the breakdown and quick fix.",
+      "review4": "Thank you for the professional approach!"
+    }
+  },
+  "api": {
+    "errors": {
+      "unauthorized": "Authorization required",
+      "accessDenied": "Access denied",
+      "invalidId": "Invalid ID",
+      "invalidProductId": "Invalid product ID",
+      "invalidOrderId": "Invalid order ID",
+      "productNotFound": "Product not found",
+      "orderNotFound": "Order not found",
+      "cartNotFound": "Cart not found",
+      "itemNotFoundInCart": "Item not found in cart",
+      "favoriteNotFound": "Item not found in favorites",
+      "quantityMustBePositive": "Quantity must be greater than 0",
+      "clearingFavorites": "Error clearing favorites",
+      "insufficientStock": "Insufficient stock",
+      "productAlreadyInFavorites": "Product already in favorites",
+      "skuAlreadyExists": "SKU already exists",
+      "fillRequiredFields": "Fill in all required fields",
+      "fillDeliveryAddress": "Fill in delivery address",
+      "cartIsEmpty": "Cart is empty",
+      "cannotCancelOrder": "Order cannot be cancelled in current status",
+      "productIdRequired": "Product ID is required",
+      "fetchingProducts": "Error fetching products",
+      "fetchingProduct": "Error fetching product",
+      "updatingProduct": "Error updating product",
+      "deletingProduct": "Error deleting product",
+      "creatingProduct": "Error creating product",
+      "fetchingOrders": "Error fetching orders",
+      "fetchingOrder": "Error fetching order",
+      "updatingOrder": "Error updating order",
+      "cancellingOrder": "Error cancelling order",
+      "creatingOrder": "Error creating order",
+      "fetchingCart": "Error fetching cart",
+      "addingToCart": "Error adding to cart",
+      "updatingCart": "Error updating cart",
+      "clearingCart": "Error clearing cart",
+      "removingFromCart": "Error removing item from cart",
+      "fetchingFavorites": "Error fetching favorites",
+      "addingToFavorites": "Error adding to favorites",
+      "removingFromFavorites": "Error removing from favorites",
+      "clearingFavorites": "Error clearing favorites"
+    },
+    "messages": {
+      "productAddedToFavorites": "Product added to favorites",
+      "itemRemovedFromCart": "Item removed from cart",
+      "orderCancelled": "Order cancelled",
+      "cartCleared": "Cart cleared",
+      "itemRemovedFromFavorites": "Item removed from favorites",
+      "favoritesCleared": "Removed {count} items from favorites"
+    }
+  },
+  "orderManagement": {
+    "title": "Order Management",
+    "filters": {
+      "title": "Filters",
+      "searchPlaceholder": "Search orders...",
+      "statusPlaceholder": "Filter by status",
+      "allStatuses": "All Statuses"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "noOrders": "No orders found",
+    "unknownUser": "Unknown User",
+    "noEmail": "No email",
+    "items": "items",
+    "viewDetails": "View Details",
+    "messages": {
+      "loadError": "Error",
+      "loadErrorDescription": "Failed to load orders. Please try again.",
+      "updateSuccess": "Success",
+      "updateSuccessDescription": "Order status updated successfully.",
+      "updateError": "Error",
+      "updateErrorDescription": "Failed to update order status. Please try again."
+    }
   }
 }

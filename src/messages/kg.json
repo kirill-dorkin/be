@@ -44,6 +44,16 @@
     "success": "Ийгиликтүү",
     "unknownError": "Белгисиз ката пайда болду"
   },
+  "actions": {
+    "view": "Көрүү",
+    "edit": "Өзгөртүү",
+    "delete": "Өчүрүү"
+  },
+  "table": {
+    "noData": "Маалымат жок",
+    "search": "Издөө..."
+  },
+  "today": "Бүгүн",
   "login": {
     "email": "Email",
     "password": "Сыр сөз",
@@ -80,7 +90,40 @@
       "completedTasks": "Аяктаган тапшырмалар",
       "employeeList": {
         "title": "Кызматкерлердин тизмеси",
-        "description": "Best Electronics компаниясынын бардык кызматкерлеринин негизги маалыматтары менен толук тизмеси."
+        "description": "Best Electronics компаниясынын бардык кызматкерлеринин негизги маалыматтары менен толук тизмеси.",
+        "totalTasks": "Жалпы тапшырмалар",
+        "noEmployeesFound": "Кызматкерлер табылган жок"
+      },
+      "quickActions": {
+        "title": "Тез аракеттер",
+        "newTask": {
+          "title": "Жаңы тапшырма",
+          "description": "Жаңы тапшырма түзүү"
+        },
+        "addUser": {
+          "title": "Колдонуучу кошуу",
+          "description": "Жаңы колдонуучу кошуу"
+        },
+        "viewTasks": {
+          "title": "Тапшырмаларды көрүү",
+          "description": "Бардык тапшырмаларды көрүү"
+        },
+        "search": {
+          "title": "Издөө",
+          "description": "Маалыматтарды издөө"
+        },
+        "settings": {
+          "title": "Жөндөөлөр",
+          "description": "Система жөндөөлөрү"
+        },
+        "reports": {
+          "title": "Отчеттор",
+          "description": "Отчетторду көрүү"
+        },
+        "notifications": {
+          "title": "Билдирүүлөр",
+          "description": "Билдирүүлөрдү көрүү"
+        }
       }
     },
     "tasks": {
@@ -117,6 +160,23 @@
       "metadata": {
         "title": "Колдонуучуларды башкаруу - Админ панели",
         "description": "Системадагы колдонуучуларды жана алардын укуктарын башкаруу"
+      },
+      "table": {
+        "name": "Аты",
+        "email": "Email",
+        "role": "Ролу",
+        "status": "Статус",
+        "actions": "Аракеттер",
+        "createdAt": "Түзүлгөн убакыт",
+        "lastLogin": "Акыркы кирүү",
+        "noUsers": "Колдонуучулар табылган жок",
+        "loading": "Колдонуучулар жүктөлүүдө..."
+      },
+      "status": {
+        "active": "Активдүү",
+        "inactive": "Активдүү эмес",
+        "pending": "Күтүлүүдө",
+        "suspended": "Токтотулган"
       }
     },
     "categories": {
@@ -191,6 +251,18 @@
       "hello": "Салам"
     }
   },
+  "contacts": {
+    "title": "Биз менен байланышыңыз",
+    "address": "Кулатова 8/1, Бишкек",
+    "description": "Биз сиздин суроолоруңузга жооп берүүгө дайыма даярбыз.",
+    "form": {
+      "namePlaceholder": "Сиздин атыңыз",
+      "emailPlaceholder": "Email",
+      "messagePlaceholder": "Сиздин билдирүүңүз",
+      "submit": "Жөнөтүү",
+      "messageSent": "Билдирүү жөнөтүлдү!"
+    }
+  },
   "hero": {
     "title": "Best Electronics",
     "subtitle": "Электроникалык түзүлүштөрдү кесиптик оңдоо жана модернизациялоо",
@@ -231,6 +303,86 @@
     "cancelOrder": "Заказды жокко чыгаруу",
     "reorder": "Кайра заказ берүү",
     "trackOrder": "Заказды көзөмөлдөө"
+  },
+  "features": {
+    "title": "Биздин артыкчылыктар",
+    "items": {
+      "fastRepair": {
+        "title": "Тез оңдоо",
+        "description": "Диагностика жана оңдоону эң кыска мөөнөттө аткарабыз."
+      },
+      "modernEquipment": {
+        "title": "Заманбап жабдуулар",
+        "description": "Кесиптик аспаптарды жана түпнуска бөлүктөрдү колдонобуз."
+      },
+      "qualityGuarantee": {
+        "title": "Сапат кепилдиги",
+        "description": "Бардык иш түрлөрүнө жана запчасттарга кепилдик беребиз."
+      },
+      "affordablePrices": {
+        "title": "Жеткиликтүү баалар",
+        "description": "Жашыруун төлөмдөрсүз адилеттүү оңдоо наркы."
+      }
+    }
+  },
+  "reviews": {
+    "title": "Кардарлардын пикирлери",
+    "items": {
+      "review1": "Мыкты кызмат жана тез оңдоо.",
+      "review2": "Ноутбукту кайра жандырууга жардам беришти.",
+      "review3": "Бузулуунун себебин сапаттуу түшүндүрүп, тез оңдошту.",
+      "review4": "Кесиптик мамилеңиз үчүн рахмат!"
+    }
+  },
+  "api": {
+    "errors": {
+      "unauthorized": "Авторизация талап кылынат",
+      "accessDenied": "Кирүүгө тыюу салынган",
+      "invalidId": "Туура эмес ID",
+      "invalidProductId": "Туура эмес товар ID",
+      "invalidOrderId": "Туура эмес заказ ID",
+      "productNotFound": "Товар табылган жок",
+      "orderNotFound": "Заказ табылган жок",
+      "cartNotFound": "Себет табылган жок",
+      "itemNotFoundInCart": "Товар себетте табылган жок",
+      "favoriteNotFound": "Товар тандалгандарда табылган жок",
+      "quantityMustBePositive": "Саны 0дөн көп болушу керек",
+      "insufficientStock": "Кампада жетишсиз товар",
+      "productAlreadyInFavorites": "Товар буга чейин тандалгандарда",
+      "skuAlreadyExists": "SKU буга чейин бар",
+      "fillRequiredFields": "Милдеттүү талааларды толтуруңуз",
+      "fillDeliveryAddress": "Жеткирүү дарегин толтуруңуз",
+      "cartIsEmpty": "Себет бош",
+      "cannotCancelOrder": "Заказды учурдагы абалында жокко чыгаруу мүмкүн эмес",
+      "productIdRequired": "Товар ID милдеттүү",
+      "fetchingProducts": "Товарларды алууда ката",
+      "fetchingProduct": "Товарды алууда ката",
+      "updatingProduct": "Товарды жаңыртууда ката",
+      "deletingProduct": "Товарды өчүрүүдө ката",
+      "creatingProduct": "Товар түзүүдө ката",
+      "fetchingOrders": "Заказдарды алууда ката",
+      "fetchingOrder": "Заказды алууда ката",
+      "updatingOrder": "Заказды жаңыртууда ката",
+      "cancellingOrder": "Заказды жокко чыгарууда ката",
+      "creatingOrder": "Заказ түзүүдө ката",
+      "fetchingCart": "Себетти алууда ката",
+      "addingToCart": "Себетке кошууда ката",
+      "updatingCart": "Себетти жаңыртууда ката",
+      "clearingCart": "Себетти тазалоодо ката",
+      "removingFromCart": "Товарды себеттен алып салууда ката",
+      "fetchingFavorites": "Тандалгандарды алууда ката",
+      "addingToFavorites": "Тандалгандарга кошууда ката",
+      "removingFromFavorites": "Тандалгандардан алып салууда ката",
+      "clearingFavorites": "Тандалгандарды тазалоодо ката"
+    },
+    "messages": {
+      "productAddedToFavorites": "Товар тандалгандарга кошулду",
+      "itemRemovedFromCart": "Товар себеттен алынды",
+      "orderCancelled": "Заказ жокко чыгарылды",
+      "cartCleared": "Себет тазаланды",
+      "itemRemovedFromFavorites": "Товар тандалгандардан алынды",
+      "favoritesCleared": "{count} товар тандалгандардан алынды"
+    }
   },
   "cart": {
     "metadata": {
@@ -302,5 +454,14 @@
       "productDeactivated": "деактивдештирилди",
       "deleteConfirm": "Товарды өчүрүүнү каалайсызбы"
     }
+  },
+  "favorites": {
+    "title": "Тандалмалар",
+    "noFavorites": "Тандалган товарлар жок",
+    "addedToFavorites": "Тандалмаларга кошулду",
+    "removedFromFavorites": "Тандалмалардан алынды"
+  },
+  "validation": {
+    "customerNameLettersOnly": "Кардардын аты тек тамгалардан турушу керек"
   }
 }

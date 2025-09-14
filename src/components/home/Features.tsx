@@ -1,34 +1,38 @@
 import { FaTools, FaLaptop, FaCheckCircle, FaMoneyBillWave } from 'react-icons/fa'
 import BaseContainer from '@/components/BaseContainer'
+import { useTranslations } from 'next-intl'
 
-const features = [
+const getFeatures = (t: any) => [
   {
     icon: FaTools,
-    title: 'Скоростной ремонт',
-    description: 'Выполняем диагностику и ремонт в кратчайшие сроки.'
+    title: t('features.items.fastRepair.title'),
+    description: t('features.items.fastRepair.description')
   },
   {
     icon: FaLaptop,
-    title: 'Современное оборудование',
-    description: 'Используем профессиональные инструменты и оригинальные детали.'
+    title: t('features.items.modernEquipment.title'),
+    description: t('features.items.modernEquipment.description')
   },
   {
     icon: FaCheckCircle,
-    title: 'Гарантия качества',
-    description: 'Предоставляем гарантию на все виды работ и запчастей.'
+    title: t('features.items.qualityGuarantee.title'),
+    description: t('features.items.qualityGuarantee.description')
   },
   {
     icon: FaMoneyBillWave,
-    title: 'Доступные цены',
-    description: 'Честная стоимость ремонта без скрытых платежей.'
+    title: t('features.items.affordablePrices.title'),
+    description: t('features.items.affordablePrices.description')
   }
 ]
 
 export default function Features() {
+  const t = useTranslations()
+  const features = getFeatures(t)
+  
   return (
     <section id="features" className="py-20">
       <BaseContainer>
-        <h2 className="text-3xl font-bold text-center mb-12">Наши преимущества</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">{t('features.title')}</h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map(({ icon: Icon, title, description }) => (
             <div

@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/dbConnect';
 import Product from '@/models/Product';
 import { getSession } from '@/auth';
 import mongoose from 'mongoose';
+import { getTranslations } from 'next-intl/server';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -14,13 +15,14 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
     await connectToDatabase();
     
     const { id } = await params;
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: 'Неверный ID товара' },
+        { error: t('invalidProductId') },
         { status: 400 }
       );
     }
@@ -29,7 +31,7 @@ export async function GET(
     
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: t('productNotFound') },
         { status: 404 }
       );
     }
@@ -37,8 +39,9 @@ export async function GET(
     return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при получении товара' },
+      { error: t('fetchingProduct') },
       { status: 500 }
     );
   }
@@ -50,11 +53,12 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Доступ запрещен' },
+        { error: t('accessDenied') },
         { status: 403 }
       );
     }
@@ -65,7 +69,7 @@ export async function PUT(
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: 'Неверный ID товара' },
+        { error: t('invalidProductId') },
         { status: 400 }
       );
     }
@@ -86,7 +90,7 @@ export async function PUT(
     
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: t('productNotFound') },
         { status: 404 }
       );
     }
@@ -96,14 +100,16 @@ export async function PUT(
     console.error('Error updating product:', error);
     
     if (error && typeof error === 'object' && 'code' in error && error.code === 11000) {
+      const tError = await getTranslations('api.errors');
       return NextResponse.json(
-        { error: 'SKU уже существует' },
+        { error: tError('skuAlreadyExists') },
         { status: 400 }
       );
     }
     
+    const tError = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при обновлении товара' },
+      { error: tError('updatingProduct') },
       { status: 500 }
     );
   }
@@ -115,11 +121,12 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Доступ запрещен' },
+        { error: t('accessDenied') },
         { status: 403 }
       );
     }
@@ -130,7 +137,7 @@ export async function DELETE(
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: 'Неверный ID товара' },
+        { error: t('invalidProductId') },
         { status: 400 }
       );
     }
@@ -139,19 +146,21 @@ export async function DELETE(
     
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: t('productNotFound') },
         { status: 404 }
       );
     }
     
+    const tMessages = await getTranslations('api.messages');
     return NextResponse.json(
-      { message: 'Товар успешно удален' },
+      { message: tMessages('productDeleted') },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error deleting product:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при удалении товара' },
+      { error: t('deletingProduct') },
       { status: 500 }
     );
   }

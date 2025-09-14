@@ -4,7 +4,7 @@ import getMetricsAction from "@/actions/dashboard/getMetricsAction";
 import getWorkersAction from "@/actions/dashboard/getWorkersAction";
 import { ITask } from "@/models/Task";
 import { IUser } from "@/models/User";
-import DashboardPageClient from "@/components/admin/DashboardPageClient";
+import EnhancedDashboard from "@/components/dashboard/EnhancedDashboard";
 
 interface TasksResponse {
   items: ITask[];
@@ -29,13 +29,13 @@ const DashboardPage = async ({ searchParams }: SearchParams) => {
   const users = (workersResponse as unknown as WorkersResponse).items ?? [];
 
   return (
-    <DashboardPageClient
-      page={page}
-      perPage={perPage}
+    <EnhancedDashboard
+      page="1"
+      perPage="10"
       items={items}
       totalItemsLength={totalItemsLength}
       users={users}
-      metrics={metrics}
+      metrics={{}}
     />
   );
 };

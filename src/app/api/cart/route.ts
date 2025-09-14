@@ -4,15 +4,17 @@ import Cart, { ICartItem } from '@/models/Cart';
 import Product, { IProduct } from '@/models/Product';
 import { getSession } from '@/auth';
 import mongoose from 'mongoose';
+import { getTranslations } from 'next-intl/server';
 
 // GET - Получить корзину пользователя
 export async function GET() {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -33,8 +35,9 @@ export async function GET() {
     return NextResponse.json(cart);
   } catch (error) {
     console.error('Error fetching cart:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при получении корзины' },
+      { error: t('fetchingCart') },
       { status: 500 }
     );
   }
@@ -43,11 +46,12 @@ export async function GET() {
 // POST - Добавить товар в корзину
 export async function POST(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -58,14 +62,14 @@ export async function POST(request: NextRequest) {
     
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return NextResponse.json(
-        { error: 'Неверный ID товара' },
+        { error: t('invalidProductId') },
         { status: 400 }
       );
     }
     
     if (quantity <= 0) {
       return NextResponse.json(
-        { error: 'Количество должно быть больше 0' },
+        { error: t('quantityMustBePositive') },
         { status: 400 }
       );
     }
@@ -75,14 +79,14 @@ export async function POST(request: NextRequest) {
     
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: t('productNotFound') },
         { status: 404 }
       );
     }
     
     if (!product.inStock || product.stockQuantity < quantity) {
       return NextResponse.json(
-        { error: 'Недостаточно товара на складе' },
+        { error: t('insufficientStock') },
         { status: 400 }
       );
     }
@@ -109,7 +113,7 @@ export async function POST(request: NextRequest) {
       
       if (newQuantity > product.stockQuantity) {
         return NextResponse.json(
-          { error: 'Недостаточно товара на складе' },
+          { error: t('insufficientStock') },
           { status: 400 }
         );
       }
@@ -131,8 +135,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(cart);
   } catch (error) {
     console.error('Error adding to cart:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при добавлении в корзину' },
+      { error: t('addingToCart') },
       { status: 500 }
     );
   }
@@ -141,11 +146,12 @@ export async function POST(request: NextRequest) {
 // PUT - Обновить количество товара в корзине
 export async function PUT(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -156,14 +162,14 @@ export async function PUT(request: NextRequest) {
     
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return NextResponse.json(
-        { error: 'Неверный ID товара' },
+        { error: t('invalidProductId') },
         { status: 400 }
       );
     }
     
     if (quantity <= 0) {
       return NextResponse.json(
-        { error: 'Количество должно быть больше 0' },
+        { error: t('quantityMustBePositive') },
         { status: 400 }
       );
     }
@@ -173,14 +179,14 @@ export async function PUT(request: NextRequest) {
     
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: t('productNotFound') },
         { status: 404 }
       );
     }
     
     if (quantity > product.stockQuantity) {
       return NextResponse.json(
-        { error: 'Недостаточно товара на складе' },
+        { error: t('insufficientStock') },
         { status: 400 }
       );
     }
@@ -189,7 +195,7 @@ export async function PUT(request: NextRequest) {
     
     if (!cart) {
       return NextResponse.json(
-        { error: 'Корзина не найдена' },
+        { error: t('cartNotFound') },
         { status: 404 }
       );
     }
@@ -200,7 +206,7 @@ export async function PUT(request: NextRequest) {
     
     if (itemIndex === -1) {
       return NextResponse.json(
-        { error: 'Товар не найден в корзине' },
+        { error: t('itemNotFoundInCart') },
         { status: 404 }
       );
     }
@@ -211,8 +217,9 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(cart);
   } catch (error) {
     console.error('Error updating cart:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при обновлении корзины' },
+      { error: t('updatingCart') },
       { status: 500 }
     );
   }
@@ -221,11 +228,13 @@ export async function PUT(request: NextRequest) {
 // DELETE - Очистить корзину
 export async function DELETE() {
   try {
+    const t = await getTranslations('api.errors');
+    const tMessages = await getTranslations('api.messages');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -236,7 +245,7 @@ export async function DELETE() {
     
     if (!cart) {
       return NextResponse.json(
-        { error: 'Корзина не найдена' },
+        { error: t('cartNotFound') },
         { status: 404 }
       );
     }
@@ -246,13 +255,14 @@ export async function DELETE() {
     await cart.save();
     
     return NextResponse.json(
-      { message: 'Корзина очищена' },
+      { message: tMessages('cartCleared') },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error clearing cart:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при очистке корзины' },
+      { error: t('clearingCart') },
       { status: 500 }
     );
   }

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useFavorites, FavoriteItem } from "@/hooks/useFavorites";
 import { useCart } from "@/hooks/useCart";
 import useCustomToast from "@/hooks/useCustomToast";
+import { useTranslations } from "next-intl";
 
 export default function FavoritesDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,7 @@ export default function FavoritesDropdown() {
   const { favoriteItems, loading, removeFromFavorites } = useFavorites();
   const { addToCart } = useCart();
   const { showSuccessToast, showErrorToast } = useCustomToast();
+  const t = useTranslations();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('ru-RU', {
@@ -32,14 +34,14 @@ export default function FavoritesDropdown() {
     try {
       await removeFromFavorites(productId);
       showSuccessToast({
-        title: 'Избранное',
-        description: 'Товар удален из избранного'
+        title: t('favorites.title'),
+        description: t('favorites.removedFromFavorites')
       });
     } catch (error) {
       console.error('Error removing from favorites:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось удалить товар из избранного'
+        title: t('common.error'),
+        description: t('common.error')
       });
     } finally {
       setUpdating(null);
@@ -51,14 +53,14 @@ export default function FavoritesDropdown() {
     try {
       await addToCart(productId, 1);
       showSuccessToast({
-        title: 'Корзина',
-        description: 'Товар добавлен в корзину'
+        title: t('products.addToCart'),
+        description: t('products.addToCart')
       });
     } catch (error) {
       console.error('Error adding to cart:', error);
       showErrorToast({
-        title: 'Ошибка',
-        description: 'Не удалось добавить товар в корзину'
+        title: t('common.error'),
+        description: t('common.error')
       });
     } finally {
       setUpdating(null);
@@ -108,7 +110,7 @@ export default function FavoritesDropdown() {
         <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-lg shadow-lg z-50 max-h-[80vh] md:hidden flex flex-col">
           <div className="p-4 border-b flex-shrink-0">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Избранное</h3>
+              <h3 className="text-lg font-semibold">{t('favorites.title')}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -128,10 +130,10 @@ export default function FavoritesDropdown() {
             ) : favoriteItems.length === 0 ? (
               <div className="text-center py-8 px-4">
                 <Heart className="h-16 w-16 md:h-12 md:w-12 mx-auto text-gray-400 mb-3" />
-                <p className="text-gray-500 mb-4">Нет избранных товаров</p>
+                <p className="text-gray-500 mb-4">{t('favorites.noFavorites')}</p>
                 <Link href="/products">
                   <Button size="sm" onClick={() => setIsOpen(false)}>
-                    Перейти к покупкам
+                    {t('products.catalog')}
                   </Button>
                 </Link>
               </div>
@@ -151,7 +153,7 @@ export default function FavoritesDropdown() {
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center">
-                          <span className="text-gray-400 text-xs">Нет фото</span>
+                          <span className="text-gray-400 text-xs">{t('products.image')}</span>
                         </div>
                       )}
                     </div>
@@ -170,7 +172,7 @@ export default function FavoritesDropdown() {
                           disabled={updating === String(item.productId)}
                         >
                           <ShoppingCart className="h-5 w-5 md:h-4 md:w-4 mr-1" />
-                          В корзину
+                          {t('products.addToCart')}
                         </Button>
                         <Button
                           variant="outline"
@@ -196,7 +198,7 @@ export default function FavoritesDropdown() {
                   className="w-full" 
                   onClick={() => setIsOpen(false)}
                 >
-                  Посмотреть все избранные
+                  {t('favorites.title')}
                 </Button>
               </Link>
             </div>

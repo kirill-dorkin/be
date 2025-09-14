@@ -213,6 +213,7 @@ export default function Checkout() {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(orderData)
       });
       

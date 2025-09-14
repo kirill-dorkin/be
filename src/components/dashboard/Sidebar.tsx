@@ -9,6 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { RiDashboardFill } from 'react-icons/ri';
 import { FaTasks, FaUsers } from 'react-icons/fa';
+import { MdShoppingCart, MdInventory } from 'react-icons/md';
 import { useTranslations } from "next-intl";
 
 interface LinkItem {
@@ -32,6 +33,16 @@ const getAdminLinks = (t: ReturnType<typeof useTranslations>): LinkItem[] => [
     href: "/admin/users",
     label: t("navigation.users"),
     icon: <FaUsers />,
+  },
+  {
+    href: "/admin/products",
+    label: t("navigation.products"),
+    icon: <MdInventory />,
+  },
+  {
+    href: "/admin/orders",
+    label: t("navigation.orders"),
+    icon: <MdShoppingCart />,
   },
   {
     href: "/admin/categories",

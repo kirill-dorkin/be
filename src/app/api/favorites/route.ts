@@ -4,14 +4,16 @@ import { connectToDatabase } from '@/lib/dbConnect';
 import Favorite from '@/models/Favorite';
 import Product from '@/models/Product';
 import { authOptions } from '@/auth';
+import { getTranslations } from 'next-intl/server';
 // GET - Получить список избранных товаров пользователя
 export async function GET() {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -39,8 +41,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error fetching favorites:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при получении избранного' },
+      { error: t('fetchingFavorites') },
       { status: 500 }
     );
   }
@@ -49,11 +52,13 @@ export async function GET() {
 // POST - Добавить товар в избранное
 export async function POST(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
+    const tMessages = await getTranslations('api.messages');
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -62,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     if (!productId) {
       return NextResponse.json(
-        { error: 'ID товара обязателен' },
+        { error: t('productIdRequired') },
         { status: 400 }
       );
     }
@@ -73,7 +78,7 @@ export async function POST(request: NextRequest) {
     const product = await Product.findById(productId);
     if (!product) {
       return NextResponse.json(
-        { error: 'Товар не найден' },
+        { error: t('productNotFound') },
         { status: 404 }
       );
     }
@@ -86,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     if (existingFavorite) {
       return NextResponse.json(
-        { error: 'Товар уже в избранном' },
+        { error: t('productAlreadyInFavorites') },
         { status: 409 }
       );
     }
@@ -101,12 +106,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Товар добавлен в избранное'
+      message: tMessages('productAddedToFavorites')
     });
   } catch (error) {
     console.error('Error adding to favorites:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при добавлении в избранное' },
+      { error: t('addingToFavorites') },
       { status: 500 }
     );
   }
@@ -115,11 +121,12 @@ export async function POST(request: NextRequest) {
 // DELETE - Удалить товар из избранного
 export async function DELETE(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -128,7 +135,7 @@ export async function DELETE(request: NextRequest) {
 
     if (!productId) {
       return NextResponse.json(
-        { error: 'ID товара обязателен' },
+        { error: t('productIdRequired') },
         { status: 400 }
       );
     }
@@ -142,19 +149,21 @@ export async function DELETE(request: NextRequest) {
 
     if (!result) {
       return NextResponse.json(
-        { error: 'Товар не найден в избранном' },
+        { error: t('favoriteNotFound') },
         { status: 404 }
       );
     }
 
+    const tMessages = await getTranslations('api.messages');
     return NextResponse.json({
       success: true,
-      message: 'Товар удален из избранного'
+      message: tMessages('itemRemovedFromFavorites')
     });
   } catch (error) {
     console.error('Error removing from favorites:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при удалении из избранного' },
+      { error: t('removingFromFavorites') },
       { status: 500 }
     );
   }

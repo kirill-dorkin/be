@@ -3,6 +3,7 @@ import BaseContainer from '@/components/BaseContainer'
 import { Card } from '@/components/ui/card'
 import Image from 'next/image'
 import { FaStar } from 'react-icons/fa'
+import { useTranslations } from 'next-intl'
 
 interface Review {
   id: number
@@ -11,30 +12,30 @@ interface Review {
   text: string
 }
 
-const reviews: Review[] = [
+const getReviews = (t: any): Review[] => [
   {
     id: 1,
     name: 'Айзат',
     avatar: 'https://i.pravatar.cc/150?img=3',
-    text: 'Отличный сервис и быстрый ремонт.'
+    text: t('reviews.items.review1')
   },
   {
     id: 2,
     name: 'Бек',
     avatar: 'https://i.pravatar.cc/150?img=5',
-    text: 'Помогли вернуть ноутбук к жизни.'
+    text: t('reviews.items.review2')
   },
   {
     id: 3,
     name: 'Мария',
     avatar: 'https://i.pravatar.cc/150?img=7',
-    text: 'Качественно объяснили причину поломки и быстро исправили.'
+    text: t('reviews.items.review3')
   },
   {
     id: 4,
     name: 'Тимур',
     avatar: 'https://i.pravatar.cc/150?img=8',
-    text: 'Спасибо за профессиональный подход!' 
+    text: t('reviews.items.review4')
   },
 ]
 
@@ -60,10 +61,13 @@ function ReviewCard({ review }: { review: Review }) {
 }
 
 export default function Reviews() {
+  const t = useTranslations()
+  const reviews = getReviews(t)
+  
   return (
     <section id="reviews" className="py-20 bg-muted/50">
       <BaseContainer>
-        <h2 className="text-3xl font-bold text-center mb-12">Отзывы клиентов</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">{t('reviews.title')}</h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {reviews.map((review) => (
             <ReviewCard review={review} key={review.id} />

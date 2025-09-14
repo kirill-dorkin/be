@@ -92,7 +92,11 @@ export default function OrderDetails({ order }: OrderDetailsProps) {
     setCancelling(true);
     try {
       const response = await fetch(`/api/orders/${order._id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
       });
       
       if (!response.ok) {

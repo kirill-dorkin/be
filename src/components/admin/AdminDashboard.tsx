@@ -35,8 +35,18 @@ export default function AdminDashboard() {
   const fetchStats = useCallback(async () => {
     try {
       const [productsRes, ordersRes] = await Promise.all([
-        fetch('/api/products'),
-        fetch('/api/orders')
+        fetch('/api/products', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        }),
+        fetch('/api/orders', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        })
       ]);
       
       if (!productsRes.ok || !ordersRes.ok) {
@@ -204,10 +214,12 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div className="mt-4">
-                <Button className="w-full" size="sm" disabled>
-                  <Eye className="h-4 w-4 mr-2" />
-                  {t('admin.dashboard.quickActions.orders.comingSoon')}
-                </Button>
+                <Link href="/admin/orders" className="w-full">
+                  <Button className="w-full" size="sm">
+                    <Eye className="h-4 w-4 mr-2" />
+                    {t('admin.dashboard.quickActions.orders.view')}
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

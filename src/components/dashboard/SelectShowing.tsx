@@ -28,15 +28,13 @@ export default function SelectShowing({ className }: { className?: string }): Re
 
   const handleSelectOnchange = (value: string) => {
     setTotalItemsPerPage(value);
-  };
-
-  useEffect(() => {
+    
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", "1");
-    params.set("per_page", totalItemsPerPage);
+    params.set("per_page", value);
 
     router.push(`${pathname}?${params.toString()}`);
-  }, [totalItemsPerPage, searchParams, pathname, router]);
+  };
 
   return (
     <Suspense>

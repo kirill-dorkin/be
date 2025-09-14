@@ -4,6 +4,7 @@ import Order from '@/models/Order';
 import { getSession } from '@/auth';
 import mongoose from 'mongoose';
 import { OrderStatus, PaymentStatus } from '@/types';
+import { getTranslations } from 'next-intl/server';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -15,11 +16,12 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -30,7 +32,7 @@ export async function GET(
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: 'Неверный ID заказа' },
+        { error: t('invalidOrderId') },
         { status: 400 }
       );
     }
@@ -51,7 +53,7 @@ export async function GET(
     
     if (!order) {
       return NextResponse.json(
-        { error: 'Заказ не найден' },
+        { error: t('orderNotFound') },
         { status: 404 }
       );
     }
@@ -59,8 +61,9 @@ export async function GET(
     return NextResponse.json(order);
   } catch (error) {
     console.error('Error fetching order:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при получении заказа' },
+      { error: t('fetchingOrder') },
       { status: 500 }
     );
   }
@@ -72,11 +75,12 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Доступ запрещен' },
+        { error: t('accessDenied') },
         { status: 403 }
       );
     }
@@ -87,7 +91,7 @@ export async function PUT(
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: 'Неверный ID заказа' },
+        { error: t('invalidOrderId') },
         { status: 400 }
       );
     }
@@ -121,7 +125,7 @@ export async function PUT(
     
     if (!order) {
       return NextResponse.json(
-        { error: 'Заказ не найден' },
+        { error: t('orderNotFound') },
         { status: 404 }
       );
     }
@@ -129,8 +133,9 @@ export async function PUT(
     return NextResponse.json(order);
   } catch (error) {
     console.error('Error updating order:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при обновлении заказа' },
+      { error: t('updatingOrder') },
       { status: 500 }
     );
   }
@@ -142,11 +147,12 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -157,7 +163,7 @@ export async function DELETE(
     
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: 'Неверный ID заказа' },
+        { error: t('invalidOrderId') },
         { status: 400 }
       );
     }
@@ -178,7 +184,7 @@ export async function DELETE(
     
     if (!order) {
       return NextResponse.json(
-        { error: 'Заказ не найден' },
+        { error: t('orderNotFound') },
         { status: 404 }
       );
     }
@@ -186,7 +192,7 @@ export async function DELETE(
     // Можно отменить только заказы в статусе pending или confirmed
     if (!['pending', 'confirmed'].includes(order.orderStatus)) {
       return NextResponse.json(
-        { error: 'Заказ нельзя отменить в текущем статусе' },
+        { error: t('cannotCancelOrder') },
         { status: 400 }
       );
     }
@@ -194,14 +200,16 @@ export async function DELETE(
     order.orderStatus = 'cancelled';
     await order.save();
     
+    const tMessages = await getTranslations('api.messages');
     return NextResponse.json(
-      { message: 'Заказ отменен' },
+      { message: tMessages('orderCancelled') },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error cancelling order:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при отмене заказа' },
+      { error: t('cancellingOrder') },
       { status: 500 }
     );
   }

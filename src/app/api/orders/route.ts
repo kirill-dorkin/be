@@ -5,15 +5,17 @@ import Cart, { ICartItem } from '@/models/Cart';
 import Product from '@/models/Product';
 import { getSession } from '@/auth';
 import { OrderStatus } from '@/types';
+import { getTranslations } from 'next-intl/server';
 
 // GET - Получить заказы пользователя
 export async function GET(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -62,8 +64,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching orders:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при получении заказов' },
+      { error: t('fetchingOrders') },
       { status: 500 }
     );
   }
@@ -72,11 +75,12 @@ export async function GET(request: NextRequest) {
 // POST - Создать новый заказ
 export async function POST(request: NextRequest) {
   try {
+    const t = await getTranslations('api.errors');
     const session = await getSession();
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Необходима авторизация' },
+        { error: t('unauthorized') },
         { status: 401 }
       );
     }
@@ -95,7 +99,7 @@ export async function POST(request: NextRequest) {
     // Валидация обязательных полей
     if (!contactInfo?.email || !contactInfo?.phone || !paymentMethod) {
       return NextResponse.json(
-        { error: 'Заполните все обязательные поля' },
+        { error: t('fillRequiredFields') },
         { status: 400 }
       );
     }
@@ -103,7 +107,7 @@ export async function POST(request: NextRequest) {
     // Валидация адреса доставки для доставки (не самовывоз)
     if (deliveryMethod !== 'pickup' && (!shippingAddress?.firstName || !shippingAddress?.address)) {
       return NextResponse.json(
-        { error: 'Заполните адрес доставки' },
+        { error: t('fillDeliveryAddress') },
         { status: 400 }
       );
     }
@@ -113,7 +117,7 @@ export async function POST(request: NextRequest) {
     
     if (!cart || cart.items.length === 0) {
       return NextResponse.json(
-        { error: 'Корзина пуста' },
+        { error: t('cartIsEmpty') },
         { status: 400 }
       );
     }
@@ -124,14 +128,14 @@ export async function POST(request: NextRequest) {
       
       if (!product) {
         return NextResponse.json(
-          { error: `Товар ${item.name} не найден` },
+          { error: t('productNotFound') },
           { status: 400 }
         );
       }
       
       if (!product.inStock || product.stockQuantity < item.quantity) {
         return NextResponse.json(
-          { error: `Недостаточно товара ${item.name} на складе` },
+          { error: t('insufficientStock') },
           { status: 400 }
         );
       }
@@ -188,8 +192,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
     console.error('Error creating order:', error);
+    const t = await getTranslations('api.errors');
     return NextResponse.json(
-      { error: 'Ошибка при создании заказа' },
+      { error: t('creatingOrder') },
       { status: 500 }
     );
   }

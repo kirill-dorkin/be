@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { IUser } from "@/models/User";
 import Image from "next/image"
 import EditButton from "@/components/dashboard/buttons/EditButton";
@@ -26,6 +27,7 @@ export default function UserTable({
   per_page: string | string[];
   deleteAction: (id: string) => void
 }) {
+  const t = useTranslations();
   const start = (Number(page) - 1) * Number(per_page);
   const totalPages = Math.ceil(totalItemsLength / Number(per_page));
 
@@ -34,12 +36,12 @@ export default function UserTable({
       <TableHeader>
         <TableRow>
           <TableHead className="min-w-[150px]">ID</TableHead>
-          <TableHead className="min-w-[200px]">Имя</TableHead>
-          <TableHead className="min-w-[250px]">Email</TableHead>
-          <TableHead className="min-w-[150px]">Роль</TableHead>
-          <TableHead className="min-w-[150px]">Фото</TableHead>
-          <TableHead className="min-w-[150px] text-center">Всего задач</TableHead>
-          <TableHead className="text-right">Действия</TableHead>
+          <TableHead className="min-w-[200px]">{t('users.table.name')}</TableHead>
+          <TableHead className="min-w-[250px]">{t('users.table.email')}</TableHead>
+          <TableHead className="min-w-[150px]">{t('users.table.role')}</TableHead>
+          <TableHead className="min-w-[150px]">{t('users.table.photo')}</TableHead>
+          <TableHead className="min-w-[150px] text-center">{t('users.table.totalTasks')}</TableHead>
+          <TableHead className="text-right">{t('common.actions.title')}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -58,9 +60,9 @@ export default function UserTable({
               }
             >
               {{
-                admin: "Администратор",
-                worker: "Сотрудник",
-                user: "Пользователь",
+                admin: t('users.roles.admin'),
+                worker: t('users.roles.worker'),
+                user: t('users.roles.user'),
               }[role as 'admin' | 'worker' | 'user'] ?? role}
             </TableCell>
             <TableCell>
