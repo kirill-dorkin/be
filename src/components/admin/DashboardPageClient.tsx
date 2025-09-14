@@ -1,7 +1,6 @@
 'use client'
 
 import { FaTasks, FaHourglassHalf, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
-import { useTranslations } from 'next-intl';
 import TaskReport from "@/components/dashboard/TaskReport";
 import UserList from "@/components/dashboard/UserList";
 import DashboardContainer from "@/components/dashboard/DashboardContainer";
@@ -38,26 +37,24 @@ const DashboardPageClient = ({
   users, 
   metrics 
 }: DashboardPageClientProps) => {
-  const t = useTranslations('admin.dashboard');
-
   const data = [
     {
-      label: t('activeTasks'),
+      label: 'Active Tasks',
       value: metrics?.metrics?.totalActiveTasks ?? 0,
       icon: <FaTasks />,
     },
     {
-      label: t('pendingTasks'),
+      label: 'Pending Tasks',
       value: metrics?.metrics?.totalPendingTasks ?? 0,
       icon: <FaExclamationCircle />,
     },
     {
-      label: t('inProgressTasks'),
+      label: 'In Progress Tasks',
       value: metrics?.metrics?.totalInProgressTasks ?? 0,
       icon: <FaHourglassHalf />,
     },
     {
-      label: t('completedTasks'),
+      label: 'Completed Tasks',
       value: metrics?.metrics?.totalCompletedTasks ?? 0,
       icon: <FaCheckCircle />,
     },
@@ -81,8 +78,8 @@ const DashboardPageClient = ({
         </section>
         <section className="flex flex-col col-span-1 sm:col-span-2 lg:col-span-2 gap-6">
           <ListCard
-            title={t('employeeList.title')}
-            description={t('employeeList.description')}
+            title="Employee List"
+            description="List of employees"
           >
             <UserList users={users} />
           </ListCard>

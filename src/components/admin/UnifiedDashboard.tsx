@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { FaTasks, FaHourglassHalf, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
-import { useTranslations } from 'next-intl';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -63,7 +63,6 @@ const UnifiedDashboard = ({
   users, 
   metrics 
 }: UnifiedDashboardProps) => {
-  const t = useTranslations();
   const { showErrorToast } = useCustomToast();
   const [shopStats, setShopStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -101,8 +100,8 @@ const UnifiedDashboard = ({
     } catch (error) {
       console.error('Error fetching shop stats:', error);
       showErrorToast({
-        title: t('common.status.error'),
-        description: t('admin.dashboard.errors.loadStatsFailed')
+        title: 'Ошибка',
+        description: 'Не удалось загрузить статистику'
       });
     } finally {
       setLoading(false);
@@ -116,22 +115,22 @@ const UnifiedDashboard = ({
   // Данные для метрик задач
   const taskMetrics = [
     {
-      label: t('admin.dashboard.activeTasks'),
+      label: 'Активные задачи',
       value: metrics?.metrics?.totalActiveTasks ?? 0,
       icon: <FaTasks />,
     },
     {
-      label: t('admin.dashboard.pendingTasks'),
+      label: 'Ожидающие задачи',
       value: metrics?.metrics?.totalPendingTasks ?? 0,
       icon: <FaExclamationCircle />,
     },
     {
-      label: t('admin.dashboard.inProgressTasks'),
+      label: 'Задачи в работе',
       value: metrics?.metrics?.totalInProgressTasks ?? 0,
       icon: <FaHourglassHalf />,
     },
     {
-      label: t('admin.dashboard.completedTasks'),
+      label: 'Завершенные задачи',
       value: metrics?.metrics?.totalCompletedTasks ?? 0,
       icon: <FaCheckCircle />,
     },
@@ -157,19 +156,19 @@ const UnifiedDashboard = ({
       <DashboardContent className="space-y-8">
         {/* Статистика магазина */}
         <div>
-          <h2 className="text-2xl font-bold mb-6">{t('admin.dashboard.title')}</h2>
+          <h2 className="text-2xl font-bold mb-6">Панель администратора</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {t('admin.dashboard.stats.totalProducts')}
+                  Всего товаров
                 </CardTitle>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{shopStats?.totalProducts || 0}</div>
                 <p className="text-xs text-muted-foreground">
-                  {t('admin.dashboard.stats.active', { count: shopStats?.activeProducts || 0 })}
+                  Активных: {shopStats?.activeProducts || 0}
                 </p>
               </CardContent>
             </Card>
@@ -177,14 +176,14 @@ const UnifiedDashboard = ({
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {t('admin.dashboard.stats.totalOrders')}
+                  Всего заказов
                 </CardTitle>
                 <ShoppingCart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{shopStats?.totalOrders || 0}</div>
                 <p className="text-xs text-muted-foreground">
-                  {t('admin.dashboard.stats.comingSoon')}
+                  Скоро
                 </p>
               </CardContent>
             </Card>
@@ -192,7 +191,7 @@ const UnifiedDashboard = ({
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {t('admin.dashboard.stats.totalRevenue')}
+                  Общая выручка
                 </CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -201,7 +200,7 @@ const UnifiedDashboard = ({
                   {shopStats?.totalRevenue ? `₽${shopStats.totalRevenue.toLocaleString()}` : '₽0'}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('admin.dashboard.stats.comingSoon')}
+                  Скоро
                 </p>
               </CardContent>
             </Card>
@@ -209,7 +208,7 @@ const UnifiedDashboard = ({
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {t('admin.dashboard.stats.users')}
+                  Пользователи
                 </CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -225,7 +224,7 @@ const UnifiedDashboard = ({
 
         {/* Быстрые действия */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">{t('admin.dashboard.quickActions.title')}</h2>
+          <h2 className="text-xl font-semibold mb-4">Быстрые действия</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="hover:shadow-md transition-shadow">
               <CardContent className="p-6">
@@ -234,21 +233,21 @@ const UnifiedDashboard = ({
                     <Package className="h-6 w-6 text-blue-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium">{t('admin.dashboard.quickActions.productManagement.title')}</h3>
-                    <p className="text-sm text-gray-600">{t('admin.dashboard.quickActions.productManagement.description')}</p>
+                    <h3 className="font-medium">Управление товарами</h3>
+                    <p className="text-sm text-gray-600">Добавление, редактирование и удаление товаров</p>
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">
                   <Link href="/admin/products" className="flex-1">
                     <Button className="w-full" size="sm">
                       <Eye className="h-4 w-4 mr-2" />
-                      {t('admin.dashboard.quickActions.productManagement.view')}
+                      Просмотр
                     </Button>
                   </Link>
                   <Link href="/admin/products/new" className="flex-1">
                     <Button variant="outline" className="w-full" size="sm">
                       <Plus className="h-4 w-4 mr-2" />
-                      {t('admin.dashboard.quickActions.productManagement.add')}
+                      Добавить
                     </Button>
                   </Link>
                 </div>
@@ -262,15 +261,15 @@ const UnifiedDashboard = ({
                     <ShoppingCart className="h-6 w-6 text-green-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium">{t('admin.dashboard.quickActions.orders.title')}</h3>
-                    <p className="text-sm text-gray-600">{t('admin.dashboard.quickActions.orders.description')}</p>
+                    <h3 className="font-medium">Заказы</h3>
+                    <p className="text-sm text-gray-600">Просмотр и управление заказами</p>
                   </div>
                 </div>
                 <div className="mt-4">
                   <Link href="/admin/orders">
                     <Button className="w-full" size="sm">
                       <Eye className="h-4 w-4 mr-2" />
-                      {t('admin.dashboard.quickActions.orders.view')}
+                      Просмотр
                     </Button>
                   </Link>
                 </div>
@@ -284,15 +283,15 @@ const UnifiedDashboard = ({
                     <FaTasks className="h-6 w-6 text-purple-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium">{t('admin.dashboard.quickActions.tasks.title')}</h3>
-                    <p className="text-sm text-gray-600">{t('admin.dashboard.quickActions.tasks.description')}</p>
+                    <h3 className="font-medium">Задачи</h3>
+                    <p className="text-sm text-gray-600">Управление задачами и проектами</p>
                   </div>
                 </div>
                 <div className="mt-4">
                   <Link href="/admin/tasks">
                     <Button className="w-full" size="sm">
                       <Eye className="h-4 w-4 mr-2" />
-                      {t('admin.dashboard.quickActions.tasks.view')}
+                      Просмотр
                     </Button>
                   </Link>
                 </div>
@@ -314,8 +313,8 @@ const UnifiedDashboard = ({
           </section>
           <section className="flex flex-col col-span-1 sm:col-span-2 lg:col-span-2 gap-6">
             <ListCard
-              title={t('admin.dashboard.employeeList.title')}
-              description={t('admin.dashboard.employeeList.description')}
+              title="Список сотрудников"
+              description="Управление пользователями системы"
             >
               <UserList users={users} />
             </ListCard>

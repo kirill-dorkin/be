@@ -3,7 +3,7 @@
 import { useState, } from "react";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from 'next-intl';
+
 import {
   Dialog,
   DialogContent,
@@ -24,39 +24,38 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import addTaskAction from "@/actions/dashboard/addTaskAction";
 import { TaskFormData } from "@/schemas/TaskSchema";
 
-const createTaskSchema = (t: (key: string) => string) => z.object({
+const createTaskSchema = () => z.object({
   description: z
     .string()
-    .min(1, { message: t('validation.descriptionRequired') })
-    .max(255, { message: t('validation.descriptionMaxLength') }),
+    .min(1, { message: 'Описание обязательно' })
+    .max(255, { message: 'Описание не должно превышать 255 символов' }),
   customerName: z
     .string()
-    .min(1, { message: t('validation.customerNameRequired') })
-    .max(100, { message: t('validation.customerNameMaxLength') }),
+    .min(1, { message: 'Имя клиента обязательно' })
+    .max(100, { message: 'Имя клиента не должно превышать 100 символов' }),
   customerPhone: z
     .string()
-    .min(1, { message: t('validation.customerPhoneRequired') })
-    .refine(isValidPhoneNumber, { message: t('validation.invalidPhoneNumber') }),
+    .min(1, { message: 'Телефон клиента обязателен' })
+    .refine(isValidPhoneNumber, { message: 'Неверный номер телефона' }),
   laptopBrand: z
     .string()
-    .min(1, { message: t('validation.laptopBrandRequired') })
-    .max(100, { message: t('validation.laptopBrandMaxLength') }),
+    .min(1, { message: 'Бренд ноутбука обязателен' })
+    .max(100, { message: 'Бренд ноутбука не должен превышать 100 символов' }),
   laptopModel: z
     .string()
-    .min(1, { message: t('validation.laptopModelRequired') })
-    .max(100, { message: t('validation.laptopModelMaxLength') }),
+    .min(1, { message: 'Модель ноутбука обязательна' })
+    .max(100, { message: 'Модель ноутбука не должна превышать 100 символов' }),
   totalCost: z
     .number()
-    .min(0, { message: t('validation.costPositive') }),
+    .min(0, { message: 'Стоимость должна быть положительной' }),
 });
 
 export function AddTaskDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const country = useGeoCountry();
-  const t = useTranslations('dashboard.addTask');
   
-  const TaskSchema = createTaskSchema(t);
+  const TaskSchema = createTaskSchema();
 
   const methods = useForm<TaskFormData>({
     resolver: zodResolver(TaskSchema),
@@ -79,17 +78,17 @@ export function AddTaskDialog() {
       const response = await addTaskAction(data);
 
       if (response.status === "error") {
-        showErrorToast({ title: t('error'), description: response.message });
+        showErrorToast({ title: 'Ошибка', description: response.message });
       } else {
         showSuccessToast({
-          title: t('success'),
+          title: 'Успех',
           description: response.message,
         });
       }
     } catch (error) {
       showErrorToast({
-        title: t('error'),
-        description: error instanceof Error ? error.message : t('unknownError'),
+        title: 'Ошибка',
+        description: error instanceof Error ? error.message : 'Неизвестная ошибка',
       });
     } finally {
       setLoading(false);
@@ -97,24 +96,24 @@ export function AddTaskDialog() {
   };
 
   const taskFields = [
-    { name: "description", label: t('fields.description'), type: "text" },
-    { name: "customerName", label: t('fields.customerName'), type: "text" },
-    { name: "customerPhone", label: t('fields.customerPhone'), type: "text" },
-    { name: "laptopBrand", label: t('fields.laptopBrand'), type: "text" },
-    { name: "laptopModel", label: t('fields.laptopModel'), type: "text" },
-    { name: "totalCost", label: t('fields.totalCost'), type: "number" },
+    { name: "description", label: 'Описание', type: "text" },
+    { name: "customerName", label: 'Имя клиента', type: "text" },
+    { name: "customerPhone", label: 'Телефон клиента', type: "text" },
+    { name: "laptopBrand", label: 'Бренд ноутбука', type: "text" },
+    { name: "laptopModel", label: 'Модель ноутбука', type: "text" },
+    { name: "totalCost", label: 'Общая стоимость', type: "number" },
   ];
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="lg">{t('addTask')}</Button>
+        <Button size="lg">Добавить задачу</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] w-full max-w-lg px-6 py-4 overflow-y-auto max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle>{t('addTask')}</DialogTitle>
+          <DialogTitle>Добавить задачу</DialogTitle>
           <DialogDescription>
-            {t('fillTaskData')}
+            Заполните данные задачи
           </DialogDescription>
         </DialogHeader>
 
@@ -147,7 +146,7 @@ export function AddTaskDialog() {
 
             <DialogFooter>
               <Button type="submit" disabled={loading} className="w-full py-2">
-              {loading ? t('saving') : t('save')}
+              {loading ? 'Сохранение...' : 'Сохранить'}
               </Button>
             </DialogFooter>
           </form>

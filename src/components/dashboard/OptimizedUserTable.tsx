@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
+
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { RiEyeLine, RiEditLine, RiDeleteBinLine, RiUserLine } from 'react-icons/ri';
@@ -40,7 +40,7 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
   loading = false,
   onRefresh
 }) => {
-  const t = useTranslations();
+
   
   // Определение колонок
   const columns = [
@@ -62,7 +62,7 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
     },
     {
       key: 'name',
-      title: t('users.table.name'),
+      title: 'Имя',
       sortable: true,
       filterable: true,
       render: (value: unknown, row: TableRow) => {
@@ -77,7 +77,7 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
     },
     {
       key: 'role',
-      title: t('users.table.role'),
+      title: 'Роль',
       sortable: true,
       filterable: true,
       render: (value: unknown, row: TableRow) => {
@@ -104,25 +104,25 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
     },
     {
       key: 'status',
-      title: t('users.table.status'),
+      title: 'Статус',
       sortable: true,
       filterable: true,
       render: (value: unknown, row: TableRow) => {
         const user = row as User;
         return (
           <Badge variant={user.status === 'active' ? 'default' : 'secondary'}>
-            {user.status === 'active' ? t('users.status.active') : t('users.status.inactive')}
+            {user.status === 'active' ? 'Активен' : 'Неактивен'}
           </Badge>
         );
       }
     },
     {
       key: 'lastLogin',
-      title: t('users.table.lastLogin'),
+      title: 'Последний вход',
       sortable: true,
       render: (value: unknown, row: TableRow) => {
         const user = row as User;
-        if (!user.lastLogin) return <span className="text-gray-400">{t('users.table.never')}</span>;
+        if (!user.lastLogin) return <span className="text-gray-400">Никогда</span>;
         
         const date = new Date(user.lastLogin);
         const now = new Date();
@@ -130,7 +130,7 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
         if (diffDays === 1) {
-          return <span className="text-green-600">{t('common.today')}</span>;
+          return <span className="text-green-600">Сегодня</span>;
         } else if (diffDays <= 7) {
           return <span className="text-blue-600">{diffDays} дн. назад</span>;
         } else {
@@ -140,7 +140,7 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
     },
     {
       key: 'createdAt',
-      title: t('users.table.registrationDate'),
+      title: 'Дата регистрации',
       sortable: true,
       render: (value: unknown, row: TableRow) => {
         const user = row as User;
@@ -159,19 +159,19 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
   const actions = [
     {
       key: 'view',
-      label: t('common.actions.view'),
+      label: 'Просмотр',
       icon: <RiEyeLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onView?.(row as User)
     },
     {
       key: 'edit',
-      label: t('common.actions.edit'),
+      label: 'Редактировать',
       icon: <RiEditLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onEdit?.(row as User)
     },
     {
       key: 'delete',
-      label: t('common.actions.delete'),
+      label: 'Удалить',
       icon: <RiDeleteBinLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onDelete?.(row as User),
       variant: 'destructive' as const,
@@ -190,13 +190,13 @@ const OptimizedUserTable: React.FC<OptimizedUserTableProps> = ({
       data={users}
       columns={columns}
       actions={actions}
-      title={t('users.title')}
+      title="Пользователи"
       searchable={true}
       exportable={true}
       refreshable={!!onRefresh}
       onRefresh={onRefresh}
       loading={loading}
-      emptyMessage={t('users.table.noUsersFound')}
+      emptyMessage="Пользователи не найдены"
       pageSize={15}
       className="w-full"
     />

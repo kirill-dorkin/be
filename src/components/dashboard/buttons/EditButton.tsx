@@ -15,7 +15,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { setUserRoleAction } from "@/actions/dashboard/setUserRoleAction";
 import useCustomToast from "@/hooks/useCustomToast";
-import { useTranslations } from "next-intl";
 
 export interface EditButtonProps {
   email: string;
@@ -27,13 +26,12 @@ export default function EditButton({
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
-  const t = useTranslations();
 
   const handleSaveRole = async () => {
     if (!role) {
       showErrorToast({
-        title: t("common.error"),
-        description: t("worker.selectRole"),
+        title: "Ошибка",
+        description: "Выберите роль",
       });
       return;
     }
@@ -46,12 +44,12 @@ export default function EditButton({
 
     if (result.status === "success") {
       showSuccessToast({
-        title: t("common.success"),
+        title: "Успех",
         description: result.message as string,
       });
     } else {
       showErrorToast({
-        title: t("common.error"),
+        title: "Ошибка",
         description: result.message as string,
       });
     }
@@ -72,29 +70,29 @@ export default function EditButton({
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{t("worker.changeRole")}</DialogTitle>
+            <DialogTitle>Изменить роль</DialogTitle>
             <DialogDescription>
-              {t("worker.changeRoleDescription")}
+              Измените роль пользователя в системе
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
-                {t("worker.role")}
+                Роль
               </Label>
               <Select
                 value={role}
                 onValueChange={setRole}
               >
                 <SelectTrigger className="col-span-3 w-full">
-                  <SelectValue placeholder={t("worker.selectRole")} />
+                  <SelectValue placeholder="Выберите роль" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>{t("worker.roles")}</SelectLabel>
-                    <SelectItem value="admin">{t("worker.admin")}</SelectItem>
-                    <SelectItem value="worker">{t("worker.worker")}</SelectItem>
-                    <SelectItem value="user">{t("worker.user")}</SelectItem>
+                    <SelectLabel>Роли</SelectLabel>
+                    <SelectItem value="admin">Администратор</SelectItem>
+                    <SelectItem value="worker">Сотрудник</SelectItem>
+                    <SelectItem value="user">Пользователь</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -106,7 +104,7 @@ export default function EditButton({
               onClick={handleSaveRole}
               disabled={loading}
             >
-              {loading ? t("common.saving") : t("common.save")}
+              {loading ? "Сохранение..." : "Сохранить"}
             </Button>
           </DialogFooter>
         </DialogContent>

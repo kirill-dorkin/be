@@ -1,20 +1,18 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 import DashboardTitle from "./DashboardTitle";
 import useClientComponent from "@/hooks/useClientComponent";
 
 const DashboardGreater = () => {
   const isClient = useClientComponent();
   const { data: session } = useSession();
-  const t = useTranslations();
 
   const userNickname = session?.user?.name?.split(" ")[0];
 
   return isClient ? (
-    <DashboardTitle>{userNickname ? t('dashboard.greeting.welcomeUser', { name: userNickname }) : t('dashboard.greeting.welcome')} 🥳👋</DashboardTitle>
+    <DashboardTitle>{userNickname ? `Добро пожаловать, ${userNickname}` : 'Добро пожаловать'} 🥳👋</DashboardTitle>
   ) : (
-    <DashboardTitle>{t('dashboard.greeting.hello')} 🥳👋</DashboardTitle>
+    <DashboardTitle>Привет 🥳👋</DashboardTitle>
   );
 };
 

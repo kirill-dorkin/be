@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
@@ -27,14 +27,14 @@ interface QuickAction {
 }
 
 const QuickActions: React.FC = () => {
-  const t = useTranslations();
+
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   const quickActions: QuickAction[] = [
     {
       id: 'new-task',
-      title: t('quickActions.newTask.title'),
-      description: t('quickActions.newTask.description'),
+      title: 'Новая задача',
+      description: 'Создать новую задачу для сотрудника',
       icon: <RiAddLine className="w-5 h-5" />,
       href: '/admin/tasks/new',
       shortcut: 'Ctrl+N',
@@ -42,8 +42,8 @@ const QuickActions: React.FC = () => {
     },
     {
       id: 'add-user',
-      title: t('quickActions.addUser.title'),
-      description: t('quickActions.addUser.description'),
+      title: 'Добавить пользователя',
+      description: 'Добавить нового пользователя в систему',
       icon: <RiUserAddLine className="w-5 h-5" />,
       href: '/admin/users/new',
       shortcut: 'Ctrl+U',
@@ -51,8 +51,8 @@ const QuickActions: React.FC = () => {
     },
     {
       id: 'view-tasks',
-      title: t('quickActions.viewTasks.title'),
-      description: t('quickActions.viewTasks.description'),
+      title: 'Просмотр задач',
+      description: 'Просмотреть все задачи и их статусы',
       icon: <RiTaskLine className="w-5 h-5" />,
       href: '/admin/tasks',
       shortcut: 'Ctrl+T',
@@ -60,8 +60,8 @@ const QuickActions: React.FC = () => {
     },
     {
       id: 'search',
-      title: t('quickActions.search.title'),
-      description: t('quickActions.search.description'),
+      title: 'Поиск',
+      description: 'Поиск по задачам и пользователям',
       icon: <RiSearchLine className="w-5 h-5" />,
       href: '/admin/search',
       shortcut: 'Ctrl+K',
@@ -69,8 +69,8 @@ const QuickActions: React.FC = () => {
     },
     {
       id: 'settings',
-      title: t('quickActions.settings.title'),
-      description: t('quickActions.settings.description'),
+      title: 'Настройки',
+      description: 'Настройки системы и профиля',
       icon: <RiSettingsLine className="w-5 h-5" />,
       href: '/admin/settings',
       shortcut: 'Ctrl+,',
@@ -78,8 +78,8 @@ const QuickActions: React.FC = () => {
     },
     {
       id: 'reports',
-      title: t('quickActions.reports.title'),
-      description: t('quickActions.reports.description'),
+      title: 'Отчеты',
+      description: 'Просмотр отчетов и аналитики',
       icon: <RiFileTextLine className="w-5 h-5" />,
       href: '/admin/reports',
       shortcut: 'Ctrl+R',

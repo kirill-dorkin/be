@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 import { RiDashboardFill } from 'react-icons/ri';
 import { FaTasks, FaUsers } from 'react-icons/fa';
 import { MdShoppingCart, MdInventory } from 'react-icons/md';
-import { useTranslations } from "next-intl";
+
 
 interface LinkItem {
   href: string;
@@ -18,63 +18,63 @@ interface LinkItem {
   icon: React.ReactElement;
 }
 
-const getAdminLinks = (t: ReturnType<typeof useTranslations>): LinkItem[] => [
+const getAdminLinks = (): LinkItem[] => [
   {
     href: "/admin/dashboard",
-    label: t("navigation.dashboard"),
+    label: "Панель управления",
     icon: <RiDashboardFill />,
   },
   {
     href: "/admin/tasks",
-    label: t("navigation.tasks"),
+    label: "Задачи",
     icon: <FaTasks />,
   },
   {
     href: "/admin/users",
-    label: t("navigation.users"),
+    label: "Пользователи",
     icon: <FaUsers />,
   },
   {
     href: "/admin/products",
-    label: t("navigation.products"),
+    label: "Товары",
     icon: <MdInventory />,
   },
   {
     href: "/admin/orders",
-    label: t("navigation.orders"),
+    label: "Заказы",
     icon: <MdShoppingCart />,
   },
   {
     href: "/admin/categories",
-    label: t("navigation.categories"),
+    label: "Категории",
     icon: <FaTasks />,
   },
   {
     href: "/admin/devices",
-    label: t("navigation.devices"),
+    label: "Устройства",
     icon: <FaTasks />,
   },
   {
     href: "/admin/services",
-    label: t("navigation.services"),
+    label: "Услуги",
     icon: <FaTasks />,
   },
 ];
 
-const getWorkerLinks = (t: ReturnType<typeof useTranslations>): LinkItem[] => [
+const getWorkerLinks = (): LinkItem[] => [
   {
     href: "/worker/my-tasks",
-    label: t("navigation.myTasks"),
+    label: "Мои задачи",
     icon: <FaTasks />,
   },
 ];
 
-const getLinksByRole = (role: string, t: ReturnType<typeof useTranslations>): LinkItem[] => {
+const getLinksByRole = (role: string): LinkItem[] => {
   switch (role) {
     case 'worker':
-      return getWorkerLinks(t);
+      return getWorkerLinks();
     case 'admin':
-      return getAdminLinks(t);
+      return getAdminLinks();
     default:
       return [];
   }
@@ -85,13 +85,13 @@ const Sidebar = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
   const [links, setLinks] = useState<LinkItem[]>([]);
-  const t = useTranslations('common');
+
 
   useEffect(() => {
     if (session?.user) {
-      setLinks(getLinksByRole(session?.user?.role, t));
+      setLinks(getLinksByRole(session?.user?.role));
     }
-  }, [session?.user, t]);
+  }, [session?.user]);
 
   const handleLogout = () => {
     signOut();
@@ -130,7 +130,7 @@ const Sidebar = () => {
             }`}
           style={{ display: isExpanded ? "block" : "none" }}
         >
-          {t("navigation.menu")}
+          Меню
         </h2>
         <span
           className="h-5 text-4xl w-6 cursor-pointer flex items-center justify-center"
@@ -178,7 +178,7 @@ const Sidebar = () => {
                 }`}
               style={{ display: isExpanded ? "block" : "none" }}
             >
-              {t("navigation.logout")}
+              Выйти
             </span>
           </button>
         </li>

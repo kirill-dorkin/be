@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -33,13 +33,13 @@ import { FaBoxes } from 'react-icons/fa';
 
 interface NavigationGroup {
   id: string;
-  titleKey: string;
+  title: string;
   items: NavigationItem[];
 }
 
 interface NavigationItem {
   href: string;
-  labelKey: string;
+  label: string;
   icon: React.ReactNode;
   badge?: string;
   isActive?: boolean;
@@ -52,22 +52,22 @@ interface MobileSidebarProps {
 const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const t = useTranslations('common');
+
 
   const navigationGroups: NavigationGroup[] = [
     {
       id: 'overview',
-      titleKey: 'navigation.overview',
+      title: 'Обзор',
       items: [
         {
           href: '/admin/dashboard',
-          labelKey: 'navigation.dashboard',
+          label: 'Панель управления',
           icon: <RiDashboardLine className="w-5 h-5" />,
           isActive: pathname === '/admin/dashboard'
         },
         {
           href: '/admin/analytics',
-          labelKey: 'navigation.analytics',
+          label: 'Аналитика',
           icon: <RiBarChartLine className="w-5 h-5" />,
           isActive: pathname === '/admin/analytics'
         }
@@ -75,25 +75,25 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
     },
     {
       id: 'management',
-      titleKey: 'navigation.management',
+      title: 'Управление',
       items: [
         {
           href: '/admin/users',
-          labelKey: 'navigation.users',
+          label: 'Пользователи',
           icon: <RiUserLine className="w-5 h-5" />,
           badge: '12',
           isActive: pathname === '/admin/users'
         },
         {
           href: '/admin/tasks',
-          labelKey: 'navigation.tasks',
+          label: 'Задачи',
           icon: <RiTaskLine className="w-5 h-5" />,
           badge: '5',
           isActive: pathname === '/admin/tasks'
         },
         {
           href: '/admin/categories',
-          labelKey: 'navigation.categories',
+          label: 'Категории',
           icon: <FaBoxes className="w-5 h-5" />,
           isActive: pathname === '/admin/categories'
         }
@@ -101,24 +101,24 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
     },
     {
       id: 'commerce',
-      titleKey: 'navigation.commerce',
+      title: 'Коммерция',
       items: [
         {
           href: '/admin/orders',
-          labelKey: 'navigation.orders',
+          label: 'Заказы',
           icon: <RiShoppingCartLine className="w-5 h-5" />,
           badge: '3',
           isActive: pathname === '/admin/orders'
         },
         {
           href: '/admin/devices',
-          labelKey: 'navigation.devices',
+          label: 'Устройства',
           icon: <RiComputerLine className="w-5 h-5" />,
           isActive: pathname === '/admin/devices'
         },
         {
           href: '/admin/services',
-          labelKey: 'navigation.services',
+          label: 'Услуги',
           icon: <RiCustomerServiceLine className="w-5 h-5" />,
           isActive: pathname === '/admin/services'
         }
@@ -126,17 +126,17 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
     },
     {
       id: 'work',
-      titleKey: 'navigation.work',
+      title: 'Работа',
       items: [
         {
           href: '/admin/projects',
-          labelKey: 'navigation.projects',
+          label: 'Проекты',
           icon: <RiBriefcaseLine className="w-5 h-5" />,
           isActive: pathname === '/admin/projects'
         },
         {
           href: '/admin/applications',
-          labelKey: 'navigation.applications',
+          label: 'Приложения',
           icon: <RiAppsLine className="w-5 h-5" />,
           isActive: pathname === '/admin/applications'
         }
@@ -198,7 +198,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
                 {navigationGroups.map((group) => (
                   <div key={group.id} className="px-4">
                     <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                      {t(group.titleKey)}
+                      {group.title}
                     </h3>
                     <div className="space-y-1">
                       {group.items.map((item) => (
@@ -218,7 +218,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
                           <span className={item.isActive ? 'text-blue-600' : 'text-gray-500'}>
                             {item.icon}
                           </span>
-                          <span className="flex-1">{t(item.labelKey)}</span>
+                          <span className="flex-1">{item.label}</span>
                           {item.badge && (
                             <Badge 
                               variant={item.isActive ? 'default' : 'secondary'}
@@ -243,7 +243,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <RiSettings4Line className="w-5 h-5 text-gray-500" />
-                <span>{t('navigation.settings')}</span>
+                <span>Настройки</span>
               </Link>
               
               <Link
@@ -252,7 +252,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <RiNotificationLine className="w-5 h-5 text-gray-500" />
-                <span>{t('navigation.notifications')}</span>
+                <span>Уведомления</span>
                 <Badge variant="destructive" className="text-xs px-2 py-0.5 min-w-[20px] h-5">
                   3
                 </Badge>
@@ -263,7 +263,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
               >
                 <RiLogoutBoxLine className="w-5 h-5" />
-                <span>{t('navigation.logout')}</span>
+                <span>Выйти</span>
               </button>
             </div>
           </div>

@@ -249,13 +249,23 @@
         "createdAt": "Created At",
         "lastLogin": "Last Login",
         "noUsers": "No users found",
-        "loading": "Loading users..."
+        "loading": "Loading users...",
+        "photo": "Photo",
+        "totalTasks": "Total Tasks",
+        "never": "Never",
+        "registrationDate": "Registration Date",
+        "noUsersFound": "No users found"
       },
       "status": {
         "active": "Active",
         "inactive": "Inactive",
         "pending": "Pending",
         "suspended": "Suspended"
+      },
+      "roles": {
+        "admin": "Administrator",
+        "worker": "Worker",
+        "user": "User"
       }
     },
     "products": {
@@ -368,9 +378,31 @@
     "to": "To",
     "apply": "Apply",
     "clear": "Clear",
-    "showAll": "Show All"
+    "showAll": "Show All",
+    "addedToCart": "Added to cart",
+    "addToCartError": "Failed to add to cart",
+    "favoritesError": "Failed to update favorites",
+    "noImage": "No image",
+    "adding": "Adding...",
+    "goToCart": "Go to Cart"
   },
   "cart": {
+    "quantityUpdated": "Quantity updated",
+    "quantityUpdateError": "Failed to update quantity",
+    "itemRemoved": "Item removed from cart",
+    "removeError": "Failed to remove item",
+    "cartCleared": "Cart cleared",
+    "clearError": "Failed to clear cart",
+    "clearCart": "Clear Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "Add some products to get started",
+    "continueShopping": "Continue Shopping",
+    "noPhoto": "No photo",
+    "perItem": "per item",
+    "orderSummary": "Order Summary",
+    "pcs": "pcs",
+    "shipping": "Shipping",
+    "proceedToCheckout": "Proceed to Checkout",
     "metadata": {
       "title": "Shopping Cart - Online Store",
       "description": "View and manage items in your shopping cart"
@@ -685,5 +717,59 @@
       "updateError": "Error",
       "updateErrorDescription": "Failed to update order status. Please try again."
     }
+  },
+  "requestForm": {
+    "problemDescription": "Problem Description",
+    "device": "Device",
+    "selectDevice": "Select Device",
+    "service": "Service",
+    "selectService": "Select Service",
+    "currency": "som",
+    "customerName": "Customer Name",
+    "customerPhone": "Customer Phone",
+    "estimatedCost": "Estimated Cost: {cost} som",
+    "submitting": "Submitting...",
+    "submitRequest": "Submit Request",
+    "error": "Error",
+    "success": "Success",
+    "unknownError": "An unknown error occurred",
+    "validation": {
+      "descriptionRequired": "Description is required",
+      "descriptionMaxLength": "Description cannot exceed 255 characters",
+      "customerNameRequired": "Customer name is required",
+      "customerNameMaxLength": "Customer name cannot exceed 100 characters",
+      "customerNameLettersOnly": "Customer name must contain only letters",
+      "customerPhoneRequired": "Customer phone is required",
+      "phoneInvalid": "Invalid phone number",
+      "laptopBrandRequired": "Laptop brand is required",
+      "laptopBrandMaxLength": "Laptop brand cannot exceed 100 characters",
+      "laptopModelRequired": "Laptop model is required",
+      "laptopModelMaxLength": "Laptop model cannot exceed 100 characters",
+      "totalCostPositive": "Total cost must be positive"
+    }
+  },
+  "delivery": {
+    "title": "Delivery",
+    "subtitle": "Choose delivery method",
+    "free": "Free",
+    "deliveryInfo": "Delivery Information",
+    "address": "Address",
+    "addressPlaceholder": "Enter your address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country"
+  },
+  "payment": {
+    "title": "Payment",
+    "subtitle": "Choose payment method",
+    "paymentMethod": "Payment Method",
+    "comment": "Comment",
+    "commentPlaceholder": "Additional comments (optional)",
+    "yourOrder": "Your Order",
+    "items": "Items",
+    "total": "Total",
+    "processing": "Processing...",
+    "placeOrder": "Place Order",
+    "backToCart": "Back to Cart"
   }
 }

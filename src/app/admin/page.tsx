@@ -1,16 +1,11 @@
 import { Metadata } from 'next';
 import BaseContainer from '@/components/BaseContainer';
 import AdminDashboard from '@/components/admin/AdminDashboard';
-import { getTranslations } from 'next-intl/server';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('admin');
-  
-  return {
-    title: t('title'),
-    description: t('subtitle')
-  };
-}
+export const metadata: Metadata = {
+  title: 'Админ панель - Best Electronics',
+  description: 'Панель администратора для управления системой'
+};
 
 export default function AdminPage() {
   return (

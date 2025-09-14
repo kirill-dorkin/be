@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactElement } from "react";
-import { useTranslations } from 'next-intl';
+
 import { CardDescription } from "@/components/ui/card";
 import Image from "next/image";
 import { IUser } from "@/models/User";
@@ -11,7 +11,7 @@ export interface UserListProps {
 }
 
 export default function UserList({ users }: UserListProps): ReactElement {
-  const t = useTranslations();
+
   const workers = users.filter((user) => user.role === "worker");
 
   return (
@@ -36,14 +36,14 @@ export default function UserList({ users }: UserListProps): ReactElement {
                     {worker.name}
                   </h5>
                   <p className="text-sm text-muted-foreground m-0">
-                    {t('dashboard.employeeList.totalTasks')}: {worker?.tasks?.length}
+                    Всего задач: {worker?.tasks?.length}
                   </p>
                 </div>
               </div>
             </li>
           ))
         ) : (
-          <CardDescription className="text-center">{t('dashboard.employeeList.noEmployeesFound')}</CardDescription>
+          <CardDescription className="text-center">Сотрудники не найдены</CardDescription>
         )}
       </ul>
     </div>

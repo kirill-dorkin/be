@@ -1,7 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { ITask } from "@/models/Task";
 import DeleteButton from "@/components/dashboard/buttons/DeleteButton";
 import ViewButton from "@/components/dashboard/buttons/ViewButton";
@@ -29,7 +28,6 @@ export default function TaskTable({
   per_page: string | string[];
   deleteAction?: (id: string) => void
 }) {
-  const t = useTranslations();
   const start = (Number(page) - 1) * Number(per_page);
   const totalPages = Math.ceil(totalItemsLength / Number(per_page));
   const { data: session } = useSession();
@@ -82,13 +80,13 @@ export default function TaskTable({
                 }
               >
                 {{
-                  Pending: t('tasks.status.pending'),
-                  "In Progress": t('tasks.status.inProgress'),
-                  Completed: t('tasks.status.completed'),
+                  Pending: 'В ожидании',
+                  "In Progress": 'В процессе',
+                  Completed: 'Завершено',
                 }[status as "Pending" | "In Progress" | "Completed"] ?? status}
               </TableCell>
               <TableCell className={role === "admin" && !hideActions ? "" : "text-right"}>
-                {totalCost} {t('common.currency')}
+                {totalCost} сом
               </TableCell>
               {(role === "admin" || role === "worker") && !hideActions && (
                 <TableCell className="flex gap-2 justify-end">

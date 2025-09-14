@@ -17,8 +17,12 @@ const intlMiddleware = createMiddleware({
 });
 
 export default function middleware(request: NextRequest) {
-  // Check if the request is for the root path without locale
   const pathname = request.nextUrl.pathname;
+  
+  // Skip middleware for admin routes
+  if (pathname.startsWith('/admin')) {
+    return;
+  }
   
   // If accessing root path, check for preferred locale in cookie or use default
   if (pathname === '/') {
@@ -34,6 +38,6 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  // Match only internationalized pathnames, exclude admin routes
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|admin).*)'],
 };

@@ -1,7 +1,6 @@
 "use client";
 
 import { type ReactElement } from "react";
-import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import useCustomToast from "@/hooks/useCustomToast";
@@ -15,24 +14,23 @@ export default function DeleteButton({
   id,
   action,
 }: DeleteButtonProps): ReactElement {
-  const t = useTranslations('common');
   const { showSuccessToast, showErrorToast } = useCustomToast();
 
   const handleDeleteAction = async () => {
     try {
       const response = await action(id);
 
-      if (response.status === "error") return showErrorToast({ title: t('error'), description: response.message });
+      if (response.status === "error") return showErrorToast({ title: 'Ошибка', description: response.message });
 
       showSuccessToast({
-        title: t('success'),
+        title: 'Успех',
         description: response.message,
       });
     } catch (error) {
 
       showErrorToast({
-        title: t('error'),
-        description: error instanceof Error ? error.message : t('unknownError'),
+        title: 'Ошибка',
+        description: error instanceof Error ? error.message : 'Неизвестная ошибка',
       });
     }
   };

@@ -41,7 +41,7 @@ export default function AdminLayout({
         {/* Mobile Header */}
         <header className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
           <MobileSidebar />
-          <h1 className="text-lg font-semibold text-gray-900">Admin Panel</h1>
+          <h1 className="text-lg font-semibold text-gray-900">Админ панель</h1>
           <div className="w-10" /> {/* Spacer for centering */}
         </header>
         

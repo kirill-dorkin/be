@@ -1,28 +1,17 @@
 import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 import getUsersAction from "@/actions/dashboard/getUsersAction"
-import { SearchParams } from "@/types"
 import { IUser } from "@/models/User";
-import UsersPageClient from "@/components/admin/UsersPageClient";
+import UsersPageClient from '@/components/admin/UsersPageClient';
 
 interface UsersResponse {
   items: IUser[];
   totalItemsLength: number;
 }
 
-type Props = {
-  params: { locale: string };
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+export const metadata: Metadata = {
+  title: 'Управление пользователями - Админ панель',
+  description: 'Управление пользователями и их правами в системе'
 };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: 'admin.users' });
-  
-  return {
-    title: t('metadata.title'),
-    description: t('metadata.description')
-  };
-}
 
 const UsersPage = async ({
   searchParams,

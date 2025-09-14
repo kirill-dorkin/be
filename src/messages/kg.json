@@ -170,13 +170,23 @@
         "createdAt": "Түзүлгөн убакыт",
         "lastLogin": "Акыркы кирүү",
         "noUsers": "Колдонуучулар табылган жок",
-        "loading": "Колдонуучулар жүктөлүүдө..."
+        "loading": "Колдонуучулар жүктөлүүдө...",
+        "photo": "Сүрөт",
+        "totalTasks": "Жалпы тапшырмалар",
+        "never": "Эч качан",
+        "registrationDate": "Катталган күнү",
+        "noUsersFound": "Колдонуучулар табылган жок"
       },
       "status": {
         "active": "Активдүү",
         "inactive": "Активдүү эмес",
         "pending": "Күтүлүүдө",
         "suspended": "Токтотулган"
+      },
+      "roles": {
+        "admin": "Администратор",
+        "worker": "Кызматкер",
+        "user": "Колдонуучу"
       }
     },
     "categories": {
@@ -382,9 +392,31 @@
       "cartCleared": "Себет тазаланды",
       "itemRemovedFromFavorites": "Товар тандалгандардан алынды",
       "favoritesCleared": "{count} товар тандалгандардан алынды"
-    }
+    },
+    "addedToCart": "Себетке кошулду",
+    "addToCartError": "Себетке кошуу мүмкүн болбоду",
+    "favoritesError": "Тандалгандарды жаңыртуу мүмкүн болбоду",
+    "noImage": "Сүрөт жок",
+    "adding": "Кошулууда...",
+    "goToCart": "Себетке өтүү"
   },
   "cart": {
+    "quantityUpdated": "Саны жаңыртылды",
+    "quantityUpdateError": "Санды жаңыртуу мүмкүн болбоду",
+    "itemRemoved": "Товар себеттен алынды",
+    "removeError": "Товарды алуу мүмкүн болбоду",
+    "cartCleared": "Себет тазаланды",
+    "clearError": "Себетти тазалоо мүмкүн болбоду",
+    "clearCart": "Себетти тазалоо",
+    "empty": "Сиздин себет бош",
+    "emptyDescription": "Баштоо үчүн товарларды кошуңуз",
+    "continueShopping": "Соода улантуу",
+    "noPhoto": "Сүрөт жок",
+    "perItem": "бир данасы үчүн",
+    "orderSummary": "Заказдын жыйынтыгы",
+    "pcs": "дана",
+    "shipping": "Жеткирүү",
+    "proceedToCheckout": "Төлөмгө өтүү",
     "metadata": {
       "title": "Себет - Интернет дүкөн",
       "description": "Себеттеги товарларды көрүү жана башкаруу"
@@ -463,5 +495,59 @@
   },
   "validation": {
     "customerNameLettersOnly": "Кардардын аты тек тамгалардан турушу керек"
+  },
+  "requestForm": {
+    "problemDescription": "Көйгөйдүн сүрөттөмөсү",
+    "device": "Түзүлүш",
+    "selectDevice": "Түзүлүштү тандаңыз",
+    "service": "Кызмат",
+    "selectService": "Кызматты тандаңыз",
+    "currency": "сом",
+    "customerName": "Кардардын аты",
+    "customerPhone": "Кардардын телефону",
+    "estimatedCost": "Болжолдуу наркы: {cost} сом",
+    "submitting": "Жөнөтүлүүдө...",
+    "submitRequest": "Өтүнүчтү жөнөтүү",
+    "error": "Ката",
+    "success": "Ийгиликтүү",
+    "unknownError": "Белгисиз ката пайда болду",
+    "validation": {
+      "descriptionRequired": "Сүрөттөмө милдеттүү",
+      "descriptionMaxLength": "Сүрөттөмө 255 символдон ашпашы керек",
+      "customerNameRequired": "Кардардын аты милдеттүү",
+      "customerNameMaxLength": "Кардардын аты 100 символдон ашпашы керек",
+      "customerNameLettersOnly": "Кардардын аты тек тамгалардан турушу керек",
+      "customerPhoneRequired": "Кардардын телефону милдеттүү",
+      "phoneInvalid": "Туура эмес телефон номери",
+      "laptopBrandRequired": "Ноутбуктун маркасы милдеттүү",
+      "laptopBrandMaxLength": "Ноутбуктун маркасы 100 символдон ашпашы керек",
+      "laptopModelRequired": "Ноутбуктун модели милдеттүү",
+      "laptopModelMaxLength": "Ноутбуктун модели 100 символдон ашпашы керек",
+      "totalCostPositive": "Жалпы наркы оң сан болушу керек"
+    }
+  },
+  "delivery": {
+    "title": "Жеткирүү",
+    "subtitle": "Жеткирүү ыкмасын тандаңыз",
+    "free": "Акысыз",
+    "deliveryInfo": "Жеткирүү маалыматы",
+    "address": "Дарек",
+    "addressPlaceholder": "Дарегиңизди киргизиңиз",
+    "city": "Шаар",
+    "postalCode": "Почта индекси",
+    "country": "Өлкө"
+  },
+  "payment": {
+    "title": "Төлөм",
+    "subtitle": "Төлөм ыкмасын тандаңыз",
+    "paymentMethod": "Төлөм ыкмасы",
+    "comment": "Комментарий",
+    "commentPlaceholder": "Кошумча комментарийлер (милдеттүү эмес)",
+    "yourOrder": "Сиздин заказыңыз",
+    "items": "Товарлар",
+    "total": "Жалпы",
+    "processing": "Иштетилүүдө...",
+    "placeOrder": "Заказ берүү",
+    "backToCart": "Себетке кайтуу"
   }
 }

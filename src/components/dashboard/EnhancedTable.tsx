@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
+
 import { 
   Table,
   TableBody,
@@ -86,7 +86,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
   pageSize = 10,
   className = ''
 }) => {
-  const t = useTranslations();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
@@ -297,7 +297,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
               ) : paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="text-center py-8 text-gray-500">
-                    {emptyMessage || t('common.table.noData')}
+                    {emptyMessage || 'Нет данных'}
                   </TableCell>
                 </TableRow>
               ) : (

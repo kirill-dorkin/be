@@ -1,6 +1,5 @@
 'use client'
 
-import { useTranslations } from 'next-intl';
 import SelectShowing from "@/components/dashboard/SelectShowing";
 import DashboardContainer from "@/components/dashboard/DashboardContainer";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -19,12 +18,10 @@ interface DevicesPageClientProps {
 }
 
 const DevicesPageClient = ({ page, perPage, items, totalItemsLength }: DevicesPageClientProps) => {
-  const t = useTranslations('admin.devices');
-
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
-        <DashboardTitle>{t('title')}</DashboardTitle>
+        <DashboardTitle>Управление устройствами</DashboardTitle>
         <div className="flex gap-4">
           <SelectShowing />
           <AddDeviceDialog />

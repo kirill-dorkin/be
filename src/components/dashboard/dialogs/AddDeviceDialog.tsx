@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,14 +28,13 @@ import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
 import { ICategory } from "@/models/Category";
 import { DeviceFormData } from "@/schemas/DeviceSchema";
 
-const createDeviceSchema = (t: ReturnType<typeof useTranslations>) => z.object({
+const createDeviceSchema = () => z.object({
   category: z.string().min(1),
-  brand: z.string().min(1, { message: t("devices.brandRequired") }).max(100),
+  brand: z.string().min(1, { message: "Бренд обязателен" }).max(100),
   deviceModel: z.string().optional(),
 });
 
 export function AddDeviceDialog() {
-  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -49,7 +48,7 @@ export function AddDeviceDialog() {
   }, []);
 
   const methods = useForm<DeviceFormData>({
-    resolver: zodResolver(createDeviceSchema(t)),
+    resolver: zodResolver(createDeviceSchema()),
     defaultValues: { category: "", brand: "", deviceModel: "" },
     mode: "onChange",
   });
@@ -66,15 +65,15 @@ export function AddDeviceDialog() {
     try {
       const response = await addDeviceAction(data.category, data.brand, data.deviceModel || "");
       if (response.status === "error") {
-        showErrorToast({ title: t("common.error"), description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message });
       } else {
-        showSuccessToast({ title: t("common.success"), description: response.message });
+        showSuccessToast({ title: "Успех", description: response.message });
         reset();
       }
     } catch (error) {
       showErrorToast({
-        title: t("common.error"),
-        description: error instanceof Error ? error.message : t("devices.addDeviceError"),
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Ошибка при добавлении устройства",
       });
     } finally {
       setLoading(false);
@@ -84,19 +83,19 @@ export function AddDeviceDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>{t("devices.addDevice")}</Button>
+        <Button>Добавить устройство</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("devices.addDevice")}</DialogTitle>
-          <DialogDescription>{t("devices.deviceDetails")}</DialogDescription>
+          <DialogTitle>Добавить устройство</DialogTitle>
+          <DialogDescription>Введите детали устройства</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
             <InputFormField<DeviceFormData>
               name="brand"
               id="brand"
-              label={t("devices.brand")}
+              label="Бренд"
               type="text"
               control={control}
               errors={errors}
@@ -104,19 +103,19 @@ export function AddDeviceDialog() {
             <InputFormField<DeviceFormData>
               name="deviceModel"
               id="deviceModel"
-              label={t("devices.model")}
+              label="Модель"
               type="text"
               control={control}
               errors={errors}
             />
             <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="category">{t("devices.category")}</label>
+              <label className="text-sm" htmlFor="category">Категория</label>
               <Select
                 value={methods.watch("category")}
                 onValueChange={(value) => methods.setValue("category", value)}
               >
                 <SelectTrigger id="category">
-                  <SelectValue placeholder={t("status.select")} />
+                  <SelectValue placeholder="Выберите" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => (
@@ -127,7 +126,7 @@ export function AddDeviceDialog() {
             </div>
           </FormProvider>
           <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>{t("status.save")}</Button>
+            <Button type="submit" disabled={loading}>Сохранить</Button>
           </DialogFooter>
         </form>
       </DialogContent>

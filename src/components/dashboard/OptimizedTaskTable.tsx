@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -55,13 +54,12 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
   canEdit = true,
   canDelete = true
 }) => {
-  const t = useTranslations();
   
   // Определение колонок
   const columns = [
     {
       key: 'title',
-      title: t('tasks.table.task'),
+      title: 'Задача',
       sortable: true,
       filterable: true,
       width: 'min-w-[200px]',
@@ -78,7 +76,7 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
     },
     {
       key: 'status',
-      title: t('tasks.table.status'),
+      title: 'Статус',
       sortable: true,
       filterable: true,
       render: (value: unknown, row: TableRow) => {
@@ -100,13 +98,13 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
         const getStatusText = (status: string) => {
           switch (status) {
             case 'pending':
-              return t('tasks.status.pending');
+              return 'В ожидании';
             case 'in_progress':
-              return t('tasks.status.inProgress');
+              return 'В процессе';
             case 'completed':
-              return t('tasks.status.completed');
+              return 'Завершено';
             case 'cancelled':
-              return t('tasks.status.cancelled');
+              return 'Отменено';
             default:
               return status;
           }
@@ -121,7 +119,7 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
     },
     {
       key: 'priority',
-      title: t('tasks.table.priority'),
+      title: 'Приоритет',
       sortable: true,
       filterable: true,
       render: (value: unknown, row: TableRow) => {
@@ -143,13 +141,13 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
         const getPriorityText = (priority: string) => {
           switch (priority) {
             case 'urgent':
-              return t('tasks.priority.urgent');
+              return 'Срочно';
             case 'high':
-              return t('tasks.priority.high');
+              return 'Высокий';
             case 'medium':
-              return t('tasks.priority.medium');
+              return 'Средний';
             case 'low':
-              return t('tasks.priority.low');
+              return 'Низкий';
             default:
               return priority;
           }
@@ -164,12 +162,12 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
     },
     {
       key: 'assignee',
-      title: t('tasks.table.assignee'),
+      title: 'Исполнитель',
       sortable: true,
       filterable: true,
       render: (value: unknown, row: TableRow) => {
         if (!(row as Task).assignee) {
-          return <span className="text-gray-400 text-sm">{t('tasks.table.notAssigned')}</span>;
+          return <span className="text-gray-400 text-sm">Не назначен</span>;
         }
         
         return (
@@ -187,7 +185,7 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
     },
     {
       key: 'progress',
-      title: t('tasks.table.progress'),
+      title: 'Прогресс',
       sortable: true,
       render: (value: unknown, row: TableRow) => (
         <div className="w-full max-w-[100px]">
@@ -200,11 +198,11 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
     },
     {
       key: 'dueDate',
-      title: t('tasks.table.dueDate'),
+      title: 'Срок выполнения',
       sortable: true,
       render: (value: unknown, row: TableRow) => {
         if (!(row as Task).dueDate) {
-          return <span className="text-gray-400 text-sm">{t('tasks.table.notSet')}</span>;
+          return <span className="text-gray-400 text-sm">Не установлен</span>;
         }
         
         const dueDate = new Date((row as Task).dueDate!);
@@ -220,10 +218,10 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
           text = `Просрочено на ${Math.abs(diffDays)} дн.`;
         } else if (diffDays === 0) {
           colorClass = 'text-orange-600';
-          text = t('common.today');
+          text = 'Сегодня';
         } else if (diffDays === 1) {
           colorClass = 'text-yellow-600';
-          text = t('common.tomorrow');
+          text = 'Завтра';
         } else if (diffDays <= 3) {
           colorClass = 'text-yellow-600';
           text = `Через ${diffDays} дн.`;
@@ -238,7 +236,7 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
     },
     {
       key: 'createdAt',
-      title: t('tasks.table.created'),
+      title: 'Создано',
       sortable: true,
       render: (value: unknown, row: TableRow) => {
         const date = new Date((row as Task).createdAt);
@@ -255,34 +253,34 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
   const actions = [
     {
       key: 'view',
-      label: t('common.actions.view'),
+      label: 'Просмотр',
       icon: <RiEyeLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onView?.(row as Task)
     },
     {
       key: 'start',
-      label: t('common.actions.start'),
+      label: 'Запустить',
       icon: <RiPlayLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onStart?.(row as Task),
       condition: (row: TableRow) => (row as Task).status === 'pending' && !!onStart
     },
     {
       key: 'pause',
-      label: t('common.actions.pause'),
+      label: 'Приостановить',
       icon: <RiPauseLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onPause?.(row as Task),
       condition: (row: TableRow) => (row as Task).status === 'in_progress' && !!onPause
     },
     {
       key: 'edit',
-      label: t('common.actions.edit'),
+      label: 'Редактировать',
       icon: <RiEditLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onEdit?.(row as Task),
       condition: () => canEdit && !!onEdit
     },
     {
       key: 'delete',
-      label: t('common.actions.delete'),
+      label: 'Удалить',
       icon: <RiDeleteBinLine className="w-4 h-4" />,
       onClick: (row: TableRow) => onDelete?.(row as Task),
       variant: 'destructive' as const,
@@ -303,13 +301,13 @@ const OptimizedTaskTable: React.FC<OptimizedTaskTableProps> = ({
       data={tasks}
       columns={columns}
       actions={actions}
-      title={t('tasks.title')}
+      title={'Задачи'}
       searchable={true}
       exportable={true}
       refreshable={!!onRefresh}
       onRefresh={onRefresh}
       loading={loading}
-      emptyMessage={t('tasks.table.notFound')}
+      emptyMessage={'Задачи не найдены'}
       pageSize={12}
       className="w-full"
     />

@@ -262,13 +262,20 @@
         "never": "Никогда",
         "noUsers": "Пользователи не найдены",
         "noUsersFound": "Пользователи не найдены",
-        "loading": "Загрузка пользователей..."
+        "loading": "Загрузка пользователей...",
+        "photo": "Фото",
+        "totalTasks": "Всего задач"
       },
       "status": {
         "active": "Активен",
         "inactive": "Неактивен",
         "pending": "В ожидании",
         "suspended": "Заблокирован"
+      },
+      "roles": {
+        "admin": "Администратор",
+        "worker": "Сотрудник",
+        "user": "Пользователь"
       }
     },
     "products": {
@@ -391,9 +398,31 @@
     "to": "До",
     "apply": "Применить",
     "clear": "Очистить",
-    "showAll": "Показать все"
+    "showAll": "Показать все",
+    "addedToCart": "Добавлено в корзину",
+    "addToCartError": "Не удалось добавить в корзину",
+    "favoritesError": "Не удалось обновить избранное",
+    "noImage": "Нет изображения",
+    "adding": "Добавление...",
+    "goToCart": "Перейти в корзину"
   },
   "cart": {
+    "quantityUpdated": "Количество обновлено",
+    "quantityUpdateError": "Не удалось обновить количество",
+    "itemRemoved": "Товар удален из корзины",
+    "removeError": "Не удалось удалить товар",
+    "cartCleared": "Корзина очищена",
+    "clearError": "Не удалось очистить корзину",
+    "clearCart": "Очистить корзину",
+    "empty": "Ваша корзина пуста",
+    "emptyDescription": "Добавьте товары, чтобы начать",
+    "continueShopping": "Продолжить покупки",
+    "noPhoto": "Нет фото",
+    "perItem": "за единицу",
+    "orderSummary": "Итого по заказу",
+    "pcs": "шт",
+    "shipping": "Доставка",
+    "proceedToCheckout": "Перейти к оформлению",
     "metadata": {
       "title": "Корзина - Интернет-магазин",
       "description": "Просмотр и управление товарами в корзине"
@@ -747,5 +776,59 @@
   },
   "validation": {
     "customerNameLettersOnly": "Имя клиента должно содержать только буквы"
+  },
+  "requestForm": {
+    "problemDescription": "Описание проблемы",
+    "device": "Устройство",
+    "selectDevice": "Выберите устройство",
+    "service": "Услуга",
+    "selectService": "Выберите услугу",
+    "currency": "сом",
+    "customerName": "Имя клиента",
+    "customerPhone": "Телефон клиента",
+    "estimatedCost": "Предварительная стоимость: {cost} сом",
+    "submitting": "Отправка...",
+    "submitRequest": "Отправить заявку",
+    "error": "Ошибка",
+    "success": "Успешно",
+    "unknownError": "Произошла неизвестная ошибка",
+    "validation": {
+      "descriptionRequired": "Описание обязательно",
+      "descriptionMaxLength": "Описание не может превышать 255 символов",
+      "customerNameRequired": "Имя клиента обязательно",
+      "customerNameMaxLength": "Имя клиента не может превышать 100 символов",
+      "customerNameLettersOnly": "Имя клиента должно содержать только буквы",
+      "customerPhoneRequired": "Телефон клиента обязателен",
+      "phoneInvalid": "Неверный номер телефона",
+      "laptopBrandRequired": "Марка ноутбука обязательна",
+      "laptopBrandMaxLength": "Марка ноутбука не может превышать 100 символов",
+      "laptopModelRequired": "Модель ноутбука обязательна",
+      "laptopModelMaxLength": "Модель ноутбука не может превышать 100 символов",
+      "totalCostPositive": "Общая стоимость должна быть положительной"
+    }
+  },
+  "delivery": {
+    "title": "Доставка",
+    "subtitle": "Выберите способ доставки",
+    "free": "Бесплатно",
+    "deliveryInfo": "Информация о доставке",
+    "address": "Адрес",
+    "addressPlaceholder": "Введите ваш адрес",
+    "city": "Город",
+    "postalCode": "Почтовый индекс",
+    "country": "Страна"
+  },
+  "payment": {
+    "title": "Оплата",
+    "subtitle": "Выберите способ оплаты",
+    "paymentMethod": "Способ оплаты",
+    "comment": "Комментарий",
+    "commentPlaceholder": "Дополнительные комментарии (необязательно)",
+    "yourOrder": "Ваш заказ",
+    "items": "Товары",
+    "total": "Итого",
+    "processing": "Обработка...",
+    "placeOrder": "Оформить заказ",
+    "backToCart": "Вернуться в корзину"
   }
 }

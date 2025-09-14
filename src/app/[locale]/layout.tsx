@@ -2,11 +2,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { locales } from '@/lib/locales';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/auth';
 import { ensureDefaultAdmin } from '@/lib/initAdmin';
-import Providers from '@/app/providers';
-import "../globals.css";
 
 export const metadata = {
   title: "Best Electronics",
@@ -34,20 +30,13 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages({ locale });
-  const session = await getServerSession(authOptions);
   
   // Ensure default admin exists
   await ensureDefaultAdmin();
 
   return (
-    <html lang={locale}>
-      <body className="font-sans antialiased">
-        <Providers session={session}>
-          <NextIntlClientProvider key={locale} messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </Providers>
-      </body>
-    </html>
+    <NextIntlClientProvider key={locale} messages={messages}>
+      {children}
+    </NextIntlClientProvider>
   );
 }

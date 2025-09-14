@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
-import { useTranslations } from 'next-intl';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,7 +65,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   users,
   metrics
 }) => {
-  const t = useTranslations();
+
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   
@@ -165,7 +165,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             }`}>
               {change}
             </span>
-            <span className="text-xs md:text-sm text-gray-500 ml-1 md:ml-2 truncate">{t('dashboard.stats.vsLastMonth')}</span>
+            <span className="text-xs md:text-sm text-gray-500 ml-1 md:ml-2 truncate">по сравнению с прошлым месяцем</span>
           </div>
         )}
       </div>
@@ -187,7 +187,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   const memoizedTaskData = useMemo(() => {
     return effectiveTasks?.slice(0, 5).map((task: ITask) => ({
       id: task._id?.toString() || '',
-      title: task.description || t('dashboard.tasks.noTitle'),
+      title: task.description || 'Без названия',
       description: task.description || '',
       status: (task.status === 'Completed' ? 'completed' : 
               task.status === 'In Progress' ? 'in_progress' : 
@@ -243,10 +243,10 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2 md:gap-3">
             <RiDashboardLine className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
-            {t('dashboard.title')}
+            Панель управления
           </h1>
           <p className="text-gray-600 mt-1 text-sm md:text-base">
-            {t('dashboard.welcome')}
+            Добро пожаловать в панель управления
           </p>
         </div>
         
@@ -258,14 +258,14 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             className="flex items-center gap-2 flex-1 sm:flex-none"
           >
             <RiRefreshLine className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">{t('dashboard.refresh')}</span>
-            <span className="sm:hidden">{t('dashboard.refresh')}</span>
+            <span className="hidden sm:inline">Обновить</span>
+            <span className="sm:hidden">Обновить</span>
           </Button>
           
           <Button className="flex items-center gap-2 flex-1 sm:flex-none">
             <RiAddLine className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('dashboard.quickAction')}</span>
-            <span className="sm:hidden">{t('dashboard.add')}</span>
+            <span className="hidden sm:inline">Быстрое действие</span>
+            <span className="sm:hidden">Добавить</span>
           </Button>
         </div>
       </div>
@@ -278,15 +278,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         <div className="flex space-x-1 md:space-x-2 overflow-x-auto pb-2">
           <TabButton value="overview" active={activeTab === 'overview'} onClick={handleTabChange}>
             <RiDashboardLine className="w-4 h-4" />
-            {t('dashboard.tabs.overview')}
+            Обзор
           </TabButton>
           <TabButton value="tasks" active={activeTab === 'tasks'} onClick={handleTabChange}>
             <RiTaskLine className="w-4 h-4" />
-            {t('dashboard.tabs.tasks')}
+            Задачи
           </TabButton>
           <TabButton value="analytics" active={activeTab === 'analytics'} onClick={handleTabChange}>
             <RiPieChartLine className="w-4 h-4" />
-            {t('dashboard.tabs.analytics')}
+            Аналитика
           </TabButton>
         </div>
 
@@ -296,28 +296,28 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
            {/* Stats Grid */}
            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
              <StatCard
-               title={t('dashboard.stats.totalUsers')}
+               title="Всего пользователей"
                value={memoizedMetrics.activeUsers}
                change="+12%"
                icon={<RiUserLine className="w-full h-full" />}
                trend="up"
              />
              <StatCard
-               title={t('dashboard.stats.activeTasks')}
+               title="Активные задачи"
                value={memoizedMetrics.totalTasks}
                change="+5%"
                icon={<RiTaskLine className="w-full h-full" />}
                trend="up"
              />
              <StatCard
-               title={t('dashboard.stats.completedToday')}
+               title="Выполнено сегодня"
                value={memoizedMetrics.completedTasks}
                change="+8%"
                icon={<RiBarChartLine className="w-full h-full" />}
                trend="up"
              />
              <StatCard
-               title={t('dashboard.stats.pendingTasks')}
+               title="Ожидающие задачи"
                value={memoizedMetrics.pendingTasks}
                change="+3%"
                icon={<RiSettings4Line className="w-full h-full" />}
@@ -369,16 +369,16 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         {activeTab === 'tasks' && (
           <Card>
             <CardHeader>
-              <CardTitle>{t('dashboard.taskManagement.title')}</CardTitle>
+              <CardTitle>Управление задачами</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
                 <RiTaskLine className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">{t('dashboard.taskManagement.detailed')}</p>
-                <p className="mb-4">{t('dashboard.taskManagement.description')}</p>
+                <p className="text-lg font-medium mb-2">Детальное управление задачами</p>
+                <p className="mb-4">Здесь вы можете управлять всеми задачами в системе</p>
                 <Link href="/admin/tasks">
                   <Button>
-                    {t('dashboard.taskManagement.goToTasks')}
+                    Перейти к задачам
                   </Button>
                 </Link>
               </div>
@@ -390,15 +390,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
         {activeTab === 'analytics' && (
           <Card>
             <CardHeader>
-              <CardTitle>{t('dashboard.analytics.title')}</CardTitle>
+              <CardTitle>Аналитика</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
                 <RiPieChartLine className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">{t('dashboard.analytics.panel')}</p>
-                <p className="mb-4">{t('dashboard.analytics.description')}</p>
+                <p className="text-lg font-medium mb-2">Панель аналитики</p>
+                <p className="mb-4">Подробная аналитика и отчеты будут доступны в ближайшее время</p>
                 <Button disabled>
-                  {t('dashboard.analytics.comingSoon')}
+                  Скоро будет доступно
                 </Button>
               </div>
             </CardContent>

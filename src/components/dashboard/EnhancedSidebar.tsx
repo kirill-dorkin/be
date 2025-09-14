@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+
 import Link from 'next/link';
 import { 
   RiDashboardFill, 
@@ -45,15 +45,15 @@ interface NavigationGroup {
   items: NavigationItem[];
 }
 
-const getAdminNavigation = (t: ReturnType<typeof useTranslations>): NavigationGroup[] => [
+const getAdminNavigation = (): NavigationGroup[] => [
   {
     id: 'overview',
-    label: t('navigation.overview'),
+    label: 'Обзор',
     items: [
       {
         id: 'dashboard',
         href: '/admin/dashboard',
-        label: t('navigation.dashboard'),
+        label: 'Панель управления',
         icon: <RiDashboardFill className="w-5 h-5" />,
         keywords: ['dashboard', 'панель', 'главная', 'обзор']
       }
@@ -61,12 +61,12 @@ const getAdminNavigation = (t: ReturnType<typeof useTranslations>): NavigationGr
   },
   {
     id: 'management',
-    label: t('navigation.management'),
+    label: 'Управление',
     items: [
       {
         id: 'tasks',
         href: '/admin/tasks',
-        label: t('navigation.tasks'),
+        label: 'Задачи',
         icon: <FaTasks className="w-5 h-5" />,
         badge: 5, // Можно получать из API
         keywords: ['tasks', 'задачи', 'работа', 'заявки']
@@ -74,7 +74,7 @@ const getAdminNavigation = (t: ReturnType<typeof useTranslations>): NavigationGr
       {
         id: 'users',
         href: '/admin/users',
-        label: t('navigation.users'),
+        label: 'Пользователи',
         icon: <FaUsers className="w-5 h-5" />,
         keywords: ['users', 'пользователи', 'сотрудники', 'команда']
       }
@@ -82,26 +82,26 @@ const getAdminNavigation = (t: ReturnType<typeof useTranslations>): NavigationGr
   },
   {
     id: 'commerce',
-    label: t('navigation.commerce'),
+    label: 'Коммерция',
     items: [
       {
         id: 'products',
         href: '/admin/products',
-        label: t('navigation.products'),
+        label: 'Товары',
         icon: <FaBoxes className="w-5 h-5" />,
         keywords: ['products', 'товары', 'продукты', 'каталог']
       },
       {
         id: 'orders',
         href: '/admin/orders',
-        label: t('navigation.orders'),
+        label: 'Заказы',
         icon: <FaShoppingCart className="w-5 h-5" />,
         keywords: ['orders', 'заказы', 'покупки', 'продажи']
       },
       {
         id: 'categories',
         href: '/admin/categories',
-        label: t('navigation.categories'),
+        label: 'Категории',
         icon: <FaLayerGroup className="w-5 h-5" />,
         keywords: ['categories', 'категории', 'группы', 'разделы']
       }
@@ -109,19 +109,19 @@ const getAdminNavigation = (t: ReturnType<typeof useTranslations>): NavigationGr
   },
   {
     id: 'services',
-    label: t('navigation.services'),
+    label: 'Услуги',
     items: [
       {
         id: 'devices',
         href: '/admin/devices',
-        label: t('navigation.devices'),
+        label: 'Устройства',
         icon: <FaLaptop className="w-5 h-5" />,
         keywords: ['devices', 'устройства', 'техника', 'оборудование']
       },
       {
         id: 'services',
         href: '/admin/services',
-        label: t('navigation.services'),
+        label: 'Услуги',
         icon: <FaCog className="w-5 h-5" />,
         keywords: ['services', 'услуги', 'сервис', 'обслуживание']
       }
@@ -129,15 +129,15 @@ const getAdminNavigation = (t: ReturnType<typeof useTranslations>): NavigationGr
   }
 ];
 
-const getWorkerNavigation = (t: ReturnType<typeof useTranslations>): NavigationGroup[] => [
+const getWorkerNavigation = (): NavigationGroup[] => [
   {
     id: 'work',
-    label: t('navigation.work'),
+    label: 'Работа',
     items: [
       {
         id: 'my-tasks',
         href: '/worker/my-tasks',
-        label: t('navigation.myTasks'),
+        label: 'Мои задачи',
         icon: <FaTasks className="w-5 h-5" />,
         keywords: ['tasks', 'задачи', 'мои', 'работа']
       }
@@ -145,12 +145,12 @@ const getWorkerNavigation = (t: ReturnType<typeof useTranslations>): NavigationG
   }
 ];
 
-const getNavigationByRole = (role: string, t: ReturnType<typeof useTranslations>): NavigationGroup[] => {
+const getNavigationByRole = (role: string): NavigationGroup[] => {
   switch (role) {
     case 'worker':
-      return getWorkerNavigation(t);
+      return getWorkerNavigation();
     case 'admin':
-      return getAdminNavigation(t);
+      return getAdminNavigation();
     default:
       return [];
   }
@@ -161,15 +161,15 @@ const EnhancedSidebar = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const t = useTranslations('common');
+
   
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   
   const navigation = useMemo(() => {
     if (!session?.user?.role) return [];
-    return getNavigationByRole(session.user.role, t);
-  }, [session?.user?.role, t]);
+    return getNavigationByRole(session.user.role);
+  }, [session?.user?.role]);
 
   // Фильтрация навигации по поисковому запросу
   const filteredNavigation = useMemo(() => {

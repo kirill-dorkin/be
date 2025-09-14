@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Section from "@/components/launchui/Section";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 const Hero: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('hero');
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const Hero: React.FC = () => {
   const handleGoToDashboard = () => {
     const role = session?.user?.role;
     if (role === "worker") {
-      router.push("/worker/my-tasks");
+      router.push(`/${locale}/worker/my-tasks`);
     } else {
       router.push("/admin/dashboard");
     }

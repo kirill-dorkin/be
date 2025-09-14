@@ -1,6 +1,5 @@
 'use client'
 
-import { useTranslations } from 'next-intl';
 import SelectShowing from "@/components/dashboard/SelectShowing";
 import { Suspense } from "react";
 import UserTable from "@/components/dashboard/UserTable";
@@ -20,13 +19,11 @@ interface UsersPageClientProps {
 }
 
 const UsersPageClient = ({ page, perPage, items, totalItemsLength }: UsersPageClientProps) => {
-  const t = useTranslations('admin.users');
-
   return (
     <Suspense>
       <DashboardContainer className="w-full min-h-svh py-12 px-10 overflow-y-auto">
         <DashboardHeader className="flex justify-between">
-          <DashboardTitle>{t('title')}</DashboardTitle>
+          <DashboardTitle>Управление пользователями</DashboardTitle>
           <div className="flex gap-6">
             <SelectShowing />
             <AddUserDialog />
