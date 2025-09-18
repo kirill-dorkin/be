@@ -1,38 +1,16 @@
 import { Metadata } from 'next';
-import getUsersAction from "@/actions/dashboard/getUsersAction"
-import { IUser } from "@/models/User";
-import UsersPageClient from '@/components/admin/UsersPageClient';
-
-interface UsersResponse {
-  items: IUser[];
-  totalItemsLength: number;
-}
+import BaseContainer from '@/components/BaseContainer';
+import EmployeeManagement from '@/components/admin/EmployeeManagement';
 
 export const metadata: Metadata = {
-  title: 'Управление пользователями - Админ панель',
-  description: 'Управление пользователями и их правами в системе'
+  title: 'Управление сотрудниками - Админ панель',
+  description: 'Управление сотрудниками и их правами в системе'
 };
 
-const UsersPage = async ({
-  searchParams,
-}: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
-  const { page = "1", perPage = "5" } = await searchParams;
-
-  const usersResponse = (await getUsersAction(
-    Number(page),
-    Number(perPage),
-  )) as unknown as UsersResponse;
-  const items = usersResponse.items ?? [];
-  const totalItemsLength: number = usersResponse.totalItemsLength ?? 0;
-
+export default function UsersPage() {
   return (
-    <UsersPageClient
-      page={page}
-      perPage={perPage}
-      items={items}
-      totalItemsLength={totalItemsLength}
-    />
+    <BaseContainer className="py-8">
+      <EmployeeManagement />
+    </BaseContainer>
   );
-};
-
-export default UsersPage;
+}

@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/dbConnect';
 import Product from '@/models/Product';
 import { getSession } from '@/auth';
 import { getTranslations } from 'next-intl/server';
+import { optimizedDb } from '@/lib/optimizedDb';
 
 
 // GET - Получить список товаров с фильтрацией
@@ -13,7 +14,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
-    const skip = (page - 1) * limit;
     
     interface ProductFilter {
       category?: string;
@@ -64,24 +64,23 @@ export async function GET(request: NextRequest) {
     }
     
     const sortBy = searchParams.get('sortBy') || 'createdAt';
-    const sortOrder = searchParams.get('sortOrder') === 'asc' ? 1 : -1;
+    const sortOrder = (searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc') as 'asc' | 'desc';
     
-    const products = await Product.find(filters)
-      .sort({ [sortBy]: sortOrder })
-      .skip(skip)
-      .limit(limit)
-      .lean();
-    
-    const total = await Product.countDocuments(filters);
+    // Используем оптимизированный сервис с кэшированием
+     const result = await optimizedDb.findWithPagination(
+       Product,
+       filters,
+       {
+         page,
+         limit,
+         sortBy,
+         sortOrder
+       }
+     );
     
     return NextResponse.json({
-      products,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit)
-      }
+      products: result.data,
+      pagination: result.pagination
     });
   } catch (error) {
     console.error('Error fetching products:', error);

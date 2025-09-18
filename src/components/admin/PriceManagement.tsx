@@ -1,0 +1,1 @@
+export { PriceManagement as default } from './price-management';

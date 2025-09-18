@@ -52,7 +52,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
@@ -60,6 +59,10 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.email = user.email;
         token.id = user.id;
+        // Generate access token for admin users
+        if (user.role === 'admin') {
+          token.accessToken = `admin-${user.id}-${Date.now()}`;
+        }
       }
       return token;
     },
@@ -71,8 +74,23 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.image as string;
         session.user.name = token.name as string;
         session.user.id = token.id as string;
+        session.accessToken = token.accessToken as string;
       }
       return session;
+    },
+  },
+  events: {
+    async signOut() {
+      // Clear any cached data on sign out
+    },
+  },
+  logger: {
+    error(code, metadata) {
+      if (code === 'JWT_SESSION_ERROR') {
+        // Ignore JWT session errors caused by secret key changes
+        return;
+      }
+      console.error(code, metadata);
     },
   },
 };

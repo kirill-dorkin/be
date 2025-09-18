@@ -71,14 +71,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   
   // Инициализация кэша dashboard
   const {
-    getCachedTasks,
-    getCachedUsers,
-    getCachedMetrics,
-    setCachedTasks,
-    setCachedUsers,
-    setCachedMetrics,
+    getTasks,
+    getUsers,
+    getMetrics,
     invalidateCache,
-    isLoading: cacheLoading
+    getCachedDataSync,
+    loading: cacheLoading
   } = useDashboardCache({ cacheTimeout: 3 * 60 * 1000 }); // 3 минуты кэш
 
   const refreshData = async () => {
@@ -88,9 +86,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       // Инвалидируем кэш для получения свежих данных
       invalidateCache();
       
-      // Обновляем кэш новыми данными
-      setCachedTasks(items);
-      setCachedUsers(users);
+      // Кэш обновляется автоматически через useDashboardCache
       
       // Simulate refresh
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -101,13 +97,9 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   
   // Эффект для первоначального кэширования данных
   useEffect(() => {
-    if (items.length > 0 && !getCachedTasks()) {
-      setCachedTasks(items);
-    }
-    if (users.length > 0 && !getCachedUsers()) {
-      setCachedUsers(users);
-    }
-  }, [items, users, getCachedTasks, getCachedUsers, setCachedTasks, setCachedUsers]);
+    // Данные уже переданы как props, используем их напрямую
+    // Кэширование происходит автоматически через useDashboardCache
+  }, [items, users]);
 
   // Мемоизированный TabButton для предотвращения лишних ререндеров
   const TabButton = useMemo(() => {
@@ -174,14 +166,9 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
     return Component;
   }, []);
 
-  // Получение данных из кэша или использование переданных данных
-  const cachedTasks = getCachedTasks();
-  const cachedUsers = getCachedUsers();
-  const cachedMetrics = getCachedMetrics();
-  
-  // Использование кэшированных данных если доступны, иначе переданных
-  const effectiveTasks = cachedTasks || items;
-  const effectiveUsers = cachedUsers || users;
+  // Использование переданных данных напрямую
+  const effectiveTasks = items;
+  const effectiveUsers = users;
   
   // Мемоизированные данные для таблиц
   const memoizedTaskData = useMemo(() => {
@@ -218,21 +205,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
     })) || [];
   }, [effectiveUsers]);
   
-  // Мемоизированные метрики с кэшированием
+  // Мемоизированные метрики
   const memoizedMetrics = useMemo(() => {
-    if (cachedMetrics) return cachedMetrics;
-    
-    const computedMetrics = {
+    return {
       totalTasks: effectiveTasks?.length || 0,
-      completedTasks: effectiveTasks?.filter(task => task.status === 'Completed').length || 0,
-      activeUsers: effectiveUsers?.filter(user => user.role === 'user').length || 0,
-      pendingTasks: effectiveTasks?.filter(task => task.status === 'Pending').length || 0
+      completedTasks: effectiveTasks?.filter((task: ITask) => task.status === 'Completed').length || 0,
+      activeUsers: effectiveUsers?.filter((user: IUser) => user.role === 'user').length || 0,
+      pendingTasks: effectiveTasks?.filter((task: ITask) => task.status === 'Pending').length || 0
     };
-    
-    // Кэшируем вычисленные метрики
-    setCachedMetrics(computedMetrics);
-    return computedMetrics;
-  }, [effectiveTasks, effectiveUsers, cachedMetrics, setCachedMetrics]);
+  }, [effectiveTasks, effectiveUsers]);
 
 
 

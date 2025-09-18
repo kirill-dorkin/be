@@ -1,18 +1,19 @@
 import { notFound } from 'next/navigation';
+import { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { locales } from '@/lib/locales';
+import { locales, type Locale } from '@/lib/locales';
 import { ensureDefaultAdmin } from '@/lib/initAdmin';
+import { PWAInstaller } from '@/components/pwa/PWAInstaller';
 
 export const metadata = {
   title: "Best Electronics",
   description: "Electronics Service Management",
 };
 
-type Props = {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-};
+interface LocaleLayoutProps {
+  children: ReactNode;
+  params: Promise<{ locale: Locale }>;
+}
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -21,22 +22,29 @@ export function generateStaticParams() {
 export default async function LocaleLayout({
   children,
   params
-}: Props) {
+}: LocaleLayoutProps) {
   const { locale } = await params;
   
-  // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as (typeof locales)[number])) {
+  // Проверяем, что локаль поддерживается
+  if (!locales.includes(locale)) {
     notFound();
   }
 
-  const messages = await getMessages({ locale });
+  // Получаем сообщения для данной локали
+  let messages;
+  try {
+    messages = (await import(`../../messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
   
   // Ensure default admin exists
   await ensureDefaultAdmin();
 
   return (
-    <NextIntlClientProvider key={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       {children}
+      <PWAInstaller />
     </NextIntlClientProvider>
   );
 }

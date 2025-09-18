@@ -1,33 +1,15 @@
 "use client"
-import { ReactNode, useEffect } from "react";
-import Sidebar from "@/components/dashboard/Sidebar"
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
+import AdaptiveLayout from "@/components/dashboard/AdaptiveLayout";
 
-export default function AdminLayout({
+export default function WorkerLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "loading") return;
-
-    if (session?.user?.role !== "worker") {
-      router.push("/");
-    }
-  }, [session, status, router]);
-
-  if (status === "loading") {
-    return null
-  }
-
   return (
-    <div className="flex max-h-svh">
-      <Sidebar />
+    <AdaptiveLayout userRole="worker">
       {children}
-    </div>
+    </AdaptiveLayout>
   );
 }

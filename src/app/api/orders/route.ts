@@ -6,6 +6,7 @@ import Product from '@/models/Product';
 import { getSession } from '@/auth';
 import { OrderStatus } from '@/types';
 import { getTranslations } from 'next-intl/server';
+import { optimizedDb } from '@/lib/optimizedDb';
 
 // GET - Получить заказы пользователя
 export async function GET(request: NextRequest) {
@@ -25,7 +26,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-    const skip = (page - 1) * limit;
+    const status = searchParams.get('status') as OrderStatus;
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = (searchParams.get('sortOrder') || 'desc') as 'asc' | 'desc';
     
     interface OrderFilter {
       userId?: string;
@@ -40,27 +43,25 @@ export async function GET(request: NextRequest) {
     }
     
     // Фильтр по статусу
-    const status = searchParams.get('status') as OrderStatus;
     if (status) {
       filter.orderStatus = status;
     }
     
-    const orders = await Order.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .lean();
-    
-    const total = await Order.countDocuments(filter);
-    
-    return NextResponse.json({
-      orders,
-      pagination: {
+    // Используем оптимизированный сервис с кэшированием
+    const result = await optimizedDb.findWithPagination(
+      Order,
+      filter,
+      {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit)
+        sortBy,
+        sortOrder
       }
+    );
+    
+    return NextResponse.json({
+      orders: result.data,
+      pagination: result.pagination
     });
   } catch (error) {
     console.error('Error fetching orders:', error);

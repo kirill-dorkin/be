@@ -5,6 +5,12 @@ interface IDashboardSummary {
   label: string;
   value: number;
   icon: JSX.Element;
+  onClick?: () => void;
+  href?: string;
+  trend?: {
+    value: number;
+    type: 'increase' | 'decrease' | 'neutral';
+  };
 }
 
 const DashboardSummary = ({

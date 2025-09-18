@@ -6,6 +6,8 @@ import { signOut } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import Link from 'next/link';
+import useDashboardPrefetch from '@/hooks/useDashboardPrefetch';
+import useDashboardCache from '@/hooks/useDashboardCache';
 import { 
   RiDashboardFill, 
   RiSearchLine, 
@@ -74,9 +76,9 @@ const getAdminNavigation = (): NavigationGroup[] => [
       {
         id: 'users',
         href: '/admin/users',
-        label: 'Пользователи',
+        label: 'Сотрудники',
         icon: <FaUsers className="w-5 h-5" />,
-        keywords: ['users', 'пользователи', 'сотрудники', 'команда']
+        keywords: ['users', 'пользователи', 'сотрудники', 'команда', 'работники']
       }
     ]
   },
@@ -104,6 +106,13 @@ const getAdminNavigation = (): NavigationGroup[] => [
         label: 'Категории',
         icon: <FaLayerGroup className="w-5 h-5" />,
         keywords: ['categories', 'категории', 'группы', 'разделы']
+      },
+      {
+        id: 'prices',
+        href: '/admin/prices',
+        label: 'Цены',
+        icon: <RiSettings4Line className="w-5 h-5" />,
+        keywords: ['prices', 'цены', 'стоимость', 'тарифы']
       }
     ]
   },
@@ -166,6 +175,10 @@ const EnhancedSidebar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   
+  // Хуки для оптимизации
+  const { prefetchSpecificRoute, prefetchDashboardPages } = useDashboardPrefetch();
+  const { prefetchDashboardData } = useDashboardCache({ enablePrefetch: true, enableBackgroundRefresh: true });
+  
   const navigation = useMemo(() => {
     if (!session?.user?.role) return [];
     return getNavigationByRole(session.user.role);
@@ -196,6 +209,12 @@ const EnhancedSidebar = () => {
       setIsExpanded(false);
     }
   };
+
+  // Предзагрузка данных при монтировании
+  useEffect(() => {
+    prefetchDashboardPages();
+    prefetchDashboardData();
+  }, [prefetchDashboardPages, prefetchDashboardData]);
 
   // Быстрая навигация по клавишам
   useEffect(() => {
@@ -318,6 +337,7 @@ const EnhancedSidebar = () => {
                       <Link
                         href={item.href}
                         onClick={handleLinkClick}
+                        onMouseEnter={() => prefetchSpecificRoute(item.href)}
                         className={`
                           flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200
                           ${isActive 

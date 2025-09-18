@@ -7,8 +7,9 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import useDashboardPrefetch from '@/hooks/useDashboardPrefetch';
 import { RiDashboardFill } from 'react-icons/ri';
-import { FaTasks, FaUsers } from 'react-icons/fa';
+import { FaTasks, FaUsers, FaLayerGroup, FaCog } from 'react-icons/fa';
 import { MdShoppingCart, MdInventory } from 'react-icons/md';
 
 
@@ -31,7 +32,7 @@ const getAdminLinks = (): LinkItem[] => [
   },
   {
     href: "/admin/users",
-    label: "Пользователи",
+    label: "Сотрудники",
     icon: <FaUsers />,
   },
   {
@@ -47,7 +48,12 @@ const getAdminLinks = (): LinkItem[] => [
   {
     href: "/admin/categories",
     label: "Категории",
-    icon: <FaTasks />,
+    icon: <FaLayerGroup />,
+  },
+  {
+    href: "/admin/prices",
+    label: "Цены",
+    icon: <FaCog />,
   },
   {
     href: "/admin/devices",
@@ -85,6 +91,7 @@ const Sidebar = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { data: session } = useSession();
   const [links, setLinks] = useState<LinkItem[]>([]);
+  const { prefetchSpecificRoute, prefetchDashboardPages } = useDashboardPrefetch();
 
 
   useEffect(() => {
@@ -109,6 +116,11 @@ const Sidebar = () => {
       return () => clearTimeout(timer);
     }
   }, [isExpanded]);
+
+  // Предзагрузка страниц при монтировании
+  useEffect(() => {
+    prefetchDashboardPages();
+  }, [prefetchDashboardPages]);
 
   const pathname = usePathname();
 
@@ -145,6 +157,7 @@ const Sidebar = () => {
             <Link
               href={href}
               onClick={handleLinkClick}
+              onMouseEnter={() => prefetchSpecificRoute(href)}
               className={`flex hover:after:hidden items-center px-8 py-4 rounded-lg space-x-4 w-full transition-all duration-500 ease-in-out bg-white ${pathname?.includes(href)
                 ? "text-primary"
                 : "text-muted-foreground hover:bg-gray-100"

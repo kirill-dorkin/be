@@ -79,7 +79,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
       items: [
         {
           href: '/admin/users',
-          label: 'Пользователи',
+          label: 'Сотрудники',
           icon: <RiUserLine className="w-5 h-5" />,
           badge: '12',
           isActive: pathname === '/admin/users'
@@ -96,6 +96,12 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ className = '' }) => {
           label: 'Категории',
           icon: <FaBoxes className="w-5 h-5" />,
           isActive: pathname === '/admin/categories'
+        },
+        {
+          href: '/admin/prices',
+          label: 'Цены',
+          icon: <RiSettings4Line className="w-5 h-5" />,
+          isActive: pathname === '/admin/prices'
         }
       ]
     },

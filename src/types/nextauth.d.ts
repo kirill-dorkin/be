@@ -11,6 +11,8 @@ declare module "next-auth" {
       /** The user's unique ID. */
       id: string;
     } & DefaultSession["user"];
+    /** Access token for API authentication */
+    accessToken?: string;
   }
 
   interface User {
@@ -28,5 +30,7 @@ declare module "next-auth/jwt" {
     role: string;
     /** The user's unique ID */
     id: string;
+    /** Access token for API authentication */
+    accessToken?: string;
   }
 }

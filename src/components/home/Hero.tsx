@@ -1,7 +1,7 @@
 "use client";
 import { signOut } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import React, { useCallback, useMemo } from "react";
+import OptimizedLink from "@/components/ui/OptimizedLink";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -9,59 +9,27 @@ import Section from "@/components/launchui/Section";
 import { useTranslations, useLocale } from 'next-intl';
 
 const Hero: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { data: session } = useSession();
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('hero');
 
-  useEffect(() => {
-    if (session?.user) return setIsLoggedIn(true);
-    setIsLoggedIn(false);
-  }, [session?.user]);
+  const isLoggedIn = useMemo(() => Boolean(session?.user), [session?.user]);
 
-  const handleGoToDashboard = () => {
+  const handleGoToDashboard = useCallback(() => {
     const role = session?.user?.role;
     if (role === "worker") {
       router.push(`/${locale}/worker/my-tasks`);
     } else {
       router.push("/admin/dashboard");
     }
-  };
+  }, [session?.user?.role, router, locale]);
 
-
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     signOut();
-  };
-
-  // Защита от скриншотов
-  useEffect(() => {
-    const preventScreenshot = () => {
-      document.body.style.userSelect = 'none';
-      document.body.style.webkitUserSelect = 'none';
-      
-      // Блокировка контекстного меню
-      document.addEventListener('contextmenu', (e) => e.preventDefault());
-      
-      // Блокировка горячих клавиш для скриншотов
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'PrintScreen' || 
-            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-            (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-            (e.ctrlKey && e.key === 'u') ||
-            e.key === 'F12') {
-          e.preventDefault();
-          return false;
-        }
-      });
-    };
-    
-    preventScreenshot();
-    
-    return () => {
-      document.removeEventListener('contextmenu', (e) => e.preventDefault());
-    };
   }, []);
+
+
 
   return (
     <Section
@@ -98,7 +66,7 @@ const Hero: React.FC = () => {
               asChild 
               className="apple-button bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 transition-all duration-200 border-0 shadow-sm hover:shadow-md"
             >
-              <Link href="/request">{t('orderRepair')}</Link>
+              <OptimizedLink href="/request">{t('orderRepair')}</OptimizedLink>
             </Button>
           )}
           {isLoggedIn && (

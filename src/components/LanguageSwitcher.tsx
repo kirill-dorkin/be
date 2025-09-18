@@ -1,66 +1,68 @@
 'use client';
 
-import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
-import { useState, useTransition, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { useLanguageSwitcher } from '@/lib/i18n/hooks';
+import { localeNames, localeFlags } from '@/lib/i18n/config';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Globe } from 'lucide-react';
-import { locales } from '@/lib/locales';
+import { Button } from '@/components/ui/button';
+import { Globe, ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const languages = [
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'kg', name: 'Кыргызча', flag: '🇰🇬' },
-];
+interface LanguageSwitcherProps {
+  className?: string;
+  variant?: 'default' | 'compact' | 'icon-only';
+  showFlag?: boolean;
+  showText?: boolean;
+}
 
-export default function LanguageSwitcher() {
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+export default function LanguageSwitcher({
+  className,
+  variant = 'default',
+  showFlag = true,
+  showText = true
+}: LanguageSwitcherProps = {}) {
+  const { currentLocale, availableLocales, switchLanguage } = useLanguageSwitcher();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Extract locale from pathname as fallback
-  const pathLocale = pathname.split('/')[1];
-  const actualLocale = locales.includes(pathLocale as (typeof locales)[number]) ? pathLocale : locale;
-  
-  const currentLanguage = languages.find(lang => lang.code === actualLocale);
+  const handleLanguageChange = (locale: string) => {
+    switchLanguage(locale as any);
+    setIsOpen(false);
+  };
 
-  // Save current locale to cookie on mount to ensure persistence
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.cookie = `preferred-locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+  const currentLocaleName = localeNames[currentLocale];
+  const currentLocaleFlag = localeFlags[currentLocale];
+
+  const renderTriggerContent = () => {
+    switch (variant) {
+      case 'icon-only':
+        return (
+          <>
+            <Globe className="h-4 w-4" />
+            <ChevronDown className="h-3 w-3 opacity-50" />
+          </>
+        );
+      case 'compact':
+        return (
+          <>
+            {showFlag && <span className="text-sm">{currentLocaleFlag}</span>}
+            <span className="text-sm font-medium">{currentLocale.toUpperCase()}</span>
+            <ChevronDown className="h-3 w-3 opacity-50" />
+          </>
+        );
+      default:
+        return (
+          <>
+            {showFlag && <span className="text-sm">{currentLocaleFlag}</span>}
+            {showText && <span className="text-sm font-medium">{currentLocaleName}</span>}
+            <ChevronDown className="h-3 w-3 opacity-50" />
+          </>
+        );
     }
-  }, [locale]);
-
-  const handleLanguageChange = (newLocale: string) => {
-    if (newLocale === actualLocale) {
-      setIsOpen(false);
-      return;
-    }
-
-    startTransition(() => {
-      // Get the current path without the locale prefix
-      const segments = pathname.split('/').filter(Boolean);
-      const pathWithoutLocale = segments.length > 1 ? '/' + segments.slice(1).join('/') : '/';
-      
-      // Create the new path with the selected locale
-      const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
-      
-      // Save the selected locale to cookies for persistence
-       if (typeof window !== 'undefined') {
-         document.cookie = `preferred-locale=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-       }
-      
-      router.push(newPath);
-      setIsOpen(false);
-    });
   };
 
   return (
@@ -69,33 +71,58 @@ export default function LanguageSwitcher() {
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center gap-2"
-          disabled={isPending}
-        >
-          {currentLanguage ? (
-            <>
-              <span className="text-lg">{currentLanguage.flag}</span>
-              <span className="hidden sm:inline">{currentLanguage.name}</span>
-            </>
-          ) : (
-            <Globe className="h-4 w-4" />
+          className={cn(
+            "h-8 gap-2 px-2",
+            variant === 'icon-only' && "w-8 px-0",
+            className
           )}
+        >
+          {renderTriggerContent()}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {languages.map((language) => (
+      <DropdownMenuContent align="end" className="min-w-[120px]">
+        {availableLocales.map((locale) => (
           <DropdownMenuItem
-            key={language.code}
-            onClick={() => handleLanguageChange(language.code)}
-            className={`flex items-center gap-2 cursor-pointer ${
-              actualLocale === language.code ? 'bg-accent' : ''
-            }`}
+            key={locale}
+            onClick={() => handleLanguageChange(locale)}
+            className={cn(
+              "flex items-center gap-2 cursor-pointer",
+              locale === currentLocale && "bg-accent"
+            )}
           >
-            <span className="text-lg">{language.flag}</span>
-            <span>{language.name}</span>
+            <span className="text-sm">{localeFlags[locale]}</span>
+            <span className="text-sm font-medium">{localeNames[locale]}</span>
+            {locale === currentLocale && (
+              <span className="ml-auto text-xs text-muted-foreground">✓</span>
+            )}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+// Компонент для мобильной версии
+export function MobileLanguageSwitcher({ className }: { className?: string }) {
+  const { currentLocale, availableLocales, switchLanguage } = useLanguageSwitcher();
+
+  return (
+    <div className={cn("flex flex-col space-y-2", className)}>
+      <h3 className="text-sm font-medium text-muted-foreground">Язык / Language</h3>
+      <div className="grid grid-cols-2 gap-2">
+        {availableLocales.map((locale) => (
+          <Button
+            key={locale}
+            variant={locale === currentLocale ? "default" : "outline"}
+            size="sm"
+            onClick={() => switchLanguage(locale)}
+            className="flex items-center gap-2 justify-start"
+          >
+            <span className="text-sm">{localeFlags[locale]}</span>
+            <span className="text-sm">{localeNames[locale]}</span>
+          </Button>
+        ))}
+      </div>
+    </div>
   );
 }

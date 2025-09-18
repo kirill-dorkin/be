@@ -16,6 +16,7 @@ import {
   BarChart3,
   Settings
 } from 'lucide-react';
+import CreateTaskDialog from './CreateTaskDialog';
 import useCustomToast from '@/hooks/useCustomToast';
 import Spinner from '@/components/ui/spinner';
 import TaskReport from "@/components/dashboard/TaskReport";
@@ -70,43 +71,59 @@ const UnifiedDashboard = ({
   // Загрузка статистики магазина
   const fetchShopStats = useCallback(async () => {
     try {
-      const [productsRes, ordersRes] = await Promise.all([
+      const [metricsRes, productsRes, ordersRes] = await Promise.all([
+        fetch('/api/dashboard/metrics', { credentials: 'include' }),
         fetch('/api/products', { credentials: 'include' }),
         fetch('/api/orders', { credentials: 'include' })
       ]);
       
-      if (!productsRes.ok || !ordersRes.ok) {
-        throw new Error('Failed to load stats');
-      }
-      
+      const metricsData = await metricsRes.json();
       const productsData = await productsRes.json();
       const ordersData = await ordersRes.json();
       
-      const products = productsData.products || [];
-      const orders = ordersData.orders || [];
-      
-      const totalRevenue = orders.reduce((sum: number, order: { totalAmount?: number }) => {
-        return sum + (order.totalAmount || 0);
-      }, 0);
-      
-      const activeProducts = products.filter((product: { inStock: boolean }) => product.inStock).length;
-      
-      setShopStats({
-        totalProducts: products.length,
-        totalOrders: orders.length,
-        totalRevenue,
-        activeProducts
-      });
+      if (metricsData.success) {
+        const { metrics } = metricsData;
+        setShopStats({
+          totalProducts: metrics.products.totalProducts,
+          totalOrders: metrics.orders.totalOrders,
+          totalRevenue: metrics.orders.totalRevenue,
+          activeProducts: metrics.products.activeProducts
+        });
+      } else {
+        // Fallback to direct API calls if metrics endpoint fails
+        const products = productsData.products || [];
+        const orders = ordersData.orders || [];
+        
+        const totalRevenue = orders.reduce((sum: number, order: { totalAmount?: number }) => {
+          return sum + (order.totalAmount || 0);
+        }, 0);
+        
+        const activeProducts = products.filter((product: { inStock: boolean }) => product.inStock).length;
+        
+        setShopStats({
+          totalProducts: products.length,
+          totalOrders: orders.length,
+          totalRevenue,
+          activeProducts
+        });
+      }
     } catch (error) {
       console.error('Error fetching shop stats:', error);
       showErrorToast({
         title: 'Ошибка',
         description: 'Не удалось загрузить статистику'
       });
+      // Fallback data in case of error
+      setShopStats({
+        totalProducts: 0,
+        totalOrders: 0,
+        totalRevenue: 0,
+        activeProducts: 0
+      });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showErrorToast]);
 
   useEffect(() => {
     fetchShopStats();
@@ -118,21 +135,41 @@ const UnifiedDashboard = ({
       label: 'Активные задачи',
       value: metrics?.metrics?.totalActiveTasks ?? 0,
       icon: <FaTasks />,
+      onClick: () => window.location.href = '/admin/tasks?status=active',
+      trend: {
+        value: 5,
+        type: 'increase' as const
+      }
     },
     {
       label: 'Ожидающие задачи',
       value: metrics?.metrics?.totalPendingTasks ?? 0,
       icon: <FaExclamationCircle />,
+      onClick: () => window.location.href = '/admin/tasks?status=pending',
+      trend: {
+        value: 2,
+        type: 'neutral' as const
+      }
     },
     {
       label: 'Задачи в работе',
       value: metrics?.metrics?.totalInProgressTasks ?? 0,
       icon: <FaHourglassHalf />,
+      onClick: () => window.location.href = '/admin/tasks?status=in-progress',
+      trend: {
+        value: 8,
+        type: 'increase' as const
+      }
     },
     {
       label: 'Завершенные задачи',
       value: metrics?.metrics?.totalCompletedTasks ?? 0,
       icon: <FaCheckCircle />,
+      onClick: () => window.location.href = '/admin/tasks?status=completed',
+      trend: {
+        value: 12,
+        type: 'increase' as const
+      }
     },
   ];
 
@@ -215,7 +252,7 @@ const UnifiedDashboard = ({
               <CardContent>
                 <div className="text-2xl font-bold">{users?.length || 0}</div>
                 <p className="text-xs text-muted-foreground">
-                  {t('admin.dashboard.stats.comingSoon')}
+                  Скоро
                 </p>
               </CardContent>
             </Card>
@@ -287,13 +324,25 @@ const UnifiedDashboard = ({
                     <p className="text-sm text-gray-600">Управление задачами и проектами</p>
                   </div>
                 </div>
-                <div className="mt-4">
-                  <Link href="/admin/tasks">
+                <div className="mt-4 flex gap-2">
+                  <Link href="/admin/tasks" className="flex-1">
                     <Button className="w-full" size="sm">
                       <Eye className="h-4 w-4 mr-2" />
                       Просмотр
                     </Button>
                   </Link>
+                  <CreateTaskDialog 
+                    trigger={
+                      <Button variant="outline" className="flex-1" size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Создать
+                      </Button>
+                    }
+                    onTaskCreated={() => {
+                      // Обновляем метрики после создания задачи
+                      window.location.reload();
+                    }}
+                  />
                 </div>
               </CardContent>
             </Card>
