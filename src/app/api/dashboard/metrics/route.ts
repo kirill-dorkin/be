@@ -6,10 +6,27 @@ import User from '@/models/User';
 import { auth } from '@/lib/auth';
 import { optimizedDb } from '@/lib/optimizedDb';
 
+const EMPTY_RESPONSE = {
+  metrics: {
+    totalOrders: 0,
+    totalRevenue: 0,
+    totalUsers: 0,
+    totalProducts: 0,
+    period: 0,
+  },
+  dailyStats: [],
+  recentOrders: [],
+};
+
 export async function GET(request: NextRequest) {
   try {
+    if (!process.env.MONGODB_URI) {
+      console.warn('MONGODB_URI is not configured. Returning empty metrics payload.');
+      return NextResponse.json(EMPTY_RESPONSE);
+    }
+
     await connectDB();
-    
+
     const session = await auth();
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json(
@@ -29,20 +46,20 @@ export async function GET(request: NextRequest) {
         { $match: { createdAt: { $gte: startDate } } },
         { $count: 'total' }
       ], `orders_count_${period}d`),
-      
+
       optimizedDb.aggregate(Order, [
         { $match: { createdAt: { $gte: startDate }, status: 'completed' } },
         { $group: { _id: null, total: { $sum: '$total' } } }
       ], `revenue_${period}d`),
-      
+
       optimizedDb.aggregate(User, [
         { $match: { createdAt: { $gte: startDate } } },
         { $count: 'total' }
       ], `users_count_${period}d`),
-      
+
       optimizedDb.findWithCache(Product, {}, `products_count`, 300),
-      
-      optimizedDb.findWithPagination(Order, 
+
+      optimizedDb.findWithPagination(Order,
         { createdAt: { $gte: startDate } },
         { page: 1, limit: 10, sortBy: 'createdAt', sortOrder: 'desc' }
       )
