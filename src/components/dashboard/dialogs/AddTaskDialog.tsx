@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, } from "react";
+import { useState } from "react";
 import useCustomToast from "@/hooks/useCustomToast";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ITask } from "@/models/Task";
+
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -48,12 +48,14 @@ const TaskSchema = z.object({
     .min(0, { message: "Стоимость должна быть положительным числом" }),
 });
 
+type TaskForm = z.infer<typeof TaskSchema>;
+
 export function AddTaskDialog() {
   const [loading, setLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useCustomToast();
   const country = useGeoCountry();
 
-  const methods = useForm<ITask>({
+  const methods = useForm<TaskForm>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
       description: '',
@@ -66,19 +68,19 @@ export function AddTaskDialog() {
     mode: "onChange",
   });
 
-  const { control, handleSubmit, formState: { errors } } = methods;
+  const { handleSubmit, control, formState: { errors } } = methods;
 
-  const handleSubmitAction = async (data: ITask) => {
+  const handleSubmitAction = async (data: TaskForm) => {
     setLoading(true);
     try {
       const response = await addTaskAction(data);
 
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
       } else {
         showSuccessToast({
           title: "Успешно",
-          description: response.message,
+          description: response.message || "Задача добавлена",
         });
       }
     } catch (error) {
@@ -123,19 +125,19 @@ export function AddTaskDialog() {
                 <PhoneInputField
                   key={field.name}
                   control={control}
-                  name={field.name as keyof ITask}
+                  name={field.name as keyof TaskForm}
                   label={field.label}
                   defaultCountry={country}
                 />
               ) : (
-                <InputFormField
+                <InputFormField<TaskForm>
                   key={field.name}
                   control={control}
-                  name={field.name as keyof ITask}
+                  name={field.name as keyof TaskForm}
                   id={field.name}
                   label={field.label}
                   errors={errors}
-                  type={field.type}
+                  type={field.type as "text" | "email" | "password" | "number" | "textarea" | "image"}
                 />
               )
             ))}

@@ -37,19 +37,19 @@ export function AddUserDialog() {
 
   const {
     handleSubmit,
-    control,
     reset,
+    control,
     formState: { errors },
   } = methods;
 
   const handleSubmitAction = async (data: UserForm) => {
     setLoading(true);
     try {
-      const response = await addUserAction(data.name, data.email, data.password);
+      const response = await addUserAction(data.name, data.email, data.password, "worker");
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
+        showSuccessToast({ title: "Успешно", description: response.message || "Пользователь добавлен" });
         reset();
       }
     } catch (error) {
@@ -74,7 +74,7 @@ export function AddUserDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
-            <InputFormField
+            <InputFormField<UserForm>
               name="name"
               label="Имя"
               id="name"
@@ -82,7 +82,7 @@ export function AddUserDialog() {
               control={control}
               errors={errors}
             />
-            <InputFormField
+            <InputFormField<UserForm>
               name="email"
               label="Email"
               id="email"
@@ -90,7 +90,7 @@ export function AddUserDialog() {
               control={control}
               errors={errors}
             />
-            <InputFormField
+            <InputFormField<UserForm>
               name="password"
               label="Пароль"
               id="password"

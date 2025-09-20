@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 export const useUsers = (page: string, perPage: string) => {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<Array<Record<string, string | number | boolean>>>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import AppProvider from "@/providers/AppProvider";
 import "./globals.css";
@@ -7,17 +7,18 @@ import Providers from "./providers";
 import { getSession } from "@/auth";
 import { ensureDefaultAdmin } from "@/lib/initAdmin";
 import ClientHeader from "@/components/ClientHeader";
+import { PerformanceProvider } from "@/providers/PerformanceProvider";
 
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const geistSans = Inter({
+  subsets: ["latin"],
   variable: "--font-geist-sans",
-  weight: "100 900",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+const geistMono = JetBrains_Mono({
+  subsets: ["latin"],
   variable: "--font-geist-mono",
-  weight: "100 900",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -37,15 +38,23 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//api.example.com" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      </head>
       <AppProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Providers session={session}>
-            {(!session || session.user.role === "user") && <ClientHeader />}
-            <div className="w-svw">{children}</div>
-            <Toaster />
-          </Providers>
+          <PerformanceProvider>
+            <Providers session={session}>
+              {(!session || session.user.role === "user") && <ClientHeader />}
+              <div className="w-svw">{children}</div>
+              <Toaster />
+            </Providers>
+          </PerformanceProvider>
         </body>
       </AppProvider>
     </html>

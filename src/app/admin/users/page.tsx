@@ -1,26 +1,28 @@
 import SelectShowing from "@/components/dashboard/SelectShowing";
-import { Suspense, } from "react";
+import { Suspense } from "react";
 import UserTable from "@/components/dashboard/UserTable";
 import DashboardContainer from "@/components/dashboard/DashboardContainer";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardTitle from "@/components/dashboard/DashboardTitle";
 import getUsersAction from "@/actions/dashboard/getUsersAction"
+import deleteUserAction from "@/actions/dashboard/deleteUserAction"
 import { SearchParams } from "@/types"
-import deleteUserAction from "@/actions/dashboard/deleteUserAction";
+
 import { AddUserDialog } from "@/components/dashboard/dialogs/AddUserDialog";
+import { IUser } from "@/models/User";
 
 const UsersPage = async ({
   searchParams,
 }: SearchParams) => {
   const { page = "1", perPage = "5" } = await searchParams;
 
-  const usersResponse = (await getUsersAction(
+  const usersResponse = await getUsersAction(
     Number(page),
     Number(perPage),
-  )) as any;
-  const items: any[] = usersResponse.items ?? [];
-  const totalItemsLength: number = usersResponse.totalItemsLength ?? 0;
+  );
+  const items: IUser[] = (usersResponse as unknown as { items: IUser[]; totalItemsLength: number }).items ?? [];
+  const totalItemsLength: number = (usersResponse as unknown as { items: IUser[]; totalItemsLength: number }).totalItemsLength ?? 0;
 
   return (
     <Suspense>
@@ -37,7 +39,7 @@ const UsersPage = async ({
             page={page}
             deleteAction={deleteUserAction}
             per_page={perPage}
-            items={items as any}
+            items={items}
             totalItemsLength={totalItemsLength}
           />
         </DashboardContent>

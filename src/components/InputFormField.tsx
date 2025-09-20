@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactElement, memo } from "react";
+import { type ReactElement } from "react";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -11,28 +11,26 @@ import type {
   Control,
   FieldErrors,
   FieldValues,
-  Path,
   ControllerRenderProps,
+  Path,
 } from "react-hook-form";
 
 interface InputFormFieldProps<TFieldValues extends FieldValues = FieldValues> {
   control: Control<TFieldValues>;
   name: Path<TFieldValues>;
   id: string;
-  placeholder?: string;
   label: string;
+  type?: "text" | "email" | "password" | "number" | "textarea" | "image";
+  placeholder?: string;
   errors?: FieldErrors<TFieldValues>;
-  type?: string;
-  onChange?: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   imageSrc?: string;
   isImageField?: boolean; // To determine if it's an image field
   rows?: number; // Optional for Textarea size
   isTextarea?: boolean; // render textarea instead of input
 }
 
-const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
+function InputFormField<TFieldValues extends FieldValues = FieldValues>({
   control,
   name,
   id,
@@ -45,7 +43,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
   isImageField = false, // Default is false, meaning it's a regular field
   rows = 4, // Default textarea size
   isTextarea = false,
-}: InputFormFieldProps<TFieldValues>): ReactElement => {
+}: InputFormFieldProps<TFieldValues>): ReactElement {
   void _errors;
 
   // Render Textarea if the field is of type "description" or if specified
@@ -144,7 +142,7 @@ const InputFormField = <TFieldValues extends FieldValues = FieldValues>({
       );
     }} />
   );
-};
+}
 
-export default memo(InputFormField);
+export default InputFormField;
 

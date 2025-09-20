@@ -5,7 +5,7 @@ import { getWorkerWithLeastTasks, assignTaskToWorker, createTask } from '@/servi
 import { revalidateTag } from 'next/cache';
 import { AddTaskActionParams } from "@/types";
 
-interface ApiResponse<T = any> {
+interface ApiResponse<T = Record<string, string | number | boolean>> {
   status: 'success' | 'error';
   message: string;
   data?: T;

@@ -29,12 +29,11 @@ import { ICategory } from "@/models/Category";
 const ServiceSchema = z.object({
   category: z.string().min(1),
   name: z.string().min(1, { message: "Название обязательно" }).max(100),
-  cost: z
-    .string()
-    .transform((v) => parseFloat(v))
-    .refine((v) => !isNaN(v) && v >= 0, { message: "Стоимость должна быть положительной" }),
+  cost: z.number().min(0, { message: "Стоимость должна быть положительной" }),
   duration: z.string().optional(),
 });
+
+type ServiceForm = z.infer<typeof ServiceSchema>;
 
 export function AddServiceDialog() {
   const [loading, setLoading] = useState(false);
@@ -43,13 +42,13 @@ export function AddServiceDialog() {
 
   useEffect(() => {
     getCategoriesAction(1, 100).then((res) => {
-      if (res.status === "success") {
-        setCategories(res.items);
+      if (res.status === "success" && "items" in res) {
+        setCategories(res.items as unknown as ICategory[]);
       }
     });
   }, []);
 
-  const methods = useForm<{ category: string; name: string; cost: number; duration?: string }>({
+  const methods = useForm<ServiceForm>({
     resolver: zodResolver(ServiceSchema),
     defaultValues: { category: "", name: "", cost: 0, duration: "" },
     mode: "onChange",
@@ -57,12 +56,11 @@ export function AddServiceDialog() {
 
   const {
     handleSubmit,
-    control,
     reset,
-    formState: { errors },
+    control,
   } = methods;
 
-  const handleSubmitAction = async (data: { category: string; name: string; cost: number; duration?: string }) => {
+  const handleSubmitAction = async (data: ServiceForm) => {
     setLoading(true);
     try {
       const response = await addServiceAction(data.category, data.name, data.cost, data.duration || "");
@@ -94,26 +92,26 @@ export function AddServiceDialog() {
         </DialogHeader>
         <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
           <FormProvider {...methods}>
-            <InputFormField
+            <InputFormField<ServiceForm>
               name="name"
               label="Название"
+              id="name"
               type="text"
               control={control}
-              errors={errors}
             />
-            <InputFormField
+            <InputFormField<ServiceForm>
               name="cost"
               label="Стоимость"
+              id="cost"
               type="number"
               control={control}
-              errors={errors}
             />
-            <InputFormField
+            <InputFormField<ServiceForm>
               name="duration"
               label="Длительность (например, 2 дня)"
+              id="duration"
               type="text"
               control={control}
-              errors={errors}
             />
             <div className="flex flex-col gap-2">
               <label className="text-sm" htmlFor="category">Категория</label>
@@ -126,7 +124,7 @@ export function AddServiceDialog() {
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((c) => (
-                    <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                    <SelectItem key={c._id as string} value={c._id as string}>{c.name as string}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

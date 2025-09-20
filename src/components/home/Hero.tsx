@@ -1,17 +1,21 @@
 "use client";
 import { signOut } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Section from "@/components/launchui/Section";
 import Glow from "@/components/launchui/Glow";
+import OptimizedLink from "@/components/OptimizedLink";
+import { usePerformance } from "@/hooks/usePerformance";
 
 const Hero: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { data: session } = useSession();
   const router = useRouter();
+  
+  // Инициализируем хук производительности
+  usePerformance();
 
   useEffect(() => {
     if (session?.user) return setIsLoggedIn(true);
@@ -48,9 +52,11 @@ const Hero: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-6 mt-8">
           {!isLoggedIn && (
-            <Button size="lg" asChild className="w-fit text-lg px-8 py-4 h-auto">
-              <Link href="/request">Заказать ремонт</Link>
-            </Button>
+            <OptimizedLink href="/request" prefetch={true} priority={true}>
+              <Button size="lg" className="w-fit text-lg px-8 py-4 h-auto">
+                Заказать ремонт
+              </Button>
+            </OptimizedLink>
           )}
           {isLoggedIn && (
             <>

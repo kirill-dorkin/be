@@ -7,7 +7,7 @@
 //   return data ? JSON.parse(data) : null;
 // }
 //
-// export async function setCache(key: string, value: any) {
+// export async function setCache(key: string, value: Record<string, string | number | boolean>) {
 //   await redis.setex(key, CACHE_TTL, JSON.stringify(value));
 // }
 //

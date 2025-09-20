@@ -4,14 +4,14 @@ import '@/models/Category';
 export interface IDevice extends Document {
   category: mongoose.Types.ObjectId;
   brand: string;
-  model?: string;
+  modelName?: string;
 }
 
-const DeviceSchema: Schema<IDevice> = new Schema(
+const DeviceSchema = new Schema<IDevice>(
   {
-    category: { type: mongoose.Types.ObjectId, ref: 'Category', required: true },
+    category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     brand: { type: String, required: true },
-    model: { type: String },
+    modelName: { type: String },
   },
   {
     timestamps: true,

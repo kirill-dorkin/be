@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import addTaskAction from '@/actions/dashboard/addTaskAction'
 import useCustomToast from '@/hooks/useCustomToast'
-import { ITask } from '@/models/Task'
+
 import getDevicesAction from '@/actions/dashboard/getDevicesAction'
 import getServicesAction from '@/actions/dashboard/getServicesAction'
 import { IDevice } from '@/models/Device'
@@ -53,6 +53,8 @@ const TaskSchema = z.object({
     .min(0, { message: 'Стоимость должна быть положительным числом' }),
 })
 
+type TaskForm = z.infer<typeof TaskSchema>
+
 export default function RequestForm() {
   const [loading, setLoading] = useState(false)
   const { showSuccessToast, showErrorToast } = useCustomToast()
@@ -60,7 +62,7 @@ export default function RequestForm() {
   const [services, setServices] = useState<IService[]>([])
   const country = useGeoCountry()
 
-  const methods = useForm<ITask>({
+  const methods = useForm<TaskForm>({
     resolver: zodResolver(TaskSchema),
     defaultValues: {
       description: '',
@@ -73,14 +75,14 @@ export default function RequestForm() {
     mode: 'onChange',
   })
 
-  const { control, handleSubmit, formState: { errors }, reset } = methods
+  const { control, handleSubmit, formState: { errors }, reset, setValue } = methods
 
   useEffect(() => {
     getDevicesAction(1, 100).then((res) => {
-      if (res.status === 'success') setDevices(res.items as any)
+      if (res.status === 'success') setDevices(res.items as unknown as IDevice[])
     })
     getServicesAction(1, 100).then((res) => {
-      if (res.status === 'success') setServices(res.items as any)
+      if (res.status === 'success') setServices(res.items as unknown as IService[])
     })
   }, [])
 
@@ -88,7 +90,7 @@ export default function RequestForm() {
     const device = devices.find((d) => d._id?.toString() === value)
     if (device) {
       methods.setValue('laptopBrand', device.brand)
-      methods.setValue('laptopModel', device.model || '')
+      methods.setValue('laptopModel', device.modelName || '')
     }
   }
 
@@ -99,7 +101,7 @@ export default function RequestForm() {
     }
   }
 
-  const handleSubmitAction = async (data: ITask) => {
+  const handleSubmitAction = async (data: TaskForm) => {
     setLoading(true)
     try {
       const response = await addTaskAction(data)
@@ -131,8 +133,8 @@ export default function RequestForm() {
           name="description"
           id="description"
           label="Описание проблемы"
+          type="textarea"
           errors={errors}
-          isTextarea
         />
 
         <div className="flex flex-col gap-2">
@@ -143,8 +145,8 @@ export default function RequestForm() {
             </SelectTrigger>
             <SelectContent>
               {devices.map((d) => (
-                <SelectItem key={d._id?.toString()} value={d._id?.toString()}>
-                  {d.brand} {d.model}
+                <SelectItem key={d._id?.toString()} value={d._id?.toString() || ''}>
+                  {d.brand} {d.modelName || ''}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -159,7 +161,7 @@ export default function RequestForm() {
             </SelectTrigger>
             <SelectContent>
               {services.map((s) => (
-                <SelectItem key={s._id?.toString()} value={s._id?.toString()}>
+                <SelectItem key={s._id?.toString()} value={s._id?.toString() || ''}>
                   {s.name} - {s.cost} сом
                 </SelectItem>
               ))}
@@ -174,7 +176,8 @@ export default function RequestForm() {
           label="Имя клиента"
           errors={errors}
           onChange={(e) => {
-            e.target.value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ]+/g, '')
+            const filteredValue = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ]+/g, '')
+            setValue('customerName', filteredValue)
           }}
         />
 
