@@ -3,9 +3,42 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getUserByEmail } from "./lib/dbUtils";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/dbConnect";
+import crypto from "crypto";
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __authSecret: string | undefined;
+}
+
+function resolveAuthSecret(): string {
+  if (process.env.NEXTAUTH_SECRET) {
+    return process.env.NEXTAUTH_SECRET;
+  }
+
+  if (globalThis.__authSecret) {
+    return globalThis.__authSecret;
+  }
+
+  const fallbackSecret =
+    process.env.NODE_ENV === "development"
+      ? "development-secret"
+      : crypto.randomBytes(32).toString("hex");
+
+  if (process.env.NODE_ENV === "production") {
+    console.warn(
+      "NEXTAUTH_SECRET is not set. Generated a temporary secret. " +
+        "Set NEXTAUTH_SECRET in the environment for stable authentication.",
+    );
+  }
+
+  globalThis.__authSecret = fallbackSecret;
+  return fallbackSecret;
+}
+
+const authSecret = resolveAuthSecret();
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -65,4 +98,11 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export const getSession = () => getServerSession(authOptions);
+export const getSession = async () => {
+  try {
+    return await getServerSession(authOptions);
+  } catch (error) {
+    console.error("Failed to retrieve session", error);
+    return null;
+  }
+};
