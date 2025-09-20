@@ -1,1 +1,0 @@
-export { CategoryManagement as default } from './category-management';

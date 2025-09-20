@@ -1,1 +1,0 @@
-export { OrderManagement } from './order-management';
