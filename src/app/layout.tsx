@@ -33,7 +33,14 @@ export default async function RootLayout({
   if (process.env.DB_URL) {
     await ensureDefaultAdmin()
   }
-  const session = await getSession()
+  
+  let session = null;
+  try {
+    session = await getSession();
+  } catch (error) {
+    console.error("Session retrieval error:", error);
+    // Session will remain null, which is handled gracefully below
+  }
 
   return (
     <html lang="en">

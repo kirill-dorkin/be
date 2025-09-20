@@ -6,6 +6,24 @@ import { connectToDatabase } from "@/lib/dbConnect";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -26,12 +44,12 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
           return {
-            id: user._id.toString(),
-            email: user.email,
-            name: user.name,
-            image: user.image,
-            role: user.role,
-          } as any;
+              id: user._id.toString(),
+              email: user.email,
+              name: user.name,
+              image: user.image,
+              role: user.role,
+            };
         } catch (error) {
           console.error("Error during credentials authorize", error);
           return null;
@@ -40,29 +58,56 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-
     async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role;
-        token.image = user.image;
-        token.name = user.name;
-        token.email = user.email;
-        token.id = user.id;
+      try {
+        if (user) {
+          token.role = user.role;
+          token.image = user.image;
+          token.name = user.name;
+          token.email = user.email;
+          token.id = user.id;
+        }
+        return token;
+      } catch (error) {
+        console.error("JWT callback error:", error);
+        // Return the original token if there's an error
+        return token;
       }
-      return token;
     },
 
     async session({ session, token }) {
-      if (token) {
-        session.user.role = token.role as string;
-        session.user.email = token.email as string;
-        session.user.image = token.image as string;
-        session.user.name = token.name as string;
-        session.user.id = token.id as string;
+      try {
+        if (token && token.email) {
+          session.user.role = token.role as string;
+          session.user.email = token.email as string;
+          session.user.image = token.image as string;
+          session.user.name = token.name as string;
+          session.user.id = token.id as string;
+        }
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        return session;
       }
-      return session;
     },
   },
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
+  events: {
+    async signOut() {
+      // Clear any cached session data
+    },
+  },
+  debug: process.env.NODE_ENV === 'development',
 };
 
-export const getSession = () => getServerSession(authOptions);
+export const getSession = async () => {
+  try {
+    return await getServerSession(authOptions);
+  } catch (error) {
+    console.error("Session retrieval failed:", error);
+    return null;
+  }
+};
