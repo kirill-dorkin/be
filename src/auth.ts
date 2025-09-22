@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { connectToDatabase } from "@/shared/lib/dbConnect"
 import User from "@/entities/user/User"
+import { getAuthSecret } from "@/shared/lib/getAuthSecret"
 
 const authOptions = {
   providers: [
@@ -57,7 +58,7 @@ const authOptions = {
       }
     })
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: getAuthSecret(),
   pages: {
     signIn: "/login",
   },

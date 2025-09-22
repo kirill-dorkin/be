@@ -1,5 +1,6 @@
 import { withAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
+import { getAuthSecret } from "@/shared/lib/getAuthSecret"
 
 const protectedRoutePrefixes = ["/dashboard", "/profile", "/settings", "/admin"]
 
@@ -41,7 +42,7 @@ export default withAuth(
         return true
       },
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: getAuthSecret(),
   }
 )
 
