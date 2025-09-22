@@ -16,11 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/select'
-import addTaskAction from '@/shared/api/dashboard/addTaskAction'
-import useCustomToast from '@/shared/lib/useCustomToast'
+import { addTaskAction } from '@/shared/api/dashboard/addTaskAction'
+import { showToast } from '@/shared/lib/toast'
 
-import getDevicesAction from '@/shared/api/dashboard/getDevicesAction'
-import getServicesAction from '@/shared/api/dashboard/getServicesAction'
+import { getDevicesAction } from '@/shared/api/dashboard/getDevicesAction'
+import { getServicesAction } from '@/shared/api/dashboard/getServicesAction'
 import { IDevice } from '@/entities/device'
 import { IService } from '@/entities/service'
 
@@ -57,7 +57,7 @@ type TaskForm = z.infer<typeof TaskSchema>
 
 export default function RequestForm() {
   const [loading, setLoading] = useState(false)
-  const { showSuccessToast, showErrorToast } = useCustomToast()
+
   const [devices, setDevices] = useState<IDevice[]>([])
   const [services, setServices] = useState<IService[]>([])
   const country = useGeoCountry()
@@ -107,19 +107,13 @@ export default function RequestForm() {
       const response = await addTaskAction(data)
 
       if (response.status === 'error') {
-        showErrorToast({ title: 'Error', description: response.message })
+        showToast.error(response.message)
       } else {
-        showSuccessToast({
-          title: 'Success',
-          description: response.message,
-        })
+        showToast.success(response.message)
         reset()
       }
     } catch (error) {
-      showErrorToast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'An unknown error occurred.',
-      })
+      showToast.error(error instanceof Error ? error.message : 'Произошла неизвестная ошибка.')
     } finally {
       setLoading(false)
     }

@@ -10,6 +10,7 @@ const getWorkersAction = async (page: number = 1, limit: number = 5) => {
     await connectToDatabase();
 
     const workers = await User.find({ role: "worker" })
+      .populate('tasks')
       .skip(skip)
       .limit(limit)
       .lean();
@@ -33,5 +34,5 @@ const getWorkersAction = async (page: number = 1, limit: number = 5) => {
   }
 };
 
-export default getWorkersAction;
+export { getWorkersAction };
 

@@ -1,5 +1,7 @@
 "use server";
 
+'use server';
+
 import { connectToDatabase } from "@/shared/lib/dbConnect";
 import Task from "@/entities/task/Task";
 import { checkUserPermission } from "@/services";
@@ -56,15 +58,15 @@ const setTaskStatusAction = async (taskId: string, newStatus: Status) => {
 
     return {
       status: "success",
-      message: `Task status updated to ${newStatus} successfully`,
+      message: `Статус задачи успешно обновлен на ${newStatus}`,
     };
   } catch (error) {
     console.error("Error updating task status:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default setTaskStatusAction;
+export { setTaskStatusAction };

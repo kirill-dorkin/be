@@ -1,7 +1,7 @@
 'use client';
 
+import React from 'react';
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 import LoadingSkeleton from '@/shared/ui/LoadingSkeleton';
 
 // Типы для роутов
@@ -34,35 +34,20 @@ export function createOptimizedPage<T = any>(
 ) {
   const config = routeConfig[role];
   
+  // Используем Next.js dynamic для создания ленивого компонента
   const OptimizedComponent = dynamic(importFn, {
-    loading: customLoadingComponent || (() => (
+    loading: () => customLoadingComponent ? customLoadingComponent() : (
       <div className="p-6">
         <LoadingSkeleton className="h-8 w-48 mb-4" />
         <LoadingSkeleton className="h-64 w-full mb-4" />
         <LoadingSkeleton className="h-32 w-3/4" />
       </div>
-    )),
-    ssr: config.ssr,
+    ),
+    ssr: config.ssr
   });
 
   return function WrappedPage(props: T) {
-    const LoadingComponent = customLoadingComponent;
-    
-    return (
-      <Suspense fallback={
-        LoadingComponent ? (
-          <LoadingComponent />
-        ) : (
-          <div className="p-6">
-            <LoadingSkeleton className="h-8 w-48 mb-4" />
-            <LoadingSkeleton className="h-64 w-full mb-4" />
-            <LoadingSkeleton className="h-32 w-3/4" />
-          </div>
-        )
-      }>
-        <OptimizedComponent {...(props as any)} />
-      </Suspense>
-    );
+    return <OptimizedComponent {...(props as any)} />;
   };
 }
 

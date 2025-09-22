@@ -1,3 +1,5 @@
+'use server';
+
 import { connectToDatabase } from "@/shared/lib/dbConnect";
 import Task from "@/entities/task/Task";
 
@@ -36,4 +38,4 @@ const getMetricsAction = async () => {
   }
 };
 
-export default getMetricsAction;
+export { getMetricsAction };

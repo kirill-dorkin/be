@@ -368,9 +368,14 @@ export const performanceMonitor = new PerformanceMonitor();
 
 // Автоматическая инициализация в браузере
 if (typeof window !== 'undefined') {
+  // Сохраняем экземпляр в window для доступа из безопасной обертки
+  (window as any).__performanceMonitor = performanceMonitor;
+  
   // Инициализируем после загрузки DOM
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => performanceMonitor.init());
+    document.addEventListener('DOMContentLoaded', () => {
+      performanceMonitor.init();
+    });
   } else {
     performanceMonitor.init();
   }

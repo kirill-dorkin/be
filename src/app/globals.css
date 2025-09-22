@@ -9,12 +9,12 @@
 @layer base {
   /* Critical font loading with fallbacks */
   .critical-text {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-display: block;
   }
   
   .non-critical-text {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-display: swap;
   }
   
@@ -30,14 +30,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-feature-settings: 'kern' 1, 'liga' 1;
-  }
-  
-  /* Preload critical font weights */
-  @font-face {
-    font-family: 'Inter-Critical';
-    font-weight: 400 600;
-    font-display: block;
-    src: local('Inter'), local('system-ui');
   }
 }
 

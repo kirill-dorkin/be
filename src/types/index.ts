@@ -14,6 +14,10 @@ export interface PageProps {
   searchParams: Promise<SearchParams>
 }
 
+export interface ClientPageProps {
+  searchParams?: SearchParams
+}
+
 export interface User {
   id: string
   name: string

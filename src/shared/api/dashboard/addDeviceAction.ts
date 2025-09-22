@@ -9,11 +9,11 @@ const addDeviceAction = async (category: string, brand: string, model?: string) 
     const device = new Device({ category, brand, model });
     await device.save();
     revalidateTag('/admin/devices');
-    return { status: "success", message: "Device created" };
+    return { status: "success", message: "Устройство создано" };
   } catch (error) {
     console.error("Error adding device:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default addDeviceAction;
+export { addDeviceAction };

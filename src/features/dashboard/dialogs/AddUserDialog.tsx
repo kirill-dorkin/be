@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
@@ -15,7 +15,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/shared/ui/InputFormField";
-import addUserAction from "@/shared/api/dashboard/addUserAction";
+import { addUserAction } from "@/shared/api/dashboard/addUserAction";
 
 const UserSchema = z.object({
   name: z.string().min(1, { message: "Имя обязательно" }).max(100),
@@ -27,7 +27,7 @@ type UserForm = z.infer<typeof UserSchema>;
 
 export function AddUserDialog() {
   const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+
 
   const methods = useForm<UserForm>({
     resolver: zodResolver(UserSchema),
@@ -47,16 +47,13 @@ export function AddUserDialog() {
     try {
       const response = await addUserAction(data.name, data.email, data.password, "worker");
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
+        showToast.error(response.message || "Произошла ошибка");
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message || "Пользователь добавлен" });
+        showToast.success(response.message || "Пользователь добавлен");
         reset();
       }
     } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить пользователя",
-      });
+      showToast.error(error instanceof Error ? error.message : "Не удалось добавить пользователя");
     } finally {
       setLoading(false);
     }

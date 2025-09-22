@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Очистка браузерных данных</title>
+    <script>
+        // Очистить все cookies для домена
+        document.cookie.split(";").forEach(function(c) { 
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        
+        // Очистить localStorage и sessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Очистить IndexedDB
+        if ('indexedDB' in window) {
+            indexedDB.databases().then(databases => {
+                databases.forEach(db => {
+                    indexedDB.deleteDatabase(db.name);
+                });
+            });
+        }
+        
+        alert('Браузерные данные очищены! Перезагрузите страницу.');
+        window.location.href = '/';
+    </script>
+</head>
+<body>
+    <h1>Очистка браузерных данных...</h1>
+    <p>Пожалуйста, подождите...</p>
+</body>
+</html>

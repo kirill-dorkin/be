@@ -3,7 +3,7 @@ import DashboardContainer from "@/components/dashboard/DashboardContainer";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardTitle from "@/components/dashboard/DashboardTitle";
-import { getTaskByIdAction } from "@/actions/dashboard/getTaskByIdAction";
+import { getTaskByIdAction } from "@/shared/api/dashboard/getTaskByIdAction";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -11,11 +11,13 @@ interface PageProps {
 
 export default async function TaskDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const task = await getTaskByIdAction(id);
+  const response = await getTaskByIdAction(id);
 
-  if (!task) {
+  if (response.status === "error" || !response.item) {
     notFound();
   }
+
+  const task = response.item;
 
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
@@ -15,7 +15,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/shared/ui/InputFormField";
-import addCategoryAction from "@/shared/api/dashboard/addCategoryAction";
+import { addCategoryAction } from "@/shared/api/dashboard/addCategoryAction";
 
 const CategorySchema = z.object({
   name: z.string().min(1, { message: "Название обязательно" }).max(100),
@@ -25,7 +25,7 @@ type CategoryForm = z.infer<typeof CategorySchema>;
 
 export function AddCategoryDialog() {
   const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+
 
   const methods = useForm<CategoryForm>({
     resolver: zodResolver(CategorySchema),
@@ -45,16 +45,13 @@ export function AddCategoryDialog() {
     try {
       const response = await addCategoryAction(data.name);
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showToast.error(response.message);
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
+        showToast.success(response.message);
         reset();
       }
     } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить категорию",
-      });
+      showToast.error(error instanceof Error ? error.message : "Не удалось добавить категорию");
     } finally {
       setLoading(false);
     }

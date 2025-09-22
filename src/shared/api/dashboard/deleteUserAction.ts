@@ -15,7 +15,7 @@ const deleteUserAction = async (userId: string) => {
     if (!userId) {
       return {
         status: "error",
-        message: "User ID is required.",
+        message: "ID пользователя обязателен.",
       };
     }
 
@@ -26,7 +26,7 @@ const deleteUserAction = async (userId: string) => {
     if (!userToDelete) {
       return {
         status: "error",
-        message: "User not found.",
+        message: "Пользователь не найден.",
       };
     }
 
@@ -34,16 +34,16 @@ const deleteUserAction = async (userId: string) => {
 
     return {
       status: "success",
-      message: "User deleted successfully!",
+      message: "Пользователь удален успешно!",
     };
   } catch (error) {
     console.error("Error deleting user:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default deleteUserAction;
+export { deleteUserAction };
 

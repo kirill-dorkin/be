@@ -16,7 +16,7 @@ export interface ITask {
 
 const TaskSchema: Schema<ITask> = new Schema({
   description: { type: String, required: true },
-  workerId: { type: mongoose.Types.ObjectId, ref: 'User', default: null },
+  workerId: { type: Schema.Types.ObjectId, ref: 'User', default: null },
   customerName: { type: String, required: true },
   customerPhone: { type: String, required: true },
   status: { type: String, enum: ['Pending', 'In Progress', 'Completed'], default: 'Pending' },

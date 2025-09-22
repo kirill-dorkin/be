@@ -140,6 +140,10 @@ class BundlePerformanceMonitor {
   }
 
   preloadChunk(chunkName: string, priority: 'high' | 'medium' | 'low' = 'medium'): Promise<void> {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return Promise.resolve();
+    }
+
     if (this.preloadedChunks.has(chunkName)) {
       return Promise.resolve();
     }
@@ -297,38 +301,30 @@ export function createDynamicComponent<P extends React.JSX.IntrinsicAttributes =
 ) {
   const {
     ssr = true,
-    loading,
-    suspense = false,
+    loading = () => <div className="animate-pulse bg-gray-200 h-32 rounded"></div>,
     preload = false,
     priority = 'medium',
     chunkName,
     ...dynamicOptions
   } = options;
 
+  // Используем next/dynamic для безопасной работы с SSR
   const DynamicComponent = dynamic(loader, {
-    ssr,
-    loading,
-    ...dynamicOptions
+    loading: loading,
+    ssr: ssr
   }) as React.ComponentType<P>;
 
   // Enhanced component with preloading
   const EnhancedComponent = (props: P) => {
-    const monitor = BundlePerformanceMonitor.getInstance();
+    const monitor = typeof window !== 'undefined' ? BundlePerformanceMonitor.getInstance() : null;
 
     useEffect(() => {
-      if (preload && chunkName) {
+      if (preload && chunkName && monitor) {
         monitor.preloadChunk(chunkName, priority);
       }
     }, [monitor]);
 
-    if (suspense) {
-      return (
-        <Suspense fallback={loading ? loading() : <div>Loading...</div>}>
-          <DynamicComponent {...props} />
-        </Suspense>
-      );
-    }
-
+    // Next.js dynamic уже обрабатывает Suspense внутри себя
     return <DynamicComponent {...props} />;
   };
 

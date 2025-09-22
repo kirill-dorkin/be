@@ -1,7 +1,8 @@
 'use client';
 
-import { lazy, Suspense, ComponentType, ReactNode, useState, useEffect, ComponentProps } from 'react';
+import { Suspense, ComponentType, ReactNode, useState, useEffect, ComponentProps } from 'react';
 import React from "react";
+import dynamic from 'next/dynamic';
 import { LoadingFallback } from "@/shared/ui/fallbacks";
 
 // Типы для code splitting
@@ -190,10 +191,10 @@ interface LazyComponentOptions {
 export function createLazyComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyComponentOptions = {}
-): React.LazyExoticComponent<T> {
+): ComponentType<any> {
   const { retryCount = 3, displayName } = options;
   
-  const lazyComponent = React.lazy(async () => {
+  const lazyComponent = dynamic(async () => {
     let lastError: Error | null = null;
     
     for (let i = 0; i <= retryCount; i++) {
@@ -210,6 +211,9 @@ export function createLazyComponent<T extends ComponentType<any>>(
     }
     
     throw lastError;
+  }, {
+    loading: () => <LoadingFallback />,
+    ssr: false
   });
   
   // displayName устанавливается через Object.defineProperty для совместимости
@@ -228,10 +232,10 @@ export function createLazyNamedComponent<T extends ComponentType<any>>(
   importFn: () => Promise<Record<string, any>>,
   componentName: string,
   options: LazyComponentOptions = {}
-): React.LazyExoticComponent<T> {
+): ComponentType<any> {
   const { retryCount = 3, displayName } = options;
   
-  const lazyComponent = React.lazy(async () => {
+  const lazyComponent = dynamic(async () => {
     let lastError: Error | null = null;
     
     for (let i = 0; i <= retryCount; i++) {
@@ -247,6 +251,9 @@ export function createLazyNamedComponent<T extends ComponentType<any>>(
     }
     
     throw lastError;
+  }, {
+    loading: () => <LoadingFallback />,
+    ssr: false
   });
   
   // displayName устанавливается через Object.defineProperty для совместимости
@@ -260,51 +267,51 @@ export function createLazyNamedComponent<T extends ComponentType<any>>(
   return lazyComponent;
 }
 
-// Предзагруженные компоненты для админки
-export const LazyAdminDashboard = createLazyComponent(
-  () => import("@/app/admin/dashboard/page"),
-  { retryCount: 2 }
-);
+// Временно отключены lazy импорты страниц
+// export const LazyAdminDashboard = createLazyComponent(
+//   () => import("@/app/admin/dashboard/page"),
+//   { retryCount: 2 }
+// );
 
-export const LazyAdminUsers = createLazyComponent(
-  () => import("@/app/admin/users/page"),
-  { retryCount: 2 }
-);
+// export const LazyAdminUsers = createLazyComponent(
+//   () => import("@/app/admin/users/page"),
+//   { retryCount: 2 }
+// );
 
-export const LazyAdminTasks = createLazyComponent(
-  () => import("@/app/admin/tasks/page"),
-  { retryCount: 2 }
-);
+// export const LazyAdminTasks = createLazyComponent(
+//   () => import("@/app/admin/tasks/page"),
+//   { retryCount: 2 }
+// );
 
 // Предзагруженные компоненты для воркеров
-export const LazyWorkerMyTasks = createLazyComponent(
-  () => import("@/app/worker/my-tasks/page"),
-  { retryCount: 2 }
-);
+// export const LazyWorkerMyTasks = createLazyComponent(
+//   () => import("@/app/worker/my-tasks/page"),
+//   { retryCount: 2 }
+// );
 
-// Lazy компоненты для UI
-export const LazyCalendar = createLazyNamedComponent(
-  () => import("@/shared/ui/calendar"),
-  "Calendar",
-  { displayName: "Calendar" }
-);
+// Временно отключены lazy импорты UI компонентов
+// export const LazyCalendar = createLazyNamedComponent(
+//   () => import("@/shared/ui/calendar"),
+//   "Calendar",
+//   { displayName: "Calendar" }
+// );
 
-export const LazyTable = createLazyNamedComponent(
-  () => import("@/shared/ui/table"),
-  "Table",
-  { displayName: "Table" }
-);
+// export const LazyTable = createLazyNamedComponent(
+//   () => import("@/shared/ui/table"),
+//   "Table",
+//   { displayName: "Table" }
+// );
 
-export const LazyPerformanceDashboard = createLazyComponent(
-  () => import("@/shared/ui/PerformanceDashboard"),
-  { displayName: "PerformanceDashboard" }
-);
+// export const LazyPerformanceDashboard = createLazyComponent(
+//   () => import("@/shared/ui/PerformanceDashboard"),
+//   { displayName: "PerformanceDashboard" }
+// );
 
-export const LazyCarousel = createLazyNamedComponent(
-  () => import("@/shared/ui/carousel"),
-  "Carousel",
-  { displayName: "Carousel" }
-);
+// export const LazyCarousel = createLazyNamedComponent(
+//   () => import("@/shared/ui/carousel"),
+//   "Carousel",
+//   { displayName: "Carousel" }
+// );
 
 // Предзагрузка критических компонентов
 export const preloadCriticalComponents = () => {

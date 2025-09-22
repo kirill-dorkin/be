@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     
     if (!session) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: 'Требуется аутентификация' },
         { status: 401 }
       );
     }
@@ -15,14 +15,14 @@ export async function GET(request: NextRequest) {
     // Проверяем роль администратора
     if (session.user?.role !== 'admin') {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: 'Требуется доступ администратора' },
         { status: 403 }
       );
     }
 
     return NextResponse.json(
       { 
-        message: 'Admin panel access granted',
+        message: 'Доступ к панели администратора предоставлен',
         user: session.user 
       },
       {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     console.error('[Admin API Error]', error);
     
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Внутренняя ошибка сервера' },
       { status: 500 }
     );
   }

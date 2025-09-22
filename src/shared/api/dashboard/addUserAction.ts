@@ -20,7 +20,7 @@ const addUserAction = async (
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return { status: "error", message: "User with this email already exists." };
+      return { status: "error", message: "Пользователь с таким email уже существует." };
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -33,11 +33,11 @@ const addUserAction = async (
     });
     await user.save();
 
-    return { status: "success", message: "User created successfully." };
+    return { status: "success", message: "Пользователь успешно создан." };
   } catch (error) {
     console.error("Error adding user:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default addUserAction;
+export { addUserAction };

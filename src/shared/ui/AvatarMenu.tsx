@@ -52,21 +52,21 @@ export default function AvatarMenu(): ReactElement {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>Menu</DropdownMenuLabel>
+          <DropdownMenuLabel>Меню</DropdownMenuLabel>
           {/* <DropdownMenuSeparator /> */}
           <DropdownMenuGroup>
             {user?.role !== "admin" ? renderMenuItem(
               () => router.push("/account/orders"),
               CreditCard,
-              "Orders"
+              "Заказы"
             ) : renderMenuItem(
               () => router.push("/admin/dashboard"),
               CreditCard,
-              "Dashboard"
+              "Панель управления"
             )}
           </DropdownMenuGroup>
           {/* <DropdownMenuSeparator /> */}
-          {renderMenuItem(handleAuthClick, LogOut, "Log out")}
+          {renderMenuItem(handleAuthClick, LogOut, "Выйти")}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

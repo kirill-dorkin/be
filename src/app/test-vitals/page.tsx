@@ -174,7 +174,7 @@ export default function TestVitalsPage() {
         {vitals.length === 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Collecting metrics...</CardTitle>
+              <CardTitle>Сбор метрик...</CardTitle>
               <CardDescription>
                 Web Vitals метрики собираются автоматически. Взаимодействуйте со страницей для получения INP.
               </CardDescription>
@@ -185,7 +185,7 @@ export default function TestVitalsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Instructions</CardTitle>
+          <CardTitle>Инструкции</CardTitle>
           <CardDescription>Как тестировать Web Vitals</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">

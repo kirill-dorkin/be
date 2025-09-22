@@ -9,11 +9,11 @@ const addServiceAction = async (category: string, name: string, cost: number, du
     const service = new Service({ category, name, cost, duration });
     await service.save();
     revalidateTag('/admin/services');
-    return { status: "success", message: "Service created" };
+    return { status: "success", message: "Услуга создана" };
   } catch (error) {
     console.error("Error adding service:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default addServiceAction;
+export { addServiceAction };

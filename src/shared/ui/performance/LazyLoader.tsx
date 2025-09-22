@@ -1,6 +1,7 @@
 'use client';
 
-import React, { Suspense, lazy, ComponentType, LazyExoticComponent } from 'react';
+import React, { Suspense, ComponentType } from 'react';
+import dynamic from 'next/dynamic';
 
 interface LazyLoaderProps {
   children: React.ReactNode;
@@ -54,11 +55,12 @@ const DefaultErrorBoundary: React.FC<{ error: Error; retry: () => void }> = ({ e
 export function createLazyComponent<T extends ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>,
   options: LazyComponentOptions = {}
-): LazyExoticComponent<T> {
+): ComponentType<any> {
   const {
     retryCount = 3,
     retryDelay = 1000,
-    preload = false
+    preload = false,
+    fallback: Fallback = DefaultFallback
   } = options;
 
   let retries = 0;
@@ -76,7 +78,10 @@ export function createLazyComponent<T extends ComponentType<unknown>>(
     }
   };
 
-  const LazyComponent = lazy(loadComponent);
+  const LazyComponent = dynamic(loadComponent, {
+    loading: () => <Fallback />,
+    ssr: false
+  });
 
   // Preload if requested
   if (preload && typeof window !== 'undefined') {

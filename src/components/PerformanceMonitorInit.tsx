@@ -7,10 +7,12 @@ export function PerformanceMonitorInit() {
     // Инициализируем performance monitor только на клиенте
     if (typeof window !== "undefined") {
       // Импортируем и инициализируем performance monitor
-      import("@/lib/performance-monitor").then(({ performanceMonitor }) => {
-        if (performanceMonitor && !performanceMonitor.isReady()) {
-          performanceMonitor.init();
-        }
+      import("@/lib/performance-monitor-safe").then(({ getPerformanceMonitor }) => {
+        getPerformanceMonitor().then((monitor) => {
+          if (monitor && !monitor.isReady()) {
+            monitor.init();
+          }
+        });
       });
     }
   }, []);

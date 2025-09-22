@@ -9,11 +9,11 @@ const addCategoryAction = async (name: string) => {
     const category = new Category({ name });
     await category.save();
     revalidateTag('/admin/categories');
-    return { status: "success", message: "Category created" };
+    return { status: "success", message: "Категория создана" };
   } catch (error) {
     console.error("Error adding category:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default addCategoryAction;
+export { addCategoryAction };

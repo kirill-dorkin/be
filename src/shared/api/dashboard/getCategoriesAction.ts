@@ -12,8 +12,8 @@ const getCategoriesAction = async (page: number = 1, limit: number = 5) => {
     return { status: "success", items: serializeData(categories), totalItemsLength };
   } catch (error) {
     console.error("Error fetching categories:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default getCategoriesAction;
+export { getCategoriesAction };

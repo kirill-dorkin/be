@@ -23,9 +23,9 @@ const getTasksAction = async (page: number = 1, limit: number = 5) => {
     console.error("Error fetching tasks:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default getTasksAction;
+export { getTasksAction };

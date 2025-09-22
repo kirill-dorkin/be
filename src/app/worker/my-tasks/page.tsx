@@ -1,35 +1,17 @@
 import { PageProps } from "@/types";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
-import dynamic from "next/dynamic";
+import authOptions from '@/auth';
+import { getServerSession } from 'next-auth';
 import { Suspense } from "react";
 import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
 import { trackRoutePerformance } from "@/shared/lib/route-optimization";
 
-// Динамические импорты для code splitting
-const TaskTable = dynamic(() => import("@/features/dashboard/TaskTable"), {
-  loading: () => <LoadingSkeleton className="h-96 w-full" />
-});
-
-const DashboardContainer = dynamic(() => import("@/features/dashboard/DashboardContainer"), {
-  loading: () => <LoadingSkeleton className="h-screen w-full" />
-});
-
-const DashboardHeader = dynamic(() => import("@/features/dashboard/DashboardHeader"), {
-  loading: () => <LoadingSkeleton className="h-16 w-full" />
-});
-
-const DashboardTitle = dynamic(() => import("@/features/dashboard/DashboardTitle"), {
-  loading: () => <LoadingSkeleton className="h-8 w-48" />
-});
-
-const SelectShowing = dynamic(() => import("@/features/dashboard/SelectShowing"), {
-  loading: () => <LoadingSkeleton className="h-10 w-32" />
-});
-
-const DashboardContent = dynamic(() => import("@/features/dashboard/DashboardContent"), {
-  loading: () => <LoadingSkeleton className="h-64 w-full" />
-});
+// Обычные импорты для диагностики
+import TaskTable from "@/features/dashboard/TaskTable";
+import DashboardContainer from "@/features/dashboard/DashboardContainer";
+import DashboardHeader from "@/features/dashboard/DashboardHeader";
+import DashboardTitle from "@/features/dashboard/DashboardTitle";
+import SelectShowing from "@/features/dashboard/SelectShowing";
+import DashboardContent from "@/features/dashboard/DashboardContent";
 import { getWorkerTasksAction, WorkerTask } from "@/actions/dashboard/getWorkerTasksAction";
 import { ITask } from "@/entities/task/Task";
 import mongoose from "mongoose";

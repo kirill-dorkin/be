@@ -1,5 +1,7 @@
 "use server";
 
+'use server';
+
 import { connectToDatabase } from "@/shared/lib/dbConnect";
 import Task from "@/entities/task/Task";
 import User from "@/entities/user/User";
@@ -16,7 +18,7 @@ const deleteTaskAction = async (taskId: string) => {
     if (!taskId) {
       return {
         status: "error",
-        message: "Task ID is required",
+        message: "ID задачи обязателен",
       };
     }
 
@@ -27,7 +29,7 @@ const deleteTaskAction = async (taskId: string) => {
     if (deleteResult.deletedCount === 0) {
       return {
         status: "error",
-        message: "Task not found",
+        message: "Задача не найдена",
       };
     }
 
@@ -40,16 +42,16 @@ const deleteTaskAction = async (taskId: string) => {
 
     return {
       status: "success",
-      message: "Task deleted successfully",
+      message: "Задача успешно удалена",
     };
   } catch (error) {
     console.error("Error deleting task:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default deleteTaskAction;
+export { deleteTaskAction };
 

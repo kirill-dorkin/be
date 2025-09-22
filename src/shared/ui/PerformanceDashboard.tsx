@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { CustomPerformanceMetrics, type ResourceMetric } from '@/lib/performance-metrics';
-import { useWebVitals } from '@/hooks/useWebVitals';
+import { useWebVitals } from '@/shared/lib/useWebVitals';
 
 interface MetricCardProps {
   title: string;

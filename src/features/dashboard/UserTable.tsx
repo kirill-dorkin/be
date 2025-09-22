@@ -2,7 +2,7 @@
 import { memo, useMemo } from "react";
 import { type IUser } from "@/entities/user/User";
 import { AvatarImage } from "@/shared/ui/OptimizedImage";
-import { deleteUserAction } from "@/actions/dashboard/deleteUserAction";
+import { deleteUserAction } from "@/shared/api/dashboard/deleteUserAction";
 import DeleteButton from "./buttons/DeleteButton";
 import EditButton from "./buttons/EditButton";
 import {
@@ -16,14 +16,14 @@ import {
 import PaginationControls from "./PaginationControls";
 
 interface UserTableProps {
-  items: IUser[];
+  items: IUser[] | undefined;
   totalItemsLength: number;
   page: number;
   per_page: number;
 }
 
 const UserTableRow = memo(({ user }: { user: IUser }) => (
-  <TableRow key={user._id?.toString()}>
+  <TableRow>
     <TableCell className="font-medium">{user._id?.toString()}</TableCell>
     <TableCell>{user.name}</TableCell>
     <TableCell>{user.email}</TableCell>
@@ -52,7 +52,15 @@ const UserTable = memo(({ items, totalItemsLength, page, per_page }: UserTablePr
   const start = useMemo(() => (page - 1) * per_page, [page, per_page]);
 
   const memoizedRows = useMemo(
-    () => items.map((user) => <UserTableRow key={user._id?.toString()} user={user} />),
+    () => {
+      if (!Array.isArray(items)) {
+        console.warn('UserTable: items is not an array:', items);
+        return [];
+      }
+      return items.map((user, index) => (
+        <UserTableRow key={user._id?.toString() || `user-${index}`} user={user} />
+      ));
+    },
     [items]
   );
 

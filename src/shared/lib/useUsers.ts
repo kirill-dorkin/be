@@ -12,17 +12,17 @@ export const useUsers = (page: string, perPage: string) => {
       try {
         const response = await fetch(`/api/users/get-all-users?page=${page}&per_page=${perPage}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch users");
+          throw new Error("Не удалось загрузить пользователей");
         }
         const data = await response.json();
         if (data.status === "success") {
           setUsers(data.items);
           setTotalItems(data.totalItemsLength);
         } else {
-          throw new Error(data.message || "Failed to fetch users");
+          throw new Error(data.message || "Не удалось загрузить пользователей");
         }
       } catch (err) {
-        setError((err as { message: string }).message || "Something went wrong");
+        setError((err as { message: string }).message || "Что-то пошло не так");
       } finally {
         setLoading(false);
       }

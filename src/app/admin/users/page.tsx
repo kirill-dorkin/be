@@ -5,8 +5,8 @@ import DashboardContainer from "@/features/dashboard/DashboardContainer";
 import DashboardHeader from "@/features/dashboard/DashboardHeader";
 import DashboardContent from "@/features/dashboard/DashboardContent";
 import DashboardTitle from "@/features/dashboard/DashboardTitle";
-import { getUsersAction } from "@/actions/dashboard/getUsersAction"
-import { deleteUserAction } from "@/actions/dashboard/deleteUserAction"
+import { getUsersAction } from "@/shared/api/dashboard/getUsersAction"
+import { deleteUserAction } from "@/shared/api/dashboard/deleteUserAction"
 import { PageProps } from "@/types";
 
 import { AddUserDialog } from "@/features/dashboard/dialogs/AddUserDialog";
@@ -18,9 +18,15 @@ const UsersPage = async ({
   const resolvedSearchParams = await searchParams;
   const { page = "1", perPage = "5" } = resolvedSearchParams;
 
-  const usersResponse = await getUsersAction();
-  const items: IUser[] = usersResponse as unknown as IUser[] ?? [];
-  const totalItemsLength: number = items.length;
+  const usersResponse = await getUsersAction(parseInt(page, 10), parseInt(perPage, 10));
+  
+  // Проверяем успешность ответа и извлекаем данные
+  const items: IUser[] = usersResponse.status === "success" && "items" in usersResponse && usersResponse.items 
+    ? (usersResponse.items as unknown as IUser[])
+    : [];
+  const totalItemsLength: number = usersResponse.status === "success" && "totalItemsLength" in usersResponse && usersResponse.totalItemsLength 
+    ? usersResponse.totalItemsLength
+    : 0;
 
   return (
     <Suspense>

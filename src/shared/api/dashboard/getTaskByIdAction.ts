@@ -1,11 +1,13 @@
 "use server";
+'use server';
+
 import { connectToDatabase } from "@/shared/lib/dbConnect";
 import Task from "@/entities/task/Task";
 
 const getTaskByIdAction = async (taskId: string) => {
   try {
     if (!taskId) {
-      return { status: "error", message: "Task ID is required" };
+      return { status: "error", message: "ID задачи обязателен" };
     }
 
     await connectToDatabase();
@@ -13,7 +15,7 @@ const getTaskByIdAction = async (taskId: string) => {
     const task = await Task.findById(taskId).lean();
 
     if (!task) {
-      return { status: "error", message: "Task not found" };
+      return { status: "error", message: "Задача не найдена" };
     }
 
     return { status: "success", item: JSON.parse(JSON.stringify(task)) };
@@ -21,9 +23,9 @@ const getTaskByIdAction = async (taskId: string) => {
     console.error("Error fetching task:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default getTaskByIdAction;
+export { getTaskByIdAction };

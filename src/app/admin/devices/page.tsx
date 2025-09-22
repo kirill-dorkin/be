@@ -7,8 +7,8 @@ import SelectShowing from "@/features/dashboard/SelectShowing";
 import DashboardContent from "@/features/dashboard/DashboardContent";
 import { AddDeviceDialog } from "@/features/dashboard/dialogs/AddDeviceDialog";
 
-import { getDevicesAction } from "@/actions/dashboard/getDevicesAction";
-import { deleteDeviceAction } from "@/actions/dashboard/deleteDeviceAction";
+import { getDevicesAction } from "@/shared/api/dashboard/getDevicesAction";
+import { deleteDeviceAction } from "@/shared/api/dashboard/deleteDeviceAction";
 
 const DevicesPage = async ({ searchParams }: PageProps) => {
   const resolvedSearchParams = await searchParams;

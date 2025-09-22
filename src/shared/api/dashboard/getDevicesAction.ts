@@ -12,8 +12,8 @@ const getDevicesAction = async (page: number = 1, limit: number = 5) => {
     return { status: "success", items: serializeData(devices), totalItemsLength };
   } catch (error) {
     console.error("Error fetching devices:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default getDevicesAction;
+export { getDevicesAction };

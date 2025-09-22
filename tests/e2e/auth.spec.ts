@@ -88,14 +88,20 @@ test.describe('Authentication Flow', () => {
     for (const route of protectedRoutes) {
       await page.goto(route);
       
-      // Should either redirect to auth or show 404/403
-      const currentUrl = page.url();
-      const isRedirected = currentUrl.includes('/auth') || 
-                          currentUrl.includes('/login') || 
-                          currentUrl.includes('/signin') ||
-                          currentUrl !== `${page.url().split('/').slice(0, 3).join('/')}${route}`;
+      // Wait for potential redirect
+      await page.waitForLoadState('networkidle');
       
-      const hasErrorMessage = await page.locator('text=/unauthorized|forbidden|access denied|sign in/i').count() > 0;
+      // Should either redirect to login or show 404/403
+      const currentUrl = page.url();
+      const baseUrl = page.url().split('/').slice(0, 3).join('/');
+      const expectedUrl = `${baseUrl}${route}`;
+      
+      const isRedirected = currentUrl.includes('/login') || 
+                          currentUrl.includes('/auth') || 
+                          currentUrl.includes('/signin') ||
+                          currentUrl !== expectedUrl;
+      
+      const hasErrorMessage = await page.locator('text=/unauthorized|forbidden|access denied|sign in|войти/i').count() > 0;
       const is404 = await page.locator('text=/404|not found/i').count() > 0;
       
       // Route should be protected (redirected, show error, or 404)

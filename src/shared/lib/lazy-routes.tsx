@@ -2,50 +2,31 @@
 
 import React from 'react';
 import { LazyWrapper } from './code-splitting';
-import { PageProps } from '@/types';
+import { PageProps, ClientPageProps } from '@/types';
 
-// Lazy компоненты для основных роутов
-export const LazyHomePage = React.lazy(() => 
-  import("@/app/page").then(module => ({ default: module.default }))
-);
+// Обычные импорты вместо lazy для диагностики
+import HomePage from '@/app/page';
+import LoginPage from '@/app/login/page';
+import RequestPage from '@/app/request/page';
+import AdminDashboard from '@/app/admin/dashboard/page';
+import AdminUsers from '@/app/admin/users/page';
+import AdminTasks from '@/app/admin/tasks/page';
+import AdminDevices from '@/app/admin/devices/page';
+import AdminCategories from '@/app/admin/categories/page';
+import AdminServices from '@/app/admin/services/page';
+import WorkerMyTasks from '@/app/worker/my-tasks/page';
 
-export const LazyLoginPage = React.lazy(() => 
-  import("@/app/login/page").then(module => ({ default: module.default }))
-);
-
-export const LazyRequestPage = React.lazy(() => 
-  import("@/app/request/page").then(module => ({ default: module.default }))
-);
-
-// Lazy компоненты для admin роутов
-export const LazyAdminDashboard = React.lazy(() => 
-  import("@/app/admin/dashboard/page").then(module => ({ default: module.default }))
-);
-
-export const LazyAdminUsers = React.lazy(() => 
-  import("@/app/admin/users/page").then(module => ({ default: module.default }))
-);
-
-export const LazyAdminTasks = React.lazy(() => 
-  import("@/app/admin/tasks/page").then(module => ({ default: module.default }))
-);
-
-export const LazyAdminDevices = React.lazy(() => 
-  import("@/app/admin/devices/page").then(module => ({ default: module.default }))
-);
-
-export const LazyAdminCategories = React.lazy(() => 
-  import("@/app/admin/categories/page").then(module => ({ default: module.default }))
-);
-
-export const LazyAdminServices = React.lazy(() => 
-  import("@/app/admin/services/page").then(module => ({ default: module.default }))
-);
-
-// Lazy компоненты для worker роутов
-export const LazyWorkerMyTasks = React.lazy(() => 
-  import("@/app/worker/my-tasks/page").then(module => ({ default: module.default }))
-);
+// Экспорт под теми же именами
+export const LazyHomePage = HomePage;
+export const LazyLoginPage = LoginPage;
+export const LazyRequestPage = RequestPage;
+export const LazyAdminDashboard = AdminDashboard;
+export const LazyAdminUsers = AdminUsers;
+export const LazyAdminTasks = AdminTasks;
+export const LazyAdminDevices = AdminDevices;
+export const LazyAdminCategories = AdminCategories;
+export const LazyAdminServices = AdminServices;
+export const LazyWorkerMyTasks = WorkerMyTasks;
 
 // Обертки с типизированными fallback
 export const HomePageWithFallback: React.FC = () => (
@@ -97,9 +78,9 @@ export const AdminCategoriesWithFallback: React.FC<PageProps> = (props) => (
   </LazyWrapper>
 );
 
-export const AdminServicesWithFallback: React.FC<PageProps> = (props) => (
+export const AdminServicesWithFallback: React.FC = () => (
   <LazyWrapper fallbackType="table">
-    <LazyAdminServices {...props} />
+    <LazyAdminServices />
   </LazyWrapper>
 );
 

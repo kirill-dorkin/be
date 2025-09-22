@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 import { Button } from "@/shared/ui/button";
 import {
   Select,
@@ -22,8 +22,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/shared/ui/InputFormField";
-import addDeviceAction from "@/shared/api/dashboard/addDeviceAction";
-import getCategoriesAction from "@/shared/api/dashboard/getCategoriesAction";
+import { addDeviceAction } from "@/shared/api/dashboard/addDeviceAction";
+import { getCategoriesAction } from "@/shared/api/dashboard/getCategoriesAction";
 import { ICategory } from "@/entities/category/Category";
 
 const DeviceSchema = z.object({
@@ -36,7 +36,7 @@ type DeviceForm = z.infer<typeof DeviceSchema>;
 
 export function AddDeviceDialog() {
   const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
@@ -64,16 +64,13 @@ export function AddDeviceDialog() {
     try {
       const response = await addDeviceAction(data.category, data.brand, data.modelName || "");
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
+        showToast.error(response.message || "Произошла ошибка");
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message || "Устройство добавлено" });
+        showToast.success(response.message || "Устройство добавлено");
         reset();
       }
     } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить устройство",
-      });
+      showToast.error(error instanceof Error ? error.message : "Не удалось добавить устройство");
     } finally {
       setLoading(false);
     }

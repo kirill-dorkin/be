@@ -15,7 +15,7 @@ export default function SelectShowing({
 }: SelectShowingProps) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-600">Show</span>
+      <span className="text-sm text-gray-600">Показать</span>
       <select
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
@@ -27,7 +27,7 @@ export default function SelectShowing({
           </option>
         ))}
       </select>
-      <span className="text-sm text-gray-600">entries</span>
+      <span className="text-sm text-gray-600">записей</span>
     </div>
   )
 }

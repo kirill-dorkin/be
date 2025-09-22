@@ -1,7 +1,6 @@
 "use client";
 
-import { ReactNode, ReactElement, useState, } from "react";
-import { createContext } from "use-context-selector";
+import { ReactNode, ReactElement, useState, createContext } from "react";
 import { AppContextTypes } from "@/types/AppContextTypes"
 
 export const AppContext = createContext<AppContextTypes | null>(null);

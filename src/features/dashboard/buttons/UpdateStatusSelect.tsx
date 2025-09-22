@@ -21,14 +21,25 @@ import {
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog";
 import { Status } from "@/shared/types";
-import useCustomToast from "@/shared/lib/useCustomToast";
-import setTaskStatusAction from "@/shared/api/dashboard/setTaskStatusAction";
+import { showToast } from "@/shared/lib/toast";
+import { setTaskStatusAction } from "@/shared/api/dashboard/setTaskStatusAction";
 
-export default function UpdateStatusButton({ taskId }: { taskId: string }) {
-  const [status, setStatus] = React.useState<Status>("Pending");
+export default function UpdateStatusButton({ 
+  taskId, 
+  currentStatus = "Pending" 
+}: { 
+  taskId: string;
+  currentStatus?: Status;
+}) {
+  const [status, setStatus] = React.useState<Status>(currentStatus);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+
+  // Обновляем статус при изменении currentStatus
+  React.useEffect(() => {
+    setStatus(currentStatus);
+  }, [currentStatus]);
+
 
   const handleStatusChange = (value: Status) => {
     setStatus(value);
@@ -41,25 +52,16 @@ export default function UpdateStatusButton({ taskId }: { taskId: string }) {
       const response = await setTaskStatusAction(taskId, status);
 
       if (response.status === "success") {
-        showSuccessToast({
-          title: "Успешно",
-          description: `Статус задачи успешно изменен на ${{
-            Pending: "В ожидании",
-            "In Progress": "В процессе",
-            Completed: "Завершено",
-          }[status]}`,
-        });
+        showToast.success(`Статус задачи успешно изменен на ${{
+          Pending: "В ожидании",
+          "In Progress": "В процессе",
+          Completed: "Завершено",
+        }[status]}`);
       } else {
-        showErrorToast({
-          title: "Ошибка",
-          description: response.message as string,
-        });
+        showToast.error(response.message as string);
       }
     } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "An unknown error occurred.",
-      });
+      showToast.error(error instanceof Error ? error.message : "Произошла неизвестная ошибка.");
     } finally {
       setLoading(false);
       setOpenDialog(false);

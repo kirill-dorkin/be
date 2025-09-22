@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { performanceMonitor, type PerformanceMetric } from '@/lib/performance-monitor';
+import { performanceMonitor, getPerformanceMonitor, type PerformanceMetric } from '@/lib/performance-monitor-safe';
 
 interface MetricCardProps {
   metric: PerformanceMetric;
@@ -94,10 +94,10 @@ export function PerformanceMetrics({
       const allMetrics = performanceMonitor.getMetrics();
       
       // Отправляем новые метрики в API
-      const newMetrics = allMetrics.filter(metric => metric.timestamp > lastSentTimestamp);
+      const newMetrics = allMetrics.filter((metric: PerformanceMetric) => metric.timestamp > lastSentTimestamp);
       if (newMetrics.length > 0) {
         sendMetricsToAPI(newMetrics);
-        setLastSentTimestamp(Math.max(...newMetrics.map(m => m.timestamp)));
+        setLastSentTimestamp(Math.max(...newMetrics.map((m: PerformanceMetric) => m.timestamp)));
       }
       
       if (showOnlyLatest) {

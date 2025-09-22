@@ -16,7 +16,7 @@ const UserSchema = new Schema<IUser>(
     role: { type: String, enum: ['admin', 'user', 'worker'], required: true },
     image: { type: String, required: true },
     passwordHash: { type: String, required: false },
-    tasks: [{ type: mongoose.Types.ObjectId, ref: 'Task', default: undefined }],
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task', default: undefined }],
   },
   {
     timestamps: true,

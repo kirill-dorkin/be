@@ -5,13 +5,8 @@ import { useRouter } from "next/navigation";
 import { preloadRoleComponents } from "@/shared/lib/code-splitting";
 import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
 
-// Lazy load Sidebar для уменьшения initial bundle
-import dynamic from "next/dynamic";
-
-const Sidebar = dynamic(() => import("@/features/dashboard/Sidebar"), {
-  loading: () => <LoadingSkeleton className="w-64 h-full" />,
-  ssr: false, // Sidebar не критичен для SSR
-});
+// Временно используем обычный импорт
+import Sidebar from "@/features/dashboard/Sidebar";
 
 export default function WorkerLayout({
   children,

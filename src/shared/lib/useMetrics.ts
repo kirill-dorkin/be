@@ -15,10 +15,10 @@ const useMetrics = () => {
         if (response.status === 200) {
           setMetrics(response.data.metrics);
         } else {
-          throw new Error("Failed to fetch metrics");
+          throw new Error("Не удалось загрузить метрики");
         }
       } catch (err) {
-        setError((err as { message: string }).message || "An error occurred while fetching metrics.");
+        setError((err as { message: string }).message || "Произошла ошибка при загрузке метрик.");
       } finally {
         setLoading(false);
       }

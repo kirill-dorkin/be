@@ -1,45 +1,17 @@
-import { createLazyComponent } from "@/shared/lib/withLazyLoading";
-import { 
-  TableFallback, 
-  DashboardFallback, 
-  ListFallback, 
-  CardFallback 
-} from "@/shared/ui/fallbacks/OptimizedFallbacks";
+'use client';
 
-// Lazy загрузка тяжелых компонентов dashboard с оптимизированными fallback
-export const LazyTaskTable = createLazyComponent(
-  () => import("@/features/dashboard/TaskTable"),
-  <TableFallback rows={5} columns={4} />
-);
+import { lazy } from 'react';
 
-export const LazyUserTable = createLazyComponent(
-  () => import("@/features/dashboard/UserTable"),
-  <TableFallback rows={8} columns={5} />
-);
+// Lazy-loaded dashboard components
+export const DashboardOverview = lazy(() => import('../DashboardSummary').then(module => ({ default: module.default })));
 
-export const LazyTaskReport = createLazyComponent(
-  () => import("@/features/dashboard/TaskReport"),
-  <DashboardFallback />
-);
+export const UserManagement = lazy(() => import('../UserTable').then(module => ({ default: module.default })));
 
-export const LazyUserList = createLazyComponent(
-  () => import("@/features/dashboard/UserList"),
-  <ListFallback items={6} />
-);
+export const SystemSettings = lazy(() => import('../DashboardContainer').then(module => ({ default: module.default })));
 
-// Дополнительные компоненты для dashboard
-export const LazyListCard = createLazyComponent(
-  () => import("@/features/dashboard/ListCard"),
-  <CardFallback />
-);
+export const ReportsSection = lazy(() => import('../TaskReport').then(module => ({ default: module.default })));
 
-// Альтернативные компоненты из components/dashboard
-export const LazyDashboardTaskTable = createLazyComponent(
-  () => import("@/components/dashboard/TaskTable"),
-  <TableFallback rows={5} columns={4} />
-);
+export const AnalyticsPanel = lazy(() => import('../DashboardContent').then(module => ({ default: module.default })));
 
-export const LazyDashboardUserTable = createLazyComponent(
-  () => import("@/components/dashboard/UserTable"),
-  <TableFallback rows={8} columns={5} />
-);
+// Default export
+export default DashboardOverview;

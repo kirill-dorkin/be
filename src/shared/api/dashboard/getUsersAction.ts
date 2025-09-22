@@ -1,3 +1,5 @@
+'use server';
+
 import { connectToDatabase } from "@/shared/lib/dbConnect";
 import User from "@/entities/user/User";
 import { serializeData } from "@/shared/lib/utils";
@@ -17,7 +19,7 @@ const getUsersAction = async (page: number = 1, limit: number = 5) => {
 
     const response = {
       status: "success",
-      message: "Users fetched successfully.",
+      message: "Пользователи загружены успешно.",
       items: serializeData(users),
       totalItemsLength,
     };
@@ -27,9 +29,9 @@ const getUsersAction = async (page: number = 1, limit: number = 5) => {
     console.error("Error fetching users:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default getUsersAction;
+export { getUsersAction };

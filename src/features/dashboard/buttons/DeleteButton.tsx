@@ -3,35 +3,30 @@
 import { type ReactElement } from "react";
 import { Button } from "@/shared/ui/button";
 import { Icons } from '@/shared/ui/icons';
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 
 export interface DeleteButtonProps {
   id: string;
-  action: (id: string) => Promise<{ message: string; status: string }>;
+  action: (id: string) => Promise<{ message?: string; status: string }>;
 }
 
 export default function DeleteButton({
   id,
   action,
 }: DeleteButtonProps): ReactElement {
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+
 
   const handleDeleteAction = async () => {
     try {
       const response = await action(id);
 
-      if (response.status === "error") return showErrorToast({ title: "Ошибка", description: response.message });
+      if (response.status === "error") {
+        return showToast.error(response.message || "Произошла ошибка при удалении");
+      }
 
-      showSuccessToast({
-        title: "Успешно",
-        description: response.message,
-      });
+      showToast.success(response.message || "Успешно удалено");
     } catch (error) {
-
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
-      });
+      showToast.error(error instanceof Error ? error.message : "Произошла неизвестная ошибка");
     }
   };
 

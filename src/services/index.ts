@@ -1,8 +1,8 @@
 // Services
 export * from './taskService'
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
+import authOptions from '@/auth';
+import { getServerSession } from 'next-auth';
 import { UserRole } from "@/shared/types"
 
 export async function checkUserPermission(requiredRole: UserRole) {
@@ -16,7 +16,7 @@ export async function checkUserPermission(requiredRole: UserRole) {
       }
       return {
         status: "error",
-        message: "User not authenticated",
+        message: "Пользователь не аутентифицирован",
       };
     }
 
@@ -25,7 +25,7 @@ export async function checkUserPermission(requiredRole: UserRole) {
     if (requiredRole !== "user" && userRole !== requiredRole) {
       return {
         status: "error",
-        message: `Forbidden: You do not have permission to perform this action as a ${requiredRole}`,
+        message: `Запрещено: У вас нет прав для выполнения этого действия как ${requiredRole}`,
       };
     }
 
@@ -33,7 +33,7 @@ export async function checkUserPermission(requiredRole: UserRole) {
   } catch (error) {
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 }

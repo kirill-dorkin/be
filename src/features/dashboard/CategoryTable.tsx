@@ -1,7 +1,7 @@
 "use client";
 import { Category } from "@/shared/types";
 import DeleteButton from "@/features/dashboard/buttons/DeleteButton";
-import { deleteCategoryAction } from "@/actions/dashboard/deleteCategoryAction";
+import { deleteCategoryAction } from "@/shared/api/dashboard/deleteCategoryAction";
 import {
   Table,
   TableBody,

@@ -20,10 +20,10 @@ const useTasks = (page: string, perPage: string) => {
         if (response.status === 200) {
           setTasks(response.data.tasks || []);
         } else {
-          throw new Error(response.statusText || "Failed to fetch tasks");
+          throw new Error(response.statusText || "Не удалось загрузить задачи");
         }
       } catch (err) {
-        setError((err as { message: string }).message || "An error occurred while fetching tasks.");
+        setError((err as { message: string }).message || "Произошла ошибка при загрузке задач.");
       } finally {
         setLoading(false);
       }

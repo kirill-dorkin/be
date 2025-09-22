@@ -14,7 +14,7 @@ import {
 import { Label } from "@/shared/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { setUserRoleAction } from "@/shared/api/dashboard";
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 
 export interface EditButtonProps {
   email: string;
@@ -25,14 +25,10 @@ export default function EditButton({
 }: EditButtonProps): ReactElement {
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
 
   const handleSaveRole = async () => {
     if (!role) {
-      showErrorToast({
-        title: "Ошибка",
-        description: "Пожалуйста, выберите роль.",
-      });
+      showToast.error("Пожалуйста, выберите роль.");
       return;
     }
 
@@ -43,15 +39,9 @@ export default function EditButton({
     setLoading(false);
 
     if (result.status === "success") {
-      showSuccessToast({
-        title: "Успешно",
-        description: result.message as string,
-      });
+      showToast.success(result.message as string);
     } else {
-      showErrorToast({
-        title: "Ошибка",
-        description: result.message as string,
-      });
+      showToast.error(result.message as string);
     }
   };
 

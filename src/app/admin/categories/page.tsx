@@ -8,8 +8,8 @@ import CategoryTable from "@/features/dashboard/CategoryTable";
 import type { ICategory } from "@/entities/category/Category";
 import type { Category } from "@/shared/types";
 import { AddCategoryDialog } from "@/features/dashboard/dialogs/AddCategoryDialog";
-import { getCategoriesAction } from "@/actions/dashboard/getCategoriesAction";
-import { deleteCategoryAction } from "@/actions/dashboard/deleteCategoryAction";
+import { getCategoriesAction } from "@/shared/api/dashboard/getCategoriesAction";
+import { deleteCategoryAction } from "@/shared/api/dashboard/deleteCategoryAction";
 
 const CategoriesPage = async ({ searchParams }: PageProps) => {
   const resolvedSearchParams = await searchParams;

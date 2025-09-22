@@ -1,19 +1,22 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { inter, FontPreloader, FontPerformanceMonitor } from "@/shared/lib/font-optimization";
+import { FontPreloader } from "@/shared/lib/font-optimization";
 import { Providers } from "@/shared/providers/Providers";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/shared/lib/auth";
-import { initializeAdmin } from "@/shared/lib/admin-init";
-import { PerformanceMetrics } from "@/components/PerformanceMetrics";
+import { getServerSession } from "next-auth/next";
+import authOptions from "@/auth";
+import { PerformanceMetricsWrapper } from "@/components/PerformanceMetricsWrapper";
 
 export const metadata: Metadata = {
-  title: "Business Equipment Management",
+  title: "BE.KG - Система управления бизнес-оборудованием",
   description: "Система управления бизнес-оборудованием",
   keywords: "equipment, management, business, tasks, devices",
   authors: [{ name: "Business Equipment Team" }],
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default async function RootLayout({
@@ -21,9 +24,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Инициализируем админа при старте приложения
-  await initializeAdmin();
-  
   const session = await getServerSession(authOptions);
 
   return (
@@ -31,11 +31,10 @@ export default async function RootLayout({
       <head>
         <FontPreloader />
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body className="antialiased font-sans">
         <Providers session={session}>
           {children}
-          <FontPerformanceMonitor />
-          <PerformanceMetrics />
+          {/* <PerformanceMetricsWrapper /> */}
         </Providers>
       </body>
     </html>

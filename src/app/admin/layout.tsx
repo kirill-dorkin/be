@@ -4,14 +4,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { preloadRoleComponents } from "@/shared/lib/code-splitting";
 import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
+import useAppContext from "@/shared/lib/useAppContext";
+import { Icons } from "@/shared/ui/icons";
 
-// Lazy load Sidebar для уменьшения initial bundle
-import dynamic from "next/dynamic";
-
-const Sidebar = dynamic(() => import("@/features/dashboard/Sidebar"), {
-  loading: () => <LoadingSkeleton className="w-64 h-full" />,
-  ssr: false, // Sidebar не критичен для SSR
-});
+// Обычный импорт Sidebar для диагностики
+import Sidebar from "@/features/dashboard/Sidebar";
 
 export default function AdminLayout({
   children,
@@ -20,6 +17,7 @@ export default function AdminLayout({
 }>) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { toggleSidebar } = useAppContext();
 
   useEffect(() => {
     if (status === "loading") return;
@@ -57,14 +55,36 @@ export default function AdminLayout({
         <Sidebar />
       </Suspense>
       <main className="flex-1 overflow-auto">
-        <Suspense fallback={
-          <div className="p-6">
-            <LoadingSkeleton className="h-8 w-48 mb-4" />
-            <LoadingSkeleton className="h-64 w-full" />
+        {/* Header с кнопкой меню */}
+        <header className="bg-background border-b border-border p-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
+              aria-label="Открыть меню"
+            >
+              <Icons.menu className="h-6 w-6" />
+            </button>
+            <h1 className="text-xl font-semibold">Панель администратора</h1>
           </div>
-        }>
-          {children}
-        </Suspense>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              {session?.user?.name || session?.user?.email}
+            </span>
+          </div>
+        </header>
+        
+        {/* Контент */}
+        <div className="p-6">
+          <Suspense fallback={
+            <div>
+              <LoadingSkeleton className="h-8 w-48 mb-4" />
+              <LoadingSkeleton className="h-64 w-full" />
+            </div>
+          }>
+            {children}
+          </Suspense>
+        </div>
       </main>
     </div>
   );

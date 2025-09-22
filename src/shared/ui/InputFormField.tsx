@@ -28,6 +28,8 @@ interface InputFormFieldProps<TFieldValues extends FieldValues = FieldValues> {
   isImageField?: boolean; // To determine if it's an image field
   rows?: number; // Optional for Textarea size
   isTextarea?: boolean; // render textarea instead of input
+  min?: number; // For number inputs
+  step?: number; // For number inputs
 }
 
 function InputFormField<TFieldValues extends FieldValues = FieldValues>({
@@ -43,6 +45,8 @@ function InputFormField<TFieldValues extends FieldValues = FieldValues>({
   isImageField = false, // Default is false, meaning it's a regular field
   rows = 4, // Default textarea size
   isTextarea = false,
+  min,
+  step,
 }: InputFormFieldProps<TFieldValues>): ReactElement {
   void _errors;
 
@@ -75,6 +79,8 @@ function InputFormField<TFieldValues extends FieldValues = FieldValues>({
       id={id}
       placeholder={placeholder}
       type={type}
+      min={min}
+      step={step}
       {...field}
       onChange={(event) => {
         if (onChange) {

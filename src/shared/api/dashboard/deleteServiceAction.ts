@@ -8,11 +8,11 @@ const deleteServiceAction = async (id: string) => {
     await connectToDatabase();
     await Service.findByIdAndDelete(id);
     revalidateTag('/admin/services');
-    return { status: "success", message: "Service deleted" };
+    return { status: "success", message: "Услуга удалена" };
   } catch (error) {
     console.error("Error deleting service:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default deleteServiceAction;
+export { deleteServiceAction };

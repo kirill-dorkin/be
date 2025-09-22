@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { memo, useMemo } from "react";
-import { deleteTaskAction } from "@/actions/dashboard/deleteTaskAction";
+import { deleteTaskAction } from "@/shared/api/dashboard/deleteTaskAction";
 import { ITask } from "@/entities/task/Task";
 import DeleteButton from "@/features/dashboard/buttons/DeleteButton";
 import ViewButton from "@/features/dashboard/buttons/ViewButton";
@@ -18,7 +18,7 @@ import PaginationControls from "./PaginationControls";
 import UpdateStatusSelect from "@/features/dashboard/buttons/UpdateStatusSelect";
 
 interface TaskTableProps {
-  items: ITask[];
+  items: ITask[] | undefined;
   totalItemsLength: number;
   page: number;
   per_page: number;
@@ -37,14 +37,14 @@ const TaskTableRow = memo(({
   const taskId = task._id?.toString() || '';
 
   return (
-    <TableRow key={taskId} className="hover:bg-muted/50 transition-colors">
+    <TableRow className="hover:bg-muted/50 transition-colors">
       <TableCell className="font-medium">{task.description}</TableCell>
       <TableCell>{task.customerName}</TableCell>
       <TableCell>{task.customerPhone}</TableCell>
       <TableCell>{task.laptopBrand}</TableCell>
       <TableCell>{task.laptopModel}</TableCell>
       <TableCell>
-        <UpdateStatusSelect taskId={taskId} />
+        <UpdateStatusSelect taskId={taskId} currentStatus={task.status} />
       </TableCell>
       <TableCell className={role === "admin" && !hideActions ? "" : "text-right"}>
         {task.totalCost} ₽
@@ -88,9 +88,13 @@ const TaskTable = memo(function TaskTable({
 
   // Мемоизируем отрендеренные строки
   const renderedRows = useMemo(() => {
-    return items.map((task) => (
+    if (!Array.isArray(items)) {
+      console.warn('TaskTable: items is not an array:', items);
+      return [];
+    }
+    return items.map((task, index) => (
       <TaskTableRow
-        key={task._id?.toString()}
+        key={task._id?.toString() || `task-${index}`}
         task={task}
         role={tableData.role}
         hideActions={tableData.hideActions}
@@ -119,7 +123,7 @@ const TaskTable = memo(function TaskTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.length === 0 ? (
+            {!Array.isArray(items) || items.length === 0 ? (
               <TableRow>
                 <TableCell 
                   colSpan={tableData.role === "admin" && !tableData.hideActions ? 8 : 7} 

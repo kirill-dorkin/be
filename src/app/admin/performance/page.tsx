@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { PerformanceMetrics } from '@/components/performance-metrics';
 
 export const metadata: Metadata = {
-  title: 'Performance Metrics | Admin Dashboard',
-  description: 'Real-time performance monitoring and Web Vitals tracking',
+  title: 'Метрики производительности | Панель администратора',
+  description: 'Мониторинг производительности в реальном времени и отслеживание Web Vitals',
 };
 
 export default function PerformancePage() {

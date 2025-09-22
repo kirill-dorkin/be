@@ -1,39 +1,28 @@
+import dynamic from "next/dynamic";
 import React from "react";
-import { createLazyComponent, LazyWrapper } from "./code-splitting";
-import { LoadingFallback } from "@/shared/ui/fallbacks";
+import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
+import { LazyWrapper } from "./code-splitting";
 
-// Lazy компоненты для тяжелых таблиц с оптимизированными fallback
-export const LazyTaskTable = createLazyComponent(
-  () => import("@/features/dashboard/TaskTable"),
-  { 
-    retryCount: 3,
-    displayName: "TaskTable"
-  }
-);
+// Lazy loaded table components
+export const LazyTaskTable = dynamic(() => import("@/features/dashboard/TaskTable"), {
+  loading: () => <LoadingSkeleton variant="table" rows={5} />,
+  ssr: false
+});
 
-export const LazyDeviceTable = createLazyComponent(
-  () => import("@/features/dashboard/DeviceTable"),
-  { 
-    retryCount: 3,
-    displayName: "DeviceTable"
-  }
-);
+export const LazyDeviceTable = dynamic(() => import("@/features/dashboard/DeviceTable"), {
+  loading: () => <LoadingSkeleton variant="table" rows={5} />,
+  ssr: false
+});
 
-export const LazyCategoryTable = createLazyComponent(
-  () => import("@/features/dashboard/CategoryTable"),
-  { 
-    retryCount: 3,
-    displayName: "CategoryTable"
-  }
-);
+export const LazyCategoryTable = dynamic(() => import("@/features/dashboard/CategoryTable"), {
+  loading: () => <LoadingSkeleton variant="table" rows={5} />,
+  ssr: false
+});
 
-export const LazyServiceTable = createLazyComponent(
-  () => import("@/features/dashboard/ServiceTable"),
-  { 
-    retryCount: 3,
-    displayName: "ServiceTable"
-  }
-);
+export const LazyServiceTable = dynamic(() => import("@/features/dashboard/ServiceTable"), {
+  loading: () => <LoadingSkeleton variant="table" rows={5} />,
+  ssr: false
+});
 
 // Обертки с типизированными fallback
 export const TaskTableWithFallback: React.FC<any> = (props) => (
@@ -169,7 +158,7 @@ export const LazyTableLoader: React.FC<{
           <span className="ml-2 text-sm text-gray-600">Загрузка таблицы...</span>
         </div>
       )}
-      {isVisible && !isLoading ? children : <LoadingFallback type="table" />}
+      {isVisible && !isLoading ? children : <LoadingSkeleton variant="table" rows={5} />}
     </div>
   );
 };

@@ -22,7 +22,7 @@ export async function setUserRoleAction({
     if (!email || !role) {
       return {
         status: "error",
-        message: "Email and role are required.",
+        message: "Email и роль обязательны.",
       };
     }
 
@@ -30,7 +30,7 @@ export async function setUserRoleAction({
     if (!validRoles.includes(role)) {
       return {
         status: "error",
-        message: `Invalid role. Valid roles are: ${validRoles.join(", ")}`,
+        message: `Недопустимая роль. Допустимые роли: ${validRoles.join(", ")}`,
       };
     }
 
@@ -68,13 +68,13 @@ export async function setUserRoleAction({
 
     return {
       status: "success",
-      message: "Role added successfully.",
+      message: "Роль добавлена успешно.",
     };
   } catch (error) {
 
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 }

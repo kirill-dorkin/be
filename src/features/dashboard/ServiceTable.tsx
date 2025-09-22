@@ -1,7 +1,8 @@
 "use client";
 import { Service } from "@/shared/types";
 import DeleteButton from "@/features/dashboard/buttons/DeleteButton";
-import { deleteServiceAction } from "@/actions/dashboard/deleteServiceAction";
+import { deleteServiceAction } from "@/shared/api/dashboard/deleteServiceAction";
+import { EditServiceDialog } from "@/features/dashboard/dialogs/EditServiceDialog";
 import {
   Table,
   TableBody,
@@ -18,12 +19,14 @@ export default function ServiceTable({
   page,
   per_page,
   deleteAction,
+  onServiceUpdated,
 }: {
   items: Service[];
   totalItemsLength: number;
   page: string | string[];
   per_page: string | string[];
   deleteAction: (id: string) => Promise<{ message: string; status: string }>;
+  onServiceUpdated?: () => void;
 }) {
   const start = (Number(page) - 1) * Number(per_page);
   const totalPages = Math.ceil(totalItemsLength / Number(per_page));
@@ -35,7 +38,7 @@ export default function ServiceTable({
           <TableHead className="min-w-[150px]">Категория</TableHead>
           <TableHead className="min-w-[200px]">Название</TableHead>
           <TableHead className="min-w-[100px]">Стоимость</TableHead>
-          <TableHead className="min-w-[150px]">Длительность</TableHead>
+          <TableHead className="min-w-[150px]">Время выполнения</TableHead>
           <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
@@ -47,7 +50,16 @@ export default function ServiceTable({
             <TableCell>{cost} сом</TableCell>
             <TableCell>{duration}</TableCell>
             <TableCell className="text-right">
-              <DeleteButton action={deleteAction} id={_id as string} />
+              <div className="flex gap-2 justify-end">
+                <EditServiceDialog 
+                  service={{ _id, category, name, cost, duration }} 
+                  onServiceUpdated={onServiceUpdated}
+                />
+                <DeleteButton
+                  id={_id as string}
+                  action={deleteAction}
+                />
+              </div>
             </TableCell>
           </TableRow>
         ))}

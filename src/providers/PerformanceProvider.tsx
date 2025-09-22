@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { performanceMonitor } from "@/lib/performance-monitor";
+import { performanceMonitor, getPerformanceMonitor } from "@/lib/performance-monitor-safe";
 
 interface PerformanceMetrics {
   lcp?: number;

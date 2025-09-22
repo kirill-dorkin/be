@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { ComponentType, Suspense, ReactElement } from "react";
+import React, { ComponentType, Suspense, ReactElement } from "react";
 import { DynamicOptionsLoadingProps } from "next/dynamic";
 import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
 
@@ -35,11 +35,7 @@ export function withLazyLoading<T extends Record<string, any>>(
   });
 
   return function LazyLoadedComponent(props: T) {
-    return (
-      <Suspense fallback={defaultFallback}>
-        <LazyComponent {...props} />
-      </Suspense>
-    );
+    return <LazyComponent {...(props as any)} />;
   };
 }
 

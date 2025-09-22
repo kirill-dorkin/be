@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
@@ -20,7 +20,7 @@ import InputFormField from "@/shared/ui/InputFormField";
 import PhoneInputField from "@/shared/ui/PhoneInputField";
 import useGeoCountry from "@/shared/lib/useGeoCountry";
 import { isValidPhoneNumber } from "react-phone-number-input";
-import addTaskAction from "@/shared/api/dashboard/addTaskAction";
+import { addTaskAction } from "@/shared/api/dashboard/addTaskAction";
 
 const TaskSchema = z.object({
   description: z
@@ -44,15 +44,20 @@ const TaskSchema = z.object({
     .min(1, { message: "Модель ноутбука обязательна" })
     .max(100, { message: "Модель ноутбука не может превышать 100 символов" }),
   totalCost: z
-    .number()
-    .min(0, { message: "Стоимость должна быть положительным числом" }),
+    .string()
+    .min(1, { message: "Стоимость обязательна" })
+    .refine((val) => val !== '' && !isNaN(parseFloat(val)) && parseFloat(val) >= 0, { 
+      message: "Стоимость должна быть положительным числом" 
+    })
+    .transform((val) => parseFloat(val)),
 });
 
 type TaskForm = z.infer<typeof TaskSchema>;
 
 export function AddTaskDialog() {
   const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+  const [open, setOpen] = useState(false);
+
   const country = useGeoCountry();
 
   const methods = useForm<TaskForm>({
@@ -63,31 +68,31 @@ export function AddTaskDialog() {
       customerPhone: '',
       laptopBrand: '',
       laptopModel: '',
-      totalCost: 0,
+      totalCost: '0',
     },
     mode: "onChange",
   });
 
-  const { handleSubmit, control, formState: { errors } } = methods;
+  const { handleSubmit, control, formState: { errors }, reset } = methods;
 
   const handleSubmitAction = async (data: TaskForm) => {
+    console.log("🎯 handleSubmitAction CALLED");
+    console.log("📋 Form submitted with data:", data);
     setLoading(true);
     try {
       const response = await addTaskAction(data);
+      console.log('addTaskAction result:', response);
 
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
+        showToast.error(response.message || "Произошла ошибка");
       } else {
-        showSuccessToast({
-          title: "Успешно",
-          description: response.message || "Задача добавлена",
-        });
+        showToast.success(response.message || "Задача добавлена");
+        reset(); // Сбрасываем форму
+        setOpen(false); // Закрываем диалог
       }
     } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
-      });
+      console.error('Error in handleSubmitAction:', error);
+      showToast.error(error instanceof Error ? error.message : "Произошла неизвестная ошибка");
     } finally {
       setLoading(false);
     }
@@ -99,11 +104,11 @@ export function AddTaskDialog() {
     { name: "customerPhone", label: "Телефон клиента", type: "text" },
     { name: "laptopBrand", label: "Марка ноутбука", type: "text" },
     { name: "laptopModel", label: "Модель ноутбука", type: "text" },
-    { name: "totalCost", label: "Стоимость", type: "number" },
+    { name: "totalCost", label: "Стоимость", type: "text" },
   ];
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="lg">Добавить задачу</Button>
       </DialogTrigger>
@@ -117,7 +122,10 @@ export function AddTaskDialog() {
 
         <FormProvider {...methods}>
           <form
-            onSubmit={handleSubmit(handleSubmitAction)}
+            onSubmit={(e) => {
+              console.log("🔥 Form onSubmit triggered");
+              handleSubmit(handleSubmitAction)(e);
+            }}
             className="space-y-4"
           >
             {taskFields.map((field) => (

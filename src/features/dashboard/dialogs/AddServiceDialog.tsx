@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import useCustomToast from "@/shared/lib/useCustomToast";
+import { showToast } from "@/shared/lib/toast";
 import { Button } from "@/shared/ui/button";
 import {
   Select,
@@ -22,8 +22,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import InputFormField from "@/shared/ui/InputFormField";
-import addServiceAction from "@/shared/api/dashboard/addServiceAction";
-import getCategoriesAction from "@/shared/api/dashboard/getCategoriesAction";
+import { addServiceAction } from "@/shared/api/dashboard/addServiceAction";
+import { getCategoriesAction } from "@/shared/api/dashboard/getCategoriesAction";
 import { ICategory } from "@/entities/category/Category";
 
 const ServiceSchema = z.object({
@@ -35,9 +35,12 @@ const ServiceSchema = z.object({
 
 type ServiceForm = z.infer<typeof ServiceSchema>;
 
-export function AddServiceDialog() {
+interface AddServiceDialogProps {
+  onServiceAdded?: () => void;
+}
+
+export function AddServiceDialog({ onServiceAdded }: AddServiceDialogProps) {
   const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   useEffect(() => {
@@ -65,16 +68,14 @@ export function AddServiceDialog() {
     try {
       const response = await addServiceAction(data.category, data.name, data.cost, data.duration || "");
       if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
+        showToast.error(response.message);
       } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
+        showToast.success(response.message);
         reset();
+        onServiceAdded?.();
       }
     } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить услугу",
-      });
+      showToast.error(error instanceof Error ? error.message : "Не удалось добавить услугу");
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
-"use server"
+'use server';
+
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/shared/lib/dbConnect";
 import { getWorkerWithLeastTasks, assignTaskToWorker, createTask } from '@/services/taskService';
@@ -11,7 +12,7 @@ interface ApiResponse<T = Record<string, string | number | boolean>> {
   data?: T;
 }
 
-export default async function addTaskAction({
+export async function addTaskAction({
   description,
   totalCost,
   customerName,
@@ -19,18 +20,31 @@ export default async function addTaskAction({
   laptopBrand,
   laptopModel,
 }: AddTaskActionParams): Promise<ApiResponse> {
+  console.log('🚀 addTaskAction STARTED - Server Action called');
+  console.log('📝 Received params:', {
+    description,
+    totalCost,
+    customerName,
+    customerPhone,
+    laptopBrand,
+    laptopModel,
+  });
+
   try {
     await connectToDatabase();
 
     const worker = await getWorkerWithLeastTasks();
+    console.log('Found worker:', worker?._id);
 
     const newTask = await createTask(
       { description, totalCost, customerName, customerPhone, laptopBrand, laptopModel },
       worker,
     );
+    console.log('Created task:', newTask._id);
 
     if (worker) {
       await assignTaskToWorker(worker, newTask._id as mongoose.Types.ObjectId);
+      console.log('Assigned task to worker');
     }
 
     revalidateTag('/admin');
@@ -38,10 +52,11 @@ export default async function addTaskAction({
     return {
       status: 'success',
       message: worker
-        ? 'Task created and assigned successfully!'
-        : 'Task created successfully, but no worker was available for assignment.',
+        ? 'Задача создана и назначена успешно!'
+        : 'Задача создана успешно, но нет доступного работника для назначения.',
     };
   } catch (error) {
-    return { status: 'error', message: (error as Error).message || 'Internal server error.' };
+    console.error('Error in addTaskAction:', error);
+    return { status: 'error', message: (error as Error).message || 'Внутренняя ошибка сервера.' };
   }
 }

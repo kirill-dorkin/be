@@ -30,10 +30,10 @@ const getWorkerTasksAction = async (workerId: string, page: number = 1, limit: n
     console.error("Error fetching worker tasks:", error);
     return {
       status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
+      message: (error as { message: string }).message || "Внутренняя ошибка сервера.",
     };
   }
 };
 
-export default getWorkerTasksAction;
+export { getWorkerTasksAction };
 

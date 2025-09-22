@@ -8,11 +8,11 @@ const deleteCategoryAction = async (id: string) => {
     await connectToDatabase();
     await Category.findByIdAndDelete(id);
     revalidateTag('/admin/categories');
-    return { status: "success", message: "Category deleted" };
+    return { status: "success", message: "Категория удалена" };
   } catch (error) {
     console.error("Error deleting category:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+    return { status: "error", message: (error as { message: string }).message || "Внутренняя ошибка сервера." };
   }
 };
 
-export default deleteCategoryAction;
+export { deleteCategoryAction };

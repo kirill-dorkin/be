@@ -46,7 +46,7 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
 
   if (!apiKey) {
     console.error("API key is missing!");
-    return { status: "error", message: "API key is missing!" };
+    return { status: "error", message: "API ключ отсутствует!" };
   }
 
   const {
@@ -88,14 +88,14 @@ export async function sendInvoiceToWhatsApp(invoiceDetails: {
 
     if (response.status === 200) {
       console.log("Invoice sent successfully!");
-      return { status: "success", message: "Invoice sent successfully!" };
+      return { status: "success", message: "Счет отправлен успешно!" };
     } else {
       console.log("Error sending invoice:", response.data);
-      return { status: "error", message: "Error sending invoice: " + response.data };
+      return { status: "error", message: "Ошибка отправки счета: " + response.data };
     }
   } catch (error) {
     console.error("Error sending invoice:", error);
-    return { status: "error", message: "Error sending invoice: " + (error as { message: string }).message };
+    return { status: "error", message: "Ошибка отправки счета: " + (error as { message: string }).message };
   }
 }
 
@@ -103,11 +103,22 @@ export const createTask = async (
   params: AddTaskActionParams,
   worker?: IUser | null,
 ): Promise<ITask> => {
-  const newTask = new Task({
+  console.log('createTask called with params:', params);
+  console.log('createTask worker:', worker?._id);
+  
+  const taskData = {
     ...params,
     workerId: worker?._id ?? null,
     status: 'Pending',
-  });
+  };
+  
+  console.log('Creating task with data:', taskData);
+  
+  const newTask = new Task(taskData);
+  console.log('Task instance created:', newTask);
+  
   await newTask.save();
+  console.log('Task saved successfully:', newTask._id);
+  
   return newTask;
 };

@@ -46,7 +46,7 @@ export default function Contacts() {
           <Input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Ваш email"
             value={form.email}
             onChange={handleChange}
             required
