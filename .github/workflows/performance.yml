@@ -1,0 +1,205 @@
+name: Performance Monitoring
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Запускаем каждый день в 2:00 UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  performance-audit:
+    name: Performance Audit
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run linting
+        run: npm run lint
+        
+      - name: Run type checking
+        run: npm run typecheck
+        
+      - name: Run tests
+        run: npm run test
+        
+      - name: Build application
+        run: npm run build
+        
+      - name: Start application
+        run: |
+          npm run start &
+          sleep 10
+          curl -f http://localhost:3000 || exit 1
+        
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          configPath: './lighthouserc.js'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          
+      - name: Run performance analysis
+        run: npm run perf:analyze
+        continue-on-error: true
+        
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-report-node-${{ matrix.node-version }}
+          path: |
+            performance-report.json
+            lighthouse-report.json
+            lighthouse-report.html
+          retention-days: 30
+          
+      - name: Comment PR with performance results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const reportPath = 'performance-report.json';
+              if (!fs.existsSync(reportPath)) {
+                console.log('Performance report not found');
+                return;
+              }
+              
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              const statusEmoji = {
+                excellent: '🟢',
+                good: '🟡',
+                'needs-improvement': '🟠',
+                poor: '🔴'
+              };
+              
+              let comment = `## ${statusEmoji[report.summary.overall] || '⚪'} Performance Report\n\n`;
+              comment += `**Overall Status:** ${report.summary.overall.toUpperCase()}\n\n`;
+              
+              if (report.lighthouse && report.lighthouse.status === 'success') {
+                comment += `### 📊 Lighthouse Scores\n`;
+                comment += `- **Performance:** ${report.lighthouse.scores.performance}/100\n`;
+                comment += `- **Accessibility:** ${report.lighthouse.scores.accessibility}/100\n`;
+                comment += `- **Best Practices:** ${report.lighthouse.scores.bestPractices}/100\n`;
+                comment += `- **SEO:** ${report.lighthouse.scores.seo}/100\n\n`;
+                
+                comment += `### 🚀 Core Web Vitals\n`;
+                comment += `- **LCP:** ${Math.round(report.lighthouse.vitals.lcp)}ms\n`;
+                comment += `- **CLS:** ${report.lighthouse.vitals.cls.toFixed(3)}\n`;
+                comment += `- **TBT:** ${Math.round(report.lighthouse.vitals.tbt)}ms\n`;
+                comment += `- **FCP:** ${Math.round(report.lighthouse.vitals.fcp)}ms\n\n`;
+              }
+              
+              if (report.summary.issues.length > 0) {
+                comment += `### ⚠️ Issues Found\n`;
+                report.summary.issues.forEach(issue => {
+                  comment += `- ${issue}\n`;
+                });
+                comment += '\n';
+              }
+              
+              if (report.summary.recommendations.length > 0) {
+                comment += `### 💡 Recommendations\n`;
+                report.summary.recommendations.forEach(rec => {
+                  comment += `- ${rec}\n`;
+                });
+                comment += '\n';
+              }
+              
+              comment += `### 🔍 Code Quality\n`;
+              comment += `- **ESLint:** ${report.codeQuality.lint ? '✅ Passed' : '❌ Failed'}\n`;
+              comment += `- **TypeScript:** ${report.codeQuality.typecheck ? '✅ Passed' : '❌ Failed'}\n`;
+              comment += `- **Tests:** ${report.codeQuality.test ? '✅ Passed' : '❌ Failed'}\n\n`;
+              
+              comment += `<details>\n<summary>📦 Bundle Analysis</summary>\n\n`;
+              comment += `- **Dependencies:** ${report.bundleAnalysis.dependencies}\n`;
+              comment += `- **Dev Dependencies:** ${report.bundleAnalysis.devDependencies}\n`;
+              comment += `</details>\n\n`;
+              
+              comment += `*Report generated at ${new Date(report.timestamp).toLocaleString()}*`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.error('Failed to create performance comment:', error);
+            }
+
+  bundle-analysis:
+    name: Bundle Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Analyze bundle
+        run: npm run bundle:analyze
+        
+      - name: Upload bundle analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analysis
+          path: |
+            .next/analyze/
+            .next/static/chunks/
+          retention-days: 7
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+        
+      - name: Check for known vulnerabilities
+        run: npx audit-ci --moderate
+        continue-on-error: true

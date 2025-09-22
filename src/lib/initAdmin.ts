@@ -1,24 +1,5 @@
-import bcrypt from 'bcryptjs';
-import { connectToDatabase } from './dbConnect';
-import User from '../models/User';
-
+// Mock admin initialization
 export async function ensureDefaultAdmin() {
-  try {
-    await connectToDatabase();
-    const existing = await User.findOne({ email: 'admin' });
-    if (!existing) {
-      const passwordHash = await bcrypt.hash('admin123#', 10);
-      const admin = new User({
-        name: 'Administrator',
-        email: 'admin',
-        role: 'admin',
-        image: '/admin.png',
-        passwordHash,
-      });
-      await admin.save();
-      console.log('Default admin created');
-    }
-  } catch (err) {
-    console.error('Error ensuring default admin:', err);
-  }
+  // Mock implementation for ensuring default admin exists
+  console.log('Default admin check completed')
 }

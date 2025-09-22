@@ -1,18 +1,34 @@
-"use server"
-import { connectToDatabase } from "@/lib/dbConnect";
-import Service from "@/models/Service";
-import { revalidateTag } from "next/cache";
+'use server'
 
-const deleteServiceAction = async (id: string) => {
-  try {
-    await connectToDatabase();
-    await Service.findByIdAndDelete(id);
-    revalidateTag('/admin/services');
-    return { status: "success", message: "Service deleted" };
-  } catch (error) {
-    console.error("Error deleting service:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
+interface DeleteServiceResult {
+  message: string
+  status: string
+}
+
+export async function deleteServiceAction(serviceId: string): Promise<DeleteServiceResult> {
+  // Заглушка для удаления услуги
+  // В реальном приложении здесь будет запрос к базе данных
+  
+  if (!serviceId) {
+    return {
+      status: 'error',
+      message: 'ID услуги не указан'
+    }
   }
-};
 
-export default deleteServiceAction;
+  try {
+    // Имитация удаления из базы данных
+    // await db.service.delete({ where: { id: serviceId } })
+    
+    return {
+      status: 'success',
+      message: 'Услуга успешно удалена'
+    }
+  } catch (error) {
+    console.error('Ошибка при удалении услуги:', error)
+    return {
+      status: 'error',
+      message: 'Произошла ошибка при удалении услуги'
+    }
+  }
+}

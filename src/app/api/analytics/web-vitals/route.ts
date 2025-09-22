@@ -3,24 +3,28 @@ import { z } from 'zod';
 
 // Схема валидации для Web Vitals метрик
 const WebVitalsSchema = z.object({
-  url: z.string().url(),
-  timestamp: z.number(),
-  userAgent: z.string(),
-  connectionType: z.string(),
+  url: z.string().url().optional(),
+  timestamp: z.number().optional(),
+  userAgent: z.string().optional(),
+  connectionType: z.string().optional(),
   metrics: z.array(z.object({
     id: z.string(),
     name: z.string(),
     value: z.number(),
-    delta: z.number(),
-    rating: z.enum(['good', 'needs-improvement', 'poor']),
-    label: z.string(),
+    delta: z.number().optional(),
+    rating: z.enum(['good', 'needs-improvement', 'poor']).optional(),
+    label: z.string().optional(),
     navigationType: z.string().optional(),
-  })),
+  })).optional(),
 });
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('[Web Vitals API] Received request');
+    console.log('[Web Vitals API] Content-Type:', request.headers.get('content-type'));
+    
     const body = await request.json();
+    console.log('[Web Vitals API] Parsed body:', JSON.stringify(body, null, 2));
     
     // Валидация входящих данных
     const validatedData = WebVitalsSchema.parse(body);
@@ -30,15 +34,15 @@ export async function POST(request: NextRequest) {
     
     if (process.env.NODE_ENV === 'development') {
       console.log('[Web Vitals Analytics]', {
-        url: validatedData.url,
-        timestamp: new Date(validatedData.timestamp).toISOString(),
-        userAgent: validatedData.userAgent,
-        connectionType: validatedData.connectionType,
-        metrics: validatedData.metrics.map(metric => ({
+        url: validatedData.url || 'unknown',
+        timestamp: validatedData.timestamp ? new Date(validatedData.timestamp).toISOString() : new Date().toISOString(),
+        userAgent: validatedData.userAgent || 'unknown',
+        connectionType: validatedData.connectionType || 'unknown',
+        metrics: validatedData.metrics?.map(metric => ({
           name: metric.name,
           value: metric.value,
-          rating: metric.rating,
-        })),
+          rating: metric.rating || 'good',
+        })) || [],
       });
     }
     
@@ -72,7 +76,7 @@ export async function POST(request: NextRequest) {
 
 // Интеграция с Google Analytics 4
 async function sendToGA4(data: z.infer<typeof WebVitalsSchema>) {
-  if (!process.env.GA_MEASUREMENT_ID) return;
+  if (!process.env.GA_MEASUREMENT_ID || !data.metrics) return;
   
   try {
     const params = new URLSearchParams({
@@ -85,10 +89,10 @@ async function sendToGA4(data: z.infer<typeof WebVitalsSchema>) {
       params: {
         metric_name: metric.name,
         metric_value: metric.value,
-        metric_rating: metric.rating,
-        page_location: data.url,
-        user_agent: data.userAgent,
-        connection_type: data.connectionType,
+        metric_rating: metric.rating || 'good',
+        page_location: data.url || 'unknown',
+        user_agent: data.userAgent || 'unknown',
+        connection_type: data.connectionType || 'unknown',
       },
     }));
     
@@ -96,7 +100,7 @@ async function sendToGA4(data: z.infer<typeof WebVitalsSchema>) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        client_id: generateClientId(data.userAgent),
+        client_id: generateClientId(data.userAgent || 'unknown'),
         events,
       }),
     });
@@ -115,12 +119,12 @@ async function sendToDataDog(data: z.infer<typeof WebVitalsSchema>) {
       ddtags: `env:${process.env.NODE_ENV}`,
       message: 'Web Vitals Metrics',
       level: 'info',
-      timestamp: data.timestamp,
+      timestamp: data.timestamp || Date.now(),
       attributes: {
-        url: data.url,
-        userAgent: data.userAgent,
-        connectionType: data.connectionType,
-        metrics: data.metrics,
+        url: data.url || 'unknown',
+        userAgent: data.userAgent || 'unknown',
+        connectionType: data.connectionType || 'unknown',
+        metrics: data.metrics || [],
       },
     };
     
@@ -151,7 +155,7 @@ async function saveToDatabase(data: z.infer<typeof WebVitalsSchema>) {
     ) VALUES ...
     */
     
-    console.log('[Database] Would save metrics:', data.metrics.length);
+    console.log('[Database] Would save metrics:', data.metrics?.length || 0);
   } catch (error) {
     console.error('[Database Error]', error);
   }

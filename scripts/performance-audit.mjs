@@ -14,7 +14,7 @@ const PERFORMANCE_BUDGETS = {
   seo: 95,
   webVitals: {
     lcp: 2500,
-    fid: 100,
+    inp: 200,
     cls: 0.1,
     ttfb: 800
   }
@@ -47,7 +47,7 @@ function analyzeResults(lhr) {
 
   const webVitals = {
     lcp: lhr.audits['largest-contentful-paint']?.numericValue || 0,
-    fid: lhr.audits['max-potential-fid']?.numericValue || 0,
+    inp: lhr.audits['max-potential-fid']?.numericValue || 0, // Note: Lighthouse doesn't have INP audit yet, using max-potential-fid as fallback
     cls: lhr.audits['cumulative-layout-shift']?.numericValue || 0,
     ttfb: lhr.audits['server-response-time']?.numericValue || 0
   };

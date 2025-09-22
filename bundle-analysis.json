@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-09-22T08:27:47.829Z",
+  "bundles": {
+    "+ First Load JS shared by all                 321 kB": {
+      "js": 328704,
+      "css": 0,
+      "total": 328704
+    }
+  },
+  "violations": [
+    {
+      "route": "+ First Load JS shared by all                 321 kB",
+      "type": "JavaScript",
+      "current": 328704,
+      "limit": 307200,
+      "excess": 21504
+    }
+  ],
+  "summary": {
+    "totalRoutes": 1,
+    "totalViolations": 1,
+    "totalSize": 328704
+  }
+}

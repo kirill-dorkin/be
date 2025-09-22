@@ -1,16 +1,17 @@
-import { SearchParams } from "@/types";
-import SelectShowing from "@/components/dashboard/SelectShowing";
-import DashboardContainer from "@/components/dashboard/DashboardContainer";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import DashboardContent from "@/components/dashboard/DashboardContent";
-import DashboardTitle from "@/components/dashboard/DashboardTitle";
-import ServiceTable from "@/components/dashboard/ServiceTable";
-import { AddServiceDialog } from "@/components/dashboard/dialogs/AddServiceDialog";
-import getServicesAction from "@/actions/dashboard/getServicesAction";
-import deleteServiceAction from "@/actions/dashboard/deleteServiceAction";
+import { PageProps } from "@/types";
+import ServiceTable from "@/features/dashboard/ServiceTable";
+import DashboardContainer from "@/features/dashboard/DashboardContainer";
+import DashboardHeader from "@/features/dashboard/DashboardHeader";
+import DashboardTitle from "@/features/dashboard/DashboardTitle";
+import SelectShowing from "@/features/dashboard/SelectShowing";
+import DashboardContent from "@/features/dashboard/DashboardContent";
+import { AddServiceDialog } from "@/features/dashboard/dialogs/AddServiceDialog";
+import { getServicesAction } from "@/actions/dashboard/getServicesAction";
+import { deleteServiceAction } from "@/actions/dashboard/deleteServiceAction";
 
-const ServicesPage = async ({ searchParams }: SearchParams) => {
-  const { page = "1", perPage = "5" } = await searchParams;
+const ServicesPage = async ({ searchParams }: PageProps) => {
+  const resolvedSearchParams = await searchParams;
+  const { page = "1", perPage = "5" } = resolvedSearchParams;
   const servicesResponse = (await getServicesAction(
     Number(page),
     Number(perPage),

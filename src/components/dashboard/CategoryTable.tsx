@@ -1,62 +1,79 @@
-"use client";
-import { ICategory } from "@/models/Category";
-import DeleteButton from "@/components/dashboard/buttons/DeleteButton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import PaginationControls from "./PaginationControls";
+'use client'
 
-export default function CategoryTable({
-  items,
-  totalItemsLength,
-  page,
-  per_page,
-  deleteAction,
-}: {
-  items: ICategory[];
-  totalItemsLength: number;
-  page: string | string[];
-  per_page: string | string[];
-  deleteAction: (id: string) => Promise<{ message: string; status: string }>;
-}) {
-  const start = (Number(page) - 1) * Number(per_page);
-  const totalPages = Math.ceil(totalItemsLength / Number(per_page));
+import React from 'react'
 
+interface Category {
+  id: string
+  name: string
+  description?: string
+  createdAt: string
+}
+
+interface CategoryTableProps {
+  categories: Category[]
+  onEdit?: (category: Category) => void
+  onDelete?: (id: string) => void
+}
+
+export default function CategoryTable({ categories, onEdit, onDelete }: CategoryTableProps) {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="min-w-[200px]">Название</TableHead>
-          <TableHead className="text-right">Действия</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {items?.map(({ _id, name }) => (
-          <TableRow key={_id?.toString() as string}>
-            <TableCell>{name}</TableCell>
-            <TableCell className="text-right">
-              <DeleteButton action={deleteAction} id={_id as string} />
-            </TableCell>
-          </TableRow>
-        ))}
-        <TableRow>
-          <TableCell className="bg-background text-muted-foreground pb-0" colSpan={1}>
-            Всего записей: {totalItemsLength}
-          </TableCell>
-          <TableCell className="bg-background pb-0" colSpan={1}>
-            <PaginationControls
-              hasNextPage={Number(page) < totalPages}
-              hasPrevPage={start > 0}
-              totalItemsLength={totalItemsLength}
-            />
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  );
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Название
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Описание
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Дата создания
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Действия
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {categories.map((category) => (
+            <tr key={category.id} className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {category.name}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {category.description || '-'}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {new Date(category.createdAt).toLocaleDateString('ru-RU')}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                {onEdit && (
+                  <button
+                    onClick={() => onEdit(category)}
+                    className="text-blue-600 hover:text-blue-900"
+                  >
+                    Редактировать
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    onClick={() => onDelete(category.id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    Удалить
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {categories.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          Категории не найдены
+        </div>
+      )}
+    </div>
+  )
 }

@@ -1,23 +1,32 @@
-import { SearchParams } from "@/types";
-import SelectShowing from "@/components/dashboard/SelectShowing";
-import DashboardContainer from "@/components/dashboard/DashboardContainer";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import DashboardContent from "@/components/dashboard/DashboardContent";
-import DashboardTitle from "@/components/dashboard/DashboardTitle";
-import CategoryTable from "@/components/dashboard/CategoryTable";
-import type { ICategory } from "@/models/Category";
-import { AddCategoryDialog } from "@/components/dashboard/dialogs/AddCategoryDialog";
-import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
-import deleteCategoryAction from "@/actions/dashboard/deleteCategoryAction";
+import { PageProps } from "@/types";
+import SelectShowing from "@/features/dashboard/SelectShowing";
+import DashboardContainer from "@/features/dashboard/DashboardContainer";
+import DashboardHeader from "@/features/dashboard/DashboardHeader";
+import DashboardContent from "@/features/dashboard/DashboardContent";
+import DashboardTitle from "@/features/dashboard/DashboardTitle";
+import CategoryTable from "@/features/dashboard/CategoryTable";
+import type { ICategory } from "@/entities/category/Category";
+import type { Category } from "@/shared/types";
+import { AddCategoryDialog } from "@/features/dashboard/dialogs/AddCategoryDialog";
+import { getCategoriesAction } from "@/actions/dashboard/getCategoriesAction";
+import { deleteCategoryAction } from "@/actions/dashboard/deleteCategoryAction";
 
-const CategoriesPage = async ({ searchParams }: SearchParams) => {
-  const { page = "1", perPage = "5" } = await searchParams;
+const CategoriesPage = async ({ searchParams }: PageProps) => {
+  const resolvedSearchParams = await searchParams;
+  const { page = "1", perPage = "5" } = resolvedSearchParams;
   const categoriesResponse = (await getCategoriesAction(
     Number(page),
     Number(perPage),
   )) as any;
   const items: ICategory[] = categoriesResponse.items ?? [];
   const totalItemsLength: number = categoriesResponse.totalItemsLength ?? 0;
+  
+  // Приводим ICategory[] к Category[]
+  const categoriesForTable: Category[] = items.map(cat => ({
+    _id: cat._id?.toString(),
+    name: cat.name
+  }));
+
   return (
     <DashboardContainer className="w-full min-h-screen py-12 px-10 overflow-y-auto">
       <DashboardHeader className="flex justify-between">
@@ -32,7 +41,7 @@ const CategoriesPage = async ({ searchParams }: SearchParams) => {
           page={page}
           per_page={perPage}
           deleteAction={deleteCategoryAction}
-          items={items as unknown as ICategory[]}
+          items={categoriesForTable}
           totalItemsLength={totalItemsLength}
         />
       </DashboardContent>

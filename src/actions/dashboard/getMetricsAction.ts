@@ -1,39 +1,29 @@
-import { connectToDatabase } from "@/lib/dbConnect";
-import Task from "@/models/Task";
+'use server'
 
-const getMetricsAction = async () => {
-  try {
-    await connectToDatabase();
+interface DashboardMetrics {
+  totalTasks: number
+  completedTasks: number
+  pendingTasks: number
+  inProgressTasks: number
+  totalUsers: number
+  totalRevenue: number
+  monthlyGrowth: number
+  averageCompletionTime: number // в часах
+  customerSatisfaction: number // в процентах
+}
 
-    const totalPendingTasks = await Task.countDocuments({
-      status: 'Pending',
-    });
-
-    const totalActiveTasks = await Task.countDocuments({
-      status: { $in: ['Pending', 'In Progress', "Completed"] },
-    });
-
-    const totalInProgressTasks = await Task.countDocuments({
-      status: { $in: ['In Progress'] },
-    });
-
-    const totalCompletedTasks = await Task.countDocuments({ status: 'Completed' });
-
-    const metrics = {
-      totalPendingTasks,
-      totalInProgressTasks,
-      totalActiveTasks,
-      totalCompletedTasks,
-    };
-
-    return { status: 'success', metrics };
-  } catch (error) {
-    console.error("Error fetching metrics:", error);
-    return {
-      status: 'error',
-      message: (error as { message: string }).message || 'Internal server error.',
-    };
+export async function getMetricsAction(): Promise<DashboardMetrics> {
+  // Заглушка для получения метрик
+  // В реальном приложении здесь будет запрос к базе данных с агрегацией
+  return {
+    totalTasks: 156,
+    completedTasks: 98,
+    pendingTasks: 34,
+    inProgressTasks: 24,
+    totalUsers: 1247,
+    totalRevenue: 2450000, // в сомах
+    monthlyGrowth: 12.5,
+    averageCompletionTime: 4.2,
+    customerSatisfaction: 94.8
   }
-};
-
-export default getMetricsAction;
+}

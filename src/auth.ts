@@ -1,8 +1,8 @@
 import { NextAuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUserByEmail } from "./lib/dbUtils";
+import { getUserByEmail } from "@/shared/lib/dbUtils";
 import bcrypt from "bcryptjs";
-import { connectToDatabase } from "@/lib/dbConnect";
+import { connectToDatabase } from "@/shared/lib/dbConnect";
 import crypto from "crypto";
 
 declare global {
@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             image: user.image,
             role: user.role,
-          } as any;
+          };
         } catch (error) {
           console.error("Error during credentials authorize", error);
           return null;

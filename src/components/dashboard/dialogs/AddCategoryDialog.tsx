@@ -1,91 +1,82 @@
-"use client";
-import { useState } from "react";
-import useCustomToast from "@/hooks/useCustomToast";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import InputFormField from "@/components/InputFormField";
-import addCategoryAction from "@/actions/dashboard/addCategoryAction";
+'use client'
 
-const CategorySchema = z.object({
-  name: z.string().min(1, { message: "Название обязательно" }).max(100),
-});
+import React, { useState } from 'react'
 
-type CategoryForm = z.infer<typeof CategorySchema>;
+interface AddCategoryDialogProps {
+  isOpen: boolean
+  onClose: () => void
+  onAdd: (category: { name: string; description?: string }) => void
+}
 
-export function AddCategoryDialog() {
-  const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+export default function AddCategoryDialog({ isOpen, onClose, onAdd }: AddCategoryDialogProps) {
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
 
-  const methods = useForm<CategoryForm>({
-    resolver: zodResolver(CategorySchema),
-    defaultValues: { name: "" },
-    mode: "onChange",
-  });
-
-  const {
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = methods;
-
-  const handleSubmitAction = async (data: { name: string }) => {
-    setLoading(true);
-    try {
-      const response = await addCategoryAction(data.name);
-      if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message });
-      } else {
-        showSuccessToast({ title: "Успешно", description: response.message });
-        reset();
-      }
-    } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить категорию",
-      });
-    } finally {
-      setLoading(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (name.trim()) {
+      onAdd({
+        name: name.trim(),
+        description: description.trim() || undefined
+      })
+      setName('')
+      setDescription('')
+      onClose()
     }
-  };
+  }
+
+  if (!isOpen) return null
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Добавить категорию</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Добавить категорию</DialogTitle>
-          <DialogDescription>Укажите название категории</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
-          <FormProvider {...methods}>
-            <InputFormField<CategoryForm>
-              name="name"
-              label="Название категории"
-              id="name"
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Добавить категорию</h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Название *
+            </label>
+            <input
               type="text"
-              control={control}
-              errors={errors}
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
-          </FormProvider>
-          <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>Сохранить</Button>
-          </DialogFooter>
+          </div>
+          
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              Описание
+            </label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              Отмена
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Добавить
+            </button>
+          </div>
         </form>
-      </DialogContent>
-    </Dialog>
-  );
+      </div>
+    </div>
+  )
 }

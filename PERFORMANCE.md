@@ -8,10 +8,9 @@ This application is optimized for production-level performance with comprehensiv
 
 ### Core Web Vitals
 - **LCP (Largest Contentful Paint)**: ≤ 2.5s
-- **FID (First Input Delay)**: ≤ 100ms  
+- **INP (Interaction to Next Paint)**: ≤ 200ms  
 - **CLS (Cumulative Layout Shift)**: ≤ 0.1
 - **TTFB (Time to First Byte)**: ≤ 800ms
-- **INP (Interaction to Next Paint)**: ≤ 200ms
 
 ### Lighthouse Scores
 - **Performance**: ≥ 90
@@ -77,21 +76,226 @@ npm run build
 npm run start
 ```
 
-## Performance Monitoring
+## Performance Monitoring System
 
-### Development Dashboard
-In development mode, the performance dashboard is automatically enabled and shows:
-- Real-time Web Vitals
-- Image optimization status
-- Route performance metrics
-- Streaming SSR status
+### Обзор
 
-### Production Monitoring
-Configure these environment variables for production monitoring:
-```env
-NEXT_PUBLIC_PERFORMANCE_MONITORING=true
-NEXT_PUBLIC_WEB_VITALS_REPORTING=true
-SENTRY_DSN=your-sentry-dsn
+Комплексная система мониторинга производительности для отслеживания Web Vitals, производительности ресурсов и пользовательского опыта в реальном времени.
+
+### Архитектура
+
+#### Компоненты
+
+1. **PerformanceMonitor** (`src/lib/performance-monitor.ts`)
+   - Основной класс для сбора метрик
+   - Интеграция с Web Vitals API
+   - Автоматическое сохранение в localStorage
+   - Отправка данных в аналитику
+
+2. **PerformanceMetrics** (`src/components/PerformanceMetrics.tsx`)
+   - React компонент для отображения метрик
+   - Реальное время обновления
+   - Цветовая индикация состояния
+
+3. **Analytics API** (`src/app/api/analytics/performance/route.ts`)
+   - Endpoint для сбора метрик
+   - Валидация данных с Zod
+   - Агрегация и логирование
+
+4. **FontPerformanceMonitor** (`src/components/FontPerformanceMonitor.tsx`)
+   - Специализированный мониторинг шрифтов
+   - Отслеживание FOIT/FOUT
+
+### Конфигурация
+
+#### Performance Budget
+
+Файл `performance-budget.json` содержит:
+
+- **Timing budgets**: FCP ≤2s, LCP ≤2.5s, CLS ≤0.1, TBT ≤200ms
+- **Resource budgets**: JS ≤300KB, CSS ≤50KB, Images ≤500KB
+- **Lighthouse thresholds**: Performance ≥90%, A11y ≥95%
+
+#### Lighthouse CI
+
+Конфигурация в `lighthouserc.js`:
+
+- Тестирование 5 ключевых страниц
+- Автоматический запуск сервера
+- Интеграция с performance budget
+- Сохранение результатов
+
+### Использование
+
+#### Автоматическая интеграция
+
+Performance monitoring автоматически активируется на всех страницах через `layout.tsx`:
+
+```tsx
+<PerformanceMetrics />
+<FontPerformanceMonitor />
+```
+
+#### Ручное использование
+
+```typescript
+import { PerformanceMonitor } from '@/lib/performance-monitor';
+
+const monitor = PerformanceMonitor.getInstance();
+
+// Получение текущих метрик
+const metrics = monitor.getMetrics();
+
+// Ручная отправка метрик
+await monitor.sendToAnalytics();
+
+// Очистка данных
+monitor.clearMetrics();
+```
+
+#### API Endpoints
+
+**POST /api/analytics/performance**
+```json
+{
+  "metrics": [
+    {
+      "name": "LCP",
+      "value": 1234.5,
+      "rating": "good",
+      "timestamp": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "url": "/dashboard",
+  "userAgent": "Mozilla/5.0...",
+  "sessionId": "uuid"
+}
+```
+
+**GET /api/analytics/performance**
+```json
+{
+  "metrics": [...],
+  "aggregated": {
+    "LCP": { "p50": 1200, "p95": 2400 },
+    "FCP": { "p50": 800, "p95": 1600 }
+  }
+}
+```
+
+### Метрики
+
+#### Core Web Vitals
+
+- **LCP** (Largest Contentful Paint): ≤2.5s
+- **INP** (Interaction to Next Paint): ≤200ms  
+- **CLS** (Cumulative Layout Shift): ≤0.1
+
+#### Дополнительные метрики
+
+- **FCP** (First Contentful Paint): ≤1.8s
+- **TTFB** (Time to First Byte): ≤800ms
+- **TBT** (Total Blocking Time): ≤200ms
+- **SI** (Speed Index): ≤3.4s
+
+#### Ресурсы
+
+- **Navigation Timing**: DNS, TCP, Request, Response
+- **Resource Timing**: Scripts, Stylesheets, Images, Fonts
+- **Memory Usage**: JS Heap Size (если доступно)
+
+### Команды
+
+#### Разработка
+
+```bash
+# Запуск dev сервера с мониторингом
+npm run dev
+
+# Тесты производительности
+npm test -- src/__tests__/performance/
+
+# Анализ бандла
+npm run build
+```
+
+#### Performance Testing
+
+```bash
+# Lighthouse CI (полный аудит)
+npx lhci autorun
+
+# Быстрая проверка одной страницы
+npx lighthouse http://localhost:3000 --view
+
+# Bundle analyzer
+npm run analyze
+```
+
+#### Мониторинг в продакшене
+
+```bash
+# Проверка health endpoint
+curl http://localhost:3000/api/health
+
+# Получение метрик
+curl http://localhost:3000/api/analytics/performance
+```
+
+### Конфигурация окружения
+
+#### Обязательные переменные
+
+```bash
+# .env.local
+NEXT_PUBLIC_ANALYTICS_ENABLED=true
+NEXT_PUBLIC_PERFORMANCE_SAMPLE_RATE=0.1
+ANALYTICS_API_KEY=your-api-key
+DATABASE_URL=postgresql://...
+```
+
+#### Опциональные переменные
+
+```bash
+NEXT_PUBLIC_DEBUG_PERFORMANCE=false
+PERFORMANCE_STORAGE_KEY=perf-metrics
+ANALYTICS_ENDPOINT=https://analytics.example.com
+```
+
+### Troubleshooting
+
+#### Общие проблемы
+
+1. **Метрики не собираются**
+   - Проверьте `NEXT_PUBLIC_ANALYTICS_ENABLED=true`
+   - Убедитесь что JavaScript включен
+   - Проверьте консоль браузера
+
+2. **API не отвечает**
+   - Проверьте `ANALYTICS_API_KEY`
+   - Убедитесь что сервер запущен
+   - Проверьте CORS настройки
+
+3. **Lighthouse CI падает**
+   - Убедитесь что сервер запущен на порту 3000
+   - Проверьте `lighthouserc.js` конфигурацию
+   - Увеличьте timeout если нужно
+
+#### Отладка
+
+```typescript
+// Включить debug режим
+localStorage.setItem('debug-performance', 'true');
+
+// Проверить состояние монитора
+console.log(PerformanceMonitor.getInstance().getConfig());
+
+// Ручная отправка тестовых данных
+await fetch('/api/analytics/performance', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ metrics: [], url: '/test' })
+});
 ```
 
 ## Optimization Strategies
@@ -212,10 +416,10 @@ Run `npm run bundle:analyze` to:
 
 4. **Check Web Vitals**
    ```typescript
-   import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+   import { getCLS, getINP, getFCP, getLCP, getTTFB } from 'web-vitals';
    
    getCLS(console.log);
-   getFID(console.log);
+   getINP(console.log);
    getFCP(console.log);
    getLCP(console.log);
    getTTFB(console.log);

@@ -1,19 +1,30 @@
-import { ReactNode, type ReactElement } from "react";
+'use client'
 
-export interface DashboardContainerProps {
-  children: ReactNode;
-  className?: string;
+import React from 'react'
+import { Sidebar } from '@/features/dashboard'
+
+interface DashboardContainerProps {
+  children: React.ReactNode
+  title?: string
+  className?: string
 }
 
-export default function DashboardContainer({
-  children,
-  className = "",
-}: DashboardContainerProps): ReactElement {
+export default function DashboardContainer({ 
+  children, 
+  title = "Dashboard",
+  className = ""
+}: DashboardContainerProps) {
   return (
-    <section
-      className={`w-full max-h-[calc(100vh-80px)] py-12 px-10 overflow-y-auto sm:px-6 md:px-8 lg:px-10 xl:px-12 ${className}`}
-    >
-      {children}
-    </section>
-  );
+    <div className={`flex min-h-screen bg-gray-50 ${className}`}>
+      <Sidebar className="w-64 bg-white shadow-sm" />
+      <main className="flex-1 p-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          {children}
+        </div>
+      </main>
+    </div>
+  )
 }

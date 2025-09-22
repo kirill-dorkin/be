@@ -1,6 +1,9 @@
+// Services
+export * from './taskService'
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
-import { UserRole } from "@/types"
+import { UserRole } from "@/shared/types"
 
 export async function checkUserPermission(requiredRole: UserRole) {
   try {

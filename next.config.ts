@@ -1,4 +1,5 @@
 import { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -9,8 +10,17 @@ const nextConfig: NextConfig = {
   },
   // Экспериментальные функции для максимальной производительности
   experimental: {
-    // Оптимизация сборки
-    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react', 'react-icons'],
+    // Оптимизация сборки и code splitting
+    optimizePackageImports: [
+      '@radix-ui/react-icons', 
+      'lucide-react',
+      '@hookform/resolvers',
+      'react-hook-form',
+      'zod',
+      'date-fns',
+      'clsx',
+      'tailwind-merge'
+    ],
     // Турбо режим для быстрой разработки
     turbo: {
       rules: {
@@ -22,8 +32,8 @@ const nextConfig: NextConfig = {
     },
     // Оптимизация CSS
     optimizeCss: true,
-    // Предзагрузка критических ресурсов
   },
+  
   // Сжатие и оптимизация
   compress: true,
   poweredByHeader: false,
@@ -32,8 +42,9 @@ const nextConfig: NextConfig = {
   // Output configuration for production
   output: 'standalone',
   
-  // External packages for server components
-  serverExternalPackages: ['mongoose', 'bcryptjs'],
+  // External packages for server components (исправленная конфигурация)
+  serverExternalPackages: ['mongoose', 'bcryptjs', 'sharp'],
+  
   // Оптимизация изображений
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -58,152 +69,222 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Агрессивные заголовки кэширования
+  
+  // Заголовки безопасности и производительности
   async headers() {
     return [
       {
-        source: "/api/:path*",
+        source: '/(.*)',
         headers: [
           {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
           },
           {
-            key: "Access-Control-Allow-Methods",
-            value: "GET, POST, PUT, DELETE",
+            key: 'X-Frame-Options',
+            value: 'DENY',
           },
           {
-            key: "Cache-Control",
-            value: "public, max-age=300, s-maxage=300, stale-while-revalidate=86400",
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
+              "font-src 'self' fonts.gstatic.com",
+              "img-src 'self' data: blob: https:",
+              "connect-src 'self'",
+              "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "object-src 'none'",
+            ].join('; '),
           },
         ],
       },
       {
-        source: "/(.*)",
+        source: '/api/(.*)',
         headers: [
           {
-            key: "X-DNS-Prefetch-Control",
-            value: "on",
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate',
           },
           {
-            key: "X-Frame-Options",
-            value: "DENY",
+            key: 'Pragma',
+            value: 'no-cache',
           },
           {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
-          },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
-          },
-          {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
+            key: 'Expires',
+            value: '0',
           },
         ],
       },
       {
-        source: "/static/:path*",
+        source: '/_next/static/(.*)',
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
       {
-        source: "/_next/static/:path*",
+        source: '/favicon.ico',
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        source: "/images/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000',
           },
         ],
       },
     ];
   },
-
-  // Redirects for SEO
+  
+  // Редиректы для SEO
   async redirects() {
     return [
       {
-        source: '/home',
-        destination: '/',
+        source: '/dashboard',
+        destination: '/admin/dashboard',
         permanent: true,
       },
     ];
   },
-
-  // Rewrites for API routes
+  
+  // Rewrites для API
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: '/api/:path*',
+        source: '/api/health',
+        destination: '/api/healthcheck',
       },
     ];
   },
-
-  // Оптимизация webpack
-  webpack: (config, { dev }) => {
-    // Оптимизация для продакшена
-    if (!dev) {
+  
+  // Webpack оптимизации
+  webpack: (config: any, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
+    // Оптимизация для production
+    if (!dev && !isServer) {
+      // Code splitting оптимизации
       config.optimization = {
         ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
         splitChunks: {
           chunks: 'all',
+          minSize: 20000,
+          maxSize: 200000,
           cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
+            // React и основные библиотеки
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+              name: 'react',
               chunks: 'all',
-              priority: 10,
+              priority: 30,
+              enforce: true,
             },
+            // Next.js специфичные модули
+            next: {
+              test: /[\\/]node_modules[\\/]next[\\/]/,
+              name: 'next',
+              chunks: 'all',
+              priority: 25,
+            },
+            // UI библиотеки (Radix UI)
+            ui: {
+              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+              name: 'ui-radix',
+              chunks: 'all',
+              priority: 20,
+            },
+            // Иконки
+            icons: {
+              test: /[\\/]node_modules[\\/](lucide-react|react-icons)[\\/]/,
+              name: 'icons',
+              chunks: 'all',
+              priority: 18,
+            },
+            // Формы и валидация
+            forms: {
+              test: /[\\/]node_modules[\\/](react-hook-form|@hookform|zod)[\\/]/,
+              name: 'forms',
+              chunks: 'all',
+              priority: 15,
+            },
+            // Утилиты
+            utils: {
+              test: /[\\/]node_modules[\\/](date-fns|clsx|tailwind-merge|class-variance-authority)[\\/]/,
+              name: 'utils',
+              chunks: 'all',
+              priority: 12,
+            },
+            // Общие компоненты приложения
             common: {
               name: 'common',
               minChunks: 2,
               chunks: 'all',
-              priority: 5,
+              priority: 8,
               reuseExistingChunk: true,
+              enforce: true,
+            },
+            // Остальные vendor библиотеки
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+              priority: 5,
+              maxSize: 150000,
             },
           },
         },
       };
     }
 
-    // Оптимизация SVG
+    // SVG оптимизация
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
 
+    // Алиасы для быстрого импорта
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+    };
+
     return config;
+  },
+  
+  // Настройки для анализа бандла
+  env: {
+    ANALYZE: process.env.ANALYZE || 'false',
   },
 };
 
-// Bundle analyzer support
 let config = nextConfig;
 
+// Bundle analyzer для анализа размера
 if (process.env.ANALYZE === 'true') {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: true,
   });
-  config = withBundleAnalyzer(nextConfig);
+  config = withBundleAnalyzer(config);
 }
 
 export default config;

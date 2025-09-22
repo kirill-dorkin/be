@@ -1,155 +1,178 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import useCustomToast from "@/hooks/useCustomToast";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import React, { useState } from 'react'
 
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import InputFormField from "@/components/InputFormField";
-import PhoneInputField from "@/components/PhoneInputField";
-import useGeoCountry from "@/hooks/useGeoCountry";
-import { isValidPhoneNumber } from "react-phone-number-input";
-import addTaskAction from "@/actions/dashboard/addTaskAction";
+interface AddTaskDialogProps {
+  isOpen: boolean
+  onClose: () => void
+  onAdd: (taskData: TaskFormData) => void
+}
 
-const TaskSchema = z.object({
-  description: z
-    .string()
-    .min(1, { message: "Описание обязательно" })
-    .max(255, { message: "Описание не может превышать 255 символов" }),
-  customerName: z
-    .string()
-    .min(1, { message: "Имя клиента обязательно" })
-    .max(100, { message: "Имя клиента не может превышать 100 символов" }),
-  customerPhone: z
-    .string()
-    .min(1, { message: "Телефон клиента обязателен" })
-    .refine(isValidPhoneNumber, { message: "Неверный номер телефона" }),
-  laptopBrand: z
-    .string()
-    .min(1, { message: "Марка ноутбука обязательна" })
-    .max(100, { message: "Марка ноутбука не может превышать 100 символов" }),
-  laptopModel: z
-    .string()
-    .min(1, { message: "Модель ноутбука обязательна" })
-    .max(100, { message: "Модель ноутбука не может превышать 100 символов" }),
-  totalCost: z
-    .number()
-    .min(0, { message: "Стоимость должна быть положительным числом" }),
-});
+interface TaskFormData {
+  title: string
+  description: string
+  priority: 'low' | 'medium' | 'high' | 'urgent'
+  assignedTo: string
+  dueDate: string
+}
 
-type TaskForm = z.infer<typeof TaskSchema>;
+const priorities = [
+  { value: 'low', label: 'Низкий' },
+  { value: 'medium', label: 'Средний' },
+  { value: 'high', label: 'Высокий' },
+  { value: 'urgent', label: 'Срочный' }
+] as const
 
-export function AddTaskDialog() {
-  const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
-  const country = useGeoCountry();
+const workers = [
+  'Алексей Петров',
+  'Мария Сидорова',
+  'Дмитрий Козлов',
+  'Анна Волкова',
+  'Сергей Новиков'
+]
 
-  const methods = useForm<TaskForm>({
-    resolver: zodResolver(TaskSchema),
-    defaultValues: {
+export default function AddTaskDialog({ isOpen, onClose, onAdd }: AddTaskDialogProps) {
+  const [formData, setFormData] = useState<TaskFormData>({
+    title: '',
+    description: '',
+    priority: 'medium',
+    assignedTo: '',
+    dueDate: ''
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onAdd(formData)
+    setFormData({
+      title: '',
       description: '',
-      customerName: '',
-      customerPhone: '',
-      laptopBrand: '',
-      laptopModel: '',
-      totalCost: 0,
-    },
-    mode: "onChange",
-  });
+      priority: 'medium',
+      assignedTo: '',
+      dueDate: ''
+    })
+    onClose()
+  }
 
-  const { handleSubmit, control, formState: { errors } } = methods;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-  const handleSubmitAction = async (data: TaskForm) => {
-    setLoading(true);
-    try {
-      const response = await addTaskAction(data);
-
-      if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
-      } else {
-        showSuccessToast({
-          title: "Успешно",
-          description: response.message || "Задача добавлена",
-        });
-      }
-    } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const taskFields = [
-    { name: "description", label: "Описание", type: "text" },
-    { name: "customerName", label: "Имя клиента", type: "text" },
-    { name: "customerPhone", label: "Телефон клиента", type: "text" },
-    { name: "laptopBrand", label: "Марка ноутбука", type: "text" },
-    { name: "laptopModel", label: "Модель ноутбука", type: "text" },
-    { name: "totalCost", label: "Стоимость", type: "number" },
-  ];
+  if (!isOpen) return null
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button size="lg">Добавить задачу</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] w-full max-w-lg px-6 py-4 overflow-y-auto max-h-[80vh]">
-        <DialogHeader>
-          <DialogTitle>Добавить задачу</DialogTitle>
-          <DialogDescription>
-            Заполните данные новой задачи и нажмите сохранить.
-          </DialogDescription>
-        </DialogHeader>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <h2 className="text-xl font-semibold mb-4">Добавить задачу</h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              Название задачи *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Введите название задачи"
+            />
+          </div>
 
-        <FormProvider {...methods}>
-          <form
-            onSubmit={handleSubmit(handleSubmitAction)}
-            className="space-y-4"
-          >
-            {taskFields.map((field) => (
-              field.name === "customerPhone" ? (
-                <PhoneInputField
-                  key={field.name}
-                  control={control}
-                  name={field.name as keyof TaskForm}
-                  label={field.label}
-                  defaultCountry={country}
-                />
-              ) : (
-                <InputFormField<TaskForm>
-                  key={field.name}
-                  control={control}
-                  name={field.name as keyof TaskForm}
-                  id={field.name}
-                  label={field.label}
-                  errors={errors}
-                  type={field.type as "text" | "email" | "password" | "number" | "textarea" | "image"}
-                />
-              )
-            ))}
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              Описание
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Описание задачи"
+            />
+          </div>
 
-            <DialogFooter>
-              <Button type="submit" disabled={loading} className="w-full py-2">
-              {loading ? "Сохранение..." : "Сохранить"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </FormProvider>
-      </DialogContent>
-    </Dialog>
-  );
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+                Приоритет *
+              </label>
+              <select
+                id="priority"
+                name="priority"
+                value={formData.priority}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {priorities.map((priority) => (
+                  <option key={priority.value} value={priority.value}>
+                    {priority.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700 mb-1">
+                Исполнитель
+              </label>
+              <select
+                id="assignedTo"
+                name="assignedTo"
+                value={formData.assignedTo}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Выберите исполнителя</option>
+                {workers.map((worker) => (
+                  <option key={worker} value={worker}>
+                    {worker}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
+              Срок выполнения
+            </label>
+            <input
+              type="datetime-local"
+              id="dueDate"
+              name="dueDate"
+              value={formData.dueDate}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            >
+              Отмена
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+            >
+              Добавить
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
 }

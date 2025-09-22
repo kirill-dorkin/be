@@ -1,0 +1,44 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerSession();
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Проверяем роль администратора
+    if (session.user?.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
+    return NextResponse.json(
+      { 
+        message: 'Admin panel access granted',
+        user: session.user 
+      },
+      {
+        status: 200,
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+        }
+      }
+    );
+
+  } catch (error) {
+    console.error('[Admin API Error]', error);
+    
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

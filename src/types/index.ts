@@ -1,38 +1,77 @@
-interface SearchParams {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-};
+// Общие типы для приложения
 
-type Status = 'Pending' | 'In Progress' | 'Completed';
-
-type UserRole = "admin" | "user" | "worker";
-
-interface Category {
-  _id?: string;
-  name: string;
+export interface SearchParams {
+  page?: string
+  perPage?: string
+  search?: string
+  status?: string
+  priority?: string
+  sort?: string
+  order?: 'asc' | 'desc'
 }
 
-interface Device {
-  _id?: string;
-  category: string;
-  brand: string;
-  model?: string;
+export interface PageProps {
+  searchParams: Promise<SearchParams>
 }
 
-interface Service {
-  _id?: string;
-  category: string;
-  name: string;
-  cost: number;
-  duration?: string;
+export interface User {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  role: 'admin' | 'worker' | 'client'
+  isActive: boolean
+  createdAt: Date
+  lastLogin?: Date
 }
 
-interface AddTaskActionParams {
-  description: string;
-  totalCost: number;
-  customerName: string;
-  customerPhone: string;
-  laptopBrand: string;
-  laptopModel: string;
+export interface Task {
+  id: string
+  title: string
+  description: string
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled'
+  priority: 'low' | 'medium' | 'high' | 'urgent'
+  assignedTo: string
+  createdAt: Date
+  updatedAt: Date
+  dueDate?: Date
+  estimatedHours?: number
+  actualHours?: number
+  clientName?: string
+  deviceType?: string
+  issueDescription?: string
 }
 
-export type { SearchParams, AddTaskActionParams, Status, UserRole, Device, Service, Category };
+export interface PaginationProps {
+  page: number
+  perPage: number
+  totalItems: number
+  totalPages: number
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean
+  data?: T
+  message?: string
+  error?: string
+}
+
+export interface SelectOption {
+  value: string
+  label: string
+}
+
+export interface FormField {
+  name: string
+  label: string
+  type: 'text' | 'email' | 'tel' | 'textarea' | 'select' | 'date' | 'number'
+  required?: boolean
+  placeholder?: string
+  options?: SelectOption[]
+  validation?: {
+    min?: number
+    max?: number
+    pattern?: string
+    message?: string
+  }
+}

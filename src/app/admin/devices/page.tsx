@@ -1,16 +1,18 @@
-import { SearchParams } from "@/types";
-import SelectShowing from "@/components/dashboard/SelectShowing";
-import DashboardContainer from "@/components/dashboard/DashboardContainer";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import DashboardContent from "@/components/dashboard/DashboardContent";
-import DashboardTitle from "@/components/dashboard/DashboardTitle";
-import DeviceTable from "@/components/dashboard/DeviceTable";
-import { AddDeviceDialog } from "@/components/dashboard/dialogs/AddDeviceDialog";
-import getDevicesAction from "@/actions/dashboard/getDevicesAction";
-import deleteDeviceAction from "@/actions/dashboard/deleteDeviceAction";
+import { PageProps } from "@/types";
+import DeviceTable from "@/features/dashboard/DeviceTable";
+import DashboardContainer from "@/features/dashboard/DashboardContainer";
+import DashboardHeader from "@/features/dashboard/DashboardHeader";
+import DashboardTitle from "@/features/dashboard/DashboardTitle";
+import SelectShowing from "@/features/dashboard/SelectShowing";
+import DashboardContent from "@/features/dashboard/DashboardContent";
+import { AddDeviceDialog } from "@/features/dashboard/dialogs/AddDeviceDialog";
 
-const DevicesPage = async ({ searchParams }: SearchParams) => {
-  const { page = "1", perPage = "5" } = await searchParams;
+import { getDevicesAction } from "@/actions/dashboard/getDevicesAction";
+import { deleteDeviceAction } from "@/actions/dashboard/deleteDeviceAction";
+
+const DevicesPage = async ({ searchParams }: PageProps) => {
+  const resolvedSearchParams = await searchParams;
+  const { page = "1", perPage = "5" } = resolvedSearchParams;
   const devicesResponse = (await getDevicesAction(
     Number(page),
     Number(perPage),

@@ -1,132 +1,192 @@
-"use client";
-import { useState, useEffect } from "react";
-import useCustomToast from "@/hooks/useCustomToast";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import InputFormField from "@/components/InputFormField";
-import addDeviceAction from "@/actions/dashboard/addDeviceAction";
-import getCategoriesAction from "@/actions/dashboard/getCategoriesAction";
-import { ICategory } from "@/models/Category";
+'use client'
 
-const DeviceSchema = z.object({
-  category: z.string().min(1),
-  brand: z.string().min(1, { message: "Бренд обязателен" }).max(100),
-  modelName: z.string().optional(),
-});
+import React, { useState } from 'react'
 
-type DeviceForm = z.infer<typeof DeviceSchema>;
+interface AddDeviceDialogProps {
+  isOpen: boolean
+  onClose: () => void
+  onAdd: (device: DeviceFormData) => void
+}
 
-export function AddDeviceDialog() {
-  const [loading, setLoading] = useState(false);
-  const { showSuccessToast, showErrorToast } = useCustomToast();
-  const [categories, setCategories] = useState<ICategory[]>([]);
+interface DeviceFormData {
+  name: string
+  brand: string
+  model: string
+  category: string
+  serialNumber: string
+  purchaseDate: string
+  warrantyExpiry?: string
+}
 
-  useEffect(() => {
-    getCategoriesAction(1, 100).then((res) => {
-      if (res.status === "success" && "items" in res) {
-        setCategories(res.items as unknown as ICategory[]);
-      }
-    });
-  }, []);
+export default function AddDeviceDialog({ isOpen, onClose, onAdd }: AddDeviceDialogProps) {
+  const [formData, setFormData] = useState<DeviceFormData>({
+    name: '',
+    brand: '',
+    model: '',
+    category: '',
+    serialNumber: '',
+    purchaseDate: '',
+    warrantyExpiry: ''
+  })
 
-  const methods = useForm<DeviceForm>({
-    resolver: zodResolver(DeviceSchema),
-    defaultValues: { category: "", brand: "", modelName: "" },
-    mode: "onChange",
-  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onAdd(formData)
+    setFormData({
+      name: '',
+      brand: '',
+      model: '',
+      category: '',
+      serialNumber: '',
+      purchaseDate: '',
+      warrantyExpiry: ''
+    })
+    onClose()
+  }
 
-  const {
-    handleSubmit,
-    reset,
-    control,
-  } = methods;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-  const handleSubmitAction = async (data: DeviceForm) => {
-    setLoading(true);
-    try {
-      const response = await addDeviceAction(data.category, data.brand, data.modelName || "");
-      if (response.status === "error") {
-        showErrorToast({ title: "Ошибка", description: response.message || "Произошла ошибка" });
-      } else {
-        showSuccessToast({ title: "Успешно", description: response.message || "Устройство добавлено" });
-        reset();
-      }
-    } catch (error) {
-      showErrorToast({
-        title: "Ошибка",
-        description: error instanceof Error ? error.message : "Не удалось добавить устройство",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!isOpen) return null
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Добавить устройство</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Добавить устройство</DialogTitle>
-          <DialogDescription>Укажите параметры устройства</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4">
-          <FormProvider {...methods}>
-            <InputFormField<DeviceForm>
-              name="brand"
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+        <h2 className="text-xl font-semibold mb-4">Добавить устройство</h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Название
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-1">
+              Бренд
+            </label>
+            <input
+              type="text"
               id="brand"
-              label="Бренд"
-              type="text"
-              control={control}
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <InputFormField<DeviceForm>
-              name="modelName"
-              id="modelName"
-              label="Модель (необязательно)"
+          </div>
+
+          <div>
+            <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-1">
+              Модель
+            </label>
+            <input
               type="text"
-              control={control}
+              id="model"
+              name="model"
+              value={formData.model}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <div className="flex flex-col gap-2">
-              <label className="text-sm" htmlFor="category">Категория</label>
-              <Select
-                value={methods.watch("category")}
-                onValueChange={(value) => methods.setValue("category", value)}
-              >
-                <SelectTrigger id="category">
-                  <SelectValue placeholder="Выбрать" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((c) => (
-                    <SelectItem key={c._id as string} value={c._id as string}>{c.name as string}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </FormProvider>
-          <DialogFooter className="pt-2">
-            <Button type="submit" disabled={loading}>Сохранить</Button>
-          </DialogFooter>
+          </div>
+
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+              Категория
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Выберите категорию</option>
+              <option value="smartphone">Смартфон</option>
+              <option value="tablet">Планшет</option>
+              <option value="laptop">Ноутбук</option>
+              <option value="desktop">Настольный ПК</option>
+              <option value="accessory">Аксессуар</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="serialNumber" className="block text-sm font-medium text-gray-700 mb-1">
+              Серийный номер
+            </label>
+            <input
+              type="text"
+              id="serialNumber"
+              name="serialNumber"
+              value={formData.serialNumber}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="purchaseDate" className="block text-sm font-medium text-gray-700 mb-1">
+              Дата покупки
+            </label>
+            <input
+              type="date"
+              id="purchaseDate"
+              name="purchaseDate"
+              value={formData.purchaseDate}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="warrantyExpiry" className="block text-sm font-medium text-gray-700 mb-1">
+              Окончание гарантии (опционально)
+            </label>
+            <input
+              type="date"
+              id="warrantyExpiry"
+              name="warrantyExpiry"
+              value={formData.warrantyExpiry}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+            >
+              Отмена
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Добавить
+            </button>
+          </div>
         </form>
-      </DialogContent>
-    </Dialog>
-  );
+      </div>
+    </div>
+  )
 }

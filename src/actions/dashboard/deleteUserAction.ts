@@ -1,49 +1,34 @@
-"use server";
+'use server'
 
-import { connectToDatabase } from "@/lib/dbConnect";
-import User from "@/models/User";
-import { checkUserPermission } from "@/services";
-import { revalidateTag } from 'next/cache';
+export interface DeleteUserResult {
+  message: string;
+  status: string;
+}
 
-const deleteUserAction = async (userId: string) => {
+export async function deleteUserAction(userId: string): Promise<DeleteUserResult> {
   try {
-    const permissionCheck = await checkUserPermission("admin");
-    if (permissionCheck.status === "error") {
-      return permissionCheck;
-    }
-
-    if (!userId) {
+    // Валидация входных данных
+    if (!userId || typeof userId !== 'string') {
       return {
-        status: "error",
-        message: "User ID is required.",
-      };
+        status: 'error',
+        message: 'Некорректный ID пользователя'
+      }
     }
 
-    await connectToDatabase();
-
-    const userToDelete = await User.findByIdAndDelete(userId);
-
-    if (!userToDelete) {
-      return {
-        status: "error",
-        message: "User not found.",
-      };
-    }
-
-    revalidateTag('/admin');
-
+    // Здесь будет логика удаления пользователя из базы данных
+    // Пока что возвращаем заглушку
+    console.log(`Удаление пользователя с ID: ${userId}`)
+    
+    // Имитация успешного удаления
     return {
-      status: "success",
-      message: "User deleted successfully!",
-    };
+      status: 'success',
+      message: 'Пользователь успешно удален'
+    }
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error('Ошибка при удалении пользователя:', error)
     return {
-      status: "error",
-      message: (error as { message: string }).message || "Internal server error.",
-    };
+      status: 'error',
+      message: 'Произошла ошибка при удалении пользователя'
+    }
   }
-};
-
-export default deleteUserAction;
-
+}

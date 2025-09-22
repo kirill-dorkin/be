@@ -1,16 +1,11 @@
+'use client';
+
 export interface ResourceMetric {
   name: string;
-  type: 'script' | 'stylesheet' | 'image' | 'fetch' | 'xmlhttprequest' | 'other';
+  type: string;
   size: number;
   duration: number;
   startTime: number;
-}
-
-export interface MemoryMetrics {
-  usedJSHeapSize: number;
-  totalJSHeapSize: number;
-  jsHeapSizeLimit: number;
-  usage: number; // percentage
 }
 
 export interface PageLoadMetrics {
@@ -18,23 +13,50 @@ export interface PageLoadMetrics {
   loadComplete: number;
   firstPaint: number;
   firstContentfulPaint: number;
-  total: number;
+  navigationStart: number;
+}
+
+export interface MemoryMetrics {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+  usagePercentage: number;
 }
 
 export class CustomPerformanceMetrics {
+  static measurePageLoad(): PageLoadMetrics | null {
+    if (typeof window === 'undefined' || !window.performance) {
+      return null;
+    }
+
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const paintEntries = performance.getEntriesByType('paint');
+
+    const firstPaint = paintEntries.find(entry => entry.name === 'first-paint')?.startTime || 0;
+    const firstContentfulPaint = paintEntries.find(entry => entry.name === 'first-contentful-paint')?.startTime || 0;
+
+    return {
+      domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
+      loadComplete: navigation.loadEventEnd - navigation.fetchStart,
+      firstPaint,
+      firstContentfulPaint,
+      navigationStart: navigation.fetchStart,
+    };
+  }
+
   static measureResourceCount(): ResourceMetric[] {
     if (typeof window === 'undefined' || !window.performance) {
       return [];
     }
 
-    const resources = window.performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+    const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
     
     return resources.map(resource => ({
       name: resource.name,
-      type: this.getResourceType(resource),
+      type: resource.initiatorType,
       size: resource.transferSize || 0,
-      duration: resource.duration,
-      startTime: resource.startTime
+      duration: resource.responseEnd - resource.requestStart,
+      startTime: resource.startTime,
     }));
   }
 
@@ -43,63 +65,72 @@ export class CustomPerformanceMetrics {
       return null;
     }
 
-    const memory = (performance as Performance & { memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
+    const memory = (performance as any).memory;
     
-    if (!memory) {
-      return null;
-    }
-    const usage = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
-
     return {
       usedJSHeapSize: memory.usedJSHeapSize,
       totalJSHeapSize: memory.totalJSHeapSize,
       jsHeapSizeLimit: memory.jsHeapSizeLimit,
-      usage: Math.round(usage * 100) / 100
+      usagePercentage: (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100,
     };
   }
 
-  static measurePageLoad(): PageLoadMetrics | null {
+  static measureNetworkTiming(): Record<string, number> | null {
     if (typeof window === 'undefined' || !window.performance) {
       return null;
     }
 
-    const navigation = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     
-    if (!navigation) {
-      return null;
-    }
-
     return {
-      domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
-      loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
-      firstPaint: this.getFirstPaint(),
-      firstContentfulPaint: this.getFirstContentfulPaint(),
-      total: navigation.loadEventEnd - navigation.startTime
+      dns: navigation.domainLookupEnd - navigation.domainLookupStart,
+      tcp: navigation.connectEnd - navigation.connectStart,
+      ssl: navigation.secureConnectionStart > 0 ? navigation.connectEnd - navigation.secureConnectionStart : 0,
+      ttfb: navigation.responseStart - navigation.requestStart,
+      download: navigation.responseEnd - navigation.responseStart,
     };
   }
 
-  private static getResourceType(resource: PerformanceResourceTiming): ResourceMetric['type'] {
-    const name = resource.name.toLowerCase();
+  static measureRenderTiming(): Record<string, number> | null {
+    if (typeof window === 'undefined' || !window.performance) {
+      return null;
+    }
+
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     
-    if (name.includes('.js') || name.includes('javascript')) return 'script';
-    if (name.includes('.css') || name.includes('stylesheet')) return 'stylesheet';
-    if (name.includes('.jpg') || name.includes('.png') || name.includes('.gif') || 
-        name.includes('.webp') || name.includes('.svg') || name.includes('.ico')) return 'image';
-    if (resource.initiatorType === 'fetch') return 'fetch';
-    if (resource.initiatorType === 'xmlhttprequest') return 'xmlhttprequest';
-    
-    return 'other';
+    return {
+      domProcessing: navigation.domComplete - navigation.domContentLoadedEventStart,
+      domInteractive: navigation.domInteractive - navigation.fetchStart,
+      domComplete: navigation.domComplete - navigation.fetchStart,
+      loadEvent: navigation.loadEventEnd - navigation.loadEventStart,
+    };
   }
 
-  private static getFirstPaint(): number {
-    const paintEntries = window.performance.getEntriesByType('paint');
-    const firstPaint = paintEntries.find(entry => entry.name === 'first-paint');
-    return firstPaint ? firstPaint.startTime : 0;
+  static clearMetrics(): void {
+    if (typeof window !== 'undefined' && window.performance && performance.clearResourceTimings) {
+      performance.clearResourceTimings();
+    }
   }
 
-  private static getFirstContentfulPaint(): number {
-    const paintEntries = window.performance.getEntriesByType('paint');
-    const fcp = paintEntries.find(entry => entry.name === 'first-contentful-paint');
-    return fcp ? fcp.startTime : 0;
+  static getPerformanceScore(): number {
+    const pageLoad = this.measurePageLoad();
+    const memory = this.measureMemoryUsage();
+    
+    if (!pageLoad) return 0;
+
+    let score = 100;
+
+    // Штрафы за медленную загрузку
+    if (pageLoad.firstContentfulPaint > 3000) score -= 20;
+    else if (pageLoad.firstContentfulPaint > 1800) score -= 10;
+
+    if (pageLoad.domContentLoaded > 5000) score -= 20;
+    else if (pageLoad.domContentLoaded > 3000) score -= 10;
+
+    // Штрафы за использование памяти
+    if (memory && memory.usagePercentage > 80) score -= 15;
+    else if (memory && memory.usagePercentage > 60) score -= 5;
+
+    return Math.max(0, score);
   }
 }

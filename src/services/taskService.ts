@@ -1,7 +1,7 @@
-import Task, { ITask } from '@/models/Task';
-import User, { IUser } from '@/models/User';
+import Task, { ITask } from '@/entities/task/Task';
+import User, { IUser } from '@/entities/user/User';
 import axios from 'axios';
-import { AddTaskActionParams } from "@/types";
+import { AddTaskActionParams } from "@/shared/types";
 import mongoose from 'mongoose';
 
 export const getWorkerWithLeastTasks = async (): Promise<IUser | null> => {

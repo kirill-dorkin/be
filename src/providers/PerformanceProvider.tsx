@@ -1,19 +1,20 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { performanceMonitor } from "@/lib/performance-monitor";
 
 interface PerformanceMetrics {
   lcp?: number;
-  fid?: number;
+  inp?: number;
   cls?: number;
   ttfb?: number;
   fcp?: number;
-  inp?: number;
 }
 
 interface PerformanceContextType {
   metrics: PerformanceMetrics;
   isLoading: boolean;
+  monitor: typeof performanceMonitor;
   reportMetric: (name: string, value: number) => void;
 }
 
@@ -43,63 +44,21 @@ export function PerformanceProvider({ children }: PerformanceProviderProps) {
   };
 
   useEffect(() => {
-    // Инициализация Web Vitals
+    // Простая инициализация без избыточной предзагрузки
     if (typeof window !== "undefined") {
-      // Предзагрузка критических ресурсов
-      const preloadCriticalResources = () => {
-        const criticalRoutes = ["/request", "/admin/dashboard", "/worker/my-tasks"];
-        
-        criticalRoutes.forEach(route => {
-          const link = document.createElement("link");
-          link.rel = "prefetch";
-          link.href = route;
-          document.head.appendChild(link);
-        });
-      };
-
-      // Оптимизация шрифтов
-      const optimizeFonts = () => {
-        const fontLinks = document.querySelectorAll('link[rel="preload"][as="font"]');
-        fontLinks.forEach(link => {
-          (link as HTMLLinkElement).crossOrigin = "anonymous";
-        });
-      };
-
-      // Инициализация после загрузки DOM
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-          preloadCriticalResources();
-          optimizeFonts();
-          setIsLoading(false);
-        });
-      } else {
-        preloadCriticalResources();
-        optimizeFonts();
+      const timer = setTimeout(() => {
         setIsLoading(false);
-      }
+      }, 100);
 
-      // Очистка неиспользуемых ресурсов
-      const cleanup = () => {
-        const unusedPrefetchLinks = document.querySelectorAll('link[rel="prefetch"]:not([data-keep])');
-        unusedPrefetchLinks.forEach(link => {
-          if (Date.now() - parseInt(link.getAttribute("data-timestamp") || "0") > 300000) { // 5 минут
-            link.remove();
-          }
-        });
-      };
-
-      const cleanupInterval = setInterval(cleanup, 60000); // Каждую минуту
-
-      return () => {
-        clearInterval(cleanupInterval);
-      };
+      return () => clearTimeout(timer);
     }
   }, []);
 
   const value: PerformanceContextType = {
     metrics,
     isLoading,
-    reportMetric
+    monitor: performanceMonitor,
+    reportMetric,
   };
 
   return (

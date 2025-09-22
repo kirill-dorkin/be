@@ -1,8 +1,17 @@
 'use client'
-import { ReactNode, useEffect } from "react";
-import Sidebar from "@/components/dashboard/Sidebar";
+import { ReactNode, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { preloadRoleComponents } from "@/shared/lib/code-splitting";
+import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
+
+// Lazy load Sidebar для уменьшения initial bundle
+import dynamic from "next/dynamic";
+
+const Sidebar = dynamic(() => import("@/features/dashboard/Sidebar"), {
+  loading: () => <LoadingSkeleton className="w-64 h-full" />,
+  ssr: false, // Sidebar не критичен для SSR
+});
 
 export default function AdminLayout({
   children,
@@ -17,21 +26,46 @@ export default function AdminLayout({
 
     if (session?.user?.role !== "admin") {
       router.push("/");
+      return;
     }
+
+    // Предзагружаем admin компоненты после успешной авторизации
+    preloadRoleComponents("admin");
   }, [session, status, router]);
 
+  // Показываем скелетон во время загрузки
   if (status === "loading") {
-    return null
+    return (
+      <div className="flex max-h-svh">
+        <LoadingSkeleton className="w-64 h-full" />
+        <div className="flex-1 p-6">
+          <LoadingSkeleton className="h-8 w-48 mb-4" />
+          <LoadingSkeleton className="h-64 w-full" />
+        </div>
+      </div>
+    );
   }
 
+  // Редирект для неавторизованных пользователей
   if (session?.user?.role !== "admin") {
     return null;
   }
 
   return (
     <div className="flex max-h-svh">
-      <Sidebar />
-      {children}
+      <Suspense fallback={<LoadingSkeleton className="w-64 h-full" />}>
+        <Sidebar />
+      </Suspense>
+      <main className="flex-1 overflow-auto">
+        <Suspense fallback={
+          <div className="p-6">
+            <LoadingSkeleton className="h-8 w-48 mb-4" />
+            <LoadingSkeleton className="h-64 w-full" />
+          </div>
+        }>
+          {children}
+        </Suspense>
+      </main>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/shared/ui/button"
 import Link from 'next/link'
-import RequestForm from '@/components/RequestForm'
+import RequestForm from '@/features/request-form/RequestForm'
 
 export default function RequestPage() {
   return (

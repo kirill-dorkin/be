@@ -1,14 +1,16 @@
-import { ReactNode, type ReactElement } from "react";
+'use client'
 
-export interface DashboardHeaderProps {
-  children: ReactNode;
-  className?: string;
+import React from 'react'
+
+interface DashboardHeaderProps {
+  children: React.ReactNode
+  className?: string
 }
 
-export default function DashboardHeader({
-  children,
-  className,
-}: DashboardHeaderProps): ReactElement {
-  return <div className={`pt-[12px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 sm:gap-12 ${className}`}>{children}</div>;
+export default function DashboardHeader({ children, className }: DashboardHeaderProps) {
+  return (
+    <div className={`flex items-center justify-between mb-6 pb-4 border-b border-gray-200 ${className || ''}`}>
+      {children}
+    </div>
+  )
 }
-

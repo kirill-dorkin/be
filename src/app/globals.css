@@ -5,6 +5,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font optimization styles */
+@layer base {
+  /* Critical font loading with fallbacks */
+  .critical-text {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-display: block;
+  }
+  
+  .non-critical-text {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-display: swap;
+  }
+  
+  /* Prevent layout shift during font loading */
+  .font-loading-fallback {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size-adjust: 0.5;
+  }
+  
+  /* Optimize font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+  
+  /* Preload critical font weights */
+  @font-face {
+    font-family: 'Inter-Critical';
+    font-weight: 400 600;
+    font-display: block;
+    src: local('Inter'), local('system-ui');
+  }
+}
+
+/* Shimmer animation for loading skeletons */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -308,5 +354,15 @@
 @layer components {
   .phone-input .PhoneInputInput {
     @apply flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+  }
+}
+
+/* Shimmer animation for skeleton loading */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }

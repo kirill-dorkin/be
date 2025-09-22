@@ -1,0 +1,25 @@
+module.exports = {
+  presets: [
+    ['@babel/preset-env', { targets: { node: 'current' } }],
+    ['@babel/preset-react', { runtime: 'automatic' }],
+    '@babel/preset-typescript',
+  ],
+  ignore: [
+    // Исключаем файлы с next/font из Babel
+    '**/font-optimization.tsx',
+    '**/fonts/**',
+  ],
+  env: {
+    test: {
+      presets: [
+        ['@babel/preset-env', { targets: { node: 'current' } }],
+        ['@babel/preset-react', { runtime: 'automatic' }],
+        '@babel/preset-typescript',
+      ],
+      ignore: [
+        '**/font-optimization.tsx',
+        '**/fonts/**',
+      ],
+    },
+  },
+}

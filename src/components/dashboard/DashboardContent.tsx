@@ -1,18 +1,15 @@
-import { ReactNode, type ReactElement } from "react";
+'use client'
 
-export interface DashboardContentProps {
-  children: ReactNode;
-  className?: string;
+import React from 'react'
+
+interface DashboardContentProps {
+  children: React.ReactNode
 }
 
-export default function DashboardContent({
-  children,
-  className = "",
-}: DashboardContentProps): ReactElement {
+export default function DashboardContent({ children }: DashboardContentProps) {
   return (
-    <div className={`w-full mt-12 overflow-visible ${className}`}>
+    <div className="space-y-6">
       {children}
     </div>
-  );
+  )
 }
-

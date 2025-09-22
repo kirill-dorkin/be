@@ -1,64 +1,33 @@
-"use client";
-import { Suspense, useEffect, type ReactElement } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import useLocalStorage from "@/hooks/useLocalStorage";
+'use client'
 
-const selectShowingItems = [
-  { value: "5" },
-  { value: "10" },
-  { value: "20" },
-  { value: "30" },
-];
+import React from 'react'
 
-export default function SelectShowing({ className }: { className?: string }): ReactElement {
-  const [totalItemsPerPage, setTotalItemsPerPage] = useLocalStorage(
-    "totalItemsPerPage",
-    "5",
-  );
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const handleSelectOnchange = (value: string) => {
-    setTotalItemsPerPage(value);
-  };
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", "1");
-    params.set("per_page", totalItemsPerPage);
-
-    router.push(`${pathname}?${params.toString()}`);
-  }, [totalItemsPerPage]);
-
-  return (
-    <Suspense>
-      <div className={`flex gap-6 items-center ${className}`}>
-        <p className="mt-0">Показать</p>
-        <Select
-          defaultValue={totalItemsPerPage}
-          onValueChange={handleSelectOnchange}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="5" />
-          </SelectTrigger>
-          <SelectContent>
-            {selectShowingItems.map(({ value }, index) => (
-              <SelectItem key={index} value={`${value}`}>
-                {value + " элементов"}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </Suspense>
-  );
+interface SelectShowingProps {
+  value: number
+  onChange: (value: number) => void
+  options?: number[]
 }
 
+export default function SelectShowing({ 
+  value, 
+  onChange, 
+  options = [10, 25, 50, 100] 
+}: SelectShowingProps) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-gray-600">Show</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <span className="text-sm text-gray-600">entries</span>
+    </div>
+  )
+}

@@ -1,19 +1,32 @@
-"use server"
-import { connectToDatabase } from "@/lib/dbConnect";
-import Category from "@/models/Category";
-import { serializeData } from "@/lib/utils";
+'use server'
 
-const getCategoriesAction = async (page: number = 1, limit: number = 5) => {
-  try {
-    const skip = (page - 1) * limit;
-    await connectToDatabase();
-    const categories = await Category.find().skip(skip).limit(limit).lean();
-    const totalItemsLength = await Category.countDocuments();
-    return { status: "success", items: serializeData(categories), totalItemsLength };
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return { status: "error", message: (error as { message: string }).message || "Internal server error." };
-  }
-};
+interface Category {
+  id: string
+  name: string
+  description?: string
+  createdAt: string
+}
 
-export default getCategoriesAction;
+export async function getCategoriesAction(page?: number, perPage?: number): Promise<{ items: Category[], totalItemsLength: number }> {
+  // Заглушка для получения категорий
+  // В реальном приложении здесь будет запрос к базе данных
+  const categories = [
+    {
+      id: '1',
+      name: 'Ремонт телефонов',
+      description: 'Ремонт мобильных устройств',
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: '2', 
+      name: 'Ремонт ноутбуков',
+      description: 'Ремонт портативных компьютеров',
+      createdAt: new Date().toISOString()
+    }
+  ];
+  
+  return {
+    items: categories,
+    totalItemsLength: categories.length
+  };
+}
