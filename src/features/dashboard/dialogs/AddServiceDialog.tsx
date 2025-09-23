@@ -29,7 +29,7 @@ import { ICategory } from "@/entities/category/Category";
 const ServiceSchema = z.object({
   category: z.string().min(1),
   name: z.string().min(1, { message: "Название обязательно" }).max(100),
-  cost: z.number().min(0, { message: "Стоимость должна быть положительной" }),
+  cost: z.coerce.number().min(0, { message: "Стоимость должна быть положительной" }),
   duration: z.string().optional(),
 });
 
@@ -62,6 +62,14 @@ export function AddServiceDialog({ onServiceAdded }: AddServiceDialogProps) {
     reset,
     control,
   } = methods;
+
+  // Нормализуем ввод стоимости: убираем не-цифры и ведущие нули
+  const handleCostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value ?? "";
+    const digitsOnly = raw.replace(/[^0-9]/g, "");
+    const normalized = digitsOnly.replace(/^0+(?=\d)/, "");
+    e.target.value = normalized;
+  };
 
   const handleSubmitAction = async (data: ServiceForm) => {
     setLoading(true);
@@ -105,6 +113,9 @@ export function AddServiceDialog({ onServiceAdded }: AddServiceDialogProps) {
               label="Стоимость"
               id="cost"
               type="number"
+              min={0}
+              step={1}
+              onChange={handleCostChange}
               control={control}
             />
             <InputFormField<ServiceForm>

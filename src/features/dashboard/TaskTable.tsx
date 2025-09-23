@@ -44,7 +44,11 @@ const TaskTableRow = memo(({
       <TableCell>{task.laptopBrand}</TableCell>
       <TableCell>{task.laptopModel}</TableCell>
       <TableCell>
-        <UpdateStatusSelect taskId={taskId} currentStatus={task.status} />
+        {role === "worker" ? (
+          <UpdateStatusSelect taskId={taskId} currentStatus={task.status} />
+        ) : (
+          <span>{task.status === 'Pending' ? 'В ожидании' : task.status === 'In Progress' ? 'В процессе' : task.status === 'Completed' ? 'Завершено' : task.status}</span>
+        )}
       </TableCell>
       <TableCell className={role === "admin" && !hideActions ? "" : "text-right"}>
         {task.totalCost} ₽
