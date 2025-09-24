@@ -30,7 +30,7 @@ import { Edit } from "lucide-react";
 const ServiceSchema = z.object({
   category: z.string().min(1),
   name: z.string().min(1, { message: "Название обязательно" }).max(100),
-  cost: z.number().min(0, { message: "Стоимость должна быть положительной" }),
+  cost: z.coerce.number().min(0, { message: "Стоимость должна быть положительной" }),
   duration: z.string().optional(),
 });
 
@@ -57,6 +57,14 @@ export function EditServiceDialog({ service, onServiceUpdated }: EditServiceDial
   });
 
   const { handleSubmit, control, reset } = methods;
+
+  // Нормализуем ввод стоимости: только цифры и без ведущих нулей
+  const handleCostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value ?? "";
+    const digitsOnly = raw.replace(/[^0-9]/g, "");
+    const normalized = digitsOnly.replace(/^0+(?=\d)/, "");
+    e.target.value = normalized;
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -137,7 +145,8 @@ export function EditServiceDialog({ service, onServiceUpdated }: EditServiceDial
               type="number"
               control={control}
               min={0}
-              step={0.01}
+              step={1}
+              onChange={handleCostChange}
             />
             <InputFormField<ServiceForm>
               name="duration"

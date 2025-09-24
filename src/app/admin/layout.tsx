@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { preloadRoleComponents } from "@/shared/lib/code-splitting";
 import LoadingSkeleton from "@/shared/ui/LoadingSkeleton";
 import useAppContext from "@/shared/lib/useAppContext";
-import { Icons } from "@/shared/ui/icons";
 
 // Обычный импорт Sidebar для диагностики
 import Sidebar from "@/features/dashboard/Sidebar";
@@ -55,25 +54,6 @@ export default function AdminLayout({
         <Sidebar />
       </Suspense>
       <main className="flex-1 overflow-auto">
-        {/* Header с кнопкой меню */}
-        <header className="bg-background border-b border-border p-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={toggleSidebar}
-              className="p-2 hover:bg-muted rounded-lg transition-colors"
-              aria-label="Открыть меню"
-            >
-              <Icons.menu className="h-6 w-6" />
-            </button>
-            <h1 className="text-xl font-semibold">Панель администратора</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">
-              {session?.user?.name || session?.user?.email}
-            </span>
-          </div>
-        </header>
-        
         {/* Контент */}
         <div className="p-6">
           <Suspense fallback={

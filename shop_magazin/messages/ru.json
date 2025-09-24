@@ -1,0 +1,834 @@
+{
+  "common": {
+    "buttons": {
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "add": "Добавить",
+      "update": "Обновить",
+      "submit": "Отправить",
+      "close": "Закрыть",
+      "confirm": "Подтвердить",
+      "back": "Назад",
+      "next": "Далее",
+      "previous": "Предыдущий",
+      "search": "Поиск",
+      "filter": "Фильтр",
+      "clear": "Очистить",
+      "reset": "Сбросить"
+    },
+    "navigation": {
+      "home": "Главная",
+      "products": "Товары",
+      "cart": "Корзина",
+      "checkout": "Оформление заказа",
+      "orders": "Заказы",
+      "admin": "Администратор",
+      "dashboard": "Панель управления",
+      "profile": "Профиль",
+      "settings": "Настройки",
+      "logout": "Выйти",
+      "login": "Войти",
+      "register": "Регистрация",
+      "favorites": "Избранное",
+      "menu": "Меню",
+      "tasks": "Задачи",
+      "users": "Пользователи",
+      "categories": "Категории",
+      "devices": "Устройства",
+      "services": "Услуги",
+      "myTasks": "Мои задачи",
+      "overview": "Обзор",
+      "management": "Управление",
+      "commerce": "Коммерция",
+      "work": "Работа",
+      "analytics": "Аналитика",
+      "projects": "Проекты",
+      "applications": "Приложения",
+      "notifications": "Уведомления"
+    },
+    "dashboard": {
+      "addTask": {
+        "addTask": "Добавить задачу",
+        "fillTaskData": "Заполните данные новой задачи и нажмите сохранить.",
+        "error": "Ошибка",
+        "success": "Успешно",
+        "unknownError": "Произошла неизвестная ошибка",
+        "saving": "Сохранение...",
+        "save": "Сохранить",
+        "fields": {
+          "description": "Описание",
+          "customerName": "Имя клиента",
+          "customerPhone": "Телефон клиента",
+          "laptopBrand": "Марка ноутбука",
+          "laptopModel": "Модель ноутбука",
+          "totalCost": "Стоимость"
+        },
+        "validation": {
+          "descriptionRequired": "Описание обязательно",
+          "descriptionMaxLength": "Описание не может превышать 255 символов",
+          "customerNameRequired": "Имя клиента обязательно",
+          "customerNameMaxLength": "Имя клиента не может превышать 100 символов",
+          "customerPhoneRequired": "Телефон клиента обязателен",
+          "invalidPhoneNumber": "Неверный номер телефона",
+          "laptopBrandRequired": "Марка ноутбука обязательна",
+          "laptopBrandMaxLength": "Марка ноутбука не может превышать 100 символов",
+          "laptopModelRequired": "Модель ноутбука обязательна",
+          "laptopModelMaxLength": "Модель ноутбука не может превышать 100 символов",
+          "costPositive": "Стоимость должна быть положительным числом"
+        }
+      }
+    },
+    "status": {
+      "loading": "Загрузка...",
+      "error": "Ошибка",
+      "success": "Успешно",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить",
+      "unknownError": "Произошла неизвестная ошибка",
+      "saving": "Сохранение...",
+      "save": "Сохранить",
+      "select": "Выбрать",
+      "updating": "Обновление...",
+      "warning": "Предупреждение",
+      "info": "Информация",
+      "pending": "В ожидании",
+      "completed": "Завершено",
+      "cancelled": "Отменено",
+      "active": "Активный",
+      "inactive": "Неактивный"
+    },
+    "messages": {
+      "confirmDelete": "Вы уверены, что хотите удалить этот элемент?",
+      "operationSuccess": "Операция выполнена успешно",
+      "operationError": "Произошла ошибка при выполнении операции",
+      "noData": "Нет данных",
+      "noResults": "Результаты не найдены",
+      "invalidInput": "Неверный ввод",
+      "requiredField": "Это поле обязательно для заполнения",
+      "emailInvalid": "Пожалуйста, введите корректный email адрес",
+      "passwordTooShort": "Пароль должен содержать не менее 8 символов"
+    },
+    "actions": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "table": {
+      "noData": "Нет данных для отображения",
+      "search": "Поиск..."
+    },
+    "today": "Сегодня"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Пароль",
+    "signIn": "Войти",
+    "invalidCredentials": "Неверный email или пароль",
+    "title": "Вход",
+    "forgotPassword": "Забыли пароль?",
+    "rememberMe": "Запомнить меня"
+  },
+  "profile": {
+    "title": "Профиль",
+    "subtitle": "Управление личной информацией",
+    "name": "Имя",
+    "email": "Электронная почта",
+    "role": "Роль",
+    "memberSince": "Участник с",
+    "edit": "Редактировать профиль",
+    "save": "Сохранить изменения",
+    "cancel": "Отмена",
+    "notLoggedIn": "Вам необходимо войти в систему для просмотра этой страницы",
+    "namePlaceholder": "Введите ваше имя",
+    "emailPlaceholder": "Введите вашу электронную почту",
+    "roles": {
+      "admin": "Администратор",
+      "worker": "Сотрудник",
+      "user": "Пользователь"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Админ панель",
+      "subtitle": "Управление интернет-магазином",
+      "stats": {
+        "totalProducts": "Всего товаров",
+        "orders": "Заказы",
+        "revenue": "Выручка",
+        "users": "Пользователи",
+        "active": "Активных: {count}",
+        "totalOrders": "Всего заказов",
+        "totalRevenue": "Общая сумма заказов",
+        "comingSoon": "Скоро доступно"
+      },
+      "quickActions": {
+        "title": "Быстрые действия",
+        "users": {
+          "addUser": "Добавить сотрудника",
+          "userDetails": "Укажите данные сотрудника",
+          "name": "Имя",
+          "email": "Email",
+          "password": "Пароль",
+          "nameRequired": "Имя обязательно",
+          "emailInvalid": "Некорректный email",
+          "passwordMinLength": "Пароль должен быть не менее 6 символов",
+          "addUserError": "Не удалось добавить пользователя",
+          "saving": "Сохранение..."
+        },
+        "productManagement": {
+          "title": "Управление товарами",
+          "description": "Добавить, редактировать или удалить товары",
+          "view": "Просмотр",
+          "add": "Добавить"
+        },
+        "orders": {
+          "title": "Заказы",
+          "description": "Просмотр и управление заказами",
+          "comingSoon": "Скоро доступно",
+          "view": "Просмотр"
+        },
+        "tasks": {
+          "title": "Задачи",
+          "description": "Управление задачами и проектами",
+          "view": "Просмотр"
+        },
+        "settings": {
+          "title": "Настройки",
+          "description": "Конфигурация магазина",
+          "comingSoon": "Скоро доступно"
+        },
+        "newTask": {
+          "title": "Новая задача",
+          "description": "Создать новую задачу"
+        },
+        "addUser": {
+          "title": "Добавить пользователя",
+          "description": "Добавить нового пользователя в систему"
+        },
+        "viewTasks": {
+          "title": "Просмотр задач",
+          "description": "Просмотреть все задачи"
+        },
+        "search": {
+          "title": "Поиск",
+          "description": "Поиск по системе"
+        },
+        "reports": {
+          "title": "Отчеты",
+          "description": "Просмотр отчетов и аналитики"
+        },
+        "notifications": {
+          "title": "Уведомления",
+          "description": "Управление уведомлениями"
+        }
+      },
+      "recentActivity": {
+        "title": "Последние действия",
+        "activityLog": "Журнал активности",
+        "description": "Здесь будут отображаться последние действия в системе"
+      },
+      "errors": {
+        "loadStats": "Ошибка при загрузке статистики",
+        "loadStatsFailed": "Не удалось загрузить статистику"
+      },
+      "activeTasks": "Активные задачи",
+      "pendingTasks": "Ожидающие задачи",
+      "inProgressTasks": "Задачи в работе",
+      "completedTasks": "Завершенные задачи",
+      "employeeList": {
+        "title": "Список сотрудников",
+        "description": "Подробный список всех сотрудников Best Electronics с основной информацией.",
+        "totalTasks": "Всего задач",
+        "noEmployeesFound": "Сотрудники не найдены"
+      }
+    },
+    "users": {
+      "title": "Пользователи",
+      "metadata": {
+        "title": "Управление пользователями - Админ панель",
+        "description": "Управление пользователями и их правами в системе"
+      },
+      "table": {
+        "name": "Имя",
+        "email": "Email",
+        "role": "Роль",
+        "status": "Статус",
+        "actions": "Действия",
+        "createdAt": "Дата создания",
+        "lastLogin": "Последний вход",
+        "registrationDate": "Дата регистрации",
+        "never": "Никогда",
+        "noUsers": "Пользователи не найдены",
+        "noUsersFound": "Пользователи не найдены",
+        "loading": "Загрузка пользователей...",
+        "photo": "Фото",
+        "totalTasks": "Всего задач"
+      },
+      "status": {
+        "active": "Активен",
+        "inactive": "Неактивен",
+        "pending": "В ожидании",
+        "suspended": "Заблокирован"
+      },
+      "roles": {
+        "admin": "Администратор",
+        "worker": "Сотрудник",
+        "user": "Пользователь"
+      }
+    },
+    "products": {
+      "title": "Товары",
+      "metadata": {
+        "title": "Управление товарами - Админ панель",
+        "description": "Добавление, редактирование и удаление товаров в интернет-магазине"
+      }
+    },
+    "orders": {
+      "title": "Заказы",
+      "description": "Просмотр и управление заказами",
+      "comingSoon": "Скоро доступно",
+      "metadata": {
+        "title": "Управление заказами",
+        "description": "Просмотр и управление заказами клиентов"
+      }
+    },
+    "categories": {
+      "title": "Категории",
+      "metadata": {
+        "title": "Управление категориями - Админ панель",
+        "description": "Управление категориями товаров и их организацией"
+      }
+    },
+    "services": {
+      "title": "Услуги"
+    },
+    "tasks": {
+      "title": "Задачи",
+      "metadata": {
+        "title": "Управление задачами - Админ панель",
+        "description": "Управление и отслеживание задач в системе"
+      }
+    },
+    "devices": {
+      "title": "Устройства"
+    },
+    "management": "Управление",
+    "addUser": "Добавить пользователя",
+    "addProduct": "Добавить товар",
+    "addCategory": "Добавить категорию",
+    "addService": "Добавить услугу",
+    "addTask": "Добавить задачу",
+    "addDevice": "Добавить устройство",
+    "editUser": "Редактировать пользователя",
+    "editProduct": "Редактировать товар",
+    "deleteUser": "Удалить пользователя",
+    "deleteProduct": "Удалить товар",
+    "userRole": "Роль пользователя",
+    "setRole": "Установить роль",
+    "status": "Статус",
+    "updateStatus": "Обновить статус",
+    "totalUsers": "Всего пользователей",
+    "totalProducts": "Всего товаров",
+    "totalOrders": "Всего заказов",
+    "revenue": "Выручка"
+  },
+  "auth": {
+    "login": "Вход",
+    "register": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "phone": "Телефон",
+    "forgotPassword": "Забыли пароль?",
+    "rememberMe": "Запомнить меня",
+    "signIn": "Войти",
+    "signUp": "Зарегистрироваться",
+    "signOut": "Выйти",
+    "invalidCredentials": "Неверный email или пароль",
+    "accountCreated": "Аккаунт успешно создан",
+    "loginSuccess": "Вход выполнен успешно",
+    "logoutSuccess": "Выход выполнен успешно",
+    "emailExists": "Email уже существует",
+    "passwordMismatch": "Пароли не совпадают"
+  },
+  "products": {
+    "title": "Товары",
+    "catalog": "Каталог товаров",
+    "foundProducts": "Найдено товаров: {count}",
+    "product": "Товар",
+    "name": "Название",
+    "description": "Описание",
+    "price": "Цена",
+    "category": "Категория",
+    "brand": "Бренд",
+    "model": "Модель",
+    "stock": "Склад",
+    "availability": "Наличие",
+    "image": "Изображение",
+    "inStock": "В наличии",
+    "outOfStock": "Нет в наличии",
+    "lowStock": "Мало в наличии",
+    "addToCart": "Добавить в корзину",
+    "buyNow": "Купить сейчас",
+    "addToFavorites": "Добавить в избранное",
+    "removeFromFavorites": "Удалить из избранного",
+    "viewDetails": "Подробнее",
+    "relatedProducts": "Похожие товары",
+    "specifications": "Характеристики",
+    "reviews": "Отзывы",
+    "rating": "Рейтинг",
+    "noReviews": "Пока нет отзывов",
+    "writeReview": "Написать отзыв",
+    "noProducts": "Товары не найдены",
+    "loading": "Загрузка товаров...",
+    "searchPlaceholder": "Поиск товаров...",
+    "sortBy": "Сортировать по",
+    "sortByName": "По названию",
+    "sortByPrice": "По цене",
+    "sortByDate": "По дате",
+    "filterBy": "Фильтровать по",
+    "filterByCategory": "Фильтр по категории",
+    "allCategories": "Все категории",
+    "priceRange": "Диапазон цен",
+    "from": "От",
+    "to": "До",
+    "apply": "Применить",
+    "clear": "Очистить",
+    "showAll": "Показать все",
+    "addedToCart": "Добавлено в корзину",
+    "addToCartError": "Не удалось добавить в корзину",
+    "favoritesError": "Не удалось обновить избранное",
+    "noImage": "Нет изображения",
+    "adding": "Добавление...",
+    "goToCart": "Перейти в корзину"
+  },
+  "cart": {
+    "quantityUpdated": "Количество обновлено",
+    "quantityUpdateError": "Не удалось обновить количество",
+    "itemRemoved": "Товар удален из корзины",
+    "removeError": "Не удалось удалить товар",
+    "cartCleared": "Корзина очищена",
+    "clearError": "Не удалось очистить корзину",
+    "clearCart": "Очистить корзину",
+    "empty": "Ваша корзина пуста",
+    "emptyDescription": "Добавьте товары, чтобы начать",
+    "continueShopping": "Продолжить покупки",
+    "noPhoto": "Нет фото",
+    "perItem": "за единицу",
+    "orderSummary": "Итого по заказу",
+    "pcs": "шт",
+    "shipping": "Доставка",
+    "proceedToCheckout": "Перейти к оформлению",
+    "metadata": {
+      "title": "Корзина - Интернет-магазин",
+      "description": "Просмотр и управление товарами в корзине"
+    }
+  },
+  "checkout": {
+    "metadata": {
+      "title": "Оформление заказа - Интернет-магазин",
+      "description": "Оформление заказа и выбор способа доставки"
+    }
+  },
+  "contacts": {
+    "title": "Свяжитесь с нами",
+    "name": "Имя",
+    "email": "Email",
+    "message": "Сообщение",
+    "send": "Отправить сообщение",
+    "messageSent": "Сообщение отправлено!",
+    "nameRequired": "Имя обязательно",
+    "emailRequired": "Email обязателен",
+    "messageRequired": "Сообщение обязательно"
+  },
+  "pagination": {
+    "previous": "Предыдущая",
+    "next": "Следующая",
+    "page": "Страница",
+    "of": "из"
+  },
+  "tasks": {
+    "title": "Задачи",
+    "myTasks": "Мои задачи",
+    "task": "Задача",
+    "description": "Описание",
+    "customer": "Клиент",
+    "phone": "Телефон",
+    "laptop": "Ноутбук",
+    "cost": "Стоимость",
+    "totalCost": "Общая стоимость",
+    "customerName": "Имя клиента",
+    "customerPhone": "Телефон клиента",
+    "laptopBrand": "Бренд ноутбука",
+    "laptopModel": "Модель ноутбука",
+    "noTasks": "Задачи не найдены",
+    "employeesNotFound": "Сотрудники не найдены",
+    "totalTasks": "Всего задач"
+  },
+  "worker": {
+    "panel": "Панель сотрудника",
+    "myTasks": "Мои задачи"
+  },
+  "request": {
+    "title": "Заявка на обслуживание",
+    "submit": "Отправить заявку"
+  },
+  "orders": {
+    "title": "Заказы",
+    "myOrders": "Мои заказы",
+    "orderHistoryDescription": "История ваших покупок и текущие заказы",
+    "order": "Заказ",
+    "orderDetails": "Детали заказа",
+    "orderHistory": "История заказов",
+    "orderNumber": "Номер заказа",
+    "orderDate": "Дата заказа",
+    "orderStatus": "Статус заказа",
+    "orderTotal": "Итого",
+    "orderItems": "Товары в заказе",
+    "quantity": "Количество",
+    "price": "Цена",
+    "total": "Итого",
+    "subtotal": "Подытог",
+    "shipping": "Доставка",
+    "tax": "Налог",
+    "discount": "Скидка",
+    "status": {
+      "pending": "Ожидает",
+      "processing": "Обрабатывается",
+      "shipped": "Отправлен",
+      "delivered": "Доставлен",
+      "cancelled": "Отменен"
+    },
+    "noOrders": "У вас пока нет заказов",
+    "viewOrder": "Посмотреть заказ",
+    "cancelOrder": "Отменить заказ",
+    "reorder": "Заказать снова",
+    "trackOrder": "Отследить заказ"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "noFavorites": "Нет избранных товаров",
+    "addedToFavorites": "Добавлено в избранное",
+    "removedFromFavorites": "Удалено из избранного"
+  },
+  "services": {
+    "addService": "Добавить услугу",
+    "serviceDetails": "Детали услуги",
+    "name": "Название",
+    "cost": "Стоимость",
+    "duration": "Длительность (например, 2 дня)",
+    "category": "Категория",
+    "nameRequired": "Название обязательно",
+    "costMustBePositive": "Стоимость должна быть положительной",
+    "addServiceError": "Не удалось добавить услугу"
+  },
+  "devices": {
+    "addDevice": "Добавить устройство",
+    "deviceDetails": "Укажите параметры устройства",
+    "brand": "Бренд",
+    "model": "Модель (необязательно)",
+    "category": "Категория",
+    "brandRequired": "Бренд обязателен",
+    "addDeviceError": "Не удалось добавить устройство"
+  },
+  "categories": {
+    "addCategory": "Добавить категорию",
+    "categoryDetails": "Укажите название категории",
+    "name": "Название",
+    "nameRequired": "Название обязательно",
+    "addCategoryError": "Не удалось добавить категорию"
+  },
+  "productManagement": {
+    "title": "Управление товарами",
+    "subtitle": "Добавление, редактирование и удаление товаров",
+    "addProduct": "Добавить товар",
+    "editProduct": "Редактировать товар",
+    "deleteProduct": "Удалить товар",
+    "activateProduct": "Активировать товар",
+    "deactivateProduct": "Деактивировать товар",
+    "searchPlaceholder": "Поиск товаров по названию или категории...",
+    "noProducts": "Нет товаров",
+    "noProductsFound": "Товары не найдены",
+    "noProductsDescription": "Добавьте первый товар",
+    "noProductsFoundDescription": "Попробуйте изменить поисковый запрос",
+    "form": {
+      "name": "Название",
+      "namePlaceholder": "Введите название товара",
+      "description": "Описание",
+      "descriptionPlaceholder": "Введите описание товара",
+      "price": "Цена",
+      "category": "Категория",
+      "categoryPlaceholder": "Введите категорию товара",
+      "stockQuantity": "Количество",
+      "images": "Изображения",
+      "imagePlaceholder": "URL изображения",
+      "inStock": "Товар в наличии",
+      "required": "*",
+      "save": "Сохранить",
+      "create": "Создать",
+      "update": "Обновить",
+      "cancel": "Отмена",
+      "saving": "Сохранение..."
+    },
+    "labels": {
+      "category": "Категория:",
+      "inStock": "В наличии:",
+      "pieces": "шт."
+    },
+    "messages": {
+      "loadError": "Ошибка",
+      "loadErrorDescription": "Ошибка при загрузке товаров",
+      "createError": "Ошибка",
+      "createErrorDescription": "Ошибка при создании товара",
+      "updateError": "Ошибка",
+      "updateErrorDescription": "Ошибка при обновлении товара",
+      "deleteError": "Ошибка",
+      "deleteErrorDescription": "Ошибка при удалении товара",
+      "statusError": "Ошибка",
+      "statusErrorDescription": "Ошибка при изменении статуса товара",
+      "validationError": "Ошибка валидации",
+      "validationErrorDescription": "Заполните все обязательные поля",
+      "success": "Успех",
+      "productCreated": "Товар создан",
+      "productUpdated": "Товар обновлен",
+      "productDeleted": "Товар удален",
+      "productActivated": "активирован",
+      "productDeactivated": "деактивирован",
+      "deleteConfirm": "Вы уверены, что хотите удалить товар"
+    }
+  },
+  "home": {
+    "welcome": "Добро пожаловать",
+    "featuredProducts": "Рекомендуемые товары",
+    "viewAll": "Посмотреть все",
+    "laptops": "Ноутбуки"
+  },
+  "contacts": {
+    "title": "Свяжитесь с нами",
+    "address": "Кулатова 8/1, Бишкек",
+    "description": "Мы всегда рады ответить на ваши вопросы.",
+    "form": {
+      "namePlaceholder": "Ваше имя",
+      "emailPlaceholder": "Email",
+      "messagePlaceholder": "Ваше сообщение",
+      "submit": "Отправить",
+      "messageSent": "Сообщение отправлено!"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "welcome": "Добро пожаловать",
+      "welcomeUser": "Добро пожаловать, {name}",
+      "hello": "Привет"
+    },
+    "addTask": {
+      "addTask": "Добавить задачу",
+      "fillTaskData": "Заполните данные новой задачи и нажмите сохранить.",
+      "error": "Ошибка",
+      "success": "Успешно",
+      "unknownError": "Произошла неизвестная ошибка",
+      "saving": "Сохранение...",
+      "save": "Сохранить",
+      "fields": {
+        "description": "Описание",
+        "customerName": "Имя клиента",
+        "customerPhone": "Телефон клиента",
+        "laptopBrand": "Марка ноутбука",
+        "laptopModel": "Модель ноутбука",
+        "totalCost": "Стоимость"
+      },
+      "validation": {
+        "descriptionRequired": "Описание обязательно",
+        "descriptionMaxLength": "Описание не может превышать 255 символов",
+        "customerNameRequired": "Имя клиента обязательно",
+        "customerNameMaxLength": "Имя клиента не может превышать 100 символов",
+        "customerPhoneRequired": "Телефон клиента обязателен",
+        "invalidPhoneNumber": "Неверный номер телефона",
+        "laptopBrandRequired": "Марка ноутбука обязательна",
+        "laptopBrandMaxLength": "Марка ноутбука не может превышать 100 символов",
+        "laptopModelRequired": "Модель ноутбука обязательна",
+        "laptopModelMaxLength": "Модель ноутбука не может превышать 100 символов",
+        "costPositive": "Стоимость должна быть положительным числом"
+      }
+    }
+  },
+  "hero": {
+    "title": "Best Electronics",
+    "subtitle": "Профессиональный ремонт и модернизация электроники",
+    "description": "Доверьте свои устройства экспертам. Качественный сервис с гарантированным результатом.",
+    "orderRepair": "Заказать ремонт",
+    "viewProducts": "Посмотреть товары",
+    "goToDashboard": "Перейти в панель управления",
+    "logout": "Выйти"
+  },
+  "features": {
+    "title": "Наши преимущества",
+    "items": {
+      "fastRepair": {
+        "title": "Скоростной ремонт",
+        "description": "Выполняем диагностику и ремонт в кратчайшие сроки."
+      },
+      "modernEquipment": {
+        "title": "Современное оборудование",
+        "description": "Используем профессиональные инструменты и оригинальные детали."
+      },
+      "qualityGuarantee": {
+        "title": "Гарантия качества",
+        "description": "Предоставляем гарантию на все виды работ и запчастей."
+      },
+      "affordablePrices": {
+        "title": "Доступные цены",
+        "description": "Честная стоимость ремонта без скрытых платежей."
+      }
+    }
+  },
+  "reviews": {
+    "title": "Отзывы клиентов",
+    "items": {
+      "review1": "Отличный сервис и быстрый ремонт.",
+      "review2": "Помогли вернуть ноутбук к жизни.",
+      "review3": "Качественно объяснили причину поломки и быстро исправили.",
+      "review4": "Спасибо за профессиональный подход!"
+    }
+  },
+  "api": {
+    "errors": {
+      "unauthorized": "Необходима авторизация",
+      "accessDenied": "Доступ запрещен",
+      "invalidId": "Неверный ID",
+      "invalidProductId": "Неверный ID товара",
+      "invalidOrderId": "Неверный ID заказа",
+      "productNotFound": "Товар не найден",
+      "orderNotFound": "Заказ не найден",
+      "cartNotFound": "Корзина не найдена",
+      "itemNotFoundInCart": "Товар не найден в корзине",
+      "favoriteNotFound": "Товар не найден в избранном",
+      "quantityMustBePositive": "Количество должно быть больше 0",
+      "insufficientStock": "Недостаточно товара на складе",
+      "productAlreadyInFavorites": "Товар уже в избранном",
+      "skuAlreadyExists": "SKU уже существует",
+      "fillRequiredFields": "Заполните все обязательные поля",
+      "fillDeliveryAddress": "Заполните адрес доставки",
+      "cartIsEmpty": "Корзина пуста",
+      "cannotCancelOrder": "Заказ нельзя отменить в текущем статусе",
+      "productIdRequired": "ID товара обязателен",
+      "fetchingProducts": "Ошибка при получении товаров",
+      "fetchingProduct": "Ошибка при получении товара",
+      "updatingProduct": "Ошибка при обновлении товара",
+      "deletingProduct": "Ошибка при удалении товара",
+      "creatingProduct": "Ошибка при создании товара",
+      "fetchingOrders": "Ошибка при получении заказов",
+      "fetchingOrder": "Ошибка при получении заказа",
+      "updatingOrder": "Ошибка при обновлении заказа",
+      "cancellingOrder": "Ошибка при отмене заказа",
+      "creatingOrder": "Ошибка при создании заказа",
+      "fetchingCart": "Ошибка при получении корзины",
+      "addingToCart": "Ошибка при добавлении в корзину",
+      "updatingCart": "Ошибка при обновлении корзины",
+      "clearingCart": "Ошибка при очистке корзины",
+      "removingFromCart": "Ошибка при удалении товара из корзины",
+      "fetchingFavorites": "Ошибка при получении избранного",
+      "addingToFavorites": "Ошибка при добавлении в избранное",
+      "removingFromFavorites": "Ошибка при удалении из избранного",
+      "clearingFavorites": "Ошибка при очистке избранного"
+    },
+    "messages": {
+      "productAddedToFavorites": "Товар добавлен в избранное",
+      "itemRemovedFromCart": "Товар удален из корзины",
+      "orderCancelled": "Заказ отменен",
+      "cartCleared": "Корзина очищена",
+      "itemRemovedFromFavorites": "Товар удален из избранного",
+      "favoritesCleared": "Удалено {count} товаров из избранного"
+    }
+  },
+  "orderManagement": {
+    "title": "Управление заказами",
+    "filters": {
+      "title": "Фильтры",
+      "searchPlaceholder": "Поиск по ID заказа, имени или email...",
+      "statusPlaceholder": "Выберите статус",
+      "allStatuses": "Все статусы"
+    },
+    "status": {
+      "pending": "Ожидает",
+      "processing": "В обработке",
+      "shipped": "Отправлен",
+      "delivered": "Доставлен",
+      "cancelled": "Отменен"
+    },
+    "noOrders": "Заказы не найдены",
+    "unknownUser": "Неизвестный пользователь",
+    "noEmail": "Email не указан",
+    "items": "Товары",
+    "viewDetails": "Подробнее",
+    "messages": {
+      "loadError": "Ошибка загрузки",
+      "loadErrorDescription": "Не удалось загрузить заказы",
+      "updateError": "Ошибка обновления",
+      "updateErrorDescription": "Не удалось обновить статус заказа",
+      "updateSuccess": "Успешно обновлено",
+      "updateSuccessDescription": "Статус заказа успешно обновлен"
+    }
+  },
+  "validation": {
+    "customerNameLettersOnly": "Имя клиента должно содержать только буквы"
+  },
+  "requestForm": {
+    "problemDescription": "Описание проблемы",
+    "device": "Устройство",
+    "selectDevice": "Выберите устройство",
+    "service": "Услуга",
+    "selectService": "Выберите услугу",
+    "currency": "сом",
+    "customerName": "Имя клиента",
+    "customerPhone": "Телефон клиента",
+    "estimatedCost": "Предварительная стоимость: {cost} сом",
+    "submitting": "Отправка...",
+    "submitRequest": "Отправить заявку",
+    "error": "Ошибка",
+    "success": "Успешно",
+    "unknownError": "Произошла неизвестная ошибка",
+    "validation": {
+      "descriptionRequired": "Описание обязательно",
+      "descriptionMaxLength": "Описание не может превышать 255 символов",
+      "customerNameRequired": "Имя клиента обязательно",
+      "customerNameMaxLength": "Имя клиента не может превышать 100 символов",
+      "customerNameLettersOnly": "Имя клиента должно содержать только буквы",
+      "customerPhoneRequired": "Телефон клиента обязателен",
+      "phoneInvalid": "Неверный номер телефона",
+      "laptopBrandRequired": "Марка ноутбука обязательна",
+      "laptopBrandMaxLength": "Марка ноутбука не может превышать 100 символов",
+      "laptopModelRequired": "Модель ноутбука обязательна",
+      "laptopModelMaxLength": "Модель ноутбука не может превышать 100 символов",
+      "totalCostPositive": "Общая стоимость должна быть положительной"
+    }
+  },
+  "delivery": {
+    "title": "Доставка",
+    "subtitle": "Выберите способ доставки",
+    "free": "Бесплатно",
+    "deliveryInfo": "Информация о доставке",
+    "address": "Адрес",
+    "addressPlaceholder": "Введите ваш адрес",
+    "city": "Город",
+    "postalCode": "Почтовый индекс",
+    "country": "Страна"
+  },
+  "payment": {
+    "title": "Оплата",
+    "subtitle": "Выберите способ оплаты",
+    "paymentMethod": "Способ оплаты",
+    "comment": "Комментарий",
+    "commentPlaceholder": "Дополнительные комментарии (необязательно)",
+    "yourOrder": "Ваш заказ",
+    "items": "Товары",
+    "total": "Итого",
+    "processing": "Обработка...",
+    "placeOrder": "Оформить заказ",
+    "backToCart": "Вернуться в корзину"
+  }
+}

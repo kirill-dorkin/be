@@ -1,0 +1,98 @@
+import { NextAuthOptions, getServerSession } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { getUserByEmail } from "./lib/dbUtils";
+import bcrypt from "bcryptjs";
+import { connectToDatabase } from "@/lib/dbConnect";
+import { randomBytes } from "crypto";
+
+const authSecret =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  randomBytes(32).toString("hex");
+
+export const authOptions: NextAuthOptions = {
+  secret: authSecret,
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials) return null;
+        try {
+          await connectToDatabase();
+          const user = await getUserByEmail(credentials.email);
+          if (!user || !user.passwordHash) {
+            return null;
+          }
+          const isValid = await bcrypt.compare(credentials.password, user.passwordHash);
+          if (!isValid) {
+            return null;
+          }
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+          } as {
+            id: string;
+            email: string;
+            name: string;
+            image?: string;
+            role: string;
+          };
+        } catch (error) {
+          console.error("Error during credentials authorize", error);
+          return null;
+        }
+      },
+    }),
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+        token.image = user.image;
+        token.name = user.name;
+        token.email = user.email;
+        token.id = user.id;
+        // Generate access token for admin users
+        if (user.role === 'admin') {
+          token.accessToken = `admin-${user.id}-${Date.now()}`;
+        }
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token) {
+        session.user.role = token.role as string;
+        session.user.email = token.email as string;
+        session.user.image = token.image as string;
+        session.user.name = token.name as string;
+        session.user.id = token.id as string;
+        session.accessToken = token.accessToken as string;
+      }
+      return session;
+    },
+  },
+  events: {
+    async signOut() {
+      // Clear any cached data on sign out
+    },
+  },
+  logger: {
+    error(code, metadata) {
+      if (code === 'JWT_SESSION_ERROR') {
+        // Ignore JWT session errors caused by secret key changes
+        return;
+      }
+      console.error(code, metadata);
+    },
+  },
+};
+
+export const getSession = () => getServerSession(authOptions);
