@@ -8,6 +8,8 @@ import { ToastProvider } from "./ToastProvider";
 // import { PerformanceMonitorInit } from "@/components/PerformanceMonitorInit";
 // import { Toaster } from "@/shared/ui/toaster";
 import { ReactNode } from "react";
+import { CartProvider } from "@/providers/CartProvider";
+import { FavoritesProvider } from "@/providers/FavoritesProvider";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -21,7 +23,11 @@ export function Providers({ children, session }: ProvidersProps) {
         {/* <PerformanceProvider> */}
           {/* <WebVitalsProvider enableInDevelopment={true}> */}
             {/* <PerformanceMonitorInit /> */}
-            {children}
+            <CartProvider>
+              <FavoritesProvider>
+                {children}
+              </FavoritesProvider>
+            </CartProvider>
             <ToastProvider />
             {/* <Toaster /> */}
           {/* </WebVitalsProvider> */}

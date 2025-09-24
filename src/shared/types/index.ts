@@ -50,3 +50,70 @@ export type {
   Service, 
   Category 
 }
+
+// Shop domain types
+interface ProductCategory {
+  _id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
+interface ProductTag {
+  _id?: string;
+  name: string;
+  slug: string;
+}
+
+interface Product {
+  _id?: string;
+  title: string;
+  slug: string;
+  description?: string;
+  price: number;
+  currency: string;
+  images: string[];
+  categoryId?: string;
+  stock: number;
+  isActive: boolean;
+  tags?: string[]; // tag _ids
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface CartItem {
+  productId: string;
+  slug: string;
+  title: string;
+  price: number;
+  quantity: number;
+  currency: string;
+  image?: string;
+}
+
+interface OrderAddress {
+  fullName: string;
+  phone: string;
+  email: string;
+  country: string;
+  city: string;
+  addressLine1: string;
+  addressLine2?: string;
+  postalCode?: string;
+}
+
+type OrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+
+interface Order {
+  _id?: string;
+  userId?: string;
+  items: CartItem[];
+  total: number;
+  currency: string;
+  status: OrderStatus;
+  address: OrderAddress;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export type { ProductCategory, ProductTag, Product, CartItem, Order, OrderStatus, OrderAddress };
