@@ -1,6 +1,7 @@
 import BaseContainer from "@/shared/ui/BaseContainer";
 import { shopStore } from "@/shared/lib/shopStore";
 import { notFound } from "next/navigation";
+import ClientHeader from "@/widgets/header/ClientHeader";
 import { ProductDetails } from "../_components/ProductDetails";
 import type { SerializableProduct } from "../_components/types";
 
@@ -29,10 +30,13 @@ export default async function ProductPage({ params }: { params: { slug: string }
     .filter((tag): tag is NonNullable<typeof tag> => Boolean(tag));
 
   return (
-    <main className="min-h-screen bg-slate-50 py-10">
-      <BaseContainer>
-        <ProductDetails product={serializableProduct} categoryName={categoryName} tags={relatedTags} />
-      </BaseContainer>
-    </main>
+    <>
+      <ClientHeader />
+      <main className="flex min-h-screen flex-col bg-white pt-[var(--header-height)]">
+        <BaseContainer className="py-16">
+          <ProductDetails product={serializableProduct} categoryName={categoryName} tags={relatedTags} />
+        </BaseContainer>
+      </main>
+    </>
   );
 }

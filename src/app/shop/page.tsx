@@ -1,5 +1,7 @@
-import BaseContainer from "@/shared/ui/BaseContainer";
+import ClientHeader from "@/widgets/header/ClientHeader";
+import { Section } from "@/shared/ui/launchui";
 import { shopStore } from "@/shared/lib/shopStore";
+import BaseContainer from "@/shared/ui/BaseContainer";
 import type { Product, ProductCategory, ProductTag } from "@/shared/types";
 import { ShopHero } from "./_components/ShopHero";
 import { ShopPageClient } from "./_components/ShopPageClient";
@@ -69,7 +71,19 @@ function validateTags(tagSlugs: string[], tags: ProductTag[]): string[] {
   return tagSlugs.filter((slug) => allowed.has(slug));
 }
 
-export default async function ShopPage({ searchParams }: { searchParams?: ShopSearchParams }) {
+type ShopPageProps = {
+  searchParams?: ShopSearchParams | Promise<ShopSearchParams | undefined>;
+};
+
+async function resolveSearchParams(params: ShopPageProps["searchParams"]): Promise<ShopSearchParams | undefined> {
+  if (!params) return undefined;
+  if (typeof (params as Promise<unknown>)?.then === "function") {
+    return (await params) ?? undefined;
+  }
+  return params as ShopSearchParams;
+}
+
+export default async function ShopPage(props: ShopPageProps) {
   const products = shopStore.listProducts();
   const categories = shopStore.listCategories();
   const allTags = shopStore.listTags();
@@ -81,7 +95,8 @@ export default async function ShopPage({ searchParams }: { searchParams?: ShopSe
   const tagCount = allTags.length;
   const inStockCount = products.reduce((acc, product) => acc + Math.max(product.stock ?? 0, 0), 0);
 
-  const rawInitialState = deriveInitialState(searchParams);
+  const resolvedParams = await resolveSearchParams(props.searchParams);
+  const rawInitialState = deriveInitialState(resolvedParams);
   const initialState: CatalogState = {
     ...rawInitialState,
     category: validateCategorySlug(rawInitialState.category, categories),
@@ -89,22 +104,27 @@ export default async function ShopPage({ searchParams }: { searchParams?: ShopSe
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 py-10">
-      <BaseContainer className="space-y-12">
-        <ShopHero
-          productCount={productCount}
-          categoryCount={categoryCount}
-          tagCount={tagCount}
-          inStockCount={inStockCount}
-        />
-        <ShopPageClient
-          products={serializableProducts}
-          categories={categories}
-          tags={allTags}
-          initialState={initialState}
-          defaultState={DEFAULT_STATE}
-        />
-      </BaseContainer>
-    </main>
+    <>
+      <ClientHeader />
+      <main className="flex min-h-screen flex-col bg-white pt-[var(--header-height)]">
+        <Section className="pb-0">
+          <BaseContainer className="space-y-16">
+            <ShopHero
+              productCount={productCount}
+              categoryCount={categoryCount}
+              tagCount={tagCount}
+              inStockCount={inStockCount}
+            />
+            <ShopPageClient
+              products={serializableProducts}
+              categories={categories}
+              tags={allTags}
+              initialState={initialState}
+              defaultState={DEFAULT_STATE}
+            />
+          </BaseContainer>
+        </Section>
+      </main>
+    </>
   );
 }
