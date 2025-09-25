@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { isValidPhoneNumber } from 'react-phone-number-input'
+
 import InputFormField from '@/shared/ui/InputFormField'
 import PhoneInputField from '@/shared/ui/PhoneInputField'
-import useGeoCountry from '@/shared/lib/useGeoCountry'
-import { isValidPhoneNumber } from 'react-phone-number-input'
 import { Button } from '@/shared/ui/button'
 import {
   Select,
@@ -16,9 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/select'
-import { addTaskAction } from '@/shared/api/dashboard/addTaskAction'
-import { showToast } from '@/shared/lib/toast'
 
+import useGeoCountry from '@/shared/lib/useGeoCountry'
+import { showToast } from '@/shared/lib/toast'
+import { addTaskAction } from '@/shared/api/dashboard/addTaskAction'
 import { getDevicesAction } from '@/shared/api/dashboard/getDevicesAction'
 import { getServicesAction } from '@/shared/api/dashboard/getServicesAction'
 import { IDevice } from '@/entities/device'
@@ -34,7 +35,7 @@ const TaskSchema = z.object({
     .min(1, { message: 'Имя клиента обязательно' })
     .max(100, { message: 'Имя клиента не должно превышать 100 символов' })
     .regex(/^[A-Za-zА-Яа-яЁё]+$/, {
-      message: 'Имя клиента должно содержать только буквы',
+      message: 'Имя должно содержать только буквы',
     }),
   customerPhone: z
     .string()
@@ -57,7 +58,6 @@ type TaskForm = z.infer<typeof TaskSchema>
 
 export default function RequestForm() {
   const [loading, setLoading] = useState(false)
-
   const [devices, setDevices] = useState<IDevice[]>([])
   const [services, setServices] = useState<IService[]>([])
   const country = useGeoCountry()
@@ -105,7 +105,6 @@ export default function RequestForm() {
     setLoading(true)
     try {
       const response = await addTaskAction(data)
-
       if (response.status === 'error') {
         showToast.error(response.message)
       } else {
@@ -121,73 +120,115 @@ export default function RequestForm() {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleSubmitAction)} className="space-y-4 w-full max-w-lg">
+      <form
+        onSubmit={handleSubmit(handleSubmitAction)}
+        className="flex flex-col gap-8"
+      >
         <InputFormField
           control={control}
           name="description"
           id="description"
-          label="Описание проблемы"
-          type="textarea"
+          label="Что с устройством"
+          placeholder="Опишите симптомы и предысторию"
           errors={errors}
+          isTextarea
+          rows={4}
         />
 
-        <div className="flex flex-col gap-2">
-          <label className="text-sm" htmlFor="device">Устройство</label>
-          <Select onValueChange={handleDeviceChange}>
-            <SelectTrigger id="device">
-              <SelectValue placeholder="Выберите устройство" />
-            </SelectTrigger>
-            <SelectContent>
-              {devices.map((d) => (
-                <SelectItem key={d._id?.toString()} value={d._id?.toString() || ''}>
-                  {d.brand} {d.modelName || ''}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+              Устройство
+            </span>
+            <Select onValueChange={handleDeviceChange}>
+              <SelectTrigger className="h-12 rounded-full border-neutral-200 bg-white px-6 text-sm font-medium text-neutral-600">
+                <SelectValue placeholder="Выберите устройство" />
+              </SelectTrigger>
+              <SelectContent className="rounded-3xl border-neutral-200 bg-white shadow-xl">
+                {devices.map((d) => (
+                  <SelectItem key={d._id?.toString()} value={d._id?.toString() || ''}>
+                    {d.brand} {d.modelName || ''}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+              Услуга
+            </span>
+            <Select onValueChange={handleServiceChange}>
+              <SelectTrigger className="h-12 rounded-full border-neutral-200 bg-white px-6 text-sm font-medium text-neutral-600">
+                <SelectValue placeholder="Выберите услугу" />
+              </SelectTrigger>
+              <SelectContent className="rounded-3xl border-neutral-200 bg-white shadow-xl">
+                {services.map((s) => (
+                  <SelectItem key={s._id?.toString()} value={s._id?.toString() || ''}>
+                    {s.name} — {s.cost} сом
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label className="text-sm" htmlFor="service">Услуга</label>
-          <Select onValueChange={handleServiceChange}>
-            <SelectTrigger id="service">
-              <SelectValue placeholder="Выберите услугу" />
-            </SelectTrigger>
-            <SelectContent>
-              {services.map((s) => (
-                <SelectItem key={s._id?.toString()} value={s._id?.toString() || ''}>
-                  {s.name} - {s.cost} сом
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <InputFormField
+            control={control}
+            name="customerName"
+            id="customerName"
+            label="Имя клиента"
+            placeholder="Как к вам обращаться"
+            errors={errors}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+              const filteredValue = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ]+/g, '')
+              setValue('customerName', filteredValue)
+            }}
+          />
+
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">
+              Контактный номер
+            </span>
+            <PhoneInputField
+              control={control}
+              name="customerPhone"
+              label=""
+              defaultCountry={country}
+            />
+          </div>
         </div>
 
-        <InputFormField
-          control={control}
-          name="customerName"
-          id="customerName"
-          label="Имя клиента"
-          errors={errors}
-          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-            const filteredValue = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ]+/g, '')
-            setValue('customerName', filteredValue)
-          }}
-        />
-
-        <PhoneInputField
-          control={control}
-          name="customerPhone"
-          label="Телефон клиента"
-          defaultCountry={country}
-        />
-
-
-        <div className="text-right font-medium">
-          {`Примерная стоимость: ${methods.watch('totalCost')} сом`}
+        <div className="grid gap-6 sm:grid-cols-2">
+          <InputFormField
+            control={control}
+            name="laptopBrand"
+            id="laptopBrand"
+            label="Марка"
+            placeholder="Apple, Lenovo и т.д."
+            errors={errors}
+          />
+          <InputFormField
+            control={control}
+            name="laptopModel"
+            id="laptopModel"
+            label="Модель"
+            placeholder="Например, MacBook Pro 14"
+            errors={errors}
+          />
         </div>
 
-        <Button type="submit" disabled={loading} className="w-full">
+        <div className="flex items-center justify-between rounded-[32px] border border-neutral-200/70 bg-white px-6 py-4 text-sm uppercase tracking-[0.35em] text-neutral-500">
+          <span>Примерная стоимость</span>
+          <span className="text-neutral-900">{methods.watch('totalCost')} сом</span>
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-14 rounded-full px-10 text-xs font-semibold uppercase tracking-[0.45em] text-neutral-100"
+        >
           {loading ? 'Отправка...' : 'Отправить заявку'}
         </Button>
       </form>

@@ -2,13 +2,16 @@ import BaseContainer from "@/shared/ui/BaseContainer";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
+import ClientHeader from "@/widgets/header/ClientHeader";
 
 export default function OrderSuccessPage({ params }: { params: { id: string } }) {
   return (
-    <main className="min-h-screen bg-slate-50 py-10">
-      <BaseContainer className="flex items-center justify-center">
-        <Card className="w-full max-w-xl border border-border/70 bg-white/95 text-center shadow-lg shadow-slate-900/5">
-          <CardContent className="space-y-6 px-10 py-12">
+    <>
+      <ClientHeader />
+      <main className="flex min-h-screen flex-col bg-white pt-[var(--header-height)]">
+        <BaseContainer className="flex flex-1 items-center justify-center py-16">
+          <Card className="w-full max-w-xl border border-border/70 bg-white/95 text-center shadow-lg shadow-slate-900/5">
+            <CardContent className="space-y-6 px-10 py-12">
             <CheckCircle2 className="mx-auto h-16 w-16 text-emerald-500" />
             <div className="space-y-2">
               <h1 className="text-3xl font-semibold">Спасибо за заказ!</h1>
@@ -35,7 +38,8 @@ export default function OrderSuccessPage({ params }: { params: { id: string } })
             </div>
           </CardContent>
         </Card>
-      </BaseContainer>
-    </main>
+        </BaseContainer>
+      </main>
+    </>
   );
 }

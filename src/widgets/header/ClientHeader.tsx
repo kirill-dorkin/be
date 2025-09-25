@@ -16,6 +16,8 @@ const navLinks = [
   { href: "/shop", label: "Магазин" },
 ];
 
+const resolveHref = (href: string) => (href.startsWith('#') ? `/${href}` : href);
+
 const serviceInfo = {
   scheduleLabel: "График работы",
   scheduleValue: "Ежедневно 09:00 — 19:00",
@@ -168,7 +170,7 @@ export default function ClientHeader() {
                 {navLinks.map(({ href, label }, index) => (
                   <Link
                     key={href}
-                    href={href}
+                    href={resolveHref(href)}
                     prefetch={false}
                     onClick={() => setMenuOpen(false)}
                     className={`group flex items-center justify-between text-lg font-semibold tracking-[0.3em] text-neutral-600 transition-all duration-500 ${

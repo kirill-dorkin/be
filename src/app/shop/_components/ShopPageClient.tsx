@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Filter, Grid, List, RefreshCcw, Search } from "lucide-react";
+import { Heart, RefreshCcw, ShoppingCart } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import type { ProductCategory, ProductTag } from "@/shared/types";
 import { cn } from "@/shared/lib/utils";
+import type { ProductCategory, ProductTag } from "@/shared/types";
+import { useCart } from "@/providers/CartProvider";
+import { useFavorites } from "@/providers/FavoritesProvider";
+
 import { ProductCard } from "./ProductCard";
 import type { CatalogSort, CatalogState, CatalogView, SerializableProduct } from "./types";
 
@@ -78,13 +81,14 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
   const [state, setState] = useState<CatalogState>(initialState);
   const [searchInput, setSearchInput] = useState(initialState.search);
   const initialSync = useRef(true);
+  const { itemCount } = useCart();
+  const { favoritesCount } = useFavorites();
 
   const tagById = useMemo(() => new Map(tags.map((tag) => [tag._id, tag])), [tags]);
   const tagBySlug = useMemo(() => new Map(tags.map((tag) => [tag.slug, tag])), [tags]);
   const categoryById = useMemo(() => new Map(categories.map((category) => [category._id, category])), [categories]);
   const categoryBySlug = useMemo(() => new Map(categories.map((category) => [category.slug, category])), [categories]);
 
-  // Sync state with URL changes (back/forward)
   useEffect(() => {
     const resolved = resolveStateFromSearch(searchParams, defaultState);
     setState((prev) => {
@@ -94,15 +98,13 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
     setSearchInput(resolved.search);
   }, [searchParams, defaultState]);
 
-  // Debounced search update
   useEffect(() => {
     const handle = window.setTimeout(() => {
       setState((prev) => ({ ...prev, search: searchInput, page: 1 }));
-    }, 280);
+    }, 240);
     return () => window.clearTimeout(handle);
   }, [searchInput]);
 
-  // Push state to URL (skip first render)
   useEffect(() => {
     if (initialSync.current) {
       initialSync.current = false;
@@ -115,16 +117,14 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
     if (state.tags.length > 0) state.tags.forEach((tag) => params.append("tags", tag));
     if (state.onlyInStock) params.set("stock", "in");
     if (state.view !== defaultState.view) params.set("view", state.view);
-    if (state.page > 1) params.set("page", state.page.toString());
-
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname);
-  }, [state, router, pathname, defaultState.sort, defaultState.view]);
+    if (state.page !== defaultState.page) params.set("page", state.page.toString());
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [state, router, pathname, defaultState]);
 
   const filtered = useMemo(() => {
-    const categoryId = state.category && state.category !== "all" ? categoryBySlug.get(state.category)?._id : undefined;
-    const tagIds = state.tags.map((slug) => tagBySlug.get(slug)?._id).filter(Boolean) as string[];
     const query = state.search.trim().toLowerCase();
+    const categoryId = state.category !== "all" ? categoryBySlug.get(state.category)?._id : undefined;
+    const tagIds = state.tags.map((slug) => tagBySlug.get(slug)?._id).filter(Boolean);
     const sortComparator = getSortComparator(state.sort);
 
     return [...products]
@@ -151,155 +151,160 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
   const paginated = filtered.slice(start, start + PAGE_SIZE);
 
   return (
-    <div className="space-y-10">
-      <section className="space-y-4">
-        <Card className="border border-border/70 bg-card/80 shadow-lg shadow-slate-900/5">
-          <CardHeader className="flex flex-col gap-4 pb-0 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <Filter className="h-5 w-5" />
-              </span>
-              <div>
-                <CardTitle className="text-xl">Фильтры и поиск</CardTitle>
-                <p className="text-sm text-muted-foreground">Настройте отображение каталога под ваши задачи</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className={cn("h-11 w-11 rounded-2xl", state.view === "grid" && "border-primary text-primary")}
-                onClick={() => setState((prev) => ({ ...prev, view: "grid" }))}
-                aria-label="Показать сеткой"
+    <div className="space-y-16">
+      <section className="animate-fade-up delay-2 rounded-[48px] border border-neutral-200/70 bg-white px-8 py-12 shadow-[0_55px_150px_-90px_rgba(15,15,15,0.4)]">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-neutral-200/60 bg-neutral-50/60 px-6 py-4">
+          <div className="space-y-1">
+            <span className="text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-neutral-400">
+              Личные подборки
+            </span>
+            <p className="text-sm text-neutral-500">
+              Возвращайтесь к отобранным позициям и оформляйте заказ в удобное время.
+            </p>
+          </div>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <Button
+              asChild
+              variant="ghost"
+              size="lg"
+              className="h-12 w-full rounded-full border border-neutral-300/80 bg-white px-6 text-xs font-semibold uppercase tracking-[0.45em] text-neutral-500 transition-colors hover:text-neutral-900 sm:w-auto"
+            >
+              <Link
+                href="/shop/cart"
+                className="inline-flex items-center gap-3"
               >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className={cn("h-11 w-11 rounded-2xl", state.view === "list" && "border-primary text-primary")}
-                onClick={() => setState((prev) => ({ ...prev, view: "list" }))}
-                aria-label="Показать списком"
+                <ShoppingCart className="h-4 w-4" />
+                Корзина
+                <span className="inline-flex min-w-[2.25rem] justify-center rounded-full bg-neutral-900 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-white">
+                  {itemCount}
+                </span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="lg"
+              className="h-12 w-full rounded-full border border-neutral-300/80 bg-white px-6 text-xs font-semibold uppercase tracking-[0.45em] text-neutral-500 transition-colors hover:text-neutral-900 sm:w-auto"
+            >
+              <Link
+                href="/shop/favorites"
+                className="inline-flex items-center gap-3"
               >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6 pt-6">
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_repeat(2,minmax(0,1fr))_minmax(0,1fr)]">
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  placeholder="Поиск по названию или описанию"
-                  className="h-12 rounded-2xl border border-input/70 bg-background/80 pl-11 text-sm font-medium"
-                />
-              </div>
-              <Select
-                value={state.category || "all"}
-                onValueChange={(value) => setState((prev) => ({ ...prev, category: value === "all" ? "all" : value, page: 1 }))}
-              >
-                <SelectTrigger className="h-12 rounded-2xl border border-input/70 bg-background/80 text-sm font-medium">
-                  <SelectValue placeholder="Категория" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Все категории</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category._id} value={category.slug}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select
-                value={state.sort}
-                onValueChange={(value: CatalogSort) => setState((prev) => ({ ...prev, sort: value, page: 1 }))}
-              >
-                <SelectTrigger className="h-12 rounded-2xl border border-input/70 bg-background/80 text-sm font-medium">
-                  <SelectValue placeholder="Сортировка" />
-                </SelectTrigger>
-                <SelectContent>
-                  {(Object.keys(sortLabels) as CatalogSort[]).map((key) => (
-                    <SelectItem key={key} value={key}>
-                      {sortLabels[key]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <label className="flex h-12 items-center justify-between rounded-2xl border border-input/70 bg-background/80 px-4 text-sm font-medium">
-                <span>Только в наличии</span>
-                <Switch
-                  checked={state.onlyInStock}
-                  onCheckedChange={(checked) => setState((prev) => ({ ...prev, onlyInStock: checked, page: 1 }))}
-                />
-              </label>
-            </div>
+                <Heart className="h-4 w-4" />
+                Избранное
+                <span className="inline-flex min-w-[2.25rem] justify-center rounded-full bg-neutral-900 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-white">
+                  {favoritesCount}
+                </span>
+              </Link>
+            </Button>
+          </div>
+        </div>
 
-            <div className="flex flex-wrap gap-2">
-              {tags.length === 0 && (
-                <span className="text-sm text-muted-foreground">Теги появятся после настройки ассортимента</span>
-              )}
-              {tags.map((tag) => {
-                const active = state.tags.includes(tag.slug);
-                return (
-                  <button
-                    key={tag._id}
-                    type="button"
-                    className={cn(
-                      "inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm transition",
-                      active
-                        ? "border-primary bg-primary text-primary-foreground shadow"
-                        : "border-border/80 bg-background/80 text-muted-foreground hover:border-primary/60 hover:text-foreground"
-                    )}
-                    onClick={() =>
-                      setState((prev) => {
-                        const exists = prev.tags.includes(tag.slug);
-                        const nextTags = exists ? prev.tags.filter((slug) => slug !== tag.slug) : [...prev.tags, tag.slug];
-                        return { ...prev, tags: nextTags, page: 1 };
-                      })
-                    }
-                  >
-                    #{tag.name}
-                  </button>
-                );
-              })}
-            </div>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_repeat(2,minmax(0,1fr))_minmax(0,1fr)]">
+          <div className="relative">
+            <Input
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              placeholder="Поиск по каталогу"
+              className="h-12 rounded-full border-neutral-200 bg-white px-6 text-sm font-medium"
+            />
+          </div>
+          <Select
+            value={state.category || "all"}
+            onValueChange={(value) => setState((prev) => ({ ...prev, category: value === "all" ? "all" : value, page: 1 }))}
+          >
+            <SelectTrigger className="h-12 rounded-full border-neutral-200 bg-white px-6 text-sm font-medium text-neutral-600">
+              <SelectValue placeholder="Категория" />
+            </SelectTrigger>
+            <SelectContent className="rounded-3xl border-neutral-200 bg-white shadow-xl">
+              <SelectItem value="all">Все категории</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category._id} value={category.slug}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={state.sort}
+            onValueChange={(value: CatalogSort) => setState((prev) => ({ ...prev, sort: value, page: 1 }))}
+          >
+            <SelectTrigger className="h-12 rounded-full border-neutral-200 bg-white px-6 text-sm font-medium text-neutral-600">
+              <SelectValue placeholder="Сортировка" />
+            </SelectTrigger>
+            <SelectContent className="rounded-3xl border-neutral-200 bg-white shadow-xl">
+              {(Object.keys(sortLabels) as CatalogSort[]).map((key) => (
+                <SelectItem key={key} value={key}>
+                  {sortLabels[key]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <label className="flex h-12 items-center justify-between rounded-full border border-neutral-200 bg-white px-6 text-sm font-medium text-neutral-600">
+            <span>Только в наличии</span>
+            <Switch
+              checked={state.onlyInStock}
+              onCheckedChange={(checked) => setState((prev) => ({ ...prev, onlyInStock: checked, page: 1 }))}
+            />
+          </label>
+        </div>
 
-            <Separator className="bg-border/60" />
-
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="text-sm text-muted-foreground">
-                Найдено товаров: {filtered.length.toLocaleString("ru-RU")}
-              </div>
-              <Button
+        <div className="mt-6 flex flex-wrap gap-3">
+          {tags.length === 0 && (
+            <span className="text-sm text-neutral-400">Теги появятся позже</span>
+          )}
+          {tags.map((tag) => {
+            const active = state.tags.includes(tag.slug);
+            return (
+              <button
+                key={tag._id}
                 type="button"
-                variant="outline"
-                className="rounded-2xl border-dashed"
-                onClick={() => {
-                  setSearchInput(defaultState.search);
-                  setState({ ...defaultState });
-                }}
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.35em] transition",
+                  active
+                    ? "border-neutral-900 bg-neutral-900 text-neutral-100 shadow"
+                    : "border-neutral-200 bg-white text-neutral-500 hover:border-neutral-900/40 hover:text-neutral-900"
+                )}
+                onClick={() =>
+                  setState((prev) => {
+                    const exists = prev.tags.includes(tag.slug);
+                    const nextTags = exists ? prev.tags.filter((slug) => slug !== tag.slug) : [...prev.tags, tag.slug];
+                    return { ...prev, tags: nextTags, page: 1 };
+                  })
+                }
               >
-                <RefreshCcw className="mr-2 h-4 w-4" /> Сбросить фильтры
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                #{tag.name}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-sm text-neutral-500">
+          <span>Найдено позиций: {filtered.length.toLocaleString("ru-RU")}</span>
+          <Button
+            type="button"
+            variant="ghost"
+            className="rounded-full border border-neutral-300/80 bg-white px-6 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-500 transition-colors hover:text-neutral-900"
+            onClick={() => {
+              setSearchInput(defaultState.search);
+              setState({ ...defaultState });
+            }}
+          >
+            <RefreshCcw className="mr-2 h-4 w-4" /> Сбросить
+          </Button>
+        </div>
       </section>
 
-      <section id="catalog" className="space-y-6">
+      <section id="catalog-section" className="space-y-8">
         {paginated.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border/70 bg-white/90 p-12 text-center text-muted-foreground">
-            <p className="text-lg font-medium">Товары не найдены по заданным условиям</p>
-            <p className="mt-2 text-sm">Попробуйте изменить фильтры или сбросьте их.</p>
+          <div className="animate-fade-up rounded-[40px] border border-dashed border-neutral-300/70 bg-white px-10 py-16 text-center text-neutral-500">
+            <p className="text-lg font-medium">Товары не найдены</p>
+            <p className="mt-2 text-sm">Измените фильтры или сбросьте их.</p>
           </div>
         ) : (
           <div
             className={cn(
-              "grid gap-6",
+              "animate-fade-up delay-2 grid gap-8",
               state.view === "grid"
                 ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
                 : "grid-cols-1"
@@ -318,11 +323,11 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
         )}
 
         {totalPages > 1 && (
-          <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="animate-fade-up delay-4 flex flex-wrap items-center justify-center gap-3">
             <Button
               type="button"
-              variant="outline"
-              className="rounded-2xl"
+              variant="ghost"
+              className="rounded-full border border-neutral-300/80 px-6 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-500 transition-colors hover:text-neutral-900"
               disabled={state.page === 1}
               onClick={() => setState((prev) => ({ ...prev, page: Math.max(1, prev.page - 1) }))}
             >
@@ -330,12 +335,13 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
             </Button>
             {Array.from({ length: totalPages }).slice(0, 7).map((_, index) => {
               const page = index + 1;
+              const active = page === state.page;
               return (
                 <Button
                   key={page}
                   type="button"
-                  variant={page === state.page ? "default" : "outline"}
-                  className="rounded-2xl px-4"
+                  variant={active ? "default" : "ghost"}
+                  className="rounded-full px-5 text-xs font-semibold uppercase tracking-[0.35em]"
                   onClick={() => setState((prev) => ({ ...prev, page }))}
                 >
                   {page}
@@ -344,8 +350,8 @@ export function ShopPageClient({ products, categories, tags, initialState, defau
             })}
             <Button
               type="button"
-              variant="outline"
-              className="rounded-2xl"
+              variant="ghost"
+              className="rounded-full border border-neutral-300/80 px-6 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-500 transition-colors hover:text-neutral-900"
               disabled={state.page === totalPages}
               onClick={() => setState((prev) => ({ ...prev, page: Math.min(totalPages, prev.page + 1) }))}
             >

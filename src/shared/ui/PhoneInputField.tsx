@@ -20,7 +20,7 @@ InputComponent.displayName = 'PhoneInputCustomInput'
 interface PhoneInputFieldProps<TFieldValues extends FieldValues = FieldValues> {
   control: Control<TFieldValues>
   name: Path<TFieldValues>
-  label: string
+  label?: string
   defaultCountry?: string
 }
 
@@ -36,7 +36,7 @@ const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          {label ? <FormLabel>{label}</FormLabel> : null}
           <FormControl>
             <PhoneInput
               {...field}
