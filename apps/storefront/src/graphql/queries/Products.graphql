@@ -1,9 +1,0 @@
-query Products {
-  products(first: 10) {
-    edges {
-      node {
-        name
-      }
-    }
-  }
-}
