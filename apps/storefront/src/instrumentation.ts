@@ -1,9 +1,39 @@
-import { existsSync } from "node:fs";
-import { createRequire } from "node:module";
-
 type NodeError = NodeJS.ErrnoException & { code?: string };
 
-const require = createRequire(import.meta.url);
+type ResolveModule = (id: string, options?: { paths?: string[] }) => string;
+
+type NodeDependencies = {
+  existsSync: (path: string) => boolean;
+  resolve: ResolveModule;
+};
+
+const createDefaultNodeDependenciesLoader = () => {
+  let cachedDependencies: NodeDependencies | null = null;
+
+  return async () => {
+    if (cachedDependencies) {
+      return cachedDependencies;
+    }
+
+    const [{ existsSync }, { createRequire }] = await Promise.all([
+      import(/* webpackIgnore: true */ "node:fs"),
+      import(/* webpackIgnore: true */ "node:module"),
+    ]);
+
+    const nodeRequire = createRequire(import.meta.url);
+
+    cachedDependencies = {
+      existsSync,
+      resolve: nodeRequire.resolve.bind(nodeRequire) as ResolveModule,
+    };
+
+    return cachedDependencies;
+  };
+};
+
+let loadNodeDependencies = createDefaultNodeDependenciesLoader();
+
+const getNodeDependencies = () => loadNodeDependencies();
 
 const isMissingOtelContextFileError = (error: unknown): error is NodeError => {
   if (!error || typeof error !== "object") {
@@ -34,15 +64,18 @@ const logMissingOtelContextWarning = () =>
     "OpenTelemetry registration skipped: context API file was not found in node_modules. Ensure the project is built with access to @opentelemetry/api, or remove OTEL_SERVICE_NAME to disable instrumentation.",
   );
 
-const hasOtelContextFile = () => {
+const hasOtelContextFile = async () => {
+  const { existsSync, resolve } = await getNodeDependencies();
+
   try {
-    const contextPath = require.resolve(
+    const contextPath = resolve(
       "@opentelemetry/api/build/src/api/context.js",
     );
 
     if (!existsSync(contextPath)) {
       logMissingOtelContextWarning();
       console.warn(`Missing file path: ${contextPath}`);
+
       return false;
     }
 
@@ -50,6 +83,7 @@ const hasOtelContextFile = () => {
   } catch (error) {
     if (isMissingOtelContextFileError(error)) {
       logMissingOtelContextWarning();
+
       return false;
     }
 
@@ -57,11 +91,23 @@ const hasOtelContextFile = () => {
       console.warn(
         "OpenTelemetry dependency '@opentelemetry/api' could not be resolved. Install it or remove OTEL_SERVICE_NAME to disable instrumentation.",
       );
+
       return false;
     }
 
     throw error;
   }
+};
+
+export const __internal = {
+  setNodeDependenciesLoader(
+    loader: () => Promise<NodeDependencies>,
+  ) {
+    loadNodeDependencies = loader;
+  },
+  resetNodeDependenciesLoader() {
+    loadNodeDependencies = createDefaultNodeDependenciesLoader();
+  },
 };
 
 export async function register() {
@@ -71,7 +117,7 @@ export async function register() {
     const otelPath = "@vercel/otel";
 
     try {
-      if (!hasOtelContextFile()) {
+      if (!(await hasOtelContextFile())) {
         return;
       }
 
