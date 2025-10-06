@@ -19,7 +19,12 @@ if (existsSync(rootNextDir)) {
 
 const shouldCopyOnVercel = process.env.VERCEL === "1";
 const symlinkType = process.platform === "win32" ? "junction" : "dir";
-const cpOptions = { recursive: true, dereference: false };
+// Always dereference symlinks when copying so that the Vercel bundler
+// receives the real file contents instead of symlinks that may point to
+// absolute paths outside of the project root (e.g. "/node_modules").
+// Such absolute symlinks cause the bundler to crash when it attempts to
+// lstat the target.
+const cpOptions = { recursive: true, dereference: true };
 
 if (shouldCopyOnVercel) {
   cpSync(storefrontBuildDir, rootNextDir, cpOptions);
@@ -80,7 +85,7 @@ if (shouldCopyOnVercel) {
           }
         }
 
-        cpSync(targetPath, linkPath, { recursive: true });
+        cpSync(targetPath, linkPath, cpOptions);
         console.log(logMessage.replace("Linked", "Copied"));
       } catch (error) {
         console.warn(
