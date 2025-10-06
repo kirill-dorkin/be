@@ -1,0 +1,27 @@
+fragment ProductRelatedProductsFragment on Product {
+  id
+  slug
+  name
+  thumbnail(size: 512) {
+    url
+    alt
+  }
+  variants {
+    pricing {
+      price {
+        gross {
+          amount
+        }
+      }
+    }
+  }
+  pricing {
+    ...ProductPricingInfoFragment
+
+    priceRangeUndiscounted {
+      start {
+        ...TaxedMoneyFragment
+      }
+    }
+  }
+}
