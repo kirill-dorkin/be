@@ -64,13 +64,26 @@ if (shouldCopyOnVercel) {
           throwIfNoEntry: false,
         });
 
-        if (targetExists && !linkStats) {
-          symlinkSync(targetPath, linkPath, symlinkType);
-          console.log(logMessage);
+        if (!targetExists) {
+          return;
         }
+
+        if (linkStats) {
+          if (linkStats.isSymbolicLink() || linkStats.isDirectory()) {
+            rmSync(linkPath, { recursive: true, force: true });
+          } else {
+            console.warn(
+              `Found existing non-directory at ${linkPath}. Skipping mirroring for Vercel bundler compatibility.`
+            );
+            return;
+          }
+        }
+
+        cpSync(targetPath, linkPath, { recursive: true });
+        console.log(logMessage.replace("Linked", "Copied"));
       } catch (error) {
         console.warn(
-          `Failed to prepare symlink at ${linkPath} pointing to ${targetPath}.`
+          `Failed to mirror directory at ${linkPath} from ${targetPath}.`
             + " Vercel bundler may fail if this resource is required during tracing.",
           error,
         );
