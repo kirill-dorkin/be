@@ -1,4 +1,4 @@
-import { cpSync, existsSync, rmSync, statSync } from "node:fs";
+import { cpSync, existsSync, rmSync, statSync, symlinkSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const repoRoot = process.cwd();
@@ -17,8 +17,29 @@ if (existsSync(rootNextDir)) {
   rmSync(rootNextDir, { recursive: true, force: true });
 }
 
-cpSync(storefrontBuildDir, rootNextDir, { recursive: true });
+const symlinkType = process.platform === "win32" ? "junction" : "dir";
 
-console.log(
-  `Copied storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(repoRoot, rootNextDir)} for Vercel deployment.`
-);
+try {
+  symlinkSync(storefrontBuildDir, rootNextDir, symlinkType);
+
+  console.log(
+    `Linked storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
+      repoRoot,
+      rootNextDir
+    )} for Vercel deployment using a ${symlinkType === "dir" ? "symlink" : symlinkType}.`
+  );
+} catch (error) {
+  console.warn(
+    "Failed to create symlink for storefront build output. Falling back to copying the directory.",
+    error
+  );
+
+  cpSync(storefrontBuildDir, rootNextDir, { recursive: true });
+
+  console.log(
+    `Copied storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
+      repoRoot,
+      rootNextDir
+    )} for Vercel deployment.`
+  );
+}
