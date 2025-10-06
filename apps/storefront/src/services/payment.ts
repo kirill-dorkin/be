@@ -1,6 +1,6 @@
 import { err } from "@nimara/domain/objects/Result";
-import { type StripePaymentService } from "@nimara/infrastructure/payment/providers";
 import { type Logger } from "@nimara/infrastructure/logging/types";
+import { type StripePaymentService } from "@nimara/infrastructure/payment/providers";
 
 import { clientEnvs } from "@/envs/client";
 import { serverEnvs } from "@/envs/server";
@@ -40,7 +40,7 @@ const createDisabledResult = () =>
 
 const createDisabledPaymentService = (logger: Logger): StripePaymentService => {
   const warn = (operation: string) =>
-    logger.warn(DISABLED_MESSAGE, {
+    logger.warning(DISABLED_MESSAGE, {
       operation,
       missingKeys: missingPaymentConfigKeys,
     });
@@ -124,7 +124,7 @@ export const getPaymentService = async (): Promise<StripePaymentService> => {
   const storefrontLogger = await getStorefrontLogger();
 
   if (!isPaymentServiceConfigured) {
-    storefrontLogger.warn(DISABLED_MESSAGE, {
+    storefrontLogger.warning(DISABLED_MESSAGE, {
       missingKeys: missingPaymentConfigKeys,
     });
 

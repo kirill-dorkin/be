@@ -13,13 +13,28 @@ const sanitizeEnv = <T extends z.ZodTypeAny>(schema: T) =>
     return trimmed.length === 0 ? undefined : trimmed;
   }, schema);
 
+const FALLBACK_SALEOR_APP_TOKEN = "demo-saleor-app-token";
+
 const schema = z.object({
   // Saleor envs
-  SALEOR_APP_TOKEN: sanitizeEnv(z.string()),
+  SALEOR_APP_TOKEN: sanitizeEnv(z.string().default(FALLBACK_SALEOR_APP_TOKEN)),
   STRIPE_SECRET_KEY: sanitizeEnv(z.string().optional()),
 });
 
 type Schema = z.infer<typeof schema>;
+
+const warnIfMissing = (envName: string, message: string) => {
+  if (!process.env[envName]) {
+    console.warn(`[storefront] ${message}`);
+  }
+};
+
+if (isSsr) {
+  warnIfMissing(
+    "SALEOR_APP_TOKEN",
+    `SALEOR_APP_TOKEN is not defined. Using fallback token "${FALLBACK_SALEOR_APP_TOKEN}" for build-time configuration.`,
+  );
+}
 
 export const serverEnvs = isSsr
   ? schema.parse({
