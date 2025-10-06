@@ -1,4 +1,4 @@
-import { cpSync, existsSync, rmSync, statSync, symlinkSync } from "node:fs";
+import { cpSync, existsSync, lstatSync, rmSync, statSync, symlinkSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const repoRoot = process.cwd();
@@ -29,6 +29,30 @@ if (shouldCopyOnVercel) {
       rootNextDir
     )} for Vercel deployment.`
   );
+
+  if (process.platform !== "win32") {
+    const rootNodeModulesPath = "/node_modules";
+    const repoNodeModulesPath = join(repoRoot, "node_modules");
+
+    try {
+      const hasRepoNodeModules =
+        statSync(repoNodeModulesPath, { throwIfNoEntry: false })?.isDirectory() ?? false;
+      const rootNodeModulesStats = lstatSync(rootNodeModulesPath, {
+        throwIfNoEntry: false,
+      });
+
+      if (hasRepoNodeModules && !rootNodeModulesStats) {
+        symlinkSync(repoNodeModulesPath, rootNodeModulesPath, symlinkType);
+        console.log("Linked /node_modules to project node_modules for Vercel bundler compatibility.");
+      }
+    } catch (error) {
+      console.warn(
+        "Failed to prepare /node_modules symlink for Vercel bundler compatibility."
+          + " OpenTelemetry packaging may fail if the build environment disallows this operation.",
+        error,
+      );
+    }
+  }
 } else {
   const rootNextDirParent = join(rootNextDir, "..");
   const symlinkTarget = symlinkType === "junction"
