@@ -24,6 +24,11 @@ const isModuleNotFoundError = (error: unknown): error is NodeError => {
   return err.code === "MODULE_NOT_FOUND" || err.code === "ERR_MODULE_NOT_FOUND";
 };
 
+const logMissingOtelContextWarning = () =>
+  console.warn(
+    "OpenTelemetry registration skipped: context API file was not found in node_modules. Ensure the project is built with access to @opentelemetry/api, or remove OTEL_SERVICE_NAME to disable instrumentation.",
+  );
+
 export async function register() {
   if (process.env.OTEL_SERVICE_NAME) {
     // By making this path dynamic, we ensure that bundler
@@ -40,15 +45,15 @@ export async function register() {
         console.log("OpenTelemetry registered.");
       } catch (error) {
         if (isMissingOtelContextFileError(error)) {
-          console.warn(
-            "OpenTelemetry registration skipped: context API file was not found in node_modules. Ensure the project is built with access to @opentelemetry/api, or remove OTEL_SERVICE_NAME to disable instrumentation.",
-          );
+          logMissingOtelContextWarning();
         } else {
           throw error;
         }
       }
     } catch (error) {
-      if (isModuleNotFoundError(error)) {
+      if (isMissingOtelContextFileError(error)) {
+        logMissingOtelContextWarning();
+      } else if (isModuleNotFoundError(error)) {
         console.warn(
           "OpenTelemetry package '@vercel/otel' could not be resolved. Ensure it is installed or remove OTEL_SERVICE_NAME to disable instrumentation.",
         );
