@@ -31,27 +31,51 @@ if (shouldCopyOnVercel) {
   );
 
   if (process.platform !== "win32") {
-    const rootNodeModulesPath = "/node_modules";
-    const repoNodeModulesPath = join(repoRoot, "node_modules");
+    const storefrontRoot = join(repoRoot, "apps", "storefront");
 
-    try {
-      const hasRepoNodeModules =
-        statSync(repoNodeModulesPath, { throwIfNoEntry: false })?.isDirectory() ?? false;
-      const rootNodeModulesStats = lstatSync(rootNodeModulesPath, {
-        throwIfNoEntry: false,
-      });
+    const symlinkMap = [
+      {
+        linkPath: "/node_modules",
+        targetPath: join(repoRoot, "node_modules"),
+        logMessage: "Linked /node_modules to project node_modules for Vercel bundler compatibility.",
+      },
+      {
+        linkPath: join(repoRoot, "src"),
+        targetPath: join(storefrontRoot, "src"),
+        logMessage: "Linked src directory for Vercel bundler compatibility.",
+      },
+      {
+        linkPath: join(repoRoot, "public"),
+        targetPath: join(storefrontRoot, "public"),
+        logMessage: "Linked public directory for Vercel bundler compatibility.",
+      },
+      {
+        linkPath: join(repoRoot, "messages"),
+        targetPath: join(storefrontRoot, "messages"),
+        logMessage: "Linked messages directory for Vercel bundler compatibility.",
+      },
+    ];
 
-      if (hasRepoNodeModules && !rootNodeModulesStats) {
-        symlinkSync(repoNodeModulesPath, rootNodeModulesPath, symlinkType);
-        console.log("Linked /node_modules to project node_modules for Vercel bundler compatibility.");
+    symlinkMap.forEach(({ linkPath, targetPath, logMessage }) => {
+      try {
+        const targetExists =
+          statSync(targetPath, { throwIfNoEntry: false })?.isDirectory() ?? false;
+        const linkStats = lstatSync(linkPath, {
+          throwIfNoEntry: false,
+        });
+
+        if (targetExists && !linkStats) {
+          symlinkSync(targetPath, linkPath, symlinkType);
+          console.log(logMessage);
+        }
+      } catch (error) {
+        console.warn(
+          `Failed to prepare symlink at ${linkPath} pointing to ${targetPath}.`
+            + " Vercel bundler may fail if this resource is required during tracing.",
+          error,
+        );
       }
-    } catch (error) {
-      console.warn(
-        "Failed to prepare /node_modules symlink for Vercel bundler compatibility."
-          + " OpenTelemetry packaging may fail if the build environment disallows this operation.",
-        error,
-      );
-    }
+    });
   }
 } else {
   const rootNextDirParent = join(rootNextDir, "..");
