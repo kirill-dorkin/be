@@ -19,9 +19,10 @@ if (existsSync(rootNextDir)) {
 
 const shouldCopyOnVercel = process.env.VERCEL === "1";
 const symlinkType = process.platform === "win32" ? "junction" : "dir";
+const cpOptions = { recursive: true, dereference: false };
 
 if (shouldCopyOnVercel) {
-  cpSync(storefrontBuildDir, rootNextDir, { recursive: true });
+  cpSync(storefrontBuildDir, rootNextDir, cpOptions);
 
   console.log(
     `Copied storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
@@ -111,7 +112,7 @@ if (shouldCopyOnVercel) {
       error
     );
 
-    cpSync(storefrontBuildDir, rootNextDir, { recursive: true });
+    cpSync(storefrontBuildDir, rootNextDir, cpOptions);
 
     console.log(
       `Copied storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
