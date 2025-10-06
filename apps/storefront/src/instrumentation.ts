@@ -64,39 +64,127 @@ const logMissingOtelContextWarning = () =>
     "OpenTelemetry registration skipped: context API file was not found in node_modules. Ensure the project is built with access to @opentelemetry/api, or remove OTEL_SERVICE_NAME to disable instrumentation.",
   );
 
-const hasOtelContextFile = async () => {
-  const { existsSync, resolve } = await getNodeDependencies();
+const CONTEXT_MODULE_IDS = [
+  "@opentelemetry/api/build/src/api/context.js",
+  "@opentelemetry/api/build/esm/api/context.js",
+];
 
+type ErrorFlags = {
+  missingContext: boolean;
+  moduleNotFound: boolean;
+};
+
+const tryResolveOtelContextFromOtelPackage = async (
+  existsSync: (path: string) => boolean,
+  resolve: ResolveModule,
+  missingPaths: string[],
+  errorFlags: ErrorFlags,
+) => {
   try {
-    const contextPath = resolve(
-      "@opentelemetry/api/build/src/api/context.js",
+    const otelEntryPath = resolve("@vercel/otel");
+    const pathModule = await import(/* webpackIgnore: true */ "node:path");
+
+    const packageRoot = pathModule.join(
+      pathModule.dirname(otelEntryPath),
+      "..",
+      "..",
     );
+    const pnpmScopeRoot = pathModule.join(packageRoot, "..", "..");
 
-    if (!existsSync(contextPath)) {
-      logMissingOtelContextWarning();
-      console.warn(`Missing file path: ${contextPath}`);
+    const fallbackSegments = [
+      ["@opentelemetry", "api", "build", "src", "api", "context.js"],
+      ["@opentelemetry", "api", "build", "esm", "api", "context.js"],
+    ] as const;
 
-      return false;
+    for (const segments of fallbackSegments) {
+      const candidatePath = pathModule.join(pnpmScopeRoot, ...segments);
+
+      if (existsSync(candidatePath)) {
+        return true;
+      }
+
+      missingPaths.push(candidatePath);
     }
-
-    return true;
   } catch (error) {
     if (isMissingOtelContextFileError(error)) {
-      logMissingOtelContextWarning();
+      errorFlags.missingContext = true;
 
       return false;
     }
 
     if (isModuleNotFoundError(error)) {
-      console.warn(
-        "OpenTelemetry dependency '@opentelemetry/api' could not be resolved. Install it or remove OTEL_SERVICE_NAME to disable instrumentation.",
-      );
+      errorFlags.moduleNotFound = true;
 
       return false;
     }
 
     throw error;
   }
+
+  return false;
+};
+
+const hasOtelContextFile = async () => {
+  const { existsSync, resolve } = await getNodeDependencies();
+
+  const missingPaths: string[] = [];
+  const errorFlags: ErrorFlags = {
+    missingContext: false,
+    moduleNotFound: false,
+  };
+
+  for (const moduleId of CONTEXT_MODULE_IDS) {
+    try {
+      const contextPath = resolve(moduleId);
+
+      if (existsSync(contextPath)) {
+        return true;
+      }
+
+      missingPaths.push(contextPath);
+    } catch (error) {
+      if (isMissingOtelContextFileError(error)) {
+        errorFlags.missingContext = true;
+
+        continue;
+      }
+
+      if (isModuleNotFoundError(error)) {
+        errorFlags.moduleNotFound = true;
+
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  if (
+    await tryResolveOtelContextFromOtelPackage(
+      existsSync,
+      resolve,
+      missingPaths,
+      errorFlags,
+    )
+  ) {
+    return true;
+  }
+
+  if (errorFlags.missingContext || missingPaths.length > 0) {
+    logMissingOtelContextWarning();
+
+    for (const missingPath of missingPaths) {
+      console.warn(`Missing file path: ${missingPath}`);
+    }
+  }
+
+  if (errorFlags.moduleNotFound) {
+    console.warn(
+      "OpenTelemetry dependency '@opentelemetry/api' could not be resolved. Install it or remove OTEL_SERVICE_NAME to disable instrumentation.",
+    );
+  }
+
+  return false;
 };
 
 export const __internal = {
