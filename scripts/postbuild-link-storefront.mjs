@@ -19,8 +19,13 @@ if (existsSync(rootNextDir)) {
 
 const symlinkType = process.platform === "win32" ? "junction" : "dir";
 
+const rootNextDirParent = join(rootNextDir, "..");
+const symlinkTarget = symlinkType === "junction"
+  ? storefrontBuildDir
+  : relative(rootNextDirParent, storefrontBuildDir);
+
 try {
-  symlinkSync(storefrontBuildDir, rootNextDir, symlinkType);
+  symlinkSync(symlinkTarget, rootNextDir, symlinkType);
 
   console.log(
     `Linked storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
