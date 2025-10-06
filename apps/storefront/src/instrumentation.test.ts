@@ -65,6 +65,73 @@ describe("instrumentation", () => {
     instrumentation.__internal.resetNodeDependenciesLoader();
   });
 
+  it("locates the context file via the @vercel/otel dependency when direct resolution fails", async () => {
+    process.env.OTEL_SERVICE_NAME = "storefront";
+
+    const fallbackContextPath =
+      "/tmp/node_modules/.pnpm/@vercel+otel/node_modules/@opentelemetry/api/build/src/api/context.js";
+    const existsSyncMock = vi
+      .fn<(path: string) => boolean>()
+      .mockImplementation((path) => path === fallbackContextPath);
+
+    const resolveMock = vi
+      .fn<ResolveModule>()
+      .mockImplementation((id: string) => {
+        if (id === "@opentelemetry/api/build/src/api/context.js") {
+          const error = Object.assign(new Error("not found"), {
+            code: "MODULE_NOT_FOUND",
+          });
+
+          throw error;
+        }
+
+        if (id === "@opentelemetry/api/build/esm/api/context.js") {
+          const error = Object.assign(new Error("not found"), {
+            code: "MODULE_NOT_FOUND",
+          });
+
+          throw error;
+        }
+
+        if (id === "@vercel/otel") {
+          return "/tmp/node_modules/.pnpm/@vercel+otel/node_modules/@vercel/otel/dist/node/index.js";
+        }
+
+        throw new Error(`Unexpected module identifier: ${id}`);
+      });
+
+    const registerOTel = vi.fn();
+
+    vi.doMock("@vercel/otel", () => ({
+      registerOTel,
+    }), { virtual: true });
+
+    const instrumentation = await import("./instrumentation");
+
+    instrumentation.__internal.setNodeDependenciesLoader(async () => ({
+      existsSync: existsSyncMock,
+      resolve: resolveMock,
+    }));
+
+    const { register } = instrumentation;
+
+    await register();
+
+    expect(resolveMock).toHaveBeenCalledWith(
+      "@opentelemetry/api/build/src/api/context.js",
+    );
+    expect(resolveMock).toHaveBeenCalledWith(
+      "@opentelemetry/api/build/esm/api/context.js",
+    );
+    expect(resolveMock).toHaveBeenCalledWith("@vercel/otel");
+    expect(existsSyncMock).toHaveBeenCalledWith(fallbackContextPath);
+    expect(registerOTel).toHaveBeenCalledWith({ serviceName: "storefront" });
+    expect(logSpy).toHaveBeenCalledWith("OpenTelemetry registered.");
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    instrumentation.__internal.resetNodeDependenciesLoader();
+  });
+
   it("warns and skips registration when the context file is missing", async () => {
     process.env.OTEL_SERVICE_NAME = "storefront";
 
