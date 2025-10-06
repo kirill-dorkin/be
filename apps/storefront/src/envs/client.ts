@@ -20,6 +20,9 @@ const optionalString = () =>
       .optional(),
   );
 
+const FALLBACK_SALEOR_API_URL = "https://demo.saleor.io/graphql/";
+const FALLBACK_DEFAULT_CHANNEL = "default-channel";
+
 const schema = z.object({
   NEXT_PUBLIC_CMS_SERVICE: sanitizeEnv(
     z.enum(["SALEOR", "BUTTER_CMS"]).default("SALEOR"),
@@ -33,7 +36,9 @@ const schema = z.object({
       .default("LOCAL"),
   ),
   NEXT_PUBLIC_BUTTER_CMS_API_KEY: optionalString(),
-  NEXT_PUBLIC_DEFAULT_CHANNEL: sanitizeEnv(z.string().trim()),
+  NEXT_PUBLIC_DEFAULT_CHANNEL: sanitizeEnv(
+    z.string().trim().default(FALLBACK_DEFAULT_CHANNEL),
+  ),
   NEXT_PUBLIC_DEFAULT_EMAIL: sanitizeEnv(
     z
       .string()
@@ -47,7 +52,9 @@ const schema = z.object({
       .trim()
       .default("Nimara Storefront"),
   ),
-  NEXT_PUBLIC_SALEOR_API_URL: sanitizeEnv(z.string().url().trim()),
+  NEXT_PUBLIC_SALEOR_API_URL: sanitizeEnv(
+    z.string().url().trim().default(FALLBACK_SALEOR_API_URL),
+  ),
   NEXT_PUBLIC_STOREFRONT_URL: sanitizeEnv(z.string().url().trim()),
   PAYMENT_APP_ID: optionalString(),
   STRIPE_PUBLIC_KEY: optionalString(),
@@ -59,6 +66,21 @@ const schema = z.object({
     z.string().trim().min(1).default("YOUR_API_KEY"),
   ),
 });
+
+const warnIfMissing = (envName: string, message: string) => {
+  if (!process.env[envName]) {
+    console.warn(`[storefront] ${message}`);
+  }
+};
+
+warnIfMissing(
+  "NEXT_PUBLIC_DEFAULT_CHANNEL",
+  `NEXT_PUBLIC_DEFAULT_CHANNEL is not defined. Using "${FALLBACK_DEFAULT_CHANNEL}" as a fallback channel slug.`,
+);
+warnIfMissing(
+  "NEXT_PUBLIC_SALEOR_API_URL",
+  "NEXT_PUBLIC_SALEOR_API_URL is not defined. Using demo Saleor endpoint for build-time configuration.",
+);
 
 export const clientEnvs = schema.parse({
   NEXT_PUBLIC_CMS_SERVICE: process.env.NEXT_PUBLIC_CMS_SERVICE,
