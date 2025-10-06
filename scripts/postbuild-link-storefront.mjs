@@ -17,28 +17,10 @@ if (existsSync(rootNextDir)) {
   rmSync(rootNextDir, { recursive: true, force: true });
 }
 
+const shouldCopyOnVercel = process.env.VERCEL === "1";
 const symlinkType = process.platform === "win32" ? "junction" : "dir";
 
-const rootNextDirParent = join(rootNextDir, "..");
-const symlinkTarget = symlinkType === "junction"
-  ? storefrontBuildDir
-  : relative(rootNextDirParent, storefrontBuildDir);
-
-try {
-  symlinkSync(symlinkTarget, rootNextDir, symlinkType);
-
-  console.log(
-    `Linked storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
-      repoRoot,
-      rootNextDir
-    )} for Vercel deployment using a ${symlinkType === "dir" ? "symlink" : symlinkType}.`
-  );
-} catch (error) {
-  console.warn(
-    "Failed to create symlink for storefront build output. Falling back to copying the directory.",
-    error
-  );
-
+if (shouldCopyOnVercel) {
   cpSync(storefrontBuildDir, rootNextDir, { recursive: true });
 
   console.log(
@@ -47,4 +29,34 @@ try {
       rootNextDir
     )} for Vercel deployment.`
   );
+} else {
+  const rootNextDirParent = join(rootNextDir, "..");
+  const symlinkTarget = symlinkType === "junction"
+    ? storefrontBuildDir
+    : relative(rootNextDirParent, storefrontBuildDir);
+
+  try {
+    symlinkSync(symlinkTarget, rootNextDir, symlinkType);
+
+    console.log(
+      `Linked storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
+        repoRoot,
+        rootNextDir
+      )} for Vercel deployment using a ${symlinkType === "dir" ? "symlink" : symlinkType}.`
+    );
+  } catch (error) {
+    console.warn(
+      "Failed to create symlink for storefront build output. Falling back to copying the directory.",
+      error
+    );
+
+    cpSync(storefrontBuildDir, rootNextDir, { recursive: true });
+
+    console.log(
+      `Copied storefront build output from ${relative(repoRoot, storefrontBuildDir)} to ${relative(
+        repoRoot,
+        rootNextDir
+      )} for Vercel deployment.`
+    );
+  }
 }
