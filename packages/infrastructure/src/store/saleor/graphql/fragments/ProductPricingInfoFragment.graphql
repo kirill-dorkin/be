@@ -1,7 +1,0 @@
-fragment ProductPricingInfoFragment on ProductPricingInfo {
-  priceRange {
-    start {
-      ...TaxedMoneyFragment
-    }
-  }
-}

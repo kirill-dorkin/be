@@ -1,8 +1,0 @@
-query ChannelQuery($channelSlug: String!) {
-  channel(slug: $channelSlug) {
-    countries {
-      code
-      country
-    }
-  }
-}

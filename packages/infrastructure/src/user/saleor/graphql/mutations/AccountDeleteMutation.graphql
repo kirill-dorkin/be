@@ -1,7 +1,0 @@
-mutation AccountDeleteMutation($token: String!) {
-  accountDelete(token: $token) {
-    errors {
-      ...AccountErrorFragment
-    }
-  }
-}

@@ -1,8 +1,0 @@
-query UserAddressesQuery {
-  me {
-    id
-    addresses {
-      ...AddressFragment
-    }
-  }
-}

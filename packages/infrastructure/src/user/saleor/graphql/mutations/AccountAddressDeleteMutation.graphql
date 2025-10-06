@@ -1,7 +1,0 @@
-mutation AccountAddressDeleteMutation($id: ID!) {
-  accountAddressDelete(id: $id) {
-    errors {
-      ...AccountErrorFragment
-    }
-  }
-}
