@@ -49,7 +49,8 @@
       "dependsOn": ["^lint:staged"]
     },
     "start": {
-      "dependsOn": ["^codegen", "^start"]
+      "dependsOn": ["build", "^codegen", "^build", "^start"],
+      "outputs": []
     },
     "test": {},
     "test:watch": {
