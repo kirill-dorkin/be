@@ -1,4 +1,9 @@
+import { existsSync } from "node:fs";
+import { createRequire } from "node:module";
+
 type NodeError = NodeJS.ErrnoException & { code?: string };
+
+const require = createRequire(import.meta.url);
 
 const isMissingOtelContextFileError = (error: unknown): error is NodeError => {
   if (!error || typeof error !== "object") {
@@ -29,6 +34,36 @@ const logMissingOtelContextWarning = () =>
     "OpenTelemetry registration skipped: context API file was not found in node_modules. Ensure the project is built with access to @opentelemetry/api, or remove OTEL_SERVICE_NAME to disable instrumentation.",
   );
 
+const hasOtelContextFile = () => {
+  try {
+    const contextPath = require.resolve(
+      "@opentelemetry/api/build/src/api/context.js",
+    );
+
+    if (!existsSync(contextPath)) {
+      logMissingOtelContextWarning();
+      console.warn(`Missing file path: ${contextPath}`);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    if (isMissingOtelContextFileError(error)) {
+      logMissingOtelContextWarning();
+      return false;
+    }
+
+    if (isModuleNotFoundError(error)) {
+      console.warn(
+        "OpenTelemetry dependency '@opentelemetry/api' could not be resolved. Install it or remove OTEL_SERVICE_NAME to disable instrumentation.",
+      );
+      return false;
+    }
+
+    throw error;
+  }
+};
+
 export async function register() {
   if (process.env.OTEL_SERVICE_NAME) {
     // By making this path dynamic, we ensure that bundler
@@ -36,6 +71,10 @@ export async function register() {
     const otelPath = "@vercel/otel";
 
     try {
+      if (!hasOtelContextFile()) {
+        return;
+      }
+
       const { registerOTel } = await import(otelPath);
 
       try {
