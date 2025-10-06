@@ -33,12 +33,12 @@ if (shouldCopyOnVercel) {
   if (process.platform !== "win32") {
     const storefrontRoot = join(repoRoot, "apps", "storefront");
 
+    // Only mirror workspace directories that the Vercel bundler expects to
+    // live at the repository root. Avoid linking the top-level node_modules as
+    // an absolute path (e.g. "/node_modules"), because the bundler rejects
+    // assets that resolve outside of the project directory when tracing
+    // serverless functions.
     const symlinkMap = [
-      {
-        linkPath: "/node_modules",
-        targetPath: join(repoRoot, "node_modules"),
-        logMessage: "Linked /node_modules to project node_modules for Vercel bundler compatibility.",
-      },
       {
         linkPath: join(repoRoot, "src"),
         targetPath: join(storefrontRoot, "src"),
