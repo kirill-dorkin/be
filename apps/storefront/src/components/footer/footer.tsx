@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+
 import { CACHE_TTL } from "@/config";
 import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";

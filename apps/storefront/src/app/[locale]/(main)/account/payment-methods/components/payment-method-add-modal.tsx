@@ -59,6 +59,7 @@ export const PaymentMethodAddModal = ({
   const handlePaymentSave = async () => {
     if (!isPaymentServiceConfigured) {
       setErrors([t("payment.provider-unavailable")]);
+
       return;
     }
 
@@ -80,6 +81,7 @@ export const PaymentMethodAddModal = ({
   useEffect(() => {
     if (!isPaymentServiceConfigured) {
       setErrors([t("payment.provider-unavailable")]);
+
       return;
     }
 

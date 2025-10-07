@@ -1,7 +1,7 @@
 import { type StripePaymentService } from "@nimara/infrastructure/payment/providers";
 
 import { clientEnvs, isStripeClientConfigured } from "@/envs/client";
-import { serverEnvs, isStripeServerConfigured } from "@/envs/server";
+import { isStripeServerConfigured, serverEnvs } from "@/envs/server";
 
 import { getStorefrontLogger } from "./lazy-logging";
 

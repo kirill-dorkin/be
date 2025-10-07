@@ -1,8 +1,7 @@
 "use client";
 
-import { useTransition } from "react";
-
 import { useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Label } from "@nimara/ui/components/label";
