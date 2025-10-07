@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LockIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { type AllCountryCode } from "@nimara/domain/consts";
@@ -82,19 +82,13 @@ export const Payment = ({
 }: PaymentProps) => {
   const t = useTranslations();
 
-  if (!isPaymentServiceConfigured) {
-    return (
-      <div className="rounded-md border border-dashed border-stone-200 p-6 text-sm text-stone-500 dark:border-stone-700 dark:text-stone-300">
-        {t("payment.provider-unavailable")}
-      </div>
-    );
-  }
-
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
   const region = useCurrentRegion();
   const { resolvedTheme } = useTheme();
+
+  const paymentServiceUnavailable = !isPaymentServiceConfigured;
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -119,14 +113,21 @@ export const Payment = ({
   );
 
   const defaultBillingAddress = formattedAddresses[0]?.address;
-  const formattedToSchemaDefaultBillingAddress = {
-    ...addressToSchema(defaultBillingAddress),
-    id: defaultBillingAddress?.id,
-  };
-  const defaultEmptyBillingAddress = {
-    ...ADDRESS_DEFAULT_VALUES,
-    country: countryCode,
-  } as Schema["billingAddress"];
+  const formattedToSchemaDefaultBillingAddress = useMemo(
+    () => ({
+      ...addressToSchema(defaultBillingAddress),
+      id: defaultBillingAddress?.id,
+    }),
+    [defaultBillingAddress],
+  );
+  const defaultEmptyBillingAddress = useMemo(
+    () =>
+      ({
+        ...ADDRESS_DEFAULT_VALUES,
+        country: countryCode,
+      }) as Schema["billingAddress"],
+    [countryCode],
+  );
   const hasDefaultBillingAddress =
     formattedAddresses[0]?.address.isDefaultBillingAddress;
   const supportedCountryCodesInChannel = countries?.map(({ value }) => value);
@@ -166,12 +167,15 @@ export const Payment = ({
     (isAddingNewPaymentMethod ? isMounted : hasSelectedPaymentMethod);
 
   const isDark = resolvedTheme === "dark";
-  const appearance = {
-    theme: (isDark ? "night" : "stripe") as "night" | "stripe",
-    variables: {
-      colorBackground: isDark ? "#1C1917" : "#fff",
-    },
-  };
+  const appearance = useMemo(
+    () => ({
+      theme: (isDark ? "night" : "stripe") as "night" | "stripe",
+      variables: {
+        colorBackground: isDark ? "#1C1917" : "#fff",
+      },
+    }),
+    [isDark],
+  );
 
   const handlePlaceOrder: SubmitHandler<Schema> = async ({
     paymentMethod,
@@ -261,6 +265,10 @@ export const Payment = ({
   };
 
   useEffect(() => {
+    if (paymentServiceUnavailable) {
+      return;
+    }
+
     void (async () => {
       const paymentService = await getPaymentService();
       const [result] = await Promise.all([
@@ -277,9 +285,13 @@ export const Payment = ({
         setIsInitialized(true);
       }
     })();
-  }, []);
+  }, [checkout.id, checkout.totalPrice.gross.amount, paymentServiceUnavailable, t]);
 
   useEffect(() => {
+    if (paymentServiceUnavailable) {
+      return;
+    }
+
     if (!isInitialized) {
       return;
     }
@@ -327,19 +339,40 @@ export const Payment = ({
     if (isAddingNewPaymentMethod) {
       form.setValue("paymentMethod", undefined);
     }
-  }, [activeTab, saveForFutureUse, isInitialized]);
+  }, [
+    activeTab,
+    appearance,
+    checkout.id,
+    checkout.totalPrice.gross.amount,
+    isAddingNewPaymentMethod,
+    isInitialized,
+    paymentGatewayCustomer,
+    paymentServiceUnavailable,
+    region.language.locale,
+    saveForFutureUse,
+    t,
+    form,
+  ]);
 
   useEffect(() => {
+    if (paymentServiceUnavailable) {
+      return;
+    }
+
     setIsMounted(false);
-  }, [saveForFutureUse, activeTab]);
+  }, [activeTab, paymentServiceUnavailable, saveForFutureUse]);
 
   useEffect(() => {
     if (errorCode) {
       router.replace(pathname);
     }
-  }, [errorCode]);
+  }, [errorCode, pathname, router]);
 
   useEffect(() => {
+    if (paymentServiceUnavailable) {
+      return;
+    }
+
     if (sameAsShippingAddress) {
       form.unregister("billingAddress");
     } else if (checkout.billingAddress) {
@@ -359,7 +392,15 @@ export const Payment = ({
         defaultValue: defaultEmptyBillingAddress,
       });
     }
-  }, [sameAsShippingAddress]);
+  }, [
+    checkout.billingAddress,
+    defaultBillingAddress,
+    defaultEmptyBillingAddress,
+    formattedToSchemaDefaultBillingAddress,
+    form,
+    paymentServiceUnavailable,
+    sameAsShippingAddress,
+  ]);
 
   useEffect(() => {
     if (billingAddressCountry && billingAddressCountry !== countryCode) {
@@ -370,11 +411,19 @@ export const Payment = ({
         { scroll: false },
       );
     }
-  }, [billingAddressCountry]);
+  }, [billingAddressCountry, countryCode, router]);
 
   useEffect(() => {
     setIsCountryChanging(false);
-  }, [countryCode, addressActiveTab]);
+  }, [addressActiveTab, countryCode]);
+
+  if (paymentServiceUnavailable) {
+    return (
+      <div className="rounded-md border border-dashed border-stone-200 p-6 text-sm text-stone-500 dark:border-stone-700 dark:text-stone-300">
+        {t("payment.provider-unavailable")}
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
