@@ -5,11 +5,12 @@ import { clientEnvs } from "@/envs/client";
 import { storefrontLogger } from "@/services/logging";
 
 const wantsButterCMS = clientEnvs.NEXT_PUBLIC_CMS_SERVICE === "BUTTER_CMS";
-const hasButterCMSKey = Boolean(clientEnvs.NEXT_PUBLIC_BUTTER_CMS_API_KEY);
+const butterCMSApiKey = clientEnvs.NEXT_PUBLIC_BUTTER_CMS_API_KEY;
+const hasButterCMSKey = Boolean(butterCMSApiKey);
 const isSaleorCMS = !wantsButterCMS || !hasButterCMSKey;
 
 if (wantsButterCMS && !hasButterCMSKey) {
-  storefrontLogger.warn(
+  storefrontLogger.warning(
     "ButterCMS selected but NEXT_PUBLIC_BUTTER_CMS_API_KEY is missing. Falling back to Saleor CMS.",
   );
 }
@@ -34,9 +35,13 @@ const getCMSPageService = async (): Promise<CMSPageService> => {
       "@nimara/infrastructure/cms-page/providers"
     );
 
+    if (!butterCMSApiKey) {
+      throw new Error("ButterCMS API key is required to use ButterCMS.");
+    }
+
     return butterCMSPageService({
       logger: storefrontLogger,
-      token: clientEnvs.NEXT_PUBLIC_BUTTER_CMS_API_KEY,
+      token: butterCMSApiKey,
     });
   }
 };
@@ -61,9 +66,13 @@ const getCMSMenuService = async (): Promise<CMSMenuService> => {
       "@nimara/infrastructure/cms-menu/providers"
     );
 
+    if (!butterCMSApiKey) {
+      throw new Error("ButterCMS API key is required to use ButterCMS.");
+    }
+
     return butterCMSMenuService({
       logger: storefrontLogger,
-      token: clientEnvs.NEXT_PUBLIC_BUTTER_CMS_API_KEY,
+      token: butterCMSApiKey,
     });
   }
 };
