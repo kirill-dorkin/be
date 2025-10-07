@@ -1,0 +1,28 @@
+{
+  "name": "automated-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:e2e": "playwright test",
+    "lint:staged": "lint-staged"
+  },
+  "devDependencies": {
+    "@nimara/config": "workspace:*",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.18.0",
+    "dotenv": "16.6.1",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "eslint-plugin-playwright": "^2.2.2",
+    "lint-staged": "^16.1.5",
+    "tsconfig": "workspace:*"
+  },
+  "lint-staged": {
+    "*.{js,cjs,ts,tsx}": "eslint --fix",
+    "*.*": "prettier --write --ignore-unknown"
+  },
+  "engines": {
+    "node": ">=22 <25"
+  },
+  "type": "module"
+}
