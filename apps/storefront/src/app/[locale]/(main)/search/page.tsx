@@ -121,6 +121,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
     ),
     fetchCategoryLabels(categorySlugs, searchContext.languageCode),
   ]);
+
   const resultOptions = searchService.getSortByOptions(searchContext);
   const options = resultOptions.ok ? resultOptions.data : [];
 
@@ -137,6 +138,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
 
   const formatList = (items: string[]) => {
     const cleaned = items.map((item) => item.trim()).filter(Boolean);
+
     if (!cleaned.length) {
       return null;
     }
@@ -146,6 +148,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
     if (cleaned.length === 2) {
       return `${cleaned[0]} ${t("common.and")} ${cleaned[1]}`;
     }
+
     const last = cleaned[cleaned.length - 1];
     return `${cleaned.slice(0, -1).join(", ")} ${t("common.and")} ${last}`;
   };
@@ -164,14 +167,16 @@ export default async function Page(props: { searchParams: SearchParams }) {
         .map((value) => formatSlugForHeader(value)),
     );
 
+    if (!categoryHeader && !collectionHeader) {
+      return t("search.all-products");
+    }
+
     if (categoryHeader) {
       return categoryHeader;
     }
     if (collectionHeader) {
       return collectionHeader;
     }
-
-    return t("search.all-products");
   };
 
   const products = resultSearch.ok ? resultSearch.data.results : [];
@@ -289,21 +294,25 @@ async function fetchCategoryLabels(
 
   const edges: Array<{
     node?: {
-      slug?: string | null;
       name?: string | null;
+      slug?: string | null;
       translation?: { name?: string | null } | null;
     } | null;
   } | null> = response.data?.categories?.edges ?? [];
   const map = new Map<string, string>();
+
   edges.forEach((edge) => {
     const node = edge?.node;
+
     if (!node) {
       return;
     }
     const slug = node.slug ?? "";
+
     if (!slug) {
       return;
     }
+
     map.set(
       slug,
       node.translation?.name?.trim() ||
@@ -348,7 +357,6 @@ type FallbackProductNode = {
 type FallbackCategoryProductsQuery = {
   category?: {
     name?: string | null;
-    translation?: { name?: string | null } | null;
     products?: {
       edges: Array<{ node: FallbackProductNode }>;
       pageInfo: {
@@ -358,6 +366,7 @@ type FallbackCategoryProductsQuery = {
         startCursor: string | null;
       };
     } | null;
+    translation?: { name?: string | null } | null;
   } | null;
 };
 
@@ -543,9 +552,9 @@ const fetchCategoryProducts = async ({
   slug: string;
 }): Promise<
   | {
+      categoryLabel: string | null;
       pageInfo: Extract<PageInfo, { type: "cursor" }>;
       products: SearchProduct[];
-      categoryLabel: string | null;
     }
   | null
 > => {
@@ -592,8 +601,8 @@ const fetchCategoryProducts = async ({
     categoryNode?.translation?.name?.trim() || categoryNode?.name?.trim() || null;
 
   return {
+    categoryLabel,
     pageInfo,
     products,
-    categoryLabel,
   };
 };
