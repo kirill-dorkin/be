@@ -92,48 +92,62 @@ export default async function Page(props: { searchParams: SearchParams }) {
     limit,
     ...rest
   } = searchParams;
-  const resultSearch = await searchService.search(
-    {
-      query,
-      limit: limit ? Number.parseInt(limit) : DEFAULT_RESULTS_PER_PAGE,
-      page,
-      after,
-      before,
-      sortBy,
-      filters: rest,
-    },
-    searchContext,
-  );
-  const getFacetsResult = await searchService.getFacets(
-    {
-      query,
-      filters: rest,
-    },
-    searchContext,
-  );
+  const categorySlugs = rest.category
+    ? rest.category
+        .split(",")
+        .map((slug) => slug.trim())
+        .filter(Boolean)
+    : [];
+
+  const [resultSearch, getFacetsResult, categoryLabels] = await Promise.all([
+    searchService.search(
+      {
+        query,
+        limit: limit ? Number.parseInt(limit) : DEFAULT_RESULTS_PER_PAGE,
+        page,
+        after,
+        before,
+        sortBy,
+        filters: rest,
+      },
+      searchContext,
+    ),
+    searchService.getFacets(
+      {
+        query,
+        filters: rest,
+      },
+      searchContext,
+    ),
+    fetchCategoryLabels(categorySlugs, searchContext.languageCode),
+  ]);
   const resultOptions = searchService.getSortByOptions(searchContext);
   const options = resultOptions.ok ? resultOptions.data : [];
 
-  const formatFilterHeader = (filterValue?: string) => {
-    if (!filterValue) {
+  const formattedCategoryLabels =
+    categoryLabels.length > 0
+      ? categoryLabels.map((label, index) => {
+          if (label) {
+            return label;
+          }
+          const slug = categorySlugs[index] ?? "";
+          return formatSlugForHeader(slug);
+        })
+      : [];
+
+  const formatList = (items: string[]) => {
+    const cleaned = items.map((item) => item.trim()).filter(Boolean);
+    if (!cleaned.length) {
       return null;
     }
-
-    const items = filterValue.split(",").map((item) =>
-      item
-        .trim()
-        .replace(/-/g, " ")
-        .replace(/^\w/, (c) => c.toUpperCase()),
-    );
-
-    if (items.length === 1) {
-      return items[0];
+    if (cleaned.length === 1) {
+      return cleaned[0];
     }
-    if (items.length === 2) {
-      return `${items[0]} ${t("common.and")} ${items[1]}`;
+    if (cleaned.length === 2) {
+      return `${cleaned[0]} ${t("common.and")} ${cleaned[1]}`;
     }
-
-    return `${items.slice(0, -1).join(", ")} ${t("common.and")} ${items[items.length - 1]}`;
+    const last = cleaned[cleaned.length - 1];
+    return `${cleaned.slice(0, -1).join(", ")} ${t("common.and")} ${last}`;
   };
 
   const getHeader = () => {
@@ -141,8 +155,14 @@ export default async function Page(props: { searchParams: SearchParams }) {
       return t("search.results-for", { query });
     }
 
-    const categoryHeader = formatFilterHeader(searchParams.category);
-    const collectionHeader = formatFilterHeader(searchParams.collection);
+    const categoryHeader = formatList(formattedCategoryLabels);
+    const collectionHeader = formatList(
+      (searchParams.collection || "")
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean)
+        .map((value) => formatSlugForHeader(value)),
+    );
 
     if (categoryHeader) {
       return categoryHeader;
@@ -162,7 +182,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
 
   if (!finalProducts.length && rest.category) {
     const fallbackResult = await fetchCategoryProducts({
-      slug: rest.category,
+      slug: categorySlugs[0] ?? rest.category,
       channel: searchContext.channel,
       languageCode: searchContext.languageCode,
       after,
@@ -173,6 +193,12 @@ export default async function Page(props: { searchParams: SearchParams }) {
     if (fallbackResult) {
       finalProducts = fallbackResult.products;
       finalPageInfo = fallbackResult.pageInfo;
+      if (
+        formattedCategoryLabels.length === 0 &&
+        fallbackResult.categoryLabel
+      ) {
+        formattedCategoryLabels.push(fallbackResult.categoryLabel);
+      }
     }
   }
 
@@ -216,6 +242,67 @@ export default async function Page(props: { searchParams: SearchParams }) {
   );
 }
 
+function formatSlugForHeader(slug: string) {
+  return slug
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+async function fetchCategoryLabels(
+  slugs: string[],
+  languageCode: string,
+): Promise<(string | null)[]> {
+  if (!slugs.length) {
+    return [];
+  }
+
+  const query = {
+    toString: () => `
+      query CategoryLabels($slugs: [String!], $languageCode: LanguageCodeEnum!) {
+        categories(first: 100, filter: { slugs: $slugs }) {
+          edges {
+            node {
+              slug
+              name
+              translation(languageCode: $languageCode) {
+                name
+              }
+            }
+          }
+        }
+      }
+    `,
+  };
+
+  const response = await saleorClient().execute(query, {
+    operationName: "CategoryLabels",
+    variables: {
+      slugs,
+      languageCode,
+    },
+  });
+
+  if (!response.ok) {
+    return slugs.map(() => null);
+  }
+
+  const edges = response.data?.categories?.edges ?? [];
+  const map = new Map<string, string>();
+  edges.forEach((edge) => {
+    const node = edge?.node;
+    if (!node) {
+      return;
+    }
+    map.set(
+      node.slug,
+      node.translation?.name?.trim() || node.name?.trim() || node.slug,
+    );
+  });
+
+  return slugs.map((slug) => map.get(slug) ?? null);
+}
+
 type FallbackProductNode = {
   id: string;
   media?: Array<{ alt?: string | null; url: string }> | null;
@@ -248,6 +335,8 @@ type FallbackProductNode = {
 
 type FallbackCategoryProductsQuery = {
   category?: {
+    name?: string | null;
+    translation?: { name?: string | null } | null;
     products?: {
       edges: Array<{ node: FallbackProductNode }>;
       pageInfo: {
@@ -271,6 +360,10 @@ const CATEGORY_PRODUCTS_FALLBACK_QUERY = {
       $before: String
     ) {
       category(slug: $slug) {
+        name
+        translation(languageCode: $languageCode) {
+          name
+        }
         products(
           channel: $channel
           first: $first
@@ -440,6 +533,7 @@ const fetchCategoryProducts = async ({
   | {
       pageInfo: Extract<PageInfo, { type: "cursor" }>;
       products: SearchProduct[];
+      categoryLabel: string | null;
     }
   | null
 > => {
@@ -462,8 +556,9 @@ const fetchCategoryProducts = async ({
     return null;
   }
 
-  const productsConnection =
-    (result.data as FallbackCategoryProductsQuery).category?.products;
+  const categoryNode = (result.data as FallbackCategoryProductsQuery).category;
+
+  const productsConnection = categoryNode?.products;
 
   if (!productsConnection) {
     return null;
@@ -481,8 +576,12 @@ const fetchCategoryProducts = async ({
     type: "cursor",
   };
 
+  const categoryLabel =
+    categoryNode?.translation?.name?.trim() || categoryNode?.name?.trim() || null;
+
   return {
     pageInfo,
     products,
+    categoryLabel,
   };
 };
