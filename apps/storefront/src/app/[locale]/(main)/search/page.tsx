@@ -454,7 +454,7 @@ const fetchCategoryProducts = async ({
         after,
         before,
       },
-      operationName: "CategoryProductsFallback",
+      operationName: "CategoryProductsFallbackQuery",
     },
   );
 
