@@ -42,7 +42,7 @@ export const LANGUAGES = {
   KG: {
     id: "kg",
     name: "Кыргызча (Кыргызстан)",
-    code: "KY_KG",
+    code: "KY",
     locale: "ky-KG",
   },
 } satisfies Record<Uppercase<LanguageId>, Language>;
