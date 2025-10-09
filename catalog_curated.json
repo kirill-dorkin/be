@@ -10,7 +10,7 @@
     },
     "root_categories": [
       {
-        "slug": "комплектующие",
+        "slug": "components",
         "translations": {
           "ru-RU": {
             "name": "Комплектующие",
@@ -31,7 +31,7 @@
         }
       },
       {
-        "slug": "периферия",
+        "slug": "peripherals",
         "translations": {
           "ru-RU": {
             "name": "Периферия",
@@ -52,7 +52,7 @@
         }
       },
       {
-        "slug": "сеть",
+        "slug": "networking",
         "translations": {
           "ru-RU": {
             "name": "Сеть",
@@ -73,7 +73,7 @@
         }
       },
       {
-        "slug": "мобильность",
+        "slug": "mobility",
         "translations": {
           "ru-RU": {
             "name": "Мобильность",
@@ -94,7 +94,7 @@
         }
       },
       {
-        "slug": "дом",
+        "slug": "home",
         "translations": {
           "ru-RU": {
             "name": "Дом",
@@ -115,7 +115,7 @@
         }
       },
       {
-        "slug": "сервис",
+        "slug": "service",
         "translations": {
           "ru-RU": {
             "name": "Сервис",
@@ -136,7 +136,7 @@
         }
       },
       {
-        "slug": "уценка",
+        "slug": "outlet",
         "translations": {
           "ru-RU": {
             "name": "Уценка",
@@ -173,7 +173,7 @@
   "categories": [
     {
       "name": "Комплектующие",
-      "slug": "комплектующие",
+      "slug": "components",
       "description": "Игровые, офисные и серверные комплектующие для систем любой сложности.",
       "translations": {
         "ru-RU": {
@@ -196,7 +196,7 @@
       "subcategories": [
         {
           "name": "Накопители",
-          "slug": "накопители",
+          "slug": "storage",
           "description": "SSD, HDD и оптические носители для всех сценариев хранения данных.",
           "translations": {
             "ru-RU": {
@@ -2377,7 +2377,7 @@
         },
         {
           "name": "Материнские платы",
-          "slug": "материнские-платы",
+          "slug": "motherboards",
           "description": "Материнские платы для игровых, офисных и серверных систем.",
           "translations": {
             "ru-RU": {
@@ -2942,7 +2942,7 @@
         },
         {
           "name": "Процессоры",
-          "slug": "процессоры",
+          "slug": "processors",
           "description": "Процессоры для настольных ПК и серверов разных поколений.",
           "translations": {
             "ru-RU": {
@@ -3191,7 +3191,7 @@
         },
         {
           "name": "Память",
-          "slug": "память",
+          "slug": "memory",
           "description": "Модули оперативной памяти форматов DIMM и SO-DIMM.",
           "translations": {
             "ru-RU": {
@@ -4776,7 +4776,7 @@
         },
         {
           "name": "Охлаждение",
-          "slug": "охлаждение",
+          "slug": "cooling",
           "description": "Воздушные и жидкостные системы охлаждения для процессоров и корпусов.",
           "translations": {
             "ru-RU": {
@@ -7234,7 +7234,7 @@
         },
         {
           "name": "Питание",
-          "slug": "питание",
+          "slug": "power",
           "description": "Блоки питания и зарядные решения для техники.",
           "translations": {
             "ru-RU": {
@@ -8009,7 +8009,7 @@
         },
         {
           "name": "Корпуса",
-          "slug": "корпуса",
+          "slug": "cases",
           "description": "Корпуса для настольных ПК и моддинг-проектов.",
           "translations": {
             "ru-RU": {
@@ -9234,7 +9234,7 @@
         },
         {
           "name": "Графика",
-          "slug": "графика",
+          "slug": "graphics",
           "description": "Видеокарты для игровых и профессиональных задач.",
           "translations": {
             "ru-RU": {
@@ -9631,7 +9631,7 @@
         },
         {
           "name": "Серверное",
-          "slug": "серверное",
+          "slug": "server-gear",
           "description": "Компоненты и периферия для серверов и инфраструктуры.",
           "translations": {
             "ru-RU": {
@@ -9765,7 +9765,7 @@
     },
     {
       "name": "Периферия",
-      "slug": "периферия",
+      "slug": "peripherals",
       "description": "Мониторы, аудио и игровые аксессуары для идеального рабочего места.",
       "translations": {
         "ru-RU": {
@@ -9788,7 +9788,7 @@
       "subcategories": [
         {
           "name": "Мониторы",
-          "slug": "мониторы",
+          "slug": "monitors",
           "description": "Компьютерные мониторы и панели для рабочих мест и signage.",
           "translations": {
             "ru-RU": {
@@ -11131,7 +11131,7 @@
         },
         {
           "name": "Проекторы",
-          "slug": "проекторы",
+          "slug": "projectors",
           "description": "Проекционные решения для офисов, образования и развлечений.",
           "translations": {
             "ru-RU": {
@@ -11272,7 +11272,7 @@
         },
         {
           "name": "Акустика",
-          "slug": "акустика",
+          "slug": "speakers",
           "description": "Колонки и акустические системы для дома и офиса.",
           "translations": {
             "ru-RU": {
@@ -11867,7 +11867,7 @@
         },
         {
           "name": "Наушники",
-          "slug": "наушники",
+          "slug": "headphones",
           "description": "Проводные и беспроводные гарнитуры для игр и работы.",
           "translations": {
             "ru-RU": {
@@ -12837,7 +12837,7 @@
         },
         {
           "name": "Клавиатуры",
-          "slug": "клавиатуры",
+          "slug": "keyboards",
           "description": "Игровые и офисные клавиатуры разных форматов.",
           "translations": {
             "ru-RU": {
@@ -13880,7 +13880,7 @@
         },
         {
           "name": "Мыши",
-          "slug": "мыши",
+          "slug": "mice",
           "description": "Компьютерные мыши для игр и продуктивности.",
           "translations": {
             "ru-RU": {
@@ -15224,7 +15224,7 @@
         },
         {
           "name": "Игровое",
-          "slug": "игровое",
+          "slug": "gaming",
           "description": "Игровые кресла, контроллеры и аксессуары для сетапов.",
           "translations": {
             "ru-RU": {
@@ -17278,7 +17278,7 @@
         },
         {
           "name": "Печать",
-          "slug": "печать",
+          "slug": "printing",
           "description": "Принтеры и решения для печати этикеток и документов.",
           "translations": {
             "ru-RU": {
@@ -17648,7 +17648,7 @@
         },
         {
           "name": "Сканеры",
-          "slug": "сканеры",
+          "slug": "scanners",
           "description": "Сканеры для офисных и специализированных задач.",
           "translations": {
             "ru-RU": {
@@ -17733,7 +17733,7 @@
         },
         {
           "name": "Хранение",
-          "slug": "хранение",
+          "slug": "portable-storage",
           "description": "USB-накопители и карты памяти для переноса данных.",
           "translations": {
             "ru-RU": {
@@ -18688,7 +18688,7 @@
         },
         {
           "name": "Кабели",
-          "slug": "кабели",
+          "slug": "cables",
           "description": "Кабели, переходники и удлинители для подключения устройств.",
           "translations": {
             "ru-RU": {
@@ -18952,7 +18952,7 @@
         },
         {
           "name": "Разное",
-          "slug": "разное",
+          "slug": "assorted",
           "description": "Раздел с универсальными и вспомогательными устройствами.",
           "translations": {
             "ru-RU": {
@@ -19069,7 +19069,7 @@
     },
     {
       "name": "Сеть",
-      "slug": "сеть",
+      "slug": "networking",
       "description": "Сетевое и охранное оборудование, готовое к масштабируемым проектам.",
       "translations": {
         "ru-RU": {
@@ -19092,7 +19092,7 @@
       "subcategories": [
         {
           "name": "Оборудование",
-          "slug": "оборудование",
+          "slug": "equipment",
           "description": "Маршрутизаторы, коммутаторы и сетевые аксессуары.",
           "translations": {
             "ru-RU": {
@@ -20819,7 +20819,7 @@
         },
         {
           "name": "Кабельная",
-          "slug": "кабельная",
+          "slug": "cabling",
           "description": "Кабели, патч-панели и монтажные решения для сетей.",
           "translations": {
             "ru-RU": {
@@ -22139,7 +22139,7 @@
         },
         {
           "name": "Видеонаблюдение",
-          "slug": "видеонаблюдение",
+          "slug": "video-surveillance",
           "description": "Камеры, регистраторы и аксессуары систем безопасности.",
           "translations": {
             "ru-RU": {
@@ -29688,7 +29688,7 @@
         },
         {
           "name": "Доступ",
-          "slug": "доступ",
+          "slug": "access-control",
           "description": "Домофоны, контроллеры и считыватели для контроля доступа.",
           "translations": {
             "ru-RU": {
@@ -31438,7 +31438,7 @@
         },
         {
           "name": "Оповещение",
-          "slug": "оповещение",
+          "slug": "alarm",
           "description": "Извещатели, сирены и аудиооборудование для сигнализации.",
           "translations": {
             "ru-RU": {
@@ -32560,7 +32560,7 @@
     },
     {
       "name": "Мобильность",
-      "slug": "мобильность",
+      "slug": "mobility",
       "description": "Ноутбуки и аксессуары для работы в дороге и гибридных команд.",
       "translations": {
         "ru-RU": {
@@ -32583,7 +32583,7 @@
       "subcategories": [
         {
           "name": "Ноутбуки",
-          "slug": "ноутбуки",
+          "slug": "laptops",
           "description": "Готовые ноутбуки для бизнеса, дома и образования.",
           "translations": {
             "ru-RU": {
@@ -33268,7 +33268,7 @@
         },
         {
           "name": "Аксессуары",
-          "slug": "аксессуары",
+          "slug": "accessories",
           "description": "Сумки, держатели и другие полезные дополнения.",
           "translations": {
             "ru-RU": {
@@ -34345,7 +34345,7 @@
         },
         {
           "name": "Питание мобильных",
-          "slug": "питание-мобильных",
+          "slug": "mobile-power",
           "description": "Power Bank и зарядные устройства для мобильной техники.",
           "translations": {
             "ru-RU": {
@@ -34646,7 +34646,7 @@
         },
         {
           "name": "Устройства",
-          "slug": "устройства",
+          "slug": "devices",
           "description": "Мобильные телефоны и смарт-устройства.",
           "translations": {
             "ru-RU": {
@@ -34687,7 +34687,7 @@
     },
     {
       "name": "Дом",
-      "slug": "дом",
+      "slug": "home",
       "description": "Бытовая электроника и развлечения для уютной цифровой среды.",
       "translations": {
         "ru-RU": {
@@ -34710,7 +34710,7 @@
       "subcategories": [
         {
           "name": "Кухня",
-          "slug": "кухня",
+          "slug": "kitchen",
           "description": "Техника для приготовления напитков и блюд.",
           "translations": {
             "ru-RU": {
@@ -34822,7 +34822,7 @@
         },
         {
           "name": "Уход",
-          "slug": "уход",
+          "slug": "care",
           "description": "Пылесосы и техника для ухода за домом и собой.",
           "translations": {
             "ru-RU": {
@@ -35117,7 +35117,7 @@
         },
         {
           "name": "Развлечения",
-          "slug": "развлечения",
+          "slug": "entertainment",
           "description": "Телевизоры и экраны для семьи и бизнеса.",
           "translations": {
             "ru-RU": {
@@ -35349,7 +35349,7 @@
         },
         {
           "name": "Ремонт",
-          "slug": "ремонт",
+          "slug": "repair",
           "description": "Запчасти для телевизоров и домашней электроники.",
           "translations": {
             "ru-RU": {
@@ -35544,7 +35544,7 @@
     },
     {
       "name": "Сервис",
-      "slug": "сервис",
+      "slug": "service",
       "description": "Инструменты, софт и расходники для обслуживания техники и проектов.",
       "translations": {
         "ru-RU": {
@@ -35567,7 +35567,7 @@
       "subcategories": [
         {
           "name": "Инструменты",
-          "slug": "инструменты",
+          "slug": "tools",
           "description": "Инструменты и наборы для монтажа и обслуживания.",
           "translations": {
             "ru-RU": {
@@ -35852,7 +35852,7 @@
         },
         {
           "name": "Маркировка",
-          "slug": "маркировка",
+          "slug": "security-labels",
           "description": "Голограммы и защитные стикеры для техники.",
           "translations": {
             "ru-RU": {
@@ -35891,7 +35891,7 @@
         },
         {
           "name": "Программное обеспечение",
-          "slug": "программное-обеспечение",
+          "slug": "software",
           "description": "Лицензии и программные продукты для бизнеса.",
           "translations": {
             "ru-RU": {
@@ -35958,7 +35958,7 @@
         },
         {
           "name": "Расходники",
-          "slug": "расходники",
+          "slug": "consumables",
           "description": "Картриджи и другие расходные материалы для устройств.",
           "translations": {
             "ru-RU": {
@@ -36329,7 +36329,7 @@
         },
         {
           "name": "Запчасти",
-          "slug": "запчасти",
+          "slug": "spare-parts",
           "description": "Экраны, платы и другие запчасти для ремонта техники.",
           "translations": {
             "ru-RU": {
@@ -36352,7 +36352,7 @@
           "subcategories": [
             {
               "name": "Батареи",
-              "slug": "батареи",
+              "slug": "batteries",
               "description": "Аккумуляторы для ноутбуков и мобильных устройств.",
               "translations": {
                 "ru-RU": {
@@ -36774,7 +36774,7 @@
             },
             {
               "name": "Зарядные устройства",
-              "slug": "зарядные-устройства",
+              "slug": "chargers",
               "description": "Блоки питания и док-станции для ноутбуков.",
               "translations": {
                 "ru-RU": {
@@ -37007,7 +37007,7 @@
             },
             {
               "name": "Клавиатуры (запчасти)",
-              "slug": "клавиатуры-запчасти",
+              "slug": "keyboard-parts",
               "description": "Клавиатуры и модули ввода для ремонта ноутбуков.",
               "translations": {
                 "ru-RU": {
@@ -37494,7 +37494,7 @@
             },
             {
               "name": "Матрицы",
-              "slug": "матрицы",
+              "slug": "display-panels",
               "description": "Экраны и матрицы для замены в ноутбуках.",
               "translations": {
                 "ru-RU": {
@@ -37714,7 +37714,7 @@
     },
     {
       "name": "Уценка",
-      "slug": "уценка",
+      "slug": "outlet",
       "description": "Лучшие предложения с прозрачными скидками и поддержкой бренда.",
       "translations": {
         "ru-RU": {
@@ -37737,7 +37737,7 @@
       "subcategories": [
         {
           "name": "Комплектующие (уценка)",
-          "slug": "комплектующие-уценка",
+          "slug": "outlet-components",
           "description": "Комплектующие по специальной цене.",
           "translations": {
             "ru-RU": {
@@ -38054,7 +38054,7 @@
         },
         {
           "name": "Периферия (уценка)",
-          "slug": "периферия-уценка",
+          "slug": "outlet-peripherals",
           "description": "Периферийные устройства со скидкой.",
           "translations": {
             "ru-RU": {
@@ -38394,7 +38394,7 @@
         },
         {
           "name": "Сеть (уценка)",
-          "slug": "сеть-уценка",
+          "slug": "networking-outlet",
           "description": "Сетевые устройства и кабельная продукция со скидками.",
           "translations": {
             "ru-RU": {
@@ -38509,7 +38509,7 @@
         },
         {
           "name": "Ноутбуки (уценка)",
-          "slug": "ноутбуки-уценка",
+          "slug": "outlet-laptops",
           "description": "Ноутбуки и их части со скидкой.",
           "translations": {
             "ru-RU": {
@@ -39278,7 +39278,7 @@
         },
         {
           "name": "Аксессуары (уценка)",
-          "slug": "аксессуары-уценка",
+          "slug": "outlet-accessories",
           "description": "Аксессуары по сниженной цене.",
           "translations": {
             "ru-RU": {
@@ -39348,7 +39348,7 @@
         },
         {
           "name": "Прочее (уценка)",
-          "slug": "прочее-уценка",
+          "slug": "outlet-misc",
           "description": "Смешанная уцененная продукция.",
           "translations": {
             "ru-RU": {
