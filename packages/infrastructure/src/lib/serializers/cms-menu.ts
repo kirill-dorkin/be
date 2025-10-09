@@ -20,7 +20,20 @@ const normalizeLocalePrefix = (locale?: string) => {
 };
 
 const stripLocalePrefix = (pathname: string, locale?: string) => {
-  const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  let normalizedPath = pathname;
+
+  if (normalizedPath.startsWith("http://") || normalizedPath.startsWith("https://")) {
+    try {
+      const parsed = new URL(normalizedPath);
+      normalizedPath = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch {
+      // Ignore parse errors and fallback to default normalization below
+    }
+  }
+
+  normalizedPath = normalizedPath.startsWith("/")
+    ? normalizedPath
+    : `/${normalizedPath}`;
   const normalizedLocale = normalizeLocalePrefix(locale);
 
   if (!normalizedLocale) {
@@ -36,6 +49,16 @@ const stripLocalePrefix = (pathname: string, locale?: string) => {
   }
 
   return normalizedPath;
+};
+
+const pickFirstNonEmpty = (...values: Array<string | null | undefined>) => {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value.trim();
+    }
+  }
+
+  return null;
 };
 
 const createMenuItemUrl = (
@@ -75,26 +98,72 @@ const createMenuItemUrl = (
   );
 };
 
+const removeStorefrontOrigin = (url: string): string => {
+  const storefrontUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL;
+
+  if (storefrontUrl) {
+    try {
+      const storefront = new URL(storefrontUrl);
+      const parsed = new URL(url);
+
+      if (parsed.origin === storefront.origin) {
+        return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+      }
+    } catch {
+      if (url.startsWith(storefrontUrl)) {
+        return url.slice(storefrontUrl.length) || "/";
+      }
+    }
+  }
+
+  return url;
+};
+
+const sanitizeMenuUrl = (
+  rawUrl: string | null | undefined,
+  locale?: string,
+): string | null => {
+  if (!rawUrl) {
+    return null;
+  }
+
+  const trimmedUrl = rawUrl.trim();
+  let candidate =
+    trimmedUrl.startsWith("http://") || trimmedUrl.startsWith("https://")
+      ? removeStorefrontOrigin(trimmedUrl)
+      : trimmedUrl;
+
+  if (candidate.startsWith("http://") || candidate.startsWith("https://")) {
+    try {
+      const parsedCandidate = new URL(candidate);
+      candidate = `${parsedCandidate.pathname}${parsedCandidate.search}${parsedCandidate.hash}`;
+    } catch {
+      // Ignore parse errors and let fallback logic normalize the URL
+    }
+  }
+
+  candidate = candidate.startsWith("/") ? candidate : `/${candidate}`;
+
+  return stripLocalePrefix(candidate, locale);
+};
+
 const serializeSaleorMenuItemChild = (
   child: MenuGet_menu_Menu_items_MenuItem_children_MenuItem,
   locale?: string,
 ): MenuItemChild => {
   const { id, name, translation, url, collection, category, page } = child;
 
-  // INFO: Links in Saleor CMS cannot be relative links, they must be absolute URLs,
-  // so to preserve locale prefixes we need to cut the domain to make them relatives
-  const formattedUrl = url?.replace(
-    process.env.NEXT_PUBLIC_STOREFRONT_URL ?? "",
-    "",
-  );
-
-  const sanitizedUrl = formattedUrl
-    ? stripLocalePrefix(formattedUrl, locale)
-    : null;
+  const sanitizedUrl = sanitizeMenuUrl(url, locale);
 
   return {
     id,
-    label: translation?.name || name,
+    label:
+      pickFirstNonEmpty(
+        translation?.name,
+        category?.translation?.name,
+        name,
+        category?.name,
+      ) ?? id,
     url:
       sanitizedUrl ?? createMenuItemUrl(category, collection, page, locale),
     description:
@@ -115,20 +184,19 @@ const serializeSaleorMenuItem = (
   const { id, name, translation, url, children, category, collection, page } =
     item;
 
-  // INFO: Links in Saleor CMS cannot be relative links, they must be absolute URLs,
-  // so to preserve locale prefixes we need to cut the domain to make them relatives
-  const formattedUrl = url?.replace(
-    process.env.NEXT_PUBLIC_STOREFRONT_URL ?? "",
-    "",
-  );
-
-  const sanitizedUrl = formattedUrl
-    ? stripLocalePrefix(formattedUrl, locale)
-    : null;
+  const sanitizedUrl = sanitizeMenuUrl(url, locale);
 
   return {
     id,
-    label: translation?.name || name,
+    label:
+      pickFirstNonEmpty(
+        translation?.name,
+        category?.translation?.name,
+        collection?.translation?.name,
+        name,
+        category?.name,
+        collection?.name,
+      ) ?? id,
     url:
       sanitizedUrl ?? createMenuItemUrl(category, collection, page, locale),
     children:

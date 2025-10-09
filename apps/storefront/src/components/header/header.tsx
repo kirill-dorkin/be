@@ -12,7 +12,7 @@ import { getCheckoutId } from "@/lib/actions/cart";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
-import { cmsMenuService } from "@/services/cms";
+import { getNavigationMenu } from "@/services/navigation-menu";
 import { getUserService } from "@/services/user";
 
 import { Logo } from "./logo";
@@ -31,10 +31,9 @@ export const Header = async () => {
     getTranslations(),
   ]);
 
-  const resultMenu = await cmsMenuService.menuGet({
+  const resultMenu = await getNavigationMenu({
     channel: region.market.channel,
     languageCode: region.language.code,
-    slug: "navbar",
     options: {
       next: {
         tags: ["CMS:navbar"],

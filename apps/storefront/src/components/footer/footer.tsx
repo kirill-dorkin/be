@@ -5,6 +5,7 @@ import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { cmsMenuService } from "@/services/cms";
+import { getNavigationMenu } from "@/services/navigation-menu";
 
 export const Footer = async () => {
   const [region, t] = await Promise.all([
@@ -24,10 +25,9 @@ export const Footer = async () => {
     },
   });
 
-  const resultCategories = await cmsMenuService.menuGet({
+  const resultCategories = await getNavigationMenu({
     channel: region.market.channel,
     languageCode: region.language.code,
-    slug: "navbar",
     options: {
       next: {
         tags: ["CMS:navbar"],

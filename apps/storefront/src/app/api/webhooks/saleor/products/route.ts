@@ -1,6 +1,7 @@
 import { secureSaleorClient } from "@/graphql/client";
 import { type ProductEventSubscriptionFragment } from "@/graphql/fragments/generated";
 import { ProductSlugQueryDocument } from "@/graphql/queries/generated";
+import { revalidateTag } from "@/lib/cache";
 import { storefrontLogger } from "@/services/logging";
 
 import { handleWebhookPostRequest } from "../helpers";
@@ -49,7 +50,13 @@ const extractSlugFromPayload = async (
 export async function POST(request: Request) {
   return handleWebhookPostRequest(
     request,
-    (json: ProductEventSubscriptionFragment) => extractSlugFromPayload(json),
+    async (json: ProductEventSubscriptionFragment) => {
+      const slug = await extractSlugFromPayload(json);
+
+      revalidateTag("SEARCH");
+
+      return slug;
+    },
     "PRODUCT",
   );
 }

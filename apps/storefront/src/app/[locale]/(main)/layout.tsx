@@ -3,7 +3,7 @@ import { Header } from "@/components/header";
 import { CACHE_TTL } from "@/config";
 import { getLocalePrefix } from "@/lib/server";
 import { getCurrentRegion } from "@/regions/server";
-import { cmsMenuService } from "@/services/cms";
+import { getNavigationMenu } from "@/services/navigation-menu";
 
 import { Navigation } from "./_components/navigation";
 
@@ -13,11 +13,10 @@ export default async function Layout({ children }: LayoutProps<"/[locale]">) {
     getLocalePrefix(),
   ]);
 
-  const resultMenu = await cmsMenuService.menuGet({
+  const resultMenu = await getNavigationMenu({
     channel: region.market.channel,
     languageCode: region.language.code,
     locale,
-    slug: "navbar",
     options: {
       next: {
         tags: ["CMS:navbar"],
