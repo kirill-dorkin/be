@@ -18,6 +18,7 @@ import {
 } from "@nimara/ui/components/navigation-menu";
 
 import { LocalizedLink } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 import { isValidJson } from "@/lib/helpers";
 import type { Maybe } from "@/lib/types";
 
@@ -28,6 +29,18 @@ const RichText = dynamic(
     ),
   { ssr: false },
 );
+
+const MAX_SUBCATEGORIES_PER_COLUMN = 4;
+
+const splitIntoColumns = <T,>(items: T[], chunkSize: number) => {
+  const result: T[][] = [];
+
+  for (let index = 0; index < items.length; index += chunkSize) {
+    result.push(items.slice(index, index + chunkSize));
+  }
+
+  return result;
+};
 
 export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
   const [currentMenuItem, setCurrentMenuItem] = useState("");
@@ -46,13 +59,33 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
     >
       <NavigationMenuList className="gap-6">
         {menu.items.map((item) => {
-          const childrenWithoutImage = item.children?.filter(
-            (child) => !child.collectionImageUrl,
+          const childrenWithoutImage =
+            item.children?.filter((child) => !child.collectionImageUrl) ?? [];
+
+          const childrenWithImage =
+            item.children?.filter((child) => child.collectionImageUrl) ?? [];
+
+          const withoutImageColumns = splitIntoColumns(
+            childrenWithoutImage,
+            MAX_SUBCATEGORIES_PER_COLUMN,
           );
 
-          const childrenWithImage = item.children?.filter(
-            (child) => child.collectionImageUrl,
-          );
+          const columnCount = Math.max(withoutImageColumns.length, 1);
+          const shouldWidenColumns = withoutImageColumns.length > 1;
+          const hasImageChildren = childrenWithImage.length > 0;
+          const leftColumnClass = hasImageChildren
+            ? shouldWidenColumns
+              ? "col-span-3"
+              : "col-span-2"
+            : "col-span-6";
+          const rightColumnClass = hasImageChildren
+            ? withoutImageColumns.length > 0
+              ? shouldWidenColumns
+                ? "col-span-3"
+                : "col-span-4"
+              : "col-span-6"
+            : "";
+          const horizontalGapClass = shouldWidenColumns ? "gap-x-6" : "gap-x-4";
 
           return (
             <NavigationMenuItem key={item.id}>
@@ -90,38 +123,60 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
 
               <NavigationMenuContent>
                 <div className="bg-background grid w-full grid-cols-6 p-6">
-                  <div className="col-span-2 flex flex-col gap-3 pr-6">
-                    {!!item.children?.length &&
-                      childrenWithoutImage?.map((child) => (
-                        <LocalizedLink
-                          key={child.id}
-                          href={child.url}
-                          className="hover:bg-accent group block space-y-1 rounded-md p-3"
-                          prefetch={false}
+                  {withoutImageColumns.length > 0 && (
+                    <div
+                      className={cn(
+                        "grid gap-y-3 pr-6",
+                        leftColumnClass,
+                        horizontalGapClass,
+                      )}
+                      style={{
+                        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+                      }}
+                    >
+                      {withoutImageColumns.map((column, columnIndex) => (
+                        <div
+                          key={`${item.id}-column-${columnIndex}`}
+                          className="flex flex-col gap-3"
                         >
-                          <div className="text-sm font-medium leading-none">
-                            {child.label}
-                          </div>
-                          {child.description && (
-                            <div className="text-muted-foreground text-sm leading-snug">
-                              {isValidJson(child.description) ? (
-                                <RichText
-                                  className="line-clamp-3 py-1"
-                                  contentData={child.description}
-                                  disableProse
-                                />
-                              ) : (
-                                <p className="py-1">{child.description}</p>
+                          {column.map((child) => (
+                            <LocalizedLink
+                              key={child.id}
+                              href={child.url}
+                              className="hover:bg-accent group block space-y-1 rounded-md p-3"
+                              prefetch={false}
+                            >
+                              <div className="text-sm font-medium leading-none">
+                                {child.label}
+                              </div>
+                              {child.description && (
+                                <div className="text-muted-foreground text-sm leading-snug">
+                                  {isValidJson(child.description) ? (
+                                    <RichText
+                                      className="line-clamp-3 py-1"
+                                      contentData={child.description}
+                                      disableProse
+                                    />
+                                  ) : (
+                                    <p className="py-1">{child.description}</p>
+                                  )}
+                                </div>
                               )}
-                            </div>
-                          )}
-                        </LocalizedLink>
+                            </LocalizedLink>
+                          ))}
+                        </div>
                       ))}
-                  </div>
+                    </div>
+                  )}
 
-                  <div className="col-span-4 grid grid-cols-3 gap-3">
-                    {!!item.children?.length &&
-                      childrenWithImage?.slice(0, 3).map((child) => (
+                  {hasImageChildren && (
+                    <div
+                      className={cn(
+                        "grid grid-cols-3 gap-3",
+                        rightColumnClass,
+                      )}
+                    >
+                      {childrenWithImage.slice(0, 3).map((child) => (
                         <LocalizedLink
                           key={child.id}
                           href={child.url}
@@ -160,7 +215,8 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                           </div>
                         </LocalizedLink>
                       ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
