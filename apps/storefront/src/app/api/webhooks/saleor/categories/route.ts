@@ -1,9 +1,18 @@
-import { type CategoryEventSubscriptionFragment } from "@/graphql/fragments/generated";
 import { revalidateTag } from "@/lib/cache";
 import { verifySaleorWebhookSignature } from "@/lib/webhooks";
 import { storefrontLogger } from "@/services/logging";
 
 const logger = storefrontLogger;
+
+type CategoryEventSubscriptionFragment =
+  | {
+      __typename: "CategoryCreated" | "CategoryUpdated" | "CategoryDeleted";
+      category: { slug: string | null } | null;
+    }
+  | {
+      __typename: string;
+      category?: { slug?: string | null } | null;
+    };
 
 const getCategorySlug = (
   payload: CategoryEventSubscriptionFragment,
