@@ -259,7 +259,7 @@ async function fetchCategoryLabels(
 
   const query = {
     toString: () => `
-      query CategoryLabels($slugs: [String!], $languageCode: LanguageCodeEnum!) {
+      query CategoryLabelsQuery($slugs: [String!], $languageCode: LanguageCodeEnum!) {
         categories(first: 100, filter: { slugs: $slugs }) {
           edges {
             node {
@@ -276,7 +276,7 @@ async function fetchCategoryLabels(
   };
 
   const response = await saleorClient().execute(query, {
-    operationName: "CategoryLabels",
+    operationName: "CategoryLabelsQuery",
     variables: {
       slugs,
       languageCode,
