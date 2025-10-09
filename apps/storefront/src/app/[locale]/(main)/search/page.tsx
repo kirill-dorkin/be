@@ -6,6 +6,7 @@ import { DEFAULT_RESULTS_PER_PAGE, DEFAULT_SORT_BY } from "@/config";
 import { clientEnvs } from "@/envs/client";
 import { JsonLd, mappedSearchProductsToJsonLd } from "@/lib/json-ld";
 import { paths } from "@/lib/paths";
+import { saleorClient } from "@/graphql/client";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 
@@ -148,6 +149,25 @@ export default async function Page(props: { searchParams: SearchParams }) {
   const products = resultSearch.ok ? resultSearch.data.results : [];
   const pageInfo = resultSearch.ok ? resultSearch.data.pageInfo : null;
 
+  let finalProducts = products;
+  let finalPageInfo = pageInfo;
+
+  if (!finalProducts.length && rest.category) {
+    const fallbackResult = await fetchCategoryProducts({
+      slug: rest.category,
+      channel: searchContext.channel,
+      languageCode: searchContext.languageCode,
+      after,
+      before,
+      limit: limit ? Number.parseInt(limit) : DEFAULT_RESULTS_PER_PAGE,
+    });
+
+    if (fallbackResult) {
+      finalProducts = fallbackResult.products;
+      finalPageInfo = fallbackResult.pageInfo;
+    }
+  }
+
   return (
     <div className="w-full">
       <Breadcrumbs pageName={getHeader()} />
@@ -168,18 +188,265 @@ export default async function Page(props: { searchParams: SearchParams }) {
           </div>
         </div>
 
-        {products.length ? <ProductsList products={products} /> : <NoResults />}
+        {finalProducts.length ? (
+          <ProductsList products={finalProducts} />
+        ) : (
+          <NoResults />
+        )}
 
-        {pageInfo && (
+        {finalPageInfo && (
           <SearchPagination
-            pageInfo={pageInfo}
+            pageInfo={finalPageInfo}
             searchParams={searchParams}
             baseUrl={paths.search.asPath()}
           />
         )}
       </section>
 
-      <JsonLd jsonLd={mappedSearchProductsToJsonLd(products)} />
+      <JsonLd jsonLd={mappedSearchProductsToJsonLd(finalProducts)} />
     </div>
   );
 }
+
+type FallbackProductNode = {
+  id: string;
+  name: string;
+  slug: string;
+  translation?: { name?: string | null } | null;
+  thumbnail?: { url: string; alt?: string | null } | null;
+  media?: Array<{ url: string; alt?: string | null }> | null;
+  updatedAt: string;
+  pricing: {
+    displayGrossPrices: boolean;
+    priceRange?: {
+      start?: {
+        gross?: { amount: number; currency: string } | null;
+        net?: { amount: number; currency: string } | null;
+      } | null;
+    } | null;
+    priceRangeUndiscounted?: {
+      start?: {
+        gross?: { amount: number; currency: string } | null;
+        net?: { amount: number; currency: string } | null;
+      } | null;
+    } | null;
+  };
+  variants?: Array<{
+    pricing?: {
+      price?: { gross?: { amount: number; currency: string } | null } | null;
+    } | null;
+  }> | null;
+};
+
+type FallbackCategoryProductsQuery = {
+  category?: {
+    products?: {
+      edges: Array<{ node: FallbackProductNode }>;
+      pageInfo: {
+        startCursor: string | null;
+        endCursor: string | null;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+      };
+    } | null;
+  } | null;
+};
+
+const CATEGORY_PRODUCTS_FALLBACK_QUERY = {
+  toString: () => `
+    query CategoryProductsFallback(
+      $slug: String!
+      $channel: String!
+      $languageCode: LanguageCodeEnum!
+      $first: Int
+      $after: String
+      $before: String
+    ) {
+      category(slug: $slug) {
+        products(
+          channel: $channel
+          first: $first
+          after: $after
+          before: $before
+        ) {
+          edges {
+            node {
+              id
+              name
+              slug
+              translation(languageCode: $languageCode) {
+                name
+              }
+              thumbnail(size: 256) {
+                url
+                alt
+              }
+              media {
+                url
+                alt
+              }
+              pricing {
+                displayGrossPrices
+                priceRange {
+                  start {
+                    gross {
+                      amount
+                      currency
+                    }
+                    net {
+                      amount
+                      currency
+                    }
+                  }
+                }
+                priceRangeUndiscounted {
+                  start {
+                    gross {
+                      amount
+                      currency
+                    }
+                    net {
+                      amount
+                      currency
+                    }
+                  }
+                }
+              }
+              variants {
+                pricing {
+                  price {
+                    gross {
+                      amount
+                      currency
+                    }
+                  }
+                }
+              }
+              updatedAt
+            }
+          }
+          pageInfo {
+            startCursor
+            endCursor
+            hasNextPage
+            hasPreviousPage
+          }
+        }
+      }
+    }
+  `,
+};
+
+const mapFallbackProduct = (node: FallbackProductNode) => {
+  const displayGross = node.pricing.displayGrossPrices;
+  const priceType = displayGross ? "gross" : "net";
+  const priceRange = node.pricing.priceRange?.start;
+  const undiscountedRange = node.pricing.priceRangeUndiscounted?.start;
+
+  const getPrice = (range?: {
+    gross?: { amount: number; currency: string } | null;
+    net?: { amount: number; currency: string } | null;
+  }) => {
+    const money = range?.[priceType];
+    if (!money) {
+      return {
+        amount: 0,
+        currency: priceRange?.gross?.currency ?? "USD",
+        type: priceType,
+      } as const;
+    }
+    return {
+      amount: money.amount,
+      currency: money.currency,
+      type: priceType,
+    } as const;
+  };
+
+  const hasFreeVariant = node.variants?.some(
+    (variant) => variant?.pricing?.price?.gross?.amount === 0,
+  );
+
+  const basePrice = getPrice(priceRange ?? undefined);
+  const undiscountedPrice = getPrice(undiscountedRange ?? undefined);
+
+  return Object.freeze({
+    id: node.id,
+    name: node.translation?.name?.trim() || node.name,
+    slug: node.slug,
+    price: hasFreeVariant
+      ? { ...basePrice, amount: 0 }
+      : basePrice,
+    currency: basePrice.currency,
+    undiscountedPrice,
+    thumbnail: node.thumbnail
+      ? {
+          url: node.thumbnail.url,
+          alt: node.thumbnail.alt ?? node.name,
+        }
+      : null,
+    media: node.media?.map((media) => ({
+      url: media.url,
+      alt: media.alt ?? node.name,
+    })) ?? null,
+    updatedAt: new Date(node.updatedAt),
+  });
+};
+
+const fetchCategoryProducts = async ({
+  slug,
+  channel,
+  languageCode,
+  after,
+  before,
+  limit,
+}: {
+  slug: string;
+  channel: string;
+  languageCode: string;
+  after?: string;
+  before?: string;
+  limit: number;
+}) => {
+  const result = await saleorClient().execute(
+    CATEGORY_PRODUCTS_FALLBACK_QUERY,
+    {
+      variables: {
+        slug,
+        channel,
+        languageCode,
+        first: before ? undefined : limit,
+        after,
+        before,
+      },
+      operationName: "CategoryProductsFallback",
+    },
+  );
+
+  if (!result.ok) {
+    return null;
+  }
+
+  const productsConnection =
+    (result.data as FallbackCategoryProductsQuery).category?.products;
+
+  if (!productsConnection) {
+    return null;
+  }
+
+  const products = productsConnection.edges.map(({ node }) =>
+    mapFallbackProduct(node),
+  );
+
+  const pageInfo = {
+    after: productsConnection.pageInfo.endCursor,
+    before: productsConnection.pageInfo.startCursor,
+    hasNextPage: productsConnection.pageInfo.hasNextPage,
+    hasPreviousPage: productsConnection.pageInfo.hasPreviousPage,
+    type: "cursor" as const,
+  };
+
+  return {
+    products,
+    pageInfo,
+  };
+};

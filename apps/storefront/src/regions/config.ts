@@ -51,7 +51,7 @@ export const MARKETS = {
   GB: {
     id: "gb",
     name: "United Kingdom",
-    channel: "channel-uk",
+    channel: CHANNEL,
     currency: "GBP",
     continent: "Europe",
     countryCode: "GB",
@@ -61,7 +61,7 @@ export const MARKETS = {
   US: {
     id: "us",
     name: "United States of America",
-    channel: "channel-us",
+    channel: CHANNEL,
     currency: "USD",
     continent: "North America",
     countryCode: "US",
@@ -71,7 +71,7 @@ export const MARKETS = {
   RU: {
     id: "ru",
     name: "Russia",
-    channel: "channel-ru",
+    channel: CHANNEL,
     currency: "RUB",
     continent: "Europe",
     countryCode: "RU",
@@ -81,7 +81,7 @@ export const MARKETS = {
   KG: {
     id: "kg",
     name: "Kyrgyzstan",
-    channel: "channel-kg",
+    channel: CHANNEL,
     currency: "KGS",
     continent: "Asia Pacific",
     countryCode: "KG",
