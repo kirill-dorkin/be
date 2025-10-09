@@ -300,9 +300,15 @@ async function fetchCategoryLabels(
     if (!node) {
       return;
     }
+    const slug = node.slug ?? "";
+    if (!slug) {
+      return;
+    }
     map.set(
-      node.slug,
-      node.translation?.name?.trim() || node.name?.trim() || node.slug,
+      slug,
+      node.translation?.name?.trim() ||
+        node.name?.trim() ||
+        slug.replace(/-/g, " "),
     );
   });
 
