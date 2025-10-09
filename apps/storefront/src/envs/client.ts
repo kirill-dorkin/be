@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { SUPPORTED_CHANNELS } from "@/regions/types";
+
 const emptyStringToUndefined = (value: unknown) =>
   typeof value === "string" && value.trim() === "" ? undefined : value;
 
@@ -20,7 +22,10 @@ const schema = z.object({
     .enum(["TEST", "LOCAL", "DEVELOPMENT", "PRODUCTION", "STAGING"])
     .default("LOCAL"),
   NEXT_PUBLIC_BUTTER_CMS_API_KEY: z.string().trim().optional(),
-  NEXT_PUBLIC_DEFAULT_CHANNEL: z.string().trim(),
+  NEXT_PUBLIC_DEFAULT_CHANNEL: z
+    .string()
+    .trim()
+    .pipe(z.enum(SUPPORTED_CHANNELS)),
   NEXT_PUBLIC_DEFAULT_EMAIL: z
     .string()
     .trim()
