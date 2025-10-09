@@ -287,7 +287,13 @@ async function fetchCategoryLabels(
     return slugs.map(() => null);
   }
 
-  const edges = response.data?.categories?.edges ?? [];
+  const edges: Array<{
+    node?: {
+      slug?: string | null;
+      name?: string | null;
+      translation?: { name?: string | null } | null;
+    } | null;
+  } | null> = response.data?.categories?.edges ?? [];
   const map = new Map<string, string>();
   edges.forEach((edge) => {
     const node = edge?.node;
