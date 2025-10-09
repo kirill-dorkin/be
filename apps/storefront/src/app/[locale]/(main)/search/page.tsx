@@ -1,6 +1,14 @@
 import { getTranslations } from "next-intl/server";
 
-import type { SearchContext } from "@nimara/infrastructure/use-cases/search/types";
+import type {
+  PageInfo,
+  SearchContext,
+} from "@nimara/infrastructure/use-cases/search/types";
+import {
+  ALLOWED_CURRENCY_CODES,
+  type AllCurrency,
+} from "@nimara/domain/consts";
+import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
 import { DEFAULT_RESULTS_PER_PAGE, DEFAULT_SORT_BY } from "@/config";
 import { clientEnvs } from "@/envs/client";
@@ -337,29 +345,53 @@ const CATEGORY_PRODUCTS_FALLBACK_QUERY = {
   `,
 };
 
-const mapFallbackProduct = (node: FallbackProductNode) => {
+const FALLBACK_CURRENCY: AllCurrency = "USD";
+
+const isAllowedCurrency = (
+  currency: string | null | undefined,
+): currency is AllCurrency =>
+  typeof currency === "string" &&
+  ALLOWED_CURRENCY_CODES.includes(currency as AllCurrency);
+
+const normalizeCurrency = (
+  ...candidates: Array<string | null | undefined>
+): AllCurrency => {
+  for (const candidate of candidates) {
+    if (isAllowedCurrency(candidate)) {
+      return candidate;
+    }
+  }
+
+  return FALLBACK_CURRENCY;
+};
+
+const mapFallbackProduct = (node: FallbackProductNode): SearchProduct => {
   const displayGross = node.pricing.displayGrossPrices;
   const priceType = displayGross ? "gross" : "net";
   const priceRange = node.pricing.priceRange?.start;
   const undiscountedRange = node.pricing.priceRangeUndiscounted?.start;
 
-  const getPrice = (range?: {
+  type MoneyRange = {
     gross?: { amount: number; currency: string } | null;
     net?: { amount: number; currency: string } | null;
-  }) => {
-    const money = range?.[priceType];
-    if (!money) {
-      return {
-        amount: 0,
-        currency: priceRange?.gross?.currency ?? "USD",
-        type: priceType,
-      } as const;
-    }
+  };
+
+  const getPrice = (range?: MoneyRange | null) => {
+    const money =
+      priceType === "gross" ? range?.gross ?? null : range?.net ?? null;
+    const currency = normalizeCurrency(
+      money?.currency,
+      range?.gross?.currency,
+      range?.net?.currency,
+      priceRange?.gross?.currency,
+      priceRange?.net?.currency,
+    );
+
     return {
-      amount: money.amount,
-      currency: money.currency,
+      amount: money?.amount ?? 0,
+      currency,
       type: priceType,
-    } as const;
+    } satisfies SearchProduct["price"];
   };
 
   const hasFreeVariant = node.variants?.some(
@@ -369,13 +401,11 @@ const mapFallbackProduct = (node: FallbackProductNode) => {
   const basePrice = getPrice(priceRange ?? undefined);
   const undiscountedPrice = getPrice(undiscountedRange ?? undefined);
 
-  return Object.freeze({
+  return {
     id: node.id,
     name: node.translation?.name?.trim() || node.name,
     slug: node.slug,
-    price: hasFreeVariant
-      ? { ...basePrice, amount: 0 }
-      : basePrice,
+    price: hasFreeVariant ? { ...basePrice, amount: 0 } : basePrice,
     currency: basePrice.currency,
     undiscountedPrice,
     thumbnail: node.thumbnail
@@ -389,7 +419,7 @@ const mapFallbackProduct = (node: FallbackProductNode) => {
       alt: media.alt ?? node.name,
     })) ?? null,
     updatedAt: new Date(node.updatedAt),
-  });
+  } satisfies SearchProduct;
 };
 
 const fetchCategoryProducts = async ({
@@ -406,7 +436,13 @@ const fetchCategoryProducts = async ({
   after?: string;
   before?: string;
   limit: number;
-}) => {
+}): Promise<
+  | {
+      pageInfo: Extract<PageInfo, { type: "cursor" }>;
+      products: SearchProduct[];
+    }
+  | null
+> => {
   const result = await saleorClient().execute(
     CATEGORY_PRODUCTS_FALLBACK_QUERY,
     {
@@ -437,12 +473,12 @@ const fetchCategoryProducts = async ({
     mapFallbackProduct(node),
   );
 
-  const pageInfo = {
+  const pageInfo: Extract<PageInfo, { type: "cursor" }> = {
     after: productsConnection.pageInfo.endCursor,
     before: productsConnection.pageInfo.startCursor,
     hasNextPage: productsConnection.pageInfo.hasNextPage,
     hasPreviousPage: productsConnection.pageInfo.hasPreviousPage,
-    type: "cursor" as const,
+    type: "cursor",
   };
 
   return {
