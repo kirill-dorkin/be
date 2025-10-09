@@ -18,9 +18,9 @@ import {
 } from "@nimara/ui/components/navigation-menu";
 
 import { LocalizedLink } from "@/i18n/routing";
-import { cn } from "@/lib/utils";
 import { isValidJson } from "@/lib/helpers";
 import type { Maybe } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 const RichText = dynamic(
   () =>
