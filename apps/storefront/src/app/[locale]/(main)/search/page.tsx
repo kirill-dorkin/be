@@ -140,12 +140,15 @@ export default async function Page(props: { searchParams: SearchParams }) {
     const cleaned = items.map((item) => item.trim()).filter(Boolean);
 
     if (!cleaned.length) {
+
       return null;
     }
     if (cleaned.length === 1) {
+
       return cleaned[0];
     }
     if (cleaned.length === 2) {
+
       return `${cleaned[0]} ${t("common.and")} ${cleaned[1]}`;
     }
 
@@ -155,6 +158,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
 
   const getHeader = () => {
     if (query) {
+
       return t("search.results-for", { query });
     }
 
@@ -168,6 +172,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
     );
 
     if (!categoryHeader && !collectionHeader) {
+
       return t("search.all-products");
     }
 
