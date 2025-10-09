@@ -1,20 +1,20 @@
 import { getTranslations } from "next-intl/server";
 
+import {
+  type AllCurrency,
+  ALLOWED_CURRENCY_CODES,
+} from "@nimara/domain/consts";
+import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 import type {
   PageInfo,
   SearchContext,
 } from "@nimara/infrastructure/use-cases/search/types";
-import {
-  ALLOWED_CURRENCY_CODES,
-  type AllCurrency,
-} from "@nimara/domain/consts";
-import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
 import { DEFAULT_RESULTS_PER_PAGE, DEFAULT_SORT_BY } from "@/config";
 import { clientEnvs } from "@/envs/client";
+import { saleorClient } from "@/graphql/client";
 import { JsonLd, mappedSearchProductsToJsonLd } from "@/lib/json-ld";
 import { paths } from "@/lib/paths";
-import { saleorClient } from "@/graphql/client";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 
@@ -218,12 +218,8 @@ export default async function Page(props: { searchParams: SearchParams }) {
 
 type FallbackProductNode = {
   id: string;
+  media?: Array<{ alt?: string | null; url: string }> | null;
   name: string;
-  slug: string;
-  translation?: { name?: string | null } | null;
-  thumbnail?: { url: string; alt?: string | null } | null;
-  media?: Array<{ url: string; alt?: string | null }> | null;
-  updatedAt: string;
   pricing: {
     displayGrossPrices: boolean;
     priceRange?: {
@@ -239,6 +235,10 @@ type FallbackProductNode = {
       } | null;
     } | null;
   };
+  slug: string;
+  thumbnail?: { alt?: string | null; url: string } | null;
+  translation?: { name?: string | null } | null;
+  updatedAt: string;
   variants?: Array<{
     pricing?: {
       price?: { gross?: { amount: number; currency: string } | null } | null;
@@ -251,10 +251,10 @@ type FallbackCategoryProductsQuery = {
     products?: {
       edges: Array<{ node: FallbackProductNode }>;
       pageInfo: {
-        startCursor: string | null;
         endCursor: string | null;
         hasNextPage: boolean;
         hasPreviousPage: boolean;
+        startCursor: string | null;
       };
     } | null;
   } | null;
@@ -410,32 +410,32 @@ const mapFallbackProduct = (node: FallbackProductNode): SearchProduct => {
     undiscountedPrice,
     thumbnail: node.thumbnail
       ? {
-          url: node.thumbnail.url,
           alt: node.thumbnail.alt ?? node.name,
+          url: node.thumbnail.url,
         }
       : null,
     media: node.media?.map((media) => ({
-      url: media.url,
       alt: media.alt ?? node.name,
+      url: media.url,
     })) ?? null,
     updatedAt: new Date(node.updatedAt),
   } satisfies SearchProduct;
 };
 
 const fetchCategoryProducts = async ({
-  slug,
-  channel,
-  languageCode,
   after,
   before,
+  channel,
+  languageCode,
   limit,
+  slug,
 }: {
-  slug: string;
-  channel: string;
-  languageCode: string;
   after?: string;
   before?: string;
+  channel: string;
+  languageCode: string;
   limit: number;
+  slug: string;
 }): Promise<
   | {
       pageInfo: Extract<PageInfo, { type: "cursor" }>;
@@ -447,12 +447,12 @@ const fetchCategoryProducts = async ({
     CATEGORY_PRODUCTS_FALLBACK_QUERY,
     {
       variables: {
-        slug,
-        channel,
-        languageCode,
-        first: before ? undefined : limit,
         after,
         before,
+        channel,
+        first: before ? undefined : limit,
+        languageCode,
+        slug,
       },
       operationName: "CategoryProductsFallbackQuery",
     },
@@ -482,7 +482,7 @@ const fetchCategoryProducts = async ({
   };
 
   return {
-    products,
     pageInfo,
+    products,
   };
 };
