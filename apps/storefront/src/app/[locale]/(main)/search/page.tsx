@@ -132,6 +132,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
             return label;
           }
           const slug = categorySlugs[index] ?? "";
+
           return formatSlugForHeader(slug);
         })
       : [];
@@ -153,6 +154,7 @@ export default async function Page(props: { searchParams: SearchParams }) {
     }
 
     const last = cleaned[cleaned.length - 1];
+
     return `${cleaned.slice(0, -1).join(", ")} ${t("common.and")} ${last}`;
   };
 
