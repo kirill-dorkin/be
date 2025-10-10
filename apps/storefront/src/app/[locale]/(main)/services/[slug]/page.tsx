@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { formatAsPrice } from "@/lib/formatters/util";
 import { paths } from "@/lib/paths";
 import {
+  type RepairPricingKind,
   type RepairService,
   repairServiceBySlug,
   repairServiceCatalog,
@@ -63,13 +64,28 @@ const formatSiblingPrice = ({
     isFree,
   };
 };
+type PriceBadgeMessageKey =
+  | "catalog.priceBadge.fixed"
+  | "catalog.priceBadge.from"
+  | "catalog.priceBadge.range";
+
+const priceBadgeKeyMap: Record<RepairPricingKind, PriceBadgeMessageKey> = {
+  fixed: "catalog.priceBadge.fixed",
+  from: "catalog.priceBadge.from",
+  range: "catalog.priceBadge.range",
+};
+
 const formatPriceLabel = ({
   serviceSlug,
   locale,
 }: {
   locale: SupportedLocale;
   serviceSlug: string;
-}): { isFree: boolean, kind: string; label: string; } => {
+}): {
+  isFree: boolean;
+  kind: "fixed" | "from" | "range";
+  label: string;
+} => {
   const service = repairServiceBySlug(serviceSlug);
 
   if (!service) {
@@ -216,7 +232,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                   </p>
                 )}
                 <p className="text-muted-foreground text-sm">
-                  {t(`catalog.priceBadge.${formattedPrice.kind}`)}
+                  {t(priceBadgeKeyMap[formattedPrice.kind])}
                 </p>
               </div>
             )}
@@ -245,7 +261,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                 >
                   <div className="flex flex-col gap-1">
                     <span className="text-sm font-semibold text-stone-500">
-                      {t(`catalog.priceBadge.${item.price.kind}`)}
+                      {t(priceBadgeKeyMap[item.price.kind])}
                     </span>
                     <span className="text-base font-medium">{item.name}</span>
                     {(() => {
