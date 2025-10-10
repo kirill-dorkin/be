@@ -10,7 +10,7 @@ import { parseRegion } from "./utils";
 
 export const getCurrentRegion = async (): Promise<Readonly<Region>> => {
   const locale = await getLocale();
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookieValue = cookieStore.get(COOKIE_KEY.currency)?.value;
   const currencyCookie =
     typeof cookieValue === "string" ? cookieValue : undefined;
