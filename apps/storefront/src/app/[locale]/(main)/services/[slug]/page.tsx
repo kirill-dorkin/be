@@ -32,7 +32,7 @@ const formatSiblingPrice = ({
 }: {
   locale: SupportedLocale;
   service: RepairService;
-}) => {
+}): { isFree: boolean, label: string; } => {
   const formatPrice = (amount: number) =>
     formatAsPrice({
       amount,
@@ -40,15 +40,28 @@ const formatSiblingPrice = ({
       locale,
     });
 
+  const isFree =
+    service.price.min === 0 &&
+    (service.price.max === null || service.price.max === 0);
+
   if (service.price.kind === "from" || service.price.max === null) {
-    return formatPrice(service.price.min);
+    return {
+      label: formatPrice(service.price.min),
+      isFree,
+    };
   }
 
   if (service.price.kind === "range") {
-    return `${formatPrice(service.price.min)} — ${formatPrice(service.price.max)}`;
+    return {
+      label: `${formatPrice(service.price.min)} — ${formatPrice(service.price.max)}`,
+      isFree,
+    };
   }
 
-  return formatPrice(service.price.min);
+  return {
+    label: formatPrice(service.price.min),
+    isFree,
+  };
 };
 const formatPriceLabel = ({
   serviceSlug,
@@ -56,11 +69,15 @@ const formatPriceLabel = ({
 }: {
   locale: SupportedLocale;
   serviceSlug: string;
-}) => {
+}): { isFree: boolean, kind: string; label: string; } => {
   const service = repairServiceBySlug(serviceSlug);
 
   if (!service) {
-    return null;
+    return {
+      label: "",
+      kind: "fixed",
+      isFree: false,
+    };
   }
 
   const { price } = service;
@@ -73,10 +90,14 @@ const formatPriceLabel = ({
       locale,
     });
 
+  const isFree =
+    price.min === 0 && (price.max === null || price.max === 0);
+
   if (price.kind === "from" || price.max === null) {
     return {
       label: formatPrice(price.min),
       kind: "from",
+      isFree,
     };
   }
 
@@ -84,12 +105,14 @@ const formatPriceLabel = ({
     return {
       label: `${formatPrice(price.min)} — ${formatPrice(price.max)}`,
       kind: "range",
+      isFree,
     };
   }
 
   return {
     label: formatPrice(price.min),
     kind: "fixed",
+    isFree,
   };
 };
 
@@ -157,9 +180,12 @@ export default async function ServiceDetails({ params }: PageProps) {
           ]}
         />
 
-        <section className="bg-muted/60 border-muted relative overflow-hidden rounded-3xl border px-6 py-10 sm:px-10">
-          <div className="space-y-4">
-            <Badge variant="outline">
+        <section className="relative overflow-hidden rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-background px-6 py-10 sm:px-10">
+          <div className="pointer-events-none absolute -left-20 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 bottom-0 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+
+          <div className="relative space-y-4">
+            <Badge variant="outline" className="bg-background/80">
               {t(`deviceLabels.${service.deviceType}`)}
             </Badge>
             <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
@@ -170,14 +196,25 @@ export default async function ServiceDetails({ params }: PageProps) {
                 {service.shortDescription}
               </p>
             )}
-            {formattedPrice && (
-              <div className="space-y-1">
-                <p className="text-sm font-semibold uppercase tracking-widest text-stone-500">
+            {formattedPrice.label && (
+              <div className="space-y-2 rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-widest text-primary">
                   {t("detail.priceLabel")}
                 </p>
-                <p className="text-primary text-3xl font-bold">
-                  {formattedPrice.label}
-                </p>
+                {formattedPrice.isFree ? (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground text-sm line-through">
+                      {formattedPrice.label}
+                    </span>
+                    <span className="text-emerald-600 text-3xl font-semibold">
+                      {t("catalog.freeLabel")}
+                    </span>
+                  </div>
+                ) : (
+                  <p className="text-primary text-3xl font-bold">
+                    {formattedPrice.label}
+                  </p>
+                )}
                 <p className="text-muted-foreground text-sm">
                   {t(`catalog.priceBadge.${formattedPrice.kind}`)}
                 </p>
@@ -211,12 +248,31 @@ export default async function ServiceDetails({ params }: PageProps) {
                       {t(`catalog.priceBadge.${item.price.kind}`)}
                     </span>
                     <span className="text-base font-medium">{item.name}</span>
-                    <span className="text-muted-foreground text-sm">
-                      {formatSiblingPrice({
+                    {(() => {
+                      const siblingPrice = formatSiblingPrice({
                         service: item,
                         locale: region.language.locale,
-                      })}
-                    </span>
+                      });
+
+                      if (!siblingPrice.isFree) {
+                        return (
+                          <span className="text-muted-foreground text-sm">
+                            {siblingPrice.label}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <span className="text-sm">
+                          <span className="text-muted-foreground mr-2 line-through">
+                            {siblingPrice.label}
+                          </span>
+                          <span className="text-emerald-600 font-semibold">
+                            {t("catalog.freeLabel")}
+                          </span>
+                        </span>
+                      );
+                    })()}
                   </div>
                 </li>
               ))}

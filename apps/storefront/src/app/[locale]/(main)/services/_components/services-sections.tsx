@@ -22,6 +22,12 @@ import type {
   SupportedLocale,
 } from "@/regions/types";
 
+type PriceLabels = {
+  fixed: string;
+  from: string;
+  range: string;
+};
+
 const formatPriceLabel = ({
   locale,
   currency,
@@ -29,14 +35,10 @@ const formatPriceLabel = ({
   labels,
 }: {
   currency: SupportedCurrency;
-  labels: {
-    fixed: string;
-    from: string;
-    range: string;
-  };
+  labels: PriceLabels;
   locale: SupportedLocale;
   service: RepairService;
-}) => {
+}): { isFree: boolean, label: string; } => {
   const formatPrice = (amount: number) =>
     formatAsPrice({
       amount,
@@ -44,17 +46,30 @@ const formatPriceLabel = ({
       locale,
     });
 
+  const isFree =
+    service.price.min === 0 &&
+    (service.price.max === null || service.price.max === 0);
+
   if (service.price.kind === "from" || service.price.max === null) {
-    return labels.from.replace("{price}", formatPrice(service.price.min));
+    return {
+      label: labels.from.replace("{price}", formatPrice(service.price.min)),
+      isFree,
+    };
   }
 
   if (service.price.kind === "range" && service.price.max !== null) {
-    return labels.range
-      .replace("{min}", formatPrice(service.price.min))
-      .replace("{max}", formatPrice(service.price.max));
+    return {
+      label: labels.range
+        .replace("{min}", formatPrice(service.price.min))
+        .replace("{max}", formatPrice(service.price.max)),
+      isFree,
+    };
   }
 
-  return labels.fixed.replace("{price}", formatPrice(service.price.min));
+  return {
+    label: labels.fixed.replace("{price}", formatPrice(service.price.min)),
+    isFree,
+  };
 };
 
 const formatBadgeLabel = (
@@ -89,6 +104,7 @@ export const ServicesSections = ({
     catalogTitle: string;
     cta: string;
     disclaimer: string;
+    freeLabel: string;
     price: {
       badge: {
         fixed: string;
@@ -127,13 +143,21 @@ export const ServicesSections = ({
                 </p>
               )}
             </div>
-            {category.services.map((service) => (
-              <Card key={service.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <CardTitle className="text-xl">{service.name}</CardTitle>
-                    <Badge variant="outline">
-                      {formatBadgeLabel(service.price.kind, strings.price.badge)}
+            {category.services.map((service) => {
+              const priceInfo = formatPriceLabel({
+                currency,
+                locale,
+                service,
+                labels: strings.price.label,
+              });
+
+              return (
+                <Card key={service.id}>
+                  <CardHeader className="pb-2">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <CardTitle className="text-xl">{service.name}</CardTitle>
+                      <Badge variant="outline">
+                        {formatBadgeLabel(service.price.kind, strings.price.badge)}
                     </Badge>
                   </div>
                   {service.shortDescription && (
@@ -141,20 +165,26 @@ export const ServicesSections = ({
                       {service.shortDescription}
                     </p>
                   )}
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-lg font-semibold">
-                    {formatPriceLabel({
-                      currency,
-                      locale,
-                      service,
-                      labels: strings.price.label,
-                    })}
-                  </p>
-                  <p className="text-muted-foreground mt-2 text-xs">
-                    {strings.disclaimer}
-                  </p>
-                </CardContent>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="text-lg font-semibold">
+                      {priceInfo.isFree ? (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-muted-foreground text-sm font-normal line-through">
+                            {priceInfo.label}
+                          </span>
+                          <span className="text-emerald-600 text-lg font-semibold">
+                            {strings.freeLabel}
+                          </span>
+                        </div>
+                      ) : (
+                        priceInfo.label
+                      )}
+                    </div>
+                    <p className="text-muted-foreground mt-2 text-xs">
+                      {strings.disclaimer}
+                    </p>
+                  </CardContent>
                 <CardFooter className="pt-0">
                   <Button asChild variant="secondary">
                     <LocalizedLink
@@ -164,10 +194,11 @@ export const ServicesSections = ({
                     >
                       {strings.cta}
                     </LocalizedLink>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </Fragment>
         ))}
       </div>

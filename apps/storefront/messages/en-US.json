@@ -19,7 +19,12 @@
       "title": "Professional electronics repair",
       "subtitle": "Pick a service, get an instant estimate without registering, and our engineer will call you back shortly.",
       "primaryCta": "Estimate my repair",
-      "secondaryCta": "Browse products"
+      "secondaryCta": "Browse products",
+      "highlights": {
+        "diagnostics": "Same-day diagnostics",
+        "warranty": "Up to 90-day workmanship warranty",
+        "parts": "Genuine parts and consumables"
+      }
     },
     "catalog": {
       "title": "BestElectronics services",
@@ -34,6 +39,7 @@
         "from": "from {price}",
         "range": "{min} — {max}"
       },
+      "freeLabel": "Free",
       "action": "View details",
       "disclaimer": "Final pricing is confirmed after diagnostics. Parts are quoted separately."
     },
@@ -75,6 +81,7 @@
       "thankYou": "Request submitted. We will respond during business hours.",
       "submitSuccess": "Thanks! Your request was sent to the service team.",
       "submitError": "We couldn’t send the request. Please try again or contact us by phone.",
+      "freeLabel": "Free",
       "errors": {
         "deviceType": "Select a device type",
         "serviceSlug": "Select a service",

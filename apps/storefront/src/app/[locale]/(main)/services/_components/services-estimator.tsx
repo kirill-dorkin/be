@@ -254,7 +254,8 @@ export const ServicesEstimator = ({
 
     if (options.length === 0) {
       setValue("serviceSlug", "");
-      return;
+      
+return;
     }
 
     const hasCurrentSelection = options.some(
@@ -278,6 +279,8 @@ export const ServicesEstimator = ({
       range: tr.raw("calculator.priceLabel.range"),
     };
   }, [t]);
+
+  const freeLabel = t("calculator.freeLabel");
 
   const estimate = useMemo(() => {
     if (!selectedService) {
@@ -334,13 +337,17 @@ export const ServicesEstimator = ({
     priceLabelStrings,
   ]);
 
+  const isEstimateFree =
+    !!estimate && estimate.min === 0 && (estimate.max === null || estimate.max === 0);
+
   const onSubmit = async (values: FormSchema) => {
     if (!selectedService || !estimate) {
       toast({
         description: t("calculator.submitError"),
         variant: "destructive",
       });
-      return;
+      
+return;
     }
 
     const payload = {
@@ -538,9 +545,20 @@ export const ServicesEstimator = ({
                 ? t(`deviceLabels.${selectedService.deviceType}`)
                 : t("calculator.estimateBadge")}
             </Badge>
-            <p className="text-2xl font-semibold leading-tight">
-              {estimateLabel}
-            </p>
+            {isEstimateFree ? (
+              <div className="flex flex-col gap-1">
+                <span className="text-muted-foreground text-sm line-through">
+                  {estimateLabel}
+                </span>
+                <span className="text-emerald-600 text-2xl font-semibold">
+                  {freeLabel}
+                </span>
+              </div>
+            ) : (
+              <p className="text-2xl font-semibold leading-tight text-primary">
+                {estimateLabel}
+              </p>
+            )}
             {selectedService && (
               <p className="text-muted-foreground text-sm">
                 {selectedService.shortDescription ??

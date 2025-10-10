@@ -77,11 +77,12 @@ export default async function ServicesPage() {
                   range: t("catalog.priceBadge.range"),
                 },
                 label: {
-                  fixed: t("catalog.priceLabel.fixed"),
-                  from: t("catalog.priceLabel.from"),
-                  range: t("catalog.priceLabel.range"),
+                  fixed: t.raw("catalog.priceLabel.fixed"),
+                  from: t.raw("catalog.priceLabel.from"),
+                  range: t.raw("catalog.priceLabel.range"),
                 },
               },
+              freeLabel: t("catalog.freeLabel"),
               cta: t("catalog.action"),
               disclaimer: t("catalog.disclaimer"),
             }}
