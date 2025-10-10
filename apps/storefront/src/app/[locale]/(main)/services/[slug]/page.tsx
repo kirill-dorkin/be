@@ -22,18 +22,19 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale, slug: string; }>;
 };
 
-const findCategoryByService = (slug: string) =>
-  repairServiceCatalog.find((category) =>
+function findCategoryByService(slug: string) {
+  return repairServiceCatalog.find((category) =>
     category.services.some((service) => service.slug === slug),
   );
+}
 
-const formatSiblingPrice = ({
+function formatSiblingPrice({
   service,
   locale,
 }: {
   locale: SupportedLocale;
   service: RepairService;
-}): { isFree: boolean, label: string; } => {
+}): { isFree: boolean, label: string; } {
   const formatPrice = (amount: number) =>
     formatAsPrice({
       amount,
@@ -63,7 +64,8 @@ const formatSiblingPrice = ({
     label: formatPrice(service.price.min),
     isFree,
   };
-};
+}
+
 type PriceBadgeMessageKey =
   | "catalog.priceBadge.fixed"
   | "catalog.priceBadge.from"
