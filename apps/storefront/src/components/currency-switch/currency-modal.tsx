@@ -71,10 +71,11 @@ export function CurrencySwitchModal({
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {currencyOptions.map((option) => {
             const isActive = option.currency === currentCurrency;
-            const symbol = getCurrencySymbol(option.currency);
+            const isSom = option.currency === "KGS";
+            const symbol = isSom ? null : getCurrencySymbol(option.currency);
 
             const symbolClassName = cn(
-              "flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg font-semibold leading-none",
+              "flex h-10 w-10 items-center justify-center rounded-full border border-border text-base font-semibold leading-none text-foreground",
               symbol === "с" && "text-[1.45rem] -translate-y-[1px]",
             );
 
@@ -83,32 +84,27 @@ export function CurrencySwitchModal({
                 key={option.id}
                 variant="ghost"
                 className={cn(
-                  "group flex h-auto flex-col items-start gap-1 rounded-lg border border-transparent bg-card p-4 text-left shadow-sm transition",
-                  {
-                    "border-primary bg-accent text-primary hover:bg-accent":
-                      isActive,
-                    "hover:border-border hover:bg-muted/40": !isActive,
-                  },
+                  "text-muted-foreground flex h-auto w-full flex-col items-start gap-3 rounded-2xl p-4 text-left text-sm font-normal leading-5 transition-colors",
                 )}
                 disabled={isPending || isActive}
                 onClick={() => onCurrencyClick(option.currency)}
               >
                 <div className="flex items-center gap-3">
-                  <span className={symbolClassName}>
+                  <span aria-hidden="true" className={symbolClassName}>
                     {symbol}
                   </span>
                   <div className="flex flex-col items-start gap-1">
                     <span className="text-xs uppercase tracking-wide text-muted-foreground">
                       {option.marketName}
                     </span>
-                    <span className="text-base font-semibold">
+                    <span className="text-base font-semibold text-foreground">
                       {option.currency}
-                    </span>
-                    <span className="text-muted-foreground text-sm">
-                      {option.languageName}
                     </span>
                   </div>
                 </div>
+                <span className="text-muted-foreground text-sm">
+                  {option.languageName}
+                </span>
               </Button>
             );
           })}

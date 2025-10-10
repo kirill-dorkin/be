@@ -89,7 +89,7 @@ export const Header = async () => {
             <SearchForm />
           </div>
 
-          <div className="flex justify-end gap-1 align-middle">
+          <div className="flex items-center justify-end gap-3">
             <MobileSearch />
 
             <div className="hidden md:block">

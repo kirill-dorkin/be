@@ -16,10 +16,13 @@ export const CurrencySwitch = () => {
   const t = useTranslations("currency");
   const region = useCurrentRegion();
 
-  const currencySymbol = getCurrencySymbol(region.market.currency);
+  const isSom = region.market.currency === "KGS";
+  const currencySymbol = isSom
+    ? null
+    : getCurrencySymbol(region.market.currency);
   const symbolClassName = cn(
-    "flex h-8 w-8 items-center justify-center rounded-full border border-border text-lg font-semibold leading-none",
-    currencySymbol === "с" && "text-[1.3rem] -translate-y-[2px] [line-height:1]",
+    "text-lg font-semibold leading-none",
+    currencySymbol === "с" && "text-xl",
   );
 
   return (
@@ -27,13 +30,15 @@ export const CurrencySwitch = () => {
       <Button
         variant="ghost"
         size="default"
-        className="gap-2"
+        className="gap-1.5"
         onClick={() => setShowModal(true)}
         aria-label={t("currency-settings")}
       >
-        <span aria-hidden="true" className={symbolClassName}>
-          {currencySymbol}
-        </span>
+        {!isSom && currencySymbol && (
+          <span aria-hidden="true" className={symbolClassName}>
+            {currencySymbol}
+          </span>
+        )}
         {region.market.currency}
       </Button>
       {showModal && (
