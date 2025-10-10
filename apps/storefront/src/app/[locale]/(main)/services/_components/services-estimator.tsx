@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { type Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Badge } from "@nimara/ui/components/badge";
@@ -70,11 +70,15 @@ const buildSchema = (t: Translator) =>
           }),
         })
         .default("phone"),
-      consent: z.literal(true, {
-        errorMap: () => ({
+      consent: z
+        .boolean({
+          errorMap: () => ({
+            message: t("calculator.errors.consent"),
+          }),
+        })
+        .refine((value) => value === true, {
           message: t("calculator.errors.consent"),
         }),
-      }),
     })
     .refine(
       (data) => {
@@ -92,7 +96,9 @@ return trimmed.length === 0 || z.string().email().safeParse(trimmed).success;
       },
     );
 
-type FormSchema = z.infer<ReturnType<typeof buildSchema>>;
+type Schema = ReturnType<typeof buildSchema>;
+
+type FormSchema = z.output<Schema>;
 
 type ServiceOption = {
   label: string;
@@ -221,7 +227,7 @@ export const ServicesEstimator = ({
     "";
 
   const form = useForm<FormSchema>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<FormSchema>,
     defaultValues: {
       deviceType: defaultDeviceType,
       serviceSlug: defaultServiceSlug,
@@ -247,15 +253,16 @@ export const ServicesEstimator = ({
 
   const deviceType = watch("deviceType");
   const serviceSlug = watch("serviceSlug");
-  const urgent = watch("urgent");
-  const needsPickup = watch("needsPickup");
+  const urgent = watch("urgent") ?? false;
+  const needsPickup = watch("needsPickup") ?? false;
 
   useEffect(() => {
     if (!deviceType) {
       return;
     }
 
-    const options = servicesByDevice.get(deviceType) ?? [];
+    const options =
+      servicesByDevice.get(deviceType as RepairDeviceType) ?? [];
 
     if (options.length === 0) {
       setValue("serviceSlug", "");
@@ -346,6 +353,10 @@ return;
     !!estimate && estimate.min === 0 && (estimate.max === null || estimate.max === 0);
 
   const onSubmit = async (values: FormSchema) => {
+    const preferredContact = values.preferredContact ?? "phone";
+    const isUrgent = values.urgent ?? false;
+    const requiresPickup = values.needsPickup ?? false;
+
     if (!selectedService || !estimate) {
       toast({
         description: t("calculator.submitError"),
@@ -357,6 +368,9 @@ return;
 
     const payload = {
       ...values,
+      preferredContact,
+      urgent: isUrgent,
+      needsPickup: requiresPickup,
       email: values.email?.trim() || undefined,
       message: values.message?.trim() || undefined,
       priceEstimate: {
@@ -366,8 +380,8 @@ return;
         currency,
       },
       modifiers: {
-        urgent: values.urgent ? URGENCY_MULTIPLIER : 1,
-        pickup: values.needsPickup ? PICKUP_FEE : 0,
+        urgent: isUrgent ? URGENCY_MULTIPLIER : 1,
+        pickup: requiresPickup ? PICKUP_FEE : 0,
       },
     };
 
@@ -394,9 +408,9 @@ return;
       form.reset({
         deviceType: values.deviceType,
         serviceSlug: values.serviceSlug,
-        urgent: values.urgent,
-        needsPickup: values.needsPickup,
-        preferredContact: values.preferredContact,
+        urgent: isUrgent,
+        needsPickup: requiresPickup,
+        preferredContact,
         fullName: "",
         phone: "",
         email: "",
@@ -414,10 +428,12 @@ return;
 
   const serviceOptions = useMemo(
     () =>
-      (servicesByDevice.get(deviceType) ?? []).map(({ service, label }) => ({
-        value: service.slug,
-        label,
-      })),
+      (servicesByDevice.get(deviceType as RepairDeviceType) ?? []).map(
+        ({ service, label }) => ({
+          value: service.slug,
+          label,
+        }),
+      ),
     [deviceType, servicesByDevice],
   );
 
@@ -495,7 +511,6 @@ return;
                   },
                 ]}
                 isRequired
-                disabled={isSubmitting}
               />
             </div>
 
