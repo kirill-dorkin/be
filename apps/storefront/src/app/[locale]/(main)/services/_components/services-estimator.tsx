@@ -269,14 +269,15 @@ export const ServicesEstimator = ({
   const selectedService =
     (serviceSlug ? serviceIndex.get(serviceSlug) : undefined) ?? null;
 
-  const priceLabelStrings = useMemo(
-    () => ({
-      fixed: t("calculator.priceLabel.fixed"),
-      from: t("calculator.priceLabel.from"),
-      range: t("calculator.priceLabel.range"),
-    }),
-    [t],
-  );
+  const priceLabelStrings = useMemo(() => {
+    const tr = t;
+
+    return {
+      fixed: tr.raw("calculator.priceLabel.fixed"),
+      from: tr.raw("calculator.priceLabel.from"),
+      range: tr.raw("calculator.priceLabel.range"),
+    };
+  }, [t]);
 
   const estimate = useMemo(() => {
     if (!selectedService) {
