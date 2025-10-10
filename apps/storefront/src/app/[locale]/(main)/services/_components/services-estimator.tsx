@@ -254,8 +254,7 @@ export const ServicesEstimator = ({
 
     if (options.length === 0) {
       setValue("serviceSlug", "");
-      
-return;
+      return;
     }
 
     const hasCurrentSelection = options.some(
@@ -269,6 +268,15 @@ return;
 
   const selectedService =
     (serviceSlug ? serviceIndex.get(serviceSlug) : undefined) ?? null;
+
+  const priceLabelStrings = useMemo(
+    () => ({
+      fixed: t("calculator.priceLabel.fixed"),
+      from: t("calculator.priceLabel.from"),
+      range: t("calculator.priceLabel.range"),
+    }),
+    [t],
+  );
 
   const estimate = useMemo(() => {
     if (!selectedService) {
@@ -315,13 +323,15 @@ return;
         max: estimate.max,
         kind: selectedService.price.kind,
       },
-      labels: t("calculator.priceLabel", { returnObjects: true }) as {
-        fixed: string;
-        from: string;
-        range: string;
-      },
+      labels: priceLabelStrings,
     });
-  }, [estimate, selectedService, currency, activeLocale, t]);
+  }, [
+    estimate,
+    selectedService,
+    currency,
+    activeLocale,
+    priceLabelStrings,
+  ]);
 
   const onSubmit = async (values: FormSchema) => {
     if (!selectedService || !estimate) {
@@ -329,8 +339,7 @@ return;
         description: t("calculator.submitError"),
         variant: "destructive",
       });
-      
-return;
+      return;
     }
 
     const payload = {
