@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { useCurrentRegion } from "@/regions/client";
 
 import { localizedFormatter } from "./util";
@@ -5,5 +7,5 @@ import { localizedFormatter } from "./util";
 export const useLocalizedFormatter = () => {
   const region = useCurrentRegion();
 
-  return localizedFormatter({ region });
+  return useMemo(() => localizedFormatter({ region }), [region]);
 };

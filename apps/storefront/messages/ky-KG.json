@@ -419,7 +419,7 @@
     "returned": "КАЙТАРЫЛДЫ"
   },
   "footer": {
-    "made-with": "❤\uFE0F менен сүйүп жасалган — <link>BestElectronics</link>",
+    "made-with": "❤️ менен сүйүп жасалган — <link>BestElectronics</link>",
     "open-source": "<link>BestElectronics платформасы тууралуу көбүрөөк билиңиз</link>",
     "demo-version": "<link>Бул BestElectronics дүкөнүнүн демо версиясы.</link>",
     "our-products": "Биздин товарлар",
@@ -459,5 +459,9 @@
     "title": "Бет табылган жок",
     "description": "Сиз издеген бет табылган жок.",
     "cta": "Башкы бетке кайтуу"
+  },
+  "currency": {
+    "currency-settings": "Валютаны тандаңыз",
+    "available-currencies": "Бар валюталар"
   }
 }

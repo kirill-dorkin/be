@@ -7,19 +7,19 @@ import { createPortal } from "react-dom";
 import { Button } from "@nimara/ui/components/button";
 import { Label } from "@nimara/ui/components/label";
 
+import { useCurrentRegion } from "@/regions/client";
 import { MARKETS } from "@/regions/config";
-import type { MarketId, Region } from "@/regions/types";
+import type { MarketId } from "@/regions/types";
 
 import { ContinentRow } from "./continent-row";
 
 export function LocaleSwitchModal({
   onClose,
-  region,
 }: {
   onClose: () => void;
-  region: Region;
 }) {
   const t = useTranslations();
+  const region = useCurrentRegion();
   const markets = Object.values(MARKETS);
   const defaultMarket = region.market.id.toUpperCase() as Uppercase<MarketId>;
   const currentLocale = MARKETS[defaultMarket].defaultLanguage.locale;
@@ -50,6 +50,7 @@ export function LocaleSwitchModal({
             currentLocale={currentLocale}
             name={t("locale.continents.asia-pacific")}
             markets={marketsByContinent.asia_pacific}
+            onLocaleSelect={onClose}
           />
         )}
         {!!marketsByContinent.europe.length && (
@@ -57,6 +58,7 @@ export function LocaleSwitchModal({
             currentLocale={currentLocale}
             name={t("locale.continents.europe")}
             markets={marketsByContinent.europe}
+            onLocaleSelect={onClose}
           />
         )}
         {!!marketsByContinent.north_america.length && (
@@ -64,6 +66,7 @@ export function LocaleSwitchModal({
             currentLocale={currentLocale}
             name={t("locale.continents.north-america")}
             markets={marketsByContinent.north_america}
+            onLocaleSelect={onClose}
           />
         )}
       </div>

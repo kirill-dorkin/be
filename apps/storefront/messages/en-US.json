@@ -419,7 +419,7 @@
     "returned": "RETURNED"
   },
   "footer": {
-    "made-with": "Crafted with ❤\uFE0F by <link>BestElectronics</link>",
+    "made-with": "Crafted with ❤️ by <link>BestElectronics</link>",
     "open-source": "<link>Discover the BestElectronics platform</link>",
     "demo-version": "<link>This is the demo version of BestElectronics.</link>",
     "our-products": "Our products",
@@ -459,5 +459,9 @@
     "title": "Page not found",
     "description": "We couldn't find the page you're looking for.",
     "cta": "Back to homepage"
+  },
+  "currency": {
+    "currency-settings": "Currency settings",
+    "available-currencies": "Available currencies"
   }
 }

@@ -6,13 +6,14 @@ import { useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
-import type { Region } from "@/regions/types";
+import { useCurrentRegion } from "@/regions/client";
 
 import { LocaleSwitchModal } from "./locale-modal";
 
-export const LocaleSwitch = ({ region }: { region: Region }) => {
+export const LocaleSwitch = () => {
   const [showModal, setShowModal] = useState(false);
   const t = useTranslations("locale");
+  const region = useCurrentRegion();
 
   return (
     <>
@@ -25,12 +26,7 @@ export const LocaleSwitch = ({ region }: { region: Region }) => {
       >
         <Globe className="h-4 w-4" /> {region.market.id.toLocaleUpperCase()}
       </Button>
-      {showModal && (
-        <LocaleSwitchModal
-          region={region}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+      {showModal && <LocaleSwitchModal onClose={() => setShowModal(false)} />}
     </>
   );
 };

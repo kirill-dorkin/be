@@ -18,8 +18,8 @@ import { MobileNavigation } from "@/components/mobile-navigation";
 import { LocalizedLink, usePathname } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/utils";
-import { useCurrentRegion } from "@/regions/client";
 
+import { CurrencySwitch } from "../currency-switch";
 import { LocaleSwitch } from "../locale-switch";
 import { LogoClient } from "./logo";
 import { MobileSearch } from "./mobile-search";
@@ -40,7 +40,6 @@ export const MobileSideMenu = ({
 
   const pathname = usePathname();
   const t = useTranslations();
-  const region = useCurrentRegion();
 
   const handleMenuItemClick = (isMenuItemClicked: boolean) => {
     setIsOpen(!isMenuItemClicked);
@@ -88,8 +87,11 @@ export const MobileSideMenu = ({
                 menu={menu}
                 onMenuItemClick={handleMenuItemClick}
               />
-              <div className="bg-background mt-auto flex w-full items-center justify-between">
-                <LocaleSwitch region={region} />
+              <div className="bg-background mt-auto flex w-full flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <LocaleSwitch />
+                  <CurrencySwitch />
+                </div>
                 <Button asChild variant="ghost" className="inline-flex gap-1.5">
                   <LocalizedLink
                     href={

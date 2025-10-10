@@ -17,6 +17,8 @@ import { routing } from "@/i18n/routing";
 import { themePreloadScript } from "@/lib/scripts/theme-preload-script";
 import { cn } from "@/lib/utils";
 import { ClientThemeProvider } from "@/providers/theme-provider";
+import { RegionProvider } from "@/regions/client/region-provider";
+import { getCurrentRegion } from "@/regions/server";
 
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnvs.NEXT_PUBLIC_STOREFRONT_URL),
@@ -35,7 +37,7 @@ export default async function LocaleLayout({
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
-  const messages = await getMessages();
+  const [messages, region] = await Promise.all([getMessages(), getCurrentRegion()]);
 
   return (
     <html lang={locale ?? "en"} suppressHydrationWarning>
@@ -54,14 +56,18 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{ __html: themePreloadScript }}
         />
         <ClientThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            <NuqsAdapter>
-              {children}
-              <SpeedInsights />
-              <Toaster />
-              <ErrorServiceServer />
-            </NuqsAdapter>
-          </NextIntlClientProvider>
+          <RegionProvider
+            initialRegion={region}
+          >
+            <NextIntlClientProvider messages={messages}>
+              <NuqsAdapter>
+                {children}
+                <SpeedInsights />
+                <Toaster />
+                <ErrorServiceServer />
+              </NuqsAdapter>
+            </NextIntlClientProvider>
+          </RegionProvider>
         </ClientThemeProvider>
       </body>
     </html>

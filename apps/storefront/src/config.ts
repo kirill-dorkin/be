@@ -23,6 +23,7 @@ export const COOKIE_KEY = {
   refreshToken: "refreshToken",
   searchProvider: "searchProvider",
   locale: "NEXT_LOCALE",
+  currency: "NEXT_CURRENCY",
 } as const;
 
 export const COOKIE_MAX_AGE = {

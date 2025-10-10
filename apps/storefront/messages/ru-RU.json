@@ -419,7 +419,7 @@
     "returned": "ВОЗВРАЩЁН"
   },
   "footer": {
-    "made-with": "Создано с ❤\uFE0F командой <link>BestElectronics</link>",
+    "made-with": "Создано с ❤️ командой <link>BestElectronics</link>",
     "open-source": "<link>Узнайте больше о платформе BestElectronics</link>",
     "demo-version": "<link>Это демо-версия магазина BestElectronics.</link>",
     "our-products": "Наши продукты",
@@ -459,5 +459,9 @@
     "title": "Страница не найдена",
     "description": "Не удалось найти страницу, которую вы запросили.",
     "cta": "Вернуться на главную"
+  },
+  "currency": {
+    "currency-settings": "Настройки валюты",
+    "available-currencies": "Доступные валюты"
   }
 }

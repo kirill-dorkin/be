@@ -42,6 +42,12 @@ export const SUPPORTED_CURRENCIES = [
 ] as const satisfies AllCurrency[];
 export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
 
+export const isSupportedCurrency = (
+  currency: string | null | undefined,
+): currency is SupportedCurrency =>
+  typeof currency === "string" &&
+  SUPPORTED_CURRENCIES.includes(currency as SupportedCurrency);
+
 /**
  * Defines available channels in your Saleor instance.
  */

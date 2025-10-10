@@ -6,32 +6,42 @@ import { useTransition } from "react";
 import { Button } from "@nimara/ui/components/button";
 import { Label } from "@nimara/ui/components/label";
 
-import { usePathname } from "@/i18n/routing";
+import { usePathname, useRouter } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { useRegionContext } from "@/regions/client/region-provider";
 import type { Market, SupportedLocale } from "@/regions/types";
-
-import { handleLocaleChange } from "./actions";
 
 export function ContinentRow({
   currentLocale,
   markets,
   name,
+  onLocaleSelect,
 }: {
   currentLocale: SupportedLocale;
   markets: Market[];
   name: string;
+  onLocaleSelect: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { setLocale } = useRegionContext();
 
   const onLocaleClick = (locale: SupportedLocale) => {
+    if (locale === currentLocale) {
+      return;
+    }
+
+    onLocaleSelect();
+
     startTransition(() => {
+      setLocale(locale);
       const basePath = pathname ?? "/";
       const search = searchParams.toString();
       const redirectPath = search ? `${basePath}?${search}` : basePath;
 
-      void handleLocaleChange(locale, redirectPath);
+      void router.replace(redirectPath, { locale });
     });
   };
 

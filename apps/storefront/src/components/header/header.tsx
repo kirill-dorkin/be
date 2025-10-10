@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { Button } from "@nimara/ui/components/button";
 
 import { getAccessToken } from "@/auth";
+import { CurrencySwitch } from "@/components/currency-switch";
 import { LocaleSwitch } from "@/components/locale-switch";
 import { CACHE_TTL } from "@/config";
 import { LocalizedLink } from "@/i18n/routing";
@@ -92,7 +93,11 @@ export const Header = async () => {
             <MobileSearch />
 
             <div className="hidden md:block">
-              <LocaleSwitch region={region} />
+              <LocaleSwitch />
+            </div>
+
+            <div className="hidden md:block">
+              <CurrencySwitch />
             </div>
 
             <div className="hidden md:block">
