@@ -17,6 +17,7 @@ import { TextFormField } from "@/components/form/text-form-field";
 import { TextareaField } from "@/components/form/textarea-field";
 import { formatAsPrice } from "@/lib/formatters/util";
 import {
+  type RepairDeviceType,
   type RepairService,
   type RepairServiceCategory,
 } from "@/lib/repair-services/data";
@@ -168,8 +169,12 @@ export const ServicesEstimator = ({
       ? serviceIndex.get(initialServiceSlug)
       : undefined) ?? null;
 
+  const getDeviceLabelKey = (
+    deviceType: RepairDeviceType,
+  ): `deviceLabels.${RepairDeviceType}` => `deviceLabels.${deviceType}`;
+
   const servicesByDevice = useMemo(() => {
-    const map = new Map<string, ServiceOption[]>();
+    const map = new Map<RepairDeviceType, ServiceOption[]>();
 
     for (const category of catalog) {
       for (const service of category.services) {
@@ -199,7 +204,7 @@ export const ServicesEstimator = ({
     () =>
       Array.from(servicesByDevice.keys()).map((deviceType) => ({
         value: deviceType,
-        label: t(`deviceLabels.${deviceType}`),
+        label: t(getDeviceLabelKey(deviceType)),
       })),
     [servicesByDevice, t],
   );
@@ -542,7 +547,7 @@ return;
           <div className="space-y-3 rounded-lg border border-dashed p-4">
             <Badge variant="outline" className="uppercase">
               {selectedService
-                ? t(`deviceLabels.${selectedService.deviceType}`)
+                ? t(getDeviceLabelKey(selectedService.deviceType))
                 : t("calculator.estimateBadge")}
             </Badge>
             {isEstimateFree ? (
