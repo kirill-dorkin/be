@@ -110,7 +110,19 @@ const mapCategoryToMenuItem = (category: CategoryNode): MenuItem => {
   };
 };
 
-const buildMenuFromCategories = (data: CategoriesNavigationQuery): Menu => {
+const SERVICE_LINK_LABELS: Partial<Record<string, string>> = {
+  EN_US: "Service centre",
+  EN_GB: "Service centre",
+  RU_RU: "Сервисный центр",
+  KY_KG: "Сервис борбору",
+};
+
+const SERVICE_LINK_DEFAULT = "Service centre";
+
+const buildMenuFromCategories = (
+  data: CategoriesNavigationQuery,
+  languageCode: string,
+): Menu => {
   const items =
     data.categories?.edges
       ?.map((edge) => edge?.node)
@@ -118,7 +130,20 @@ const buildMenuFromCategories = (data: CategoriesNavigationQuery): Menu => {
       .filter((node) => Boolean(node.slug && node.id))
       .map(mapCategoryToMenuItem) ?? [];
 
-  return { items };
+  const serviceItem: MenuItem = {
+    id: "repair-services",
+    label: SERVICE_LINK_LABELS[languageCode] ?? SERVICE_LINK_DEFAULT,
+    url: "/services",
+    children: [],
+  };
+
+  const hasExistingServiceLink = items.some(
+    (item) => item.url === serviceItem.url,
+  );
+
+  return {
+    items: hasExistingServiceLink ? items : [serviceItem, ...items],
+  };
 };
 
 export const getNavigationMenu = async ({
@@ -172,7 +197,10 @@ export const getNavigationMenu = async ({
     return fallbackResult;
   }
 
-  const menu = buildMenuFromCategories(fallbackResult.data);
+  const menu = buildMenuFromCategories(
+    fallbackResult.data,
+    languageCode,
+  );
 
   storefrontLogger.debug("[Navigation] Built menu from category fallback.", {
     topLevelCount: menu.items.length,

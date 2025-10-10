@@ -6,6 +6,103 @@
     "homepage-preview": "Homepage preview",
     "hero-banner-alt": "BestElectronics hero banner"
   },
+  "services": {
+    "meta": {
+      "title": "BestElectronics Repair & Service",
+      "description": "Manage repair offerings and book professional maintenance with BestElectronics. The built-in calculator provides an instant estimate before you speak with a technician.",
+      "notFoundTitle": "Service not found",
+      "notFoundDescription": "This repair service is no longer available. Go back to the catalog to choose another option.",
+      "serviceTitle": "Service: {service}"
+    },
+    "hero": {
+      "overline": "Service Center",
+      "title": "Professional electronics repair",
+      "subtitle": "Pick a service, get an instant estimate without registering, and our engineer will call you back shortly.",
+      "primaryCta": "Estimate my repair",
+      "secondaryCta": "Browse products"
+    },
+    "catalog": {
+      "title": "BestElectronics services",
+      "subtitle": "Certified engineers handle every repair. Prices cover labor and may change depending on device configuration and issue complexity.",
+      "priceBadge": {
+        "fixed": "Fixed price",
+        "from": "From",
+        "range": "Range"
+      },
+      "priceLabel": {
+        "fixed": "{price}",
+        "from": "from {price}",
+        "range": "{min} — {max}"
+      },
+      "action": "View details",
+      "disclaimer": "Final pricing is confirmed after diagnostics. Parts are quoted separately."
+    },
+    "calculator": {
+      "title": "Calculate the repair and send a request",
+      "subtitle": "Submit the form and we will confirm the price, timeline, and get in touch using your preferred channel.",
+      "deviceTypeLabel": "Device type",
+      "deviceTypePlaceholder": "Choose a device",
+      "serviceLabel": "Service",
+      "servicePlaceholder": "Choose a service",
+      "fullName": "Name",
+      "fullNamePlaceholder": "How should we address you?",
+      "phone": "Phone",
+      "phonePlaceholder": "+996 555 000 000",
+      "email": "Email (optional)",
+      "emailPlaceholder": "Used for confirmation",
+      "preferredContactLabel": "Preferred contact method",
+      "contactOptions": {
+        "phone": "Call me",
+        "email": "Email me"
+      },
+      "message": "Request details",
+      "messagePlaceholder": "Describe the issue, device model, or convenient time for pickup",
+      "urgentLabel": "Need urgent repair (+25% labor)",
+      "pickupLabel": "Need pickup or on-site visit (+500 KGS)",
+      "consentLabel": "I agree to the processing of my personal data and to be contacted about this request",
+      "submit": "Send request",
+      "estimateTitle": "Estimated price",
+      "estimateHint": "The final cost is confirmed by the technician after diagnostics.",
+      "priceLabel": {
+        "fixed": "{price}",
+        "from": "from {price}",
+        "range": "{min} — {max}"
+      },
+      "estimateUnavailable": "Select a service to see the estimate.",
+      "estimateBadge": "Service",
+      "fallbackDescription": "{service}",
+      "estimateDisclaimer": "Displayed estimate excludes rare/original parts and may change after inspection.",
+      "thankYou": "Request submitted. We will respond during business hours.",
+      "submitSuccess": "Thanks! Your request was sent to the service team.",
+      "submitError": "We couldn’t send the request. Please try again or contact us by phone.",
+      "errors": {
+        "deviceType": "Select a device type",
+        "serviceSlug": "Select a service",
+        "fullNameMin": "Name must contain at least 2 characters",
+        "fullNameMax": "Name cannot exceed 120 characters",
+        "phoneMin": "Provide a phone number so we can reach you",
+        "phoneMax": "Phone number is too long",
+        "email": "Enter a valid email",
+        "messageMax": "Message is too long",
+        "preferredContact": "Choose how we should contact you",
+        "consent": "Consent is required to submit the request"
+      }
+    },
+    "detail": {
+      "breadcrumbServices": "Service center",
+      "priceLabel": "Labor cost",
+      "related": "Other services: {category}"
+    },
+    "deviceLabels": {
+      "computer": "Computers",
+      "laptop": "Laptops",
+      "monitor": "Monitors",
+      "power-supply": "Power supplies",
+      "video-card": "Graphics cards",
+      "data-recovery": "Data recovery",
+      "peripheral": "Peripherals"
+    }
+  },
   "locale": {
     "region": "Region",
     "language": "Language",

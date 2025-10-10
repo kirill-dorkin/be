@@ -101,6 +101,10 @@ export const paths = {
   home: url("/"),
   search: url("/search"),
   cart: url("/cart"),
+  services: {
+    ...url("/services"),
+    detail: url<"slug">("/services/[slug]"),
+  },
   products: {
     ...url<"slug">("/products/[slug]"),
   },
