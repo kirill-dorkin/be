@@ -547,6 +547,59 @@
     "red": "Red",
     "green": "Green"
   },
+  "contact": {
+    "meta": {
+      "title": "Contact",
+      "description": "Reach the BestElectronics support team for questions about orders, services or partnerships."
+    },
+    "hero": {
+      "badge": "Support team",
+      "title": "Contact BestElectronics support",
+      "subtitle": "We are ready to help with anything from product advice to order updates. Pick the channel that suits you best and we'll respond shortly.",
+      "primaryCta": "Email us",
+      "secondaryCta": "Call {phone}"
+    },
+    "channels": {
+      "title": "Talk to us",
+      "subtitle": "Choose the way you prefer to get in touch with our specialists.",
+      "phone": {
+        "title": "Phone support",
+        "description": "Speak directly with our consultants on business days.",
+        "value": "+48 22 123 45 67",
+        "href": "+48221234567",
+        "cta": "Call now"
+      },
+      "email": {
+        "title": "Email",
+        "description": "Send us a message anytime and we'll reply within one business day.",
+        "cta": "Send an email"
+      },
+      "support": {
+        "title": "Help centre",
+        "description": "Browse step-by-step guides or start a chat with our support team.",
+        "value": "Live chat & FAQ",
+        "cta": "Open help centre"
+      }
+    },
+    "support": {
+      "title": "Support details",
+      "subtitle": "We make sure every request gets the attention it deserves.",
+      "hoursTitle": "Availability",
+      "hoursValue": "Monday–Friday, 9:00–18:00 CET",
+      "responseTitle": "Average response time",
+      "responseValue": "Within 24 business hours",
+      "note": "Need something urgent? <faqLink>Visit our Help Centre</faqLink> or <emailLink>drop us an email</emailLink>."
+    },
+    "visit": {
+      "title": "Visit our showroom",
+      "subtitle": "Experience the latest gear in person with a guided demo.",
+      "addressTitle": "Address",
+      "address": "Prosta 51\n00-838 Warsaw\nPoland",
+      "mapDescription": "Planning a visit? Let us know before you arrive so we can prepare a tailored demo.",
+      "cta": "Open in Google Maps",
+      "mapLink": "https://maps.google.com/?q=Prosta+51,+Warsaw"
+    }
+  },
   "newsletter": {
     "email-required-newsletter": "Email is required to subscribe to the newsletter.",
     "subscribe-title": "Subscribe to Newsletter",
