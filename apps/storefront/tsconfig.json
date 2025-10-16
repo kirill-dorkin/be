@@ -3,7 +3,8 @@
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "~@nimara/codegen/schema": ["../../packages/codegen/schema"]
     }
   },
   "include": ["**/*/*.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
