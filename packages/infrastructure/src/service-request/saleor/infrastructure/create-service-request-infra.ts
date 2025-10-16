@@ -12,6 +12,7 @@ import {
   ServiceRequestProductQueryDocument,
   ServiceRequestWorkersQueryDocument,
 } from "../graphql/queries/generated";
+import type { ServiceRequestWorkersQuery } from "../graphql/queries/generated";
 import type {
   SaleorServiceRequestConfig,
   ServiceRequestCreateInfra,
@@ -23,6 +24,12 @@ import type {
 type MetadataEntry = { key: string; value: string };
 
 const WORKER_GROUP_SEARCH_LIMIT = 20;
+
+type WorkerGroupEdge = NonNullable<
+  NonNullable<ServiceRequestWorkersQuery["permissionGroups"]>["edges"]
+>[number];
+
+type WorkerGroupNode = NonNullable<WorkerGroupEdge["node"]>;
 
 const serializeBoolean = (value: boolean) => (value ? "true" : "false");
 
@@ -102,7 +109,11 @@ const buildMetadata = ({
   return metadata;
 };
 
-const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput & {
+const buildOrderNote = ({
+  request,
+  service,
+  worker,
+}: ServiceRequestCreateInput & {
   worker?: ServiceWorker;
 }): string => {
   const noteLines: string[] = [
@@ -117,13 +128,8 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
 
   const flags: string[] = [];
 
-  if (request.urgent) {
-    flags.push("срочный ремонт");
-  }
-
-  if (request.needsPickup) {
-    flags.push("требуется выезд/забор устройства");
-  }
+  if (request.urgent) flags.push("срочный ремонт");
+  if (request.needsPickup) flags.push("требуется выезд/забор устройства");
 
   if (flags.length > 0) {
     noteLines.push(`Особые условия: ${flags.join(", ")}.`);
@@ -141,12 +147,8 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
 };
 
 const pickRandomWorker = (workers: ServiceWorker[]): ServiceWorker | undefined => {
-  if (!workers.length) {
-    return undefined;
-  }
-
+  if (!workers.length) return undefined;
   const index = Math.floor(Math.random() * workers.length);
-
   return workers[index];
 };
 
@@ -256,8 +258,11 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const matchedGroup = workersResult.data.permissionGroups?.edges
-      ?.map((edge) => edge?.node)
-      .find((group) => group?.name === config.workerGroupName);
+      ?.map((edge: WorkerGroupEdge) => edge?.node ?? null)
+      .find(
+        (group: WorkerGroupNode | null): group is WorkerGroupNode =>
+          Boolean(group && group.name === config.workerGroupName),
+      );
 
     if (!matchedGroup) {
       logger.error("[ServiceRequest] Worker group not found.", {
@@ -274,15 +279,15 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const availableWorkers: ServiceWorker[] =
-      matchedGroup.users
-        ?.filter((user): user is NonNullable<typeof user> => Boolean(user))
+      (matchedGroup.users ?? [])
+        .filter((user): user is Nonnullable<typeof user> => Boolean(user))
         .filter((user) => user.isActive)
         .map((user) => ({
           id: user.id,
           email: user.email,
           firstName: user.firstName ?? "",
           lastName: user.lastName ?? "",
-        })) ?? [];
+        }));
 
     if (!availableWorkers.length) {
       logger.error("[ServiceRequest] No active workers in the group.", {
