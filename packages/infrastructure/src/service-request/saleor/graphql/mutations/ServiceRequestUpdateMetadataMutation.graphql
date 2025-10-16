@@ -1,0 +1,9 @@
+mutation ServiceRequestUpdateMetadataMutation($id: ID!, $input: [MetadataInput!]!) {
+  updateMetadata(id: $id, input: $input) {
+    errors {
+      code
+      field
+      message
+    }
+  }
+}

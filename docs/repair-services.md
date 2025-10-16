@@ -15,6 +15,35 @@ This storefront now ships with a curated catalogue of repair services and a requ
    - `device-type`, `service-group`, `service-category`, `pricing-kind` (all as plain text / dropdowns).
 4. Import the payload into Saleor Cloud and manage price ranges or descriptions right from the dashboard.
 
+### Worker role configuration
+
+- Create a Saleor permission group named **Repair Workers** (or override the default name via `SERVICE_WORKER_GROUP_NAME`).
+- Grant the group access to the services channel (`SERVICE_CHANNEL_SLUG`) and at least the `MANAGE_ORDERS` permission.
+- Administrators can now add staff accounts to this group directly from Saleor Dashboard Cloud — these will be considered workers.
+
+### Managing workers in Saleor Dashboard Cloud
+
+1. Navigate to **Configuration → Staff Members**. The list shows every staff account and indicates the permission groups (for example, *Repair Workers* or *Couriers*) each user belongs to.
+2. Click **Add staff member** to invite a new worker. Provide an email, set a password (or send an invitation), and assign the account to the worker group created above. You can create separate groups (e.g. *Repair Workers*, *Couriers*) when you need different rosters—set `SERVICE_WORKER_GROUP_NAME` to the group that should receive repair tasks.
+3. Existing staff members can be converted into workers by opening their detail page and checking the worker-group box under **Permission groups**. Save the changes to activate them immediately.
+4. Only active staff members in the configured worker group are picked up by the API. Deactivate a worker (toggle **Is active**) when you no longer want them to receive assignments; the automation will skip them on the next request.
+
+### Owner, administrators, and role separation
+
+- Saleor ships with an **Owner** account. Make sure Igor Dorkin signs in with this profile (or another user with full permissions). Owners can invite new staff and manage every permission group.
+- To add an administrator, open **Configuration → Staff Members → Invite staff member**, assign the user to broad groups such as **Full Access** or a bespoke *Repair Admins* group that includes `MANAGE_USERS`, `MANAGE_ORDERS`, and any other required scopes. Admins can then help maintain worker rosters and monitor orders.
+- Workers can have multiple flavours (repair technicians, couriers, estimators). Create one Saleor permission group per worker role, grant each group only the scopes they need (for example, couriers usually require `MANAGE_ORDERS` but not catalogue access), and add the staff member to the right group when inviting them.
+- If a specific workflow is not covered by Saleor permissions (for example, coordinating with couriers in Telegram), document the fallback channel in the worker-group description and capture contact metadata on the staff profile so dispatchers know how to reach them.
+
+The created draft orders carry a private note with the selected worker, so administrators can open the order inside the dashboard and confirm who received the task.
+
+### Service request routing
+
+- The storefront converts every `/api/service-request` submission into a Saleor draft order in the channel defined by `SERVICE_CHANNEL_SLUG`.
+- The service product is resolved by slug and added as the only order line. Metadata captures the customer payload, estimate, and assignment details.
+- Workers are fetched from the configured permission group and one active member is assigned automatically.
+- A private order note summarises the request and the selected worker so the task is fully visible inside the Saleor dashboard.
+
 ### Storefront usage
 
 - `GET /api/repair-services` — returns the raw catalogue for integrations.
