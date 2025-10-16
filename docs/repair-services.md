@@ -21,6 +21,7 @@ This storefront now ships with a curated catalogue of repair services and a requ
 - Grant the group access to the services channel (`SERVICE_CHANNEL_SLUG`) and at least the `MANAGE_ORDERS` permission.
 - Administrators can now add staff accounts to this group directly from Saleor Dashboard Cloud — these will be considered workers.
 
+
 ### Managing workers in Saleor Dashboard Cloud
 
 1. Navigate to **Configuration → Staff Members**. The list shows every staff account and indicates the permission groups (for example, *Repair Workers* or *Couriers*) each user belongs to.
