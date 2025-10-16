@@ -1,58 +1,62 @@
-# Управление каталогом ремонтных услуг
+## Repair Services Management
 
-Эта инструкция описывает, как работает встроенный каталог ремонтных услуг Nimara и каким образом заявки из витрины автоматически превращаются в черновики заказов в Saleor. Материал ориентирован на сотрудников сервисного центра и администраторов, которым нужно понимать полный цикл: от наполнения каталога до назначения исполнителей.
+This storefront now ships with a curated catalogue of repair services and a request flow.
 
-## 1. Источники данных
-- `apps/storefront/src/lib/repair-services/data.ts` — основной файл со всеми услугами: название, категории, цены, длительность и подсказки для формы заявки.
-- `apps/storefront/src/lib/repair-services/seed.ts` — конвертер, который превращает данные из `data.ts` в структуру, подходящую для массового импорта в Saleor (мутация `productBulkCreate`).
-- `apps/storefront/src/app/api/repair-services/route.ts` — публичный API, возвращающий каталог услуг для внешних интеграций.
-- `apps/storefront/src/app/api/service-request/route.ts` — API, которое принимает заявки клиентов и создаёт черновой заказ в Saleor.
+### Data sources
 
-## 2. Подготовка Saleor к работе с услугами
-1. **Настройте каналы.** Убедитесь, что заданы переменные окружения `SERVICE_CHANNEL_SLUG` и `SERVICE_CATEGORY_SLUG`. По умолчанию используются `default-channel` и `repair-services`.
-2. **Создайте тип товара.** В разделе **Products → Product Types** создайте тип `Repair Service` с атрибутами:
-   - `device-type` — устройство (например, iPhone, MacBook).
-   - `service-group` — группа услуг (диагностика, ремонт, аксессуары).
-   - `service-category` — уточняющая категория.
-   - `pricing-kind` — тип ценообразования (фиксированная цена, диагностика и т.д.).
-3. **Импортируйте услуги.**
-   - Выполните запрос `GET https://<домен витрины>/api/repair-services/seed`.
-   - Полученный JSON содержит готовый набор данных для мутации `productBulkCreate` в Saleor Cloud.
-   - После импорта проверьте цены, описания и публикацию в нужных каналах.
-4. **Проверьте отображение на сайте.** Каталог автоматически появляется на странице [services](https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/app/%5Blocale%5D/(main)/services/page.tsx). Убедитесь, что услуги видны и фильтры работают корректно.
+- `apps/storefront/src/lib/repair-services/data.ts` — single source of truth for the service catalogue.
+- `apps/storefront/src/lib/repair-services/seed.ts` — mapper that converts a service into a Saleor-friendly payload.
 
-## 3. Назначение и управление исполнителями
-1. **Создайте группу прав.** В разделе **Configuration → Permission Groups** создайте группу, например *Repair Workers*. Имя можно переопределить через переменную `SERVICE_WORKER_GROUP_NAME`.
-2. **Выдайте доступы.** Для группы включите канал `SERVICE_CHANNEL_SLUG` и отметьте минимум разрешение `MANAGE_ORDERS`.
-3. **Добавьте сотрудников.**
-   - Зайдите в **Configuration → Staff Members → Add staff member**.
-   - Укажите рабочий email, задайте пароль или отправьте приглашение.
-   - Отметьте созданную группу *Repair Workers* (или другое выбранное название).
-4. **Управляйте активностью.** Только активные сотрудники в этой группе получают заявки. Если нужно временно отключить исполнителя, снимите галочку **Is active** — автоматизация перестанет назначать ему задачи.
-5. **Проверяйте назначения.** Каждый созданный черновой заказ содержит приватный комментарий с именем выбранного сотрудника. Комментарий виден на вкладке **History** внутри заказа.
+### Dashboard seeding
 
-## 4. Как формируются заявки
-- При отправке формы «Заказать ремонт» фронтенд отправляет `POST /api/service-request`.
-- API ищет нужную услугу по `slug` и добавляет её в черновик заказа.
-- В метаданных заказа сохраняются контактные данные клиента, предварительная оценка и выбранная услуга.
-- Список доступных работников берётся из группы, указанной в `SERVICE_WORKER_GROUP_NAME`; выбирается случайный активный сотрудник.
-- В приватную заметку заказа записывается краткое резюме заявки и имя назначенного специалиста.
+1. Ensure `SERVICE_CHANNEL_SLUG` and `SERVICE_CATEGORY_SLUG` are defined (defaults: `default-channel`, `repair-services`).
+2. Run the helper API: `GET /api/repair-services/seed`. The response contains ready-to-import payloads for Saleor’s `productBulkCreate` mutation.
+3. Create a dedicated Saleor product type named `Repair Service` with attributes:
+   - `device-type`, `service-group`, `service-category`, `pricing-kind` (all as plain text / dropdowns).
+4. Import the payload into Saleor Cloud and manage price ranges or descriptions right from the dashboard.
 
-## 5. Ежедневные задачи менеджера
-- **Проверять новые черновики.** В разделе **Orders → Drafts** отображаются свежие заявки. Менеджер связывается с клиентом, подтверждает детали и превращает черновик в обычный заказ.
-- **Обновлять цены и описания.** Меняйте стоимость, тексты и фотографии прямо в карточках услуг. Если нужно массовое обновление — скорректируйте `data.ts` и снова выполните импорт.
-- **Следить за составом команды.** Добавляйте новых сотрудников, удаляйте ушедших, корректируйте права доступа.
-- **Контролировать аналитику.** Используйте отчёты Saleor и маркетинговые инструменты, чтобы оценивать спрос на услуги.
+### Worker role configuration
 
-## 6. Обновление каталога
-1. Откройте файл [`data.ts`](https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/lib/repair-services/data.ts) и добавьте новую услугу или измените существующую.
-2. При необходимости обновите маппер [`mapServiceToSaleorSeed`](https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/lib/repair-services/seed.ts), если появились новые поля или атрибуты.
-3. Получите свежий JSON через `GET /api/repair-services/seed` и повторно выполните импорт в Saleor.
-4. Проверьте, что услуга отображается на витрине и доступна для оформления заявки.
+- Create a Saleor permission group named **Repair Workers** (or override the default name via `SERVICE_WORKER_GROUP_NAME`).
+- Grant the group access to the services channel (`SERVICE_CHANNEL_SLUG`) and at least the `MANAGE_ORDERS` permission.
+- Administrators can now add staff accounts to this group directly from Saleor Dashboard Cloud — these will be considered workers.
 
-## 7. Полезные улучшения на будущее
-- **Хранить модификаторы расчётов в Saleor.** Как только вся информация переедет в панель, можно отказаться от ручного редактирования `data.ts`.
-- **Выделить отдельное приложение для заявок.** Например, сохранить заявки в базе данных, отправлять уведомления исполнителям и вести историю изменений.
-- **Подключить интеграции.** Синхронизируйте задачи с CRM или системой учёта сервисного центра через API `/api/repair-services` и `/api/service-request`.
+### Managing workers in Saleor Dashboard Cloud
 
-Если возникли вопросы или требуется помощь с импортом, обратитесь к администратору Saleor или создайте запрос в службе поддержки.
+1. Navigate to **Configuration → Staff Members**. The list shows every staff account and indicates the permission groups (for example, *Repair Workers* or *Couriers*) each user belongs to.
+2. Click **Add staff member** to invite a new worker. Provide an email, set a password (or send an invitation), and assign the account to the worker group created above. You can create separate groups (e.g. *Repair Workers*, *Couriers*) when you need different rosters—set `SERVICE_WORKER_GROUP_NAME` to the group that should receive repair tasks.
+3. Existing staff members can be converted into workers by opening their detail page and checking the worker-group box under **Permission groups**. Save the changes to activate them immediately.
+4. Only active staff members in the configured worker group are picked up by the API. Deactivate a worker (toggle **Is active**) when you no longer want them to receive assignments; the automation will skip them on the next request.
+
+### Owner, administrators, and role separation
+
+- Saleor ships with an **Owner** account. Make sure Igor Dorkin signs in with this profile (or another user with full permissions). Owners can invite new staff and manage every permission group.
+- To add an administrator, open **Configuration → Staff Members → Invite staff member**, assign the user to broad groups such as **Full Access** or a bespoke *Repair Admins* group that includes `MANAGE_USERS`, `MANAGE_ORDERS`, and any other required scopes. Admins can then help maintain worker rosters and monitor orders.
+- Workers can have multiple flavours (repair technicians, couriers, estimators). Create one Saleor permission group per worker role, grant each group only the scopes they need (for example, couriers usually require `MANAGE_ORDERS` but not catalogue access), and add the staff member to the right group when inviting them.
+- If a specific workflow is not covered by Saleor permissions (for example, coordinating with couriers in Telegram), document the fallback channel in the worker-group description and capture contact metadata on the staff profile so dispatchers know how to reach them.
+
+The created draft orders carry a private note with the selected worker, so administrators can open the order inside the dashboard and confirm who received the task.
+
+### Service request routing
+
+- The storefront converts every `/api/service-request` submission into a Saleor draft order in the channel defined by `SERVICE_CHANNEL_SLUG`.
+- The service product is resolved by slug and added as the only order line. Metadata captures the customer payload, estimate, and assignment details.
+- Workers are fetched from the configured permission group and one active member is assigned automatically.
+- A private order note summarises the request and the selected worker so the task is fully visible inside the Saleor dashboard.
+
+### Storefront usage
+
+- `GET /api/repair-services` — returns the raw catalogue for integrations.
+- `GET /api/repair-services/seed` — returns the Saleor seed data described above.
+- `POST /api/service-request` — receives request submissions coming from the storefront form.
+
+### Updating the catalogue
+
+1. Edit `data.ts` to add, remove, or update services.
+2. Optional: adjust `mapServiceToSaleorSeed` if new attributes/metadata are required.
+3. Reimport the payload or update products directly through the Saleor dashboard.
+
+### Roadmap ideas
+
+- Store calculator modifiers in Saleor metadata once the services are managed in the dashboard.
+- Pipe submitted requests into a dedicated Saleor App (database + notifications).
