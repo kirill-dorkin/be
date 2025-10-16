@@ -1,0 +1,14 @@
+mutation ServiceRequestDraftOrderCreateMutation($input: DraftOrderCreateInput!) {
+  draftOrderCreate(input: $input) {
+    order {
+      id
+      number
+      status
+    }
+    errors {
+      code
+      field
+      message
+    }
+  }
+}

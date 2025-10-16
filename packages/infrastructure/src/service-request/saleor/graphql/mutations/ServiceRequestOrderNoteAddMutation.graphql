@@ -1,0 +1,9 @@
+mutation ServiceRequestOrderNoteAddMutation($orderId: ID!, $message: String!) {
+  orderNoteAdd(order: $orderId, input: { message: $message }) {
+    errors {
+      code
+      field
+      message
+    }
+  }
+}

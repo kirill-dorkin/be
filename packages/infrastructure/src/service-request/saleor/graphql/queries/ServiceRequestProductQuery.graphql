@@ -1,0 +1,15 @@
+query ServiceRequestProductQuery($slug: String!, $channel: String!) {
+  product(slug: $slug, channel: $channel) {
+    id
+    name
+    slug
+    defaultVariant {
+      id
+      name
+    }
+    variants {
+      id
+      name
+    }
+  }
+}

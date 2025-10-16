@@ -1,0 +1,17 @@
+query ServiceRequestWorkersQuery($search: String!, $first: Int!) {
+  permissionGroups(first: $first, filter: { search: $search }) {
+    edges {
+      node {
+        id
+        name
+        users {
+          id
+          email
+          firstName
+          lastName
+          isActive
+        }
+      }
+    }
+  }
+}
