@@ -30,7 +30,6 @@ type WorkerGroupEdge = NonNullable<
 >[number];
 
 type WorkerGroupNode = NonNullable<WorkerGroupEdge["node"]>;
-
 type WorkerUser = NonNullable<WorkerGroupNode["users"]>[number];
 
 const isActiveWorker = (
@@ -115,7 +114,11 @@ const buildMetadata = ({
   return metadata;
 };
 
-const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput & {
+const buildOrderNote = ({
+  request,
+  service,
+  worker,
+}: ServiceRequestCreateInput & {
   worker?: ServiceWorker;
 }): string => {
   const noteLines: string[] = [
@@ -129,18 +132,9 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
   }
 
   const flags: string[] = [];
-
-  if (request.urgent) {
-    flags.push("срочный ремонт");
-  }
-
-  if (request.needsPickup) {
-    flags.push("требуется выезд/забор устройства");
-  }
-
-  if (flags.length > 0) {
-    noteLines.push(`Особые условия: ${flags.join(", ")}.`);
-  }
+  if (request.urgent) flags.push("срочный ремонт");
+  if (request.needsPickup) flags.push("требуется выезд/забор устройства");
+  if (flags.length > 0) noteLines.push(`Особые условия: ${flags.join(", ")}.`);
 
   if (worker) {
     noteLines.push(
@@ -154,12 +148,8 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
 };
 
 const pickRandomWorker = (workers: ServiceWorker[]): ServiceWorker | undefined => {
-  if (!workers.length) {
-    return undefined;
-  }
-
+  if (!workers.length) return undefined;
   const index = Math.floor(Math.random() * workers.length);
-
   return workers[index];
 };
 
@@ -269,9 +259,7 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const matchedGroup = workersResult.data.permissionGroups?.edges
-      ?.map(
-        (edge: WorkerGroupEdge): WorkerGroupNode | null => edge.node ?? null,
-      )
+      ?.map((edge: WorkerGroupEdge): WorkerGroupNode | null => edge.node ?? null)
       .find(
         (group: WorkerGroupNode | null): group is WorkerGroupNode =>
           Boolean(group && group.name === config.workerGroupName),
@@ -292,7 +280,6 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const groupUsers: WorkerUser[] = matchedGroup.users ?? [];
-
     const availableWorkers: ServiceWorker[] = groupUsers
       .filter(isActiveWorker)
       .map((user: WorkerUser) => ({
