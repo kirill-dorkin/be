@@ -31,8 +31,6 @@ type WorkerGroupEdge = NonNullable<
 
 type WorkerGroupNode = NonNullable<WorkerGroupEdge["node"]>;
 
-type WorkerUser = NonNullable<WorkerGroupNode["users"]>[number];
-
 const serializeBoolean = (value: boolean) => (value ? "true" : "false");
 
 const buildMetadata = ({
@@ -111,7 +109,11 @@ const buildMetadata = ({
   return metadata;
 };
 
-const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput & {
+const buildOrderNote = ({
+  request,
+  service,
+  worker,
+}: ServiceRequestCreateInput & {
   worker?: ServiceWorker;
 }): string => {
   const noteLines: string[] = [
@@ -126,13 +128,8 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
 
   const flags: string[] = [];
 
-  if (request.urgent) {
-    flags.push("срочный ремонт");
-  }
-
-  if (request.needsPickup) {
-    flags.push("требуется выезд/забор устройства");
-  }
+  if (request.urgent) flags.push("срочный ремонт");
+  if (request.needsPickup) flags.push("требуется выезд/забор устройства");
 
   if (flags.length > 0) {
     noteLines.push(`Особые условия: ${flags.join(", ")}.`);
@@ -150,12 +147,8 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
 };
 
 const pickRandomWorker = (workers: ServiceWorker[]): ServiceWorker | undefined => {
-  if (!workers.length) {
-    return undefined;
-  }
-
+  if (!workers.length) return undefined;
   const index = Math.floor(Math.random() * workers.length);
-
   return workers[index];
 };
 
@@ -265,9 +258,7 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const matchedGroup = workersResult.data.permissionGroups?.edges
-      ?.map(
-        (edge: WorkerGroupEdge): WorkerGroupNode | null => edge.node ?? null,
-      )
+      ?.map((edge: WorkerGroupEdge) => edge?.node ?? null)
       .find(
         (group: WorkerGroupNode | null): group is WorkerGroupNode =>
           Boolean(group && group.name === config.workerGroupName),
@@ -288,14 +279,15 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const availableWorkers: ServiceWorker[] =
-      matchedGroup.users
-        ?.filter((user: WorkerUser) => user.isActive)
-        .map((user: WorkerUser) => ({
+      (matchedGroup.users ?? [])
+        .filter((user): user is Nonnullable<typeof user> => Boolean(user))
+        .filter((user) => user.isActive)
+        .map((user) => ({
           id: user.id,
           email: user.email,
           firstName: user.firstName ?? "",
           lastName: user.lastName ?? "",
-        })) ?? [];
+        }));
 
     if (!availableWorkers.length) {
       logger.error("[ServiceRequest] No active workers in the group.", {
