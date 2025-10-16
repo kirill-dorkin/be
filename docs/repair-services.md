@@ -15,6 +15,19 @@ This storefront now ships with a curated catalogue of repair services and a requ
    - `device-type`, `service-group`, `service-category`, `pricing-kind` (all as plain text / dropdowns).
 4. Import the payload into Saleor Cloud and manage price ranges or descriptions right from the dashboard.
 
+### Worker role configuration
+
+- Create a Saleor permission group named **Repair Workers** (or override the default name via `SERVICE_WORKER_GROUP_NAME`).
+- Grant the group access to the services channel (`SERVICE_CHANNEL_SLUG`) and at least the `MANAGE_ORDERS` permission.
+- Administrators can now add staff accounts to this group directly from Saleor Dashboard Cloud — these will be considered workers.
+
+### Service request routing
+
+- The storefront converts every `/api/service-request` submission into a Saleor draft order in the channel defined by `SERVICE_CHANNEL_SLUG`.
+- The service product is resolved by slug and added as the only order line. Metadata captures the customer payload, estimate, and assignment details.
+- Workers are fetched from the configured permission group and one active member is assigned automatically.
+- A private order note summarises the request and the selected worker so the task is fully visible inside the Saleor dashboard.
+
 ### Storefront usage
 
 - `GET /api/repair-services` — returns the raw catalogue for integrations.
