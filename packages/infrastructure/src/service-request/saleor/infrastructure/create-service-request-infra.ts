@@ -30,6 +30,11 @@ type WorkerGroupEdge = NonNullable<
 >[number];
 
 type WorkerGroupNode = NonNullable<WorkerGroupEdge["node"]>;
+type WorkerUser = NonNullable<WorkerGroupNode["users"]>[number];
+
+const isActiveWorker = (
+  user: WorkerUser | null | undefined,
+): user is WorkerUser => Boolean(user?.isActive);
 
 const serializeBoolean = (value: boolean) => (value ? "true" : "false");
 
@@ -127,13 +132,9 @@ const buildOrderNote = ({
   }
 
   const flags: string[] = [];
-
   if (request.urgent) flags.push("срочный ремонт");
   if (request.needsPickup) flags.push("требуется выезд/забор устройства");
-
-  if (flags.length > 0) {
-    noteLines.push(`Особые условия: ${flags.join(", ")}.`);
-  }
+  if (flags.length > 0) noteLines.push(`Особые условия: ${flags.join(", ")}.`);
 
   if (worker) {
     noteLines.push(
@@ -258,7 +259,7 @@ export const saleorServiceRequestCreateInfra = (
     }
 
     const matchedGroup = workersResult.data.permissionGroups?.edges
-      ?.map((edge: WorkerGroupEdge) => edge?.node ?? null)
+      ?.map((edge: WorkerGroupEdge): WorkerGroupNode | null => edge.node ?? null)
       .find(
         (group: WorkerGroupNode | null): group is WorkerGroupNode =>
           Boolean(group && group.name === config.workerGroupName),
@@ -278,16 +279,15 @@ export const saleorServiceRequestCreateInfra = (
       ]);
     }
 
-    const availableWorkers: ServiceWorker[] =
-      (matchedGroup.users ?? [])
-        .filter((user): user is Nonnullable<typeof user> => Boolean(user))
-        .filter((user) => user.isActive)
-        .map((user) => ({
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName ?? "",
-          lastName: user.lastName ?? "",
-        }));
+    const groupUsers: WorkerUser[] = matchedGroup.users ?? [];
+    const availableWorkers: ServiceWorker[] = groupUsers
+      .filter(isActiveWorker)
+      .map((user: WorkerUser) => ({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
+      }));
 
     if (!availableWorkers.length) {
       logger.error("[ServiceRequest] No active workers in the group.", {
