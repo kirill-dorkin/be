@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { repairServiceBySlug } from "@/lib/repair-services/data";
 import { storefrontLogger } from "@/services/logging";
+import { getServiceRequestService } from "@/services/service-request";
 
 const requestSchema = z.object({
   fullName: z.string().min(2).max(120),
@@ -95,12 +96,56 @@ export async function POST(request: Request) {
 
   const now = new Date().toISOString();
 
+  const normalizedEmail = payload.email?.trim() ? payload.email.trim() : undefined;
+
+  const serviceRequestService = await getServiceRequestService();
+  const creationResult = await serviceRequestService.create({
+    createdAt: now,
+    request: {
+      consent: payload.consent ?? false,
+      deviceType: payload.deviceType,
+      email: normalizedEmail,
+      fullName: payload.fullName,
+      message: payload.message,
+      modifiers: payload.modifiers ?? {},
+      needsPickup: payload.needsPickup ?? false,
+      phone: payload.phone,
+      preferredContact: payload.preferredContact,
+      priceEstimate: payload.priceEstimate,
+      serviceSlug: payload.serviceSlug,
+      urgent: payload.urgent ?? false,
+    },
+    service: {
+      category: service.category,
+      group: service.group,
+      name: service.name,
+      slug: service.slug,
+    },
+  });
+
+  if (!creationResult.ok) {
+    storefrontLogger.error("[ServiceRequest] Failed to create Saleor task.", {
+      errors: creationResult.errors,
+      ...formatLogContext(payload),
+    });
+
+    return NextResponse.json(
+      { ok: false, error: "TASK_CREATION_FAILED" },
+      { status: 502 },
+    );
+  }
+
+  const { assignedWorker, orderId, orderNumber } = creationResult.data;
+
   const webhookBody = JSON.stringify({
     ...payload,
     createdAt: now,
     serviceName: service.name,
     group: service.group,
     category: service.category,
+    orderId,
+    orderNumber,
+    assignedWorker,
   });
 
   const webhookUrl = process.env.SERVICE_REQUEST_WEBHOOK_URL;
@@ -137,12 +182,19 @@ export async function POST(request: Request) {
 
   storefrontLogger.info("[ServiceRequest] Request processed successfully.", {
     ...formatLogContext(payload),
+    orderId,
+    assignedWorkerId: assignedWorker?.id,
   });
 
   return NextResponse.json(
     {
       ok: true,
       receivedAt: now,
+      task: {
+        orderId,
+        orderNumber: orderNumber ?? null,
+        assignedWorker,
+      },
     },
     { status: 200 },
   );
