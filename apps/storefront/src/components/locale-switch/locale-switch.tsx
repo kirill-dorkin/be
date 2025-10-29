@@ -11,22 +11,42 @@ import { useCurrentRegion } from "@/regions/client";
 import { LocaleSwitchModal } from "./locale-modal";
 
 export const LocaleSwitch = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("locale");
   const region = useCurrentRegion();
+
+  const openModal = () => {
+    setIsMounted(true);
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => setIsOpen(true));
+    } else {
+      setIsOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
       <Button
         variant="ghost"
         size="default"
-        className="gap-1.5"
-        onClick={() => setShowModal(true)}
+        className="gap-1.5 text-[0.8rem] font-semibold uppercase tracking-[0.08em]"
+        onClick={openModal}
         aria-label={t("region-settings")}
       >
         <Globe className="h-4 w-4" /> {region.market.id.toLocaleUpperCase()}
       </Button>
-      {showModal && <LocaleSwitchModal onClose={() => setShowModal(false)} />}
+      {isMounted && (
+        <LocaleSwitchModal
+          open={isOpen}
+          onClose={closeModal}
+          onExited={() => setIsMounted(false)}
+        />
+      )}
     </>
   );
 };

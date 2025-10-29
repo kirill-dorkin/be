@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 
 import {
@@ -8,15 +10,22 @@ import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 import type {
   PageInfo,
   SearchContext,
+  SearchService,
 } from "@nimara/infrastructure/use-cases/search/types";
 
-import { DEFAULT_RESULTS_PER_PAGE, DEFAULT_SORT_BY } from "@/config";
+import {
+  CACHE_TTL,
+  DEFAULT_RESULTS_PER_PAGE,
+  DEFAULT_SORT_BY,
+} from "@/config";
 import { clientEnvs } from "@/envs/client";
 import { saleorClient } from "@/graphql/client";
 import { JsonLd, mappedSearchProductsToJsonLd } from "@/lib/json-ld";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
+import { type SortByOption } from "@nimara/domain/objects/Search";
+import { type SortByOption } from "@nimara/domain/objects/Search";
 
 import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { ProductsList } from "../_components/products-list";
@@ -35,6 +44,175 @@ type SearchParams = Promise<{
   q?: string;
   sortBy?: string;
 }>;
+
+const CACHE_TAGS = {
+  categoryLabels: "search:category-labels",
+  categoryProducts: "search:category-products",
+  facets: "search:facets",
+  results: "search:results",
+} as const;
+
+const stableJSONStringify = (value: unknown): string => {
+  if (value === null || typeof value !== "object") {
+    const primitive = JSON.stringify(value);
+
+    return primitive === undefined ? "null" : primitive;
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => stableJSONStringify(item)).join(",")}]`;
+  }
+
+  const entries = Object.keys(value as Record<string, unknown>)
+    .filter((key) => {
+      const entry = (value as Record<string, unknown>)[key];
+
+      return typeof entry !== "undefined" && typeof entry !== "function";
+    })
+    .sort()
+    .map((key) => {
+      const entry = (value as Record<string, unknown>)[key];
+
+      return `${JSON.stringify(key)}:${stableJSONStringify(entry)}`;
+    });
+
+  return `{${entries.join(",")}}`;
+};
+
+type SearchPayload = Parameters<SearchService["search"]>[0];
+type SearchResult = Awaited<ReturnType<SearchService["search"]>>;
+type FacetsPayload = Parameters<SearchService["getFacets"]>[0];
+type FacetsResult = Awaited<ReturnType<SearchService["getFacets"]>>;
+
+type SearchViewModel = {
+  categoryLabels: (string | null)[];
+  fallbackCategoryLabel: string | null;
+  pageInfo: PageInfo | null;
+  products: SearchProduct[];
+  sortOptions: SortByOption[];
+};
+
+const loadSearchResults = unstable_cache(
+  async (serializedArgs: string): Promise<SearchResult> => {
+    const { payload, context } = JSON.parse(serializedArgs) as {
+      context: SearchContext;
+      payload: SearchPayload;
+    };
+
+    const searchService = await getSearchService();
+
+    return searchService.search(payload, context);
+  },
+  [CACHE_TAGS.results],
+  {
+    revalidate: CACHE_TTL.search,
+    tags: [CACHE_TAGS.results],
+  },
+);
+
+const loadFacets = unstable_cache(
+  async (serializedArgs: string): Promise<FacetsResult> => {
+    const { payload, context } = JSON.parse(serializedArgs) as {
+      context: SearchContext;
+      payload: FacetsPayload;
+    };
+
+    const searchService = await getSearchService();
+
+    return searchService.getFacets(payload, context);
+  },
+  [CACHE_TAGS.facets],
+  {
+    revalidate: CACHE_TTL.search,
+    tags: [CACHE_TAGS.facets],
+  },
+);
+
+const loadCategoryLabels = unstable_cache(
+  async (serializedArgs: string): Promise<(string | null)[]> => {
+    const { slugs, languageCode } = JSON.parse(serializedArgs) as {
+      languageCode: string;
+      slugs: string[];
+    };
+
+    return fetchCategoryLabelsInternal(slugs, languageCode);
+  },
+  [CACHE_TAGS.categoryLabels],
+  {
+    revalidate: CACHE_TTL.search,
+    tags: [CACHE_TAGS.categoryLabels],
+  },
+);
+
+const loadCategoryProducts = unstable_cache(
+  async (serializedArgs: string) => {
+    const args = JSON.parse(serializedArgs) as {
+      after?: string | null;
+      before?: string | null;
+      channel: string;
+      languageCode: string;
+      limit: number;
+      slug: string;
+    };
+
+    return fetchCategoryProductsInternal(args);
+  },
+  [CACHE_TAGS.categoryProducts],
+  {
+    revalidate: CACHE_TTL.search,
+    tags: [CACHE_TAGS.categoryProducts],
+  },
+);
+
+const buildSearchViewModel = async ({
+  categoryLabelsPromise,
+  fallbackPromise,
+  searchContext,
+  searchResultPromise,
+}: {
+  categoryLabelsPromise: Promise<(string | null)[]>;
+  fallbackPromise: Promise<
+    | {
+        categoryLabel: string | null;
+        pageInfo: Extract<PageInfo, { type: "cursor" }>;
+        products: SearchProduct[];
+      }
+    | null
+  > | null;
+  searchContext: SearchContext;
+  searchResultPromise: Promise<SearchResult>;
+}): Promise<SearchViewModel> => {
+  const [categoryLabels, searchResult, searchService] = await Promise.all([
+    categoryLabelsPromise,
+    searchResultPromise,
+    getSearchService(),
+  ]);
+
+  const sortOptionsResult = searchService.getSortByOptions(searchContext);
+  const sortOptions = sortOptionsResult.ok ? sortOptionsResult.data : [];
+
+  let products = searchResult.ok ? searchResult.data.results : [];
+  let pageInfo = searchResult.ok ? searchResult.data.pageInfo : null;
+  let fallbackCategoryLabel: string | null = null;
+
+  if (!products.length && fallbackPromise) {
+    const fallbackResult = await fallbackPromise;
+
+    if (fallbackResult) {
+      products = fallbackResult.products;
+      pageInfo = fallbackResult.pageInfo;
+      fallbackCategoryLabel = fallbackResult.categoryLabel ?? null;
+    }
+  }
+
+  return {
+    categoryLabels,
+    fallbackCategoryLabel,
+    pageInfo,
+    products,
+    sortOptions,
+  };
+};
 
 export async function generateMetadata(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams;
@@ -71,11 +249,7 @@ export async function generateMetadata(props: { searchParams: SearchParams }) {
 export default async function Page(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams;
 
-  const [t, region, searchService] = await Promise.all([
-    getTranslations(),
-    getCurrentRegion(),
-    getSearchService(),
-  ]);
+  const region = await getCurrentRegion();
 
   const searchContext = {
     currency: region.market.currency,
@@ -92,64 +266,161 @@ export default async function Page(props: { searchParams: SearchParams }) {
     limit,
     ...rest
   } = searchParams;
+  const parsedLimit = limit ? Number.parseInt(limit) : DEFAULT_RESULTS_PER_PAGE;
   const categorySlugs = rest.category
     ? rest.category
         .split(",")
         .map((slug) => slug.trim())
         .filter(Boolean)
     : [];
+  const searchPayload: SearchPayload = {
+    query,
+    limit: parsedLimit,
+    page,
+    after,
+    before,
+    sortBy,
+    filters: rest,
+  };
+  const facetsPayload: FacetsPayload = {
+    query,
+    filters: rest,
+  };
 
-  const [resultSearch, getFacetsResult, categoryLabels] = await Promise.all([
-    searchService.search(
-      {
-        query,
-        limit: limit ? Number.parseInt(limit) : DEFAULT_RESULTS_PER_PAGE,
-        page,
+  const fallbackPromise = rest.category
+    ? fetchCategoryProducts({
+        slug: categorySlugs[0] ?? rest.category,
+        channel: searchContext.channel,
+        languageCode: searchContext.languageCode ?? region.language.code,
         after,
         before,
-        sortBy,
-        filters: rest,
-      },
-      searchContext,
-    ),
-    searchService.getFacets(
-      {
-        query,
-        filters: rest,
-      },
-      searchContext,
-    ),
-    fetchCategoryLabels(categorySlugs, searchContext.languageCode),
+        limit: parsedLimit,
+      })
+    : null;
+
+  const serializedSearchArgs = stableJSONStringify({
+    context: searchContext,
+    payload: searchPayload,
+  });
+  const serializedFacetsArgs = stableJSONStringify({
+    context: searchContext,
+    payload: facetsPayload,
+  });
+
+  const categoryLabelsPromise = fetchCategoryLabels(
+    categorySlugs,
+    searchContext.languageCode ?? region.language.code,
+  );
+  const searchResultPromise = loadSearchResults(serializedSearchArgs);
+  const viewModelPromise = buildSearchViewModel({
+    categoryLabelsPromise,
+    fallbackPromise,
+    searchContext,
+    searchResultPromise,
+  });
+
+  return (
+    <Suspense fallback={<SearchPageSkeleton query={query} />}>
+      <SearchContent
+        categorySlugs={categorySlugs}
+        collectionParam={searchParams.collection ?? ""}
+        query={query}
+        searchParams={searchParams}
+        serializedFacetsArgs={serializedFacetsArgs}
+        viewModelPromise={viewModelPromise}
+      />
+    </Suspense>
+  );
+}
+
+async function SearchFilters({
+  serializedArgs,
+  searchParams,
+  sortByOptions,
+}: {
+  serializedArgs: string;
+  searchParams: Record<string, string>;
+  sortByOptions: SortByOption[];
+}) {
+  const facetsResult = await loadFacets(serializedArgs);
+
+  return (
+    <FiltersContainer
+      facets={facetsResult.ok ? facetsResult.data : []}
+      searchParams={searchParams}
+      sortByOptions={sortByOptions}
+    />
+  );
+}
+
+function FiltersSkeleton() {
+  return (
+    <div className="h-10 w-10 animate-pulse rounded-xl border border-neutral-200 bg-neutral-100 sm:w-28 dark:border-white/15 dark:bg-white/10" />
+  );
+}
+
+async function SearchContent({
+  categorySlugs,
+  collectionParam,
+  query,
+  searchParams,
+  serializedFacetsArgs,
+  viewModelPromise,
+}: {
+  categorySlugs: string[];
+  collectionParam: string;
+  query: string;
+  searchParams: Record<string, string>;
+  serializedFacetsArgs: string;
+  viewModelPromise: Promise<SearchViewModel>;
+}) {
+  const [t, viewModel] = await Promise.all([
+    getTranslations(),
+    viewModelPromise,
   ]);
 
-  const resultOptions = searchService.getSortByOptions(searchContext);
-  const options = resultOptions.ok ? resultOptions.data : [];
+  const normalizedSearchParams = Object.fromEntries(
+    Object.entries(searchParams).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
 
-  const formattedCategoryLabels =
-    categoryLabels.length > 0
-      ? categoryLabels.map((label, index) => {
-          if (label) {
-            return label;
-          }
-          const slug = categorySlugs[index] ?? "";
+  const categoryLabels = viewModel.categoryLabels.map((label, index) => {
+    if (label?.trim()) {
+      return label;
+    }
 
-          return formatSlugForHeader(slug);
-        })
-      : [];
+    const slug = categorySlugs[index] ?? "";
+
+    return formatSlugForHeader(slug);
+  });
+
+  if (
+    !categoryLabels.length &&
+    viewModel.fallbackCategoryLabel &&
+    viewModel.fallbackCategoryLabel.trim()
+  ) {
+    categoryLabels.push(viewModel.fallbackCategoryLabel);
+  }
+
+  const collectionLabels = (collectionParam || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map((value) => formatSlugForHeader(value));
 
   const formatList = (items: string[]) => {
     const cleaned = items.map((item) => item.trim()).filter(Boolean);
 
     if (!cleaned.length) {
-
       return null;
     }
-    if (cleaned.length === 1) {
 
+    if (cleaned.length === 1) {
       return cleaned[0];
     }
-    if (cleaned.length === 2) {
 
+    if (cleaned.length === 2) {
       return `${cleaned[0]} ${t("common.and")} ${cleaned[1]}`;
     }
 
@@ -158,98 +429,107 @@ export default async function Page(props: { searchParams: SearchParams }) {
     return `${cleaned.slice(0, -1).join(", ")} ${t("common.and")} ${last}`;
   };
 
-  const getHeader = () => {
+  const header = (() => {
     if (query) {
-
       return t("search.results-for", { query });
     }
 
-    const categoryHeader = formatList(formattedCategoryLabels);
-    const collectionHeader = formatList(
-      (searchParams.collection || "")
-        .split(",")
-        .map((value) => value.trim())
-        .filter(Boolean)
-        .map((value) => formatSlugForHeader(value)),
-    );
+    const categoryHeader = formatList(categoryLabels);
+    const collectionHeader = formatList(collectionLabels);
 
     if (!categoryHeader && !collectionHeader) {
-
       return t("search.all-products");
     }
 
     if (categoryHeader) {
       return categoryHeader;
     }
+
     if (collectionHeader) {
       return collectionHeader;
     }
-  };
 
-  const products = resultSearch.ok ? resultSearch.data.results : [];
-  const pageInfo = resultSearch.ok ? resultSearch.data.pageInfo : null;
-
-  let finalProducts = products;
-  let finalPageInfo = pageInfo;
-
-  if (!finalProducts.length && rest.category) {
-    const fallbackResult = await fetchCategoryProducts({
-      slug: categorySlugs[0] ?? rest.category,
-      channel: searchContext.channel,
-      languageCode: searchContext.languageCode,
-      after,
-      before,
-      limit: limit ? Number.parseInt(limit) : DEFAULT_RESULTS_PER_PAGE,
-    });
-
-    if (fallbackResult) {
-      finalProducts = fallbackResult.products;
-      finalPageInfo = fallbackResult.pageInfo;
-      if (
-        formattedCategoryLabels.length === 0 &&
-        fallbackResult.categoryLabel
-      ) {
-        formattedCategoryLabels.push(fallbackResult.categoryLabel);
-      }
-    }
-  }
+    return t("search.all-products");
+  })();
 
   return (
     <div className="w-full">
-      <Breadcrumbs pageName={getHeader()} />
+      <Breadcrumbs pageName={header} />
       <section className="mx-auto my-8 grid gap-8">
         <div className="flex items-center justify-between">
           <h2 className="text-slate-700 dark:text-primary text-2xl">
-            {getHeader()}
+            {header}
           </h2>
           <div className="flex gap-4">
             <div className="hidden md:block">
-              <SearchSortBy options={options} searchParams={searchParams} />
+              <SearchSortBy options={viewModel.sortOptions} searchParams={searchParams} />
             </div>
-            <FiltersContainer
-              facets={getFacetsResult.ok ? getFacetsResult.data : []}
-              searchParams={searchParams}
-              sortByOptions={options}
-            />
+            <Suspense fallback={<FiltersSkeleton />}>
+              <SearchFilters
+                serializedArgs={serializedFacetsArgs}
+                searchParams={normalizedSearchParams}
+                sortByOptions={viewModel.sortOptions}
+              />
+            </Suspense>
           </div>
         </div>
 
-        {finalProducts.length ? (
-          <ProductsList products={finalProducts} />
+        {viewModel.products.length ? (
+          <ProductsList products={viewModel.products} />
         ) : (
           <NoResults />
         )}
 
-        {finalPageInfo && (
+        {viewModel.pageInfo && (
           <SearchPagination
-            pageInfo={finalPageInfo}
+            pageInfo={viewModel.pageInfo}
             searchParams={searchParams}
             baseUrl={paths.search.asPath()}
           />
         )}
       </section>
 
-      <JsonLd jsonLd={mappedSearchProductsToJsonLd(finalProducts)} />
+      <JsonLd jsonLd={mappedSearchProductsToJsonLd(viewModel.products)} />
+    </div>
+  );
+}
+
+function SearchPageSkeleton({
+  query,
+}: {
+  query: string;
+}) {
+  const placeholderTitle = query
+    ? `Поиск: ${query}`
+    : "Загрузка товаров...";
+
+  return (
+    <div className="w-full">
+      <div className="mb-6 h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
+      <section className="mx-auto my-8 grid gap-8">
+        <div className="flex items-center justify-between">
+          <h2 className="h-8 w-64 animate-pulse rounded bg-neutral-200 dark:bg-white/10">
+            <span className="sr-only">{placeholderTitle}</span>
+          </h2>
+          <div className="flex gap-4">
+            <div className="hidden h-10 w-32 animate-pulse rounded-lg bg-neutral-200 md:block dark:bg-white/10" />
+            <FiltersSkeleton />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex flex-col gap-3 rounded-2xl border border-neutral-200 p-4 dark:border-white/10"
+            >
+              <div className="aspect-[3/4] w-full animate-pulse rounded-xl bg-neutral-200 dark:bg-white/10" />
+              <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
+              <div className="h-4 w-1/2 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
@@ -269,6 +549,18 @@ async function fetchCategoryLabels(
     return [];
   }
 
+  return loadCategoryLabels(
+    stableJSONStringify({
+      languageCode,
+      slugs,
+    }),
+  );
+}
+
+async function fetchCategoryLabelsInternal(
+  slugs: string[],
+  languageCode: string,
+): Promise<(string | null)[]> {
   const query = {
     toString: () => `
       query CategoryLabelsQuery($slugs: [String!], $languageCode: LanguageCodeEnum!) {
@@ -543,14 +835,7 @@ const mapFallbackProduct = (node: FallbackProductNode): SearchProduct => {
   } satisfies SearchProduct;
 };
 
-const fetchCategoryProducts = async ({
-  after,
-  before,
-  channel,
-  languageCode,
-  limit,
-  slug,
-}: {
+const fetchCategoryProducts = async (params: {
   after?: string;
   before?: string;
   channel: string;
@@ -565,12 +850,43 @@ const fetchCategoryProducts = async ({
     }
   | null
 > => {
+  return loadCategoryProducts(
+    stableJSONStringify({
+      ...params,
+      after: params.after ?? null,
+      before: params.before ?? null,
+    }),
+  );
+};
+
+async function fetchCategoryProductsInternal({
+  after,
+  before,
+  channel,
+  languageCode,
+  limit,
+  slug,
+}: {
+  after?: string | null;
+  before?: string | null;
+  channel: string;
+  languageCode: string;
+  limit: number;
+  slug: string;
+}): Promise<
+  | {
+      categoryLabel: string | null;
+      pageInfo: Extract<PageInfo, { type: "cursor" }>;
+      products: SearchProduct[];
+    }
+  | null
+> {
   const result = await saleorClient().execute(
     CATEGORY_PRODUCTS_FALLBACK_QUERY,
     {
       variables: {
-        after,
-        before,
+        after: after ?? undefined,
+        before: before ?? undefined,
         channel,
         first: before ? undefined : limit,
         languageCode,
@@ -612,4 +928,4 @@ const fetchCategoryProducts = async ({
     pageInfo,
     products,
   };
-};
+}

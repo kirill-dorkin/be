@@ -4,7 +4,8 @@ import { ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import {
@@ -45,6 +46,64 @@ const splitIntoColumns = <T,>(items: T[], chunkSize: number) => {
 export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
   const [currentMenuItem, setCurrentMenuItem] = useState("");
   const t = useTranslations("site");
+  const router = useRouter();
+
+  const isInternalHref = useCallback((href: string) => {
+    if (!href) {
+      return false;
+    }
+
+    if (href.startsWith("http://") || href.startsWith("https://")) {
+      return false;
+    }
+
+    // Skip hash anchors.
+    if (href.startsWith("#")) {
+      return false;
+    }
+
+    return href.startsWith("/");
+  }, []);
+
+  const attemptPrefetch = useCallback(
+    (href: string | null | undefined) => {
+      if (!href || !isInternalHref(href) || typeof router.prefetch !== "function") {
+        return;
+      }
+
+      try {
+        const maybePromise = router.prefetch(href);
+        if (
+          maybePromise &&
+          typeof (maybePromise as PromiseLike<unknown>).catch === "function"
+        ) {
+          (maybePromise as PromiseLike<unknown>).catch(() => {
+            // Ignore background prefetch errors.
+          });
+        }
+      } catch {
+        // Ignore prefetch errors; fallback to regular navigation.
+      }
+    },
+    [isInternalHref, router],
+  );
+
+  const prefetchOnIntent = useCallback(
+    (href: string | null | undefined) => {
+      attemptPrefetch(href);
+    },
+    [attemptPrefetch],
+  );
+
+  useEffect(() => {
+    if (!menu?.items?.length) {
+      return;
+    }
+
+    menu.items.slice(0, 4).forEach((item) => {
+      attemptPrefetch(item?.url);
+    });
+  }, [attemptPrefetch, menu]);
 
   if (!menu || menu?.items?.length === 0) {
     return null;
@@ -97,7 +156,7 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                   <LocalizedLink
                     href={item.url}
                     className="text-inherit no-underline hover:underline"
-                    prefetch={false}
+                    onPointerEnter={() => prefetchOnIntent(item.url)}
                   >
                     <span>{item.label}</span>
                     <ChevronDown
@@ -114,7 +173,7 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                   <LocalizedLink
                     href={item.url}
                     className="text-inherit no-underline hover:underline"
-                    prefetch={false}
+                    onPointerEnter={() => prefetchOnIntent(item.url)}
                   >
                     <span>{item.label}</span>
                   </LocalizedLink>
@@ -144,7 +203,7 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                               key={child.id}
                               href={child.url}
                               className="hover:bg-accent group block space-y-1 rounded-md p-3"
-                              prefetch={false}
+                              onPointerEnter={() => prefetchOnIntent(child.url)}
                             >
                               <div className="text-sm font-medium leading-none">
                                 {child.label}
@@ -182,7 +241,7 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                           href={child.url}
                           className="bg-accent group relative min-h-[270px] overflow-hidden rounded-lg"
                           onClick={() => setCurrentMenuItem("")}
-                          prefetch={false}
+                          onPointerEnter={() => prefetchOnIntent(child.url)}
                         >
                           <div className="relative h-1/2">
                             {child.collectionImageUrl && (

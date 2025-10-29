@@ -58,11 +58,7 @@ export default async function Page() {
     getUserService(),
   ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
-
-  const user = resultUserGet.ok ? resultUserGet.data : null;
-
-  const resultPage = await cmsPageService.cmsPageGet({
+  const cmsPagePromise = cmsPageService.cmsPageGet({
     pageType: PageType.HOMEPAGE,
     slug: "home",
     languageCode: region.language.code,
@@ -74,10 +70,20 @@ export default async function Page() {
     },
   });
 
+  const userPromise = userService.userGet(accessToken);
+
+  const [resultPage, resultUserGet] = await Promise.all([
+    cmsPagePromise,
+    userPromise,
+  ]);
+
+  const user = resultUserGet.ok ? resultUserGet.data : null;
+
   return (
     <section className="grid w-full content-start">
       <HeroBanner fields={resultPage?.data?.fields} />
       <RepairDiscountBanner user={user} />
+
       <Suspense fallback={<ProductsGridSkeleton />}>
         <ProductsGrid fields={resultPage?.data?.fields} />
       </Suspense>

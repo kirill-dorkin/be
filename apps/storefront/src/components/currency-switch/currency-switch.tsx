@@ -12,7 +12,8 @@ import { useCurrentRegion } from "@/regions/client";
 import { CurrencySwitchModal } from "./currency-modal";
 
 export const CurrencySwitch = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("currency");
   const region = useCurrentRegion();
 
@@ -21,17 +22,30 @@ export const CurrencySwitch = () => {
     ? null
     : getCurrencySymbol(region.market.currency);
   const symbolClassName = cn(
-    "text-lg font-semibold leading-none",
-    currencySymbol === "с" && "text-xl",
+    "text-xl font-bold leading-none",
+    currencySymbol === "с" && "text-[1.55rem]",
   );
+
+  const openModal = () => {
+    setIsMounted(true);
+    if (typeof window !== "undefined") {
+      window.requestAnimationFrame(() => setIsOpen(true));
+    } else {
+      setIsOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
       <Button
         variant="ghost"
         size="default"
-        className="gap-1.5"
-        onClick={() => setShowModal(true)}
+        className="gap-1.5 text-[0.8rem] font-semibold uppercase tracking-[0.08em]"
+        onClick={openModal}
         aria-label={t("currency-settings")}
       >
         {!isSom && currencySymbol && (
@@ -41,10 +55,12 @@ export const CurrencySwitch = () => {
         )}
         {region.market.currency}
       </Button>
-      {showModal && (
+      {isMounted && (
         <CurrencySwitchModal
           currentCurrency={region.market.currency}
-          onClose={() => setShowModal(false)}
+          onClose={closeModal}
+          open={isOpen}
+          onExited={() => setIsMounted(false)}
         />
       )}
     </>

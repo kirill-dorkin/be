@@ -82,7 +82,7 @@ const ComboboxInput = ({
       inputMode="search"
       name="query"
       role="combobox"
-      type="search"
+      type="text"
       aria-expanded={expanded ? "true" : "false"}
       {...inputProps}
     />

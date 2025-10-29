@@ -13,10 +13,7 @@ import {
 import { ProductTitle } from "../components/product-title";
 import { RelatedProductsContainer } from "../components/related-products-container";
 import { RelatedProductsSkeleton } from "../components/related-products-skeleton";
-import {
-  VariantSelectorSkeleton,
-  VariantSelectorWrapper,
-} from "../components/variant-selector-wrapper";
+import { VariantSelectorWrapper } from "../components/variant-selector-wrapper";
 import { ProductProvider } from "../providers/product-provider";
 import { type PDPViewProps } from "../types";
 
@@ -30,7 +27,7 @@ export const CustomPDPView = async (props: PDPViewProps) => {
   return (
     <ProductProvider
       slug={slug}
-      render={(product, availability) => (
+      render={(product, availability, { cart }) => (
         <div className="relative grid w-full gap-8">
           <ProductBreadcrumbs
             category={product.category}
@@ -42,6 +39,7 @@ export const CustomPDPView = async (props: PDPViewProps) => {
               <ProductMediaWrapper
                 product={product}
                 availability={availability}
+                cart={cart}
                 showAs="vertical"
               />
             </div>
@@ -50,12 +48,11 @@ export const CustomPDPView = async (props: PDPViewProps) => {
               <ProductTitle title={product.name} className="text-center" />
               <ProductExternalSearch productName={product.name} />
 
-              <Suspense fallback={<VariantSelectorSkeleton />}>
-                <VariantSelectorWrapper
-                  availability={availability}
-                  product={product}
-                />
-              </Suspense>
+              <VariantSelectorWrapper
+                availability={availability}
+                cart={cart}
+                product={product}
+              />
             </div>
           </div>
 

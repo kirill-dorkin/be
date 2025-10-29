@@ -69,15 +69,14 @@ export const Header = async () => {
   const shoppingBag = <ShoppingBagIconWithCount count={checkoutLinesCount} />;
 
   return (
-    <header>
+    <header
+      id="site-header"
+      className="sticky top-0 z-[70] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
+    >
       <div className="container">
         <div className="grid w-full grid-flow-col grid-cols-[repeat(3,1fr)] justify-between gap-4">
           <div className="md:hidden">
-            <MobileSideMenu
-              user={user}
-              menu={resultMenu?.data?.menu}
-              checkoutLinesCount={checkoutLinesCount}
-            >
+            <MobileSideMenu user={user} menu={resultMenu?.data?.menu}>
               {shoppingBag}
             </MobileSideMenu>
           </div>

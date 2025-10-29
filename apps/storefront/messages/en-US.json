@@ -23,7 +23,34 @@
         "warranty": "Extended 90-day workmanship warranty",
         "tracking": "Track every repair stage from your account"
       }
+    },
+    "highlights": {
+      "eyebrow": "Why customers pick us",
+      "title": "Technology care that's ready for anything",
+      "subtitle": "We combine expert engineers, careful logistics, and flexible plans so you stay productive.",
+      "items": {
+        "support": {
+          "title": "Expert support 7 days a week",
+          "description": "Talk to certified specialists whenever you need setup help or urgent diagnostics."
+        },
+        "delivery": {
+          "title": "Same-day pick-up and delivery",
+          "description": "Couriers collect and return devices on your schedule across the city."
+        },
+        "warranty": {
+          "title": "Extended workmanship warranty",
+          "description": "Repairs include detailed quality checks plus coverage beyond the standard 90 days."
+        },
+        "savings": {
+          "title": "Transparent pricing and loyalty perks",
+          "description": "Bundle repairs, accessories, and service plans to save up to 25% annually."
+        }
+      }
     }
+  },
+  "navigation": {
+    "open-menu": "Open menu",
+    "close-menu": "Close menu"
   },
   "help": {
     "meta": {
@@ -417,15 +444,15 @@
       "priceLabel": "Labor cost",
       "related": "Other services: {category}"
     },
-  "deviceLabels": {
-    "computer": "Computers",
-    "laptop": "Laptops",
-    "monitor": "Monitors",
-    "power-supply": "Power supplies",
-    "video-card": "Graphics cards",
-    "data-recovery": "Data recovery",
-    "peripheral": "Peripherals"
-  }
+    "deviceLabels": {
+      "computer": "Computers",
+      "laptop": "Laptops",
+      "monitor": "Monitors",
+      "power-supply": "Power supplies",
+      "video-card": "Graphics cards",
+      "data-recovery": "Data recovery",
+      "peripheral": "Peripherals"
+    }
   },
   "staff": {
     "title": "Repair workspace",
@@ -540,10 +567,11 @@
     "language": "Language",
     "region-settings": "Region and language settings",
     "continents": {
-      "asia-pacific": "Asia Pacific",
+      "asia-pacific": "Asia",
       "europe": "Europe",
       "north-america": "North America"
-    }
+    },
+    "switching-to": "Switching to {locale}"
   },
   "filters": {
     "artists": "Artists",
@@ -583,7 +611,8 @@
     "search-label": "Search",
     "search-preview": "Search preview",
     "all-products": "All BestElectronics best products",
-    "description": "Find products fast on BestElectronics — a headless storefront powered by Saleor with smart search and filtering."
+    "description": "Find products fast on BestElectronics — a headless storefront powered by Saleor with smart search and filtering.",
+    "clear-search": "Clear search"
   },
   "common": {
     "checkout": "Checkout",

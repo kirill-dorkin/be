@@ -46,7 +46,7 @@ export default async function LocaleLayout({
           "min-h-[100dvh]",
           "flex flex-col",
           "bg-background",
-          "text-foreground",
+          "text-foreground text-[17px] leading-[1.55] font-medium",
           aspekta.className,
         )}
       >

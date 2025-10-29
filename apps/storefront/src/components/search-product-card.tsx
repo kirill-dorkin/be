@@ -1,8 +1,9 @@
 "use client";
 
 import Image, { type ImageProps } from "next/image";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { type PropsWithChildren,useMemo } from "react";
+import { type PropsWithChildren,useCallback,useEffect,useMemo,useRef } from "react";
 
 import type { SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
@@ -38,17 +39,59 @@ export const SearchProductCard = ({
 }: Props) => {
   const t = useTranslations();
   const palette = useMemo(() => getCardPalette(slug || name), [slug, name]);
+  const router = useRouter();
+  const cardRef = useRef<HTMLElement | null>(null);
+  const productHref = paths.products.asPath({ slug });
 
   const { discountPercent } = getDiscountInfo(price, undiscountedPrice);
 
+  const prefetchProduct = useCallback(() => {
+    try {
+      const maybePromise = router.prefetch(productHref);
+      if (
+        maybePromise &&
+        typeof (maybePromise as PromiseLike<unknown>).catch === "function"
+      ) {
+        (maybePromise as PromiseLike<unknown>).catch(() => {
+          // Ignore prefetch errors; navigation will fallback to default behaviour.
+        });
+      }
+    } catch {
+      // Swallow errors on best-effort prefetch.
+    }
+  }, [productHref, router]);
+
+  useEffect(() => {
+    const element = cardRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          prefetchProduct();
+          obs.disconnect();
+        }
+      },
+      {
+        rootMargin: "200px",
+      },
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [prefetchProduct]);
+
   return (
-    <article className="row-span-3">
+    <article className="row-span-3" ref={cardRef}>
       <LocalizedLink
         className="group grid gap-2"
         title={t(`search.go-to-product`, { name })}
-        href={paths.products.asPath({
-          slug: slug,
-        })}
+        href={productHref}
+        onPointerEnter={prefetchProduct}
       >
         <div className="relative">
           {thumbnail ? (

@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 import { createPortal } from "react-dom";
 
 import { Button } from "@nimara/ui/components/button";
@@ -17,6 +17,8 @@ import type { SupportedCurrency } from "@/regions/types";
 type CurrencySwitchModalProps = {
   currentCurrency: string;
   onClose: () => void;
+  onExited: () => void;
+  open: boolean;
 };
 
 type CurrencyOption = {
@@ -37,6 +39,8 @@ const getCurrencyOptions = (): CurrencyOption[] =>
 export function CurrencySwitchModal({
   currentCurrency,
   onClose,
+  onExited,
+  open,
 }: CurrencySwitchModalProps) {
   const t = useTranslations("currency");
   const [isPending, startTransition] = useTransition();
@@ -52,10 +56,43 @@ export function CurrencySwitchModal({
     });
   };
 
+  const firstRenderRef = useRef(true);
+
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+
+    if (!open) {
+      const timeout = window.setTimeout(() => {
+        onExited();
+      }, 280);
+
+      return () => window.clearTimeout(timeout);
+    }
+
+    return undefined;
+  }, [open, onExited]);
+
   return createPortal(
-    <div className="z-51 bg-background pointer-events-auto fixed inset-0 flex justify-center p-4 md:py-24">
-      <div className="lg-max-w-[1024px] grow sm:max-w-[640px] md:max-w-[768px] xl:max-w-[1280px] 2xl:max-w-[1536px]">
-        <div className="mb-4 flex justify-between">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 md:py-20">
+      <div
+        className={cn(
+          "absolute inset-0 bg-stone-950/40 transition-opacity duration-300",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          "relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl bg-background px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
+          open
+            ? "translate-y-0 opacity-100"
+            : "translate-y-6 opacity-0",
+        )}
+      >
+        <div className="flex items-center justify-between">
           <Label className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
             {t("currency-settings")}
           </Label>

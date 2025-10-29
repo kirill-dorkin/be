@@ -1,7 +1,7 @@
 "use client";
 
 import { useDebounce } from "@uidotdev/usehooks";
-import { Search } from "lucide-react";
+import { CircleX, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   type KeyboardEventHandler,
@@ -24,6 +24,7 @@ import { Spinner } from "@nimara/ui/components/spinner";
 
 import { DEFAULT_DEBOUNCE_TIME_IN_MS } from "@/config";
 import { LocalizedLink, usePathname, useRouter } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
@@ -69,6 +70,9 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   const isIdle = status === "IDLE";
   const isNoOptionHighlighted = highlightedOptionIndex === -1;
   const isLastOptionHighlighted = highlightedOptionIndex === options.length;
+  const hasQuery = inputValue.trim().length > 0;
+  const isNoResultsState =
+    isIdle && showOptions && !options.length && hasQuery;
 
   const debouncedInputValue = useDebounce(
     inputValue,
@@ -174,6 +178,28 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     resetSearchState();
   }, [pathname]);
 
+  const handleClear = () => {
+    resetSearchState();
+  };
+
+  const renderAdornmentContent = () => {
+    if (isLoading) {
+      return <Spinner size={16} />;
+    }
+
+    if (isNoResultsState) {
+      return <CircleX aria-hidden className="h-4 w-4" />;
+    }
+
+    return <Search aria-hidden={true} height={16} />;
+  };
+
+  const adornmentAria = isLoading
+    ? ts("loading-text")
+    : isNoResultsState
+      ? ts("clear-search")
+      : tc("submit");
+
   return (
     <form
       action={performSearch}
@@ -185,17 +211,19 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
         <ComboboxInput
           endAdornment={
             <Button
-              aria-label={tc("submit")}
+              aria-label={adornmentAria}
               size="icon"
-              type="submit"
-              variant="outline"
-              className="cursor-pointer"
-            >
-              {isLoading ? (
-                <Spinner size={16} />
-              ) : (
-                <Search aria-hidden={true} height={16} />
+              type={
+                isLoading || isNoResultsState ? "button" : "submit"
+              }
+              variant="ghost"
+              className={cn(
+                "cursor-pointer text-foreground/70 hover:text-foreground",
+                isLoading && "pointer-events-none text-foreground/50",
               )}
+              onClick={isNoResultsState ? handleClear : undefined}
+            >
+              {renderAdornmentContent()}
             </Button>
           }
           inputProps={{
@@ -209,6 +237,12 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
             onKeyDown: handleKeyDown,
             placeholder: ts("search-placeholder"),
             value: inputValue,
+            className: cn(
+              "focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none border border-stone-200/60 bg-white/95 shadow-[0_16px_32px_-24px_rgba(15,23,42,0.35)] transition-colors",
+              hasQuery
+                ? "border-stone-300/80 focus:border-stone-400/80"
+                : "focus:border-stone-300/70",
+            ),
           }}
         />
 
