@@ -25,7 +25,6 @@ import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 import { type SortByOption } from "@nimara/domain/objects/Search";
-import { type SortByOption } from "@nimara/domain/objects/Search";
 
 import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { ProductsList } from "../_components/products-list";
