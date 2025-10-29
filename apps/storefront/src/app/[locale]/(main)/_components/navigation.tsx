@@ -72,12 +72,15 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
       }
 
       try {
-        const maybePromise = router.prefetch(href);
+        const maybePromise = router.prefetch(href) as unknown;
+
         if (
-          maybePromise &&
-          typeof (maybePromise as PromiseLike<unknown>).catch === "function"
+          typeof maybePromise === "object" &&
+          maybePromise !== null &&
+          "catch" in maybePromise &&
+          typeof (maybePromise as Promise<unknown>).catch === "function"
         ) {
-          (maybePromise as PromiseLike<unknown>).catch(() => {
+          (maybePromise as Promise<unknown>).catch(() => {
             // Ignore background prefetch errors.
           });
         }
