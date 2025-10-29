@@ -43,6 +43,14 @@ const splitIntoColumns = <T,>(items: T[], chunkSize: number) => {
   return result;
 };
 
+const isPromiseWithCatch = (value: unknown): value is Promise<unknown> => {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  return typeof (value as Promise<unknown>).catch === "function";
+};
+
 export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
   const [currentMenuItem, setCurrentMenuItem] = useState("");
   const t = useTranslations("site");
@@ -73,11 +81,9 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
 
       try {
         const maybePromise = router.prefetch(href);
-        if (
-          maybePromise &&
-          typeof (maybePromise as PromiseLike<unknown>).catch === "function"
-        ) {
-          (maybePromise as PromiseLike<unknown>).catch(() => {
+
+        if (isPromiseWithCatch(maybePromise)) {
+          maybePromise.catch(() => {
             // Ignore background prefetch errors.
           });
         }
