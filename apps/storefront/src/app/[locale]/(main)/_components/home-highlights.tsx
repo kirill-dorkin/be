@@ -6,12 +6,22 @@ import {
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import type { TranslationMessage } from "@/types";
+
 const FEATURE_ORDER = [
   { key: "support", icon: Headset },
   { key: "delivery", icon: Truck },
   { key: "warranty", icon: ShieldCheck },
   { key: "savings", icon: PiggyBank },
-];
+] as const;
+
+type FeatureKey = (typeof FEATURE_ORDER)[number]["key"];
+
+const getItemMessageKey = <Field extends "title" | "description">(
+  key: FeatureKey,
+  field: Field,
+): TranslationMessage<"home.highlights"> =>
+  `items.${key}.${field}` as TranslationMessage<"home.highlights">;
 
 export const HomeHighlights = async () => {
   const t = await getTranslations("home.highlights");
@@ -46,10 +56,10 @@ export const HomeHighlights = async () => {
                 </span>
                 <div>
                   <h3 className="text-lg font-semibold hyphens-auto break-words text-neutral-900 dark:text-white">
-                    {t(`items.${key}.title`)}
+                    {t(getItemMessageKey(key, "title"))}
                   </h3>
                   <p className="mt-2 text-sm text-neutral-600 hyphens-auto break-words dark:text-white/70">
-                    {t(`items.${key}.description`)}
+                    {t(getItemMessageKey(key, "description"))}
                   </p>
                 </div>
               </div>

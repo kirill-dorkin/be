@@ -3,7 +3,7 @@
 import Image, { type ImageProps } from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { type PropsWithChildren,useCallback,useEffect,useMemo,useRef } from "react";
+import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef } from "react";
 
 import type { SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
@@ -33,6 +33,14 @@ type Props = {
   product: SearchProduct;
 } & Pick<ImageProps, "height" | "width" | "sizes">;
 
+const isPromiseWithCatch = (value: unknown): value is Promise<unknown> => {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  return typeof (value as Promise<unknown>).catch === "function";
+};
+
 export const SearchProductCard = ({
   product: { slug, thumbnail, name, price, undiscountedPrice },
   sizes,
@@ -48,11 +56,8 @@ export const SearchProductCard = ({
   const prefetchProduct = useCallback(() => {
     try {
       const maybePromise = router.prefetch(productHref);
-      if (
-        maybePromise &&
-        typeof (maybePromise as PromiseLike<unknown>).catch === "function"
-      ) {
-        (maybePromise as PromiseLike<unknown>).catch(() => {
+      if (isPromiseWithCatch(maybePromise)) {
+        maybePromise.catch(() => {
           // Ignore prefetch errors; navigation will fallback to default behaviour.
         });
       }
