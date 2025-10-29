@@ -21,6 +21,16 @@ export type FulfillmentStatus =
   | "RETURNED"
   | "WAITING_FOR_APPROVAL";
 
+export type OrderInvoiceStatus = "DELETED" | "FAILED" | "PENDING" | "SUCCESS";
+
+export interface OrderInvoice {
+  createdAt: string;
+  id: string;
+  number: string | null;
+  status: OrderInvoiceStatus;
+  url: string | null;
+}
+
 export interface Order {
   created: string;
   fulfillments: {
@@ -38,6 +48,7 @@ export interface Order {
     status: FulfillmentStatus;
   }[];
   id: string;
+  invoices: OrderInvoice[];
   lines: OrderLine[];
   number: string;
   status: OrderStatus;

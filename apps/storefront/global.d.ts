@@ -54,7 +54,7 @@ declare module "*.svg?url" {
   export default content;
 }
 
-type Messages = typeof import("./messages/en-US.json");
+type Messages = typeof import("./messages/ru-RU.json");
 declare interface IntlMessages extends Messages {}
 
 type Slug = string;

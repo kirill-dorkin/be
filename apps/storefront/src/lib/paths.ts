@@ -105,6 +105,13 @@ export const paths = {
     ...url("/services"),
     detail: url<"slug">("/services/[slug]"),
   },
+  help: {
+    ...url("/help"),
+    orders: url("/help/orders"),
+    delivery: url("/help/delivery"),
+    repairs: url("/help/repairs"),
+    faq: url("/help/faq"),
+  },
   products: {
     ...url<"slug">("/products/[slug]"),
   },
@@ -127,6 +134,12 @@ export const paths = {
   },
   notFound: url("/404"),
   signIn: url("/sign-in"),
+  staff: {
+    ...url("/staff"),
+    orders: url("/staff/orders"),
+    apply: url("/staff/apply"),
+    adminWorkers: url("/staff/workers"),
+  },
   createAccount: url("/create-account"),
   termsOfUse: url("/terms-of-use"),
   privacyPolicy: url("/privacy-policy"),

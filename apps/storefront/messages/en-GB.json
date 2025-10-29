@@ -4,7 +4,310 @@
     "home": "Home",
     "description": "BestElectronics is a flexible headless storefront built on Saleor. Quick to deploy, easy to integrate, with an intuitive UI for management and customization.",
     "homepage-preview": "Homepage preview",
-    "hero-banner-alt": "BestElectronics hero banner"
+    "hero-banner-alt": "BestElectronics hero banner",
+    "repairBanner": {
+      "badge": "Service offer",
+      "titleGuest": "Registered customers get 20% off repairs",
+      "titleMember": "Your 20% repair discount is active",
+      "descriptionGuest": "Create an account and book a repair in minutes. Registered customers receive priority diagnostics and an extended warranty.",
+      "descriptionMember": "Schedule your next repair online — the discount is applied automatically to every registered order.",
+      "primaryCta": "Book a repair",
+      "secondaryGuest": "Create an account",
+      "secondaryMember": "Go to my repairs",
+      "card": {
+        "title": "Premium repair care",
+        "subtitle": "Everything you need to keep devices running longer."
+      },
+      "perks": {
+        "priority": "Priority diagnostics on the day of your request",
+        "warranty": "Extended 90-day workmanship warranty",
+        "tracking": "Track every repair stage from your account"
+      }
+    }
+  },
+  "help": {
+    "meta": {
+      "title": "Help & support",
+      "description": "Self-service answers for orders, delivery, and repairs at BestElectronics."
+    },
+    "nav": {
+      "overview": "Overview",
+      "overviewDescription": "Start with the essentials",
+      "orders": "Orders & payments",
+      "ordersDescription": "Checkout, billing and account tips",
+      "delivery": "Delivery & collection",
+      "deliveryDescription": "Courier service, collection slots, status updates",
+      "repairs": "Service centre",
+      "repairsDescription": "Repair workflow, benefits and location",
+      "faq": "FAQ",
+      "faqDescription": "Answers to frequent questions"
+    },
+    "sidebar": {
+      "overline": "Support",
+      "title": "Need assistance?",
+      "subtitle": "Explore guides or contact the service team directly."
+    },
+    "overview": {
+      "hero": {
+        "badge": "Support centre",
+        "title": "How can we help today?",
+        "subtitle": "Find quick answers about ordering, delivery and professional repairs in one place.",
+        "primaryCta": "Track my order",
+        "secondaryCta": "Contact support"
+      },
+      "shortcuts": {
+        "title": "Popular topics",
+        "subtitle": "Choose a section to dive deeper or browse the detailed guides below.",
+        "orders": "Placing an order, editing a basket and managing payments.",
+        "delivery": "Courier zones, collection windows and delivery times.",
+        "repairs": "Service workflow, diagnostics, and repair discounts."
+      },
+      "support": {
+        "title": "Do it yourself in minutes",
+        "description": "The quickest answers usually live in your account — here are the most helpful shortcuts.",
+        "items": [
+          "Track an order and download invoices from the profile",
+          "Request a return or warranty check in the order details",
+          "Schedule a repair and follow every stage online"
+        ],
+        "cta": "Open the FAQ"
+      },
+      "visit": {
+        "title": "Visit the service desk",
+        "description": "Bring devices directly to our service desk for diagnostics or collection of repaired equipment.",
+        "address": "Кулатова 8/1\nЖукеева-Пудовкина, 8/1, Bishkek 720000",
+        "actions": {
+          "google": "Open in Google Maps",
+          "twoGis": "Open in 2GIS"
+        }
+      }
+    },
+    "orders": {
+      "meta": {
+        "title": "Order help",
+        "description": "Checkout, payment and account assistance for BestElectronics orders."
+      },
+      "hero": {
+        "title": "Ordering and payments",
+        "subtitle": "Learn how to build your basket, choose payment methods and keep your account up to date."
+      },
+      "sections": {
+        "selection": {
+          "title": "Basket & availability",
+          "description": "Everything starts with a balanced basket and a confirmed stock status.",
+          "items": [
+            "Reserve stock for 45 minutes while you browse checkout.",
+            "Combine products and services in the same order — the system calculates compatible delivery options automatically.",
+            "Need advice? Use the product page chat to message a consultant before adding to basket."
+          ]
+        },
+        "payment": {
+          "title": "Payment methods",
+          "description": "We support secure local payments and international cards.",
+          "items": [
+            "Bank cards Visa/Mastercard and Elcart are processed via an encrypted gateway.",
+            "For cash on delivery, choose courier payment and prepare the exact amount — the courier issues a receipt.",
+            "Instalments are available for selected partners; look for the \"Instalment\" badge on the product page."
+          ]
+        },
+        "account": {
+          "title": "Account essentials",
+          "description": "Stay signed in to synchronise baskets, addresses and service requests.",
+          "items": [
+            "Saved addresses speed up checkout and help us calculate delivery fees instantly.",
+            "Order history keeps invoices, return forms and repair updates accessible 24/7.",
+            "Enable email notifications in profile settings to receive status alerts immediately."
+          ]
+        }
+      },
+      "nextSteps": {
+        "title": "Next steps",
+        "description": "Ready to continue? Review your basket or jump to delivery details.",
+        "items": [
+          "Check availability and lead times in the basket summary before paying.",
+          "Update contact information in profile → personal data to avoid missed calls.",
+          "For B2B orders, attach purchase documents in the comments field during checkout."
+        ],
+        "ctaCart": "View basket",
+        "ctaDelivery": "Delivery options"
+      }
+    },
+    "delivery": {
+      "meta": {
+        "title": "Delivery help",
+        "description": "Courier, collection and delivery tracking guidelines."
+      },
+      "hero": {
+        "title": "Delivery & collection",
+        "subtitle": "Understand how we ship products, arrange collection and keep you informed along the way."
+      },
+      "options": {
+        "courier": {
+          "title": "Courier delivery",
+          "description": "Timely delivery across Bishkek with best-fit time slots.",
+          "items": [
+            "Same-day courier delivery is available for orders confirmed before 14:00.",
+            "The courier shares an ETA 30 minutes before arrival.",
+            "Large appliances travel with two-person crews; prepare doorway measurements in advance."
+          ]
+        },
+        "pickup": {
+          "title": "Store collection",
+          "description": "Collect orders from the service desk when it suits you.",
+          "items": [
+            "Collections are ready within 2 hours once payment is confirmed.",
+            "Bring an ID or share the order QR code from your account.",
+            "You can inspect and test devices on-site before leaving."
+          ]
+        },
+        "status": {
+          "title": "Status updates",
+          "description": "We keep you in the loop via email, SMS and profile notifications.",
+          "items": [
+            "Delivery status is available in account → orders → tracking.",
+            "SMS alerts include the courier name and phone number.",
+            "Need to reschedule? Click “change delivery window” inside the order card."
+          ]
+        }
+      },
+      "preparation": {
+        "title": "Prepare for delivery",
+        "description": "A few minutes of preparation ensure a smooth handover.",
+        "items": [
+          "Clear the pathway for bulky items and protect floors if required.",
+          "Have a grounded outlet ready when testing electronics on delivery.",
+          "Inspect the package together with the courier and note any damage on the document."
+        ]
+      },
+      "faq": {
+        "title": "Still unsure?",
+        "items": [
+          "Delivery zones and fees for Bishkek and suburbs",
+          "What to do if the courier missed the window",
+          "Required documents for company collections"
+        ],
+        "cta": "Read the FAQ"
+      }
+    },
+    "repairs": {
+      "meta": {
+        "title": "Repair help",
+        "description": "How to submit a repair request, track progress and visit the service centre."
+      },
+      "hero": {
+        "badge": "Service centre",
+        "title": "Professional repairs with real-time updates",
+        "subtitle": "Diagnostics, parts ordering and quality control are handled in-house.",
+        "description": "Use the calculator to estimate costs, hand over the device in person or schedule a courier collection."
+      },
+      "process": {
+        "title": "Repair workflow",
+        "subtitle": "Fast, transparent and aligned with your schedule.",
+        "items": [
+          "Submit a request online or via hotline — we confirm the estimate within one business hour.",
+          "Bring the device or arrange collection. Diagnostics is free for registered customers.",
+          "Watch repair stages in your account and receive a notification before delivery."
+        ],
+        "cta": "Explore repair services"
+      },
+      "services": {
+        "title": "What we fix",
+        "subtitle": "Certified engineers handle computers, laptops, monitors and component-level repairs.",
+        "items": [
+          "Component-level motherboard, GPU and PSU repairs",
+          "Data recovery and software reinstallations",
+          "Express diagnostics for urgent cases"
+        ],
+        "cta": "View diagnostics service"
+      },
+      "discount": {
+        "title": "Registered customer bonus",
+        "description": "Log in before submitting a request to activate the built-in 20% labour discount.",
+        "items": [
+          "Free diagnostics and prioritised queue",
+          "90-day workmanship warranty on every repair",
+          "Stage-by-stage notifications in the customer portal"
+        ],
+        "cta": "Learn about orders & payments"
+      },
+      "location": {
+        "title": "Where to find us",
+        "description": "Our service centre is near the intersection of Кулатова and Жукеева-Пудовкина. Parking is available inside the courtyard.",
+        "mapTitle": "BestElectronics service centre",
+        "actions": {
+          "google": "Open route in Google Maps",
+          "twoGis": "Open route in 2GIS"
+        }
+      }
+    },
+    "faq": {
+      "meta": {
+        "title": "Help centre FAQ",
+        "description": "Short answers to recurring questions about orders, delivery and repair services."
+      },
+      "hero": {
+        "badge": "Knowledge base",
+        "title": "Frequently asked questions",
+        "subtitle": "Quick answers collected by our support engineers.",
+        "description": "Look up the topic you care about. Each answer links to the relevant section so you can finish the action immediately."
+      },
+      "sections": [
+        {
+          "id": "orders",
+          "title": "Orders & payments",
+          "items": [
+            {
+              "question": "Can I change the delivery address after payment?",
+              "answer": "Yes. Open the order in your profile and choose “change delivery window”. If the courier has not left the warehouse yet you will be able to pick a new address or collection point."
+            },
+            {
+              "question": "Where do I download invoices and receipts?",
+              "answer": "Invoices and payment receipts live inside Account → Orders. Select the order and use the \"Documents\" tab. PDF files are generated instantly."
+            },
+            {
+              "question": "What should I do if the payment failed?",
+              "answer": "Return to the basket and select “Pay again”. If the bank declined the transaction, try another card or choose cash on delivery. The reserved stock stays with you for 45 minutes."
+            }
+          ]
+        },
+        {
+          "id": "delivery",
+          "title": "Delivery & collection",
+          "items": [
+            {
+              "question": "How do I track the courier?",
+              "answer": "Open Account → Orders → Tracking. You will see the courier’s name, phone number and live ETA. We also send SMS updates 30 minutes before arrival."
+            },
+            {
+              "question": "What documents are needed for collection?",
+              "answer": "Bring an ID or show the QR code from your order confirmation email. For company collections, attach a power of attorney or stamped requisites to the order comment."
+            },
+            {
+              "question": "Can the courier install appliances?",
+              "answer": "The courier can unpack and perform a basic power-on check. Full installation is available as an extra service — add it in the basket or contact support after placing the order."
+            }
+          ]
+        },
+        {
+          "id": "repairs",
+          "title": "Service centre",
+          "items": [
+            {
+              "question": "Is diagnostics free of charge?",
+              "answer": "Diagnostics is free for registered customers and for approved warranty repairs. If the device is not repairable we still share the report so you can decide on next steps."
+            },
+            {
+              "question": "How long does a typical repair take?",
+              "answer": "Most repairs finish within 2–5 business days. If parts need to be ordered we estimate the lead time during diagnostics and keep you updated in the order timeline."
+            },
+            {
+              "question": "How do I extend the 20% repair discount?",
+              "answer": "Stay logged in when submitting repair requests. The discount applies automatically to every task linked with your account, including courier collection and return delivery."
+            }
+          ]
+        }
+      ]
+    }
   },
   "services": {
     "meta": {
@@ -41,15 +344,23 @@
       },
       "freeLabel": "Free",
       "action": "View details",
-      "disclaimer": "Final pricing is confirmed after diagnostics. Parts are quoted separately."
+      "disclaimer": "Final pricing is confirmed after diagnostics. Parts are quoted separately.",
+      "discountBadge": "-{percent}%",
+      "discountCaption": "{percent}% off for registered customers",
+      "discountSavings": "You save {amount}"
     },
     "calculator": {
       "title": "Calculate the repair and send a request",
       "subtitle": "Submit the form and we will confirm the price, timeline, and get in touch using your preferred channel.",
-      "deviceTypeLabel": "Device type",
+      "deviceTypeLabel": "Device types",
       "deviceTypePlaceholder": "Choose a device",
       "serviceLabel": "Service",
       "servicePlaceholder": "Choose a service",
+      "deviceSelectionHint": "Select one or more device types below.",
+      "deviceSelectionEmptyHint": "Pick a device type to see available services.",
+      "serviceSelectionHint": "Choose all services that apply to this device.",
+      "serviceSelectionPlaceholder": "No services selected yet.",
+      "removeDevice": "Remove device",
       "fullName": "Name",
       "fullNamePlaceholder": "How should we address you?",
       "phone": "Phone",
@@ -78,10 +389,14 @@
       "estimateBadge": "Service",
       "fallbackDescription": "{service}",
       "estimateDisclaimer": "Displayed estimate excludes rare/original parts and may change after inspection.",
+      "noServicesSelected": "Select at least one service to see an estimate.",
+      "selectedServicesCount": "{count, plural, one {# service selected} other {# services selected}}",
       "thankYou": "Request submitted. We will respond during business hours.",
       "submitSuccess": "Thanks! Your request was sent to the service team.",
       "submitError": "We couldn’t send the request. Please try again or contact us by phone.",
       "freeLabel": "Free",
+      "discountApplied": "{percent}% discount for registered customers applied.",
+      "discountSavings": "You save {amount}",
       "errors": {
         "deviceType": "Select a device type",
         "serviceSlug": "Select a service",
@@ -92,7 +407,9 @@
         "email": "Enter a valid email",
         "messageMax": "Message is too long",
         "preferredContact": "Choose how we should contact you",
-        "consent": "Consent is required to submit the request"
+        "consent": "Consent is required to submit the request",
+        "deviceSelection": "Select at least one device type.",
+        "serviceSelection": "Select at least one service for this device."
       }
     },
     "detail": {
@@ -100,15 +417,123 @@
       "priceLabel": "Labour cost",
       "related": "Other services: {category}"
     },
-    "deviceLabels": {
-      "computer": "Computers",
-      "laptop": "Laptops",
-      "monitor": "Monitors",
-      "power-supply": "Power supplies",
-      "video-card": "Graphics cards",
-      "data-recovery": "Data recovery",
-      "peripheral": "Peripherals"
+  "deviceLabels": {
+    "computer": "Computers",
+    "laptop": "Laptops",
+    "monitor": "Monitors",
+    "power-supply": "Power supplies",
+    "video-card": "Graphics cards",
+    "data-recovery": "Data recovery",
+    "peripheral": "Peripherals"
+  }
+  },
+  "staff": {
+    "title": "Repair workspace",
+    "subtitle": "Track incoming repair requests and update progress.",
+    "sections": {
+      "unassigned": "Unassigned",
+      "myOrders": "My assignments",
+      "completed": "Completed"
+    },
+    "empty": {
+      "unassigned": "No new repairs at the moment.",
+      "myOrders": "You have no active repairs yet.",
+      "completed": "No completed repairs recorded yet."
+    },
+    "orderCard": {
+      "created": "Created",
+      "customer": "Customer",
+      "phone": "Phone",
+      "service": "Service",
+      "notes": "Customer note",
+      "urgent": "Urgent",
+      "pickup": "Pickup required",
+      "stageUpdated": "Stage updated",
+      "total": "Total"
+    },
+    "actions": {
+      "claim": "Take order",
+      "updateStage": "Update stage",
+      "release": "Release order",
+      "logout": "Sign out"
+    },
+    "nav": {
+      "orders": "Orders",
+      "workers": "Technicians"
+    },
+    "apply-cta": "Want to join the repair team? <link>Submit your application</link>.",
+    "stages": {
+      "pending_assignment": "Awaiting assignment",
+      "diagnostics": "Diagnostics",
+      "waiting_for_parts": "Waiting for parts",
+      "in_progress": "In progress",
+      "quality_check": "Quality check",
+      "ready_for_delivery": "Ready for delivery",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "toast": {
+      "claimed": "Order assigned to you.",
+      "stageUpdated": "Stage updated.",
+      "error": "Something went wrong. Please try again."
+    },
+    "pending-message": "Your application is under review. We will notify you once it is approved."
+  },
+  "staff-apply": {
+    "badge": "Technician portal",
+    "title": "Join the repair team",
+    "subtitle": "Fill in the form below – the administrator will review your application and provide workspace access.",
+    "success-message": "Thank you! Your application has been sent to the administrator. You will receive access after approval.",
+    "success-title": "Application submitted",
+    "success-description": "We’ve forwarded your details to the administrator. Once approved, you’ll receive an email with the next steps.",
+    "password-hint": "Password must contain letters and numbers.",
+    "disclaimer": "By submitting the form you consent to the processing of your personal data for repair services.",
+    "submit": "Submit application",
+    "submit-loading": "Sending…",
+    "submit-error-general": "We couldn’t send your application. Please try again or contact the administrator.",
+    "errors": {
+      "firstName": {
+        "min": "First name must contain at least 2 characters",
+        "max": "First name must contain at most 120 characters"
+      },
+      "lastName": {
+        "min": "Last name must contain at least 2 characters",
+        "max": "Last name must contain at most 120 characters"
+      },
+      "email": {
+        "invalid": "Please enter a valid email address"
+      },
+      "phone": {
+        "min": "Phone number must contain at least 5 characters",
+        "max": "Phone number must contain at most 40 characters"
+      },
+      "password": {
+        "min": "Password must contain at least 6 characters",
+        "max": "Password must contain at most 120 characters"
+      }
     }
+  },
+  "staff-workers": {
+    "title": "Repair technicians",
+    "subtitle": "Approve new applications and manage access for existing workers.",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "statuses": {
+      "pending": "Awaiting approval",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "reset": "Reset"
+    },
+    "empty": "No applications yet."
   },
   "locale": {
     "region": "Region",
@@ -190,6 +615,7 @@
     "privacy-policy": "Privacy Policy",
     "first-name": "First Name",
     "last-name": "Last Name",
+    "phone": "Phone",
     "back-to-homepage": "Back to homepage",
     "save-changes": "Save changes",
     "change": "Change",
@@ -248,7 +674,14 @@
     "you-may-also-like": "You may also like",
     "check-out-the-product": "Check out the {productName} in our offer.",
     "discover-our-product": "Discover our product.",
-    "image-alt": "Image of {productName}"
+    "image-alt": "Image of {productName}",
+    "search-online-button": "Search images on the web",
+    "search-online-disclaimer": "Opens Google Images with results from external sites.",
+    "search-online-query-suffix": "photo",
+    "media-placeholder-title": "Product photo coming soon",
+    "media-placeholder-description": "We are still preparing official pictures for {productName}.",
+    "media-placeholder-hint": "Use \"Search images on the web\" to explore external photos.",
+    "grid-placeholder-subtitle": "Open the product page to browse images from the web."
   },
   "collections": {
     "associated-products": "Associated products",
@@ -520,7 +953,24 @@
     "order-status": "Order status",
     "select-at-least-one-product": "Select at least one product.",
     "return-request-submitted": "Thank you! Your return request has been successfully submitted",
-    "returned": "RETURNED"
+    "returned": "RETURNED",
+    "tabs": {
+      "details": "Details",
+      "documents": "Documents"
+    },
+    "documents": {
+      "empty": "Invoices are being prepared. Please refresh this page shortly.",
+      "download": "Download PDF",
+      "created": "Created {date}",
+      "pending": "Preparing file…",
+      "fallback": "Invoice",
+      "status": {
+        "PENDING": "Pending",
+        "SUCCESS": "Ready",
+        "FAILED": "Failed",
+        "DELETED": "Deleted"
+      }
+    }
   },
   "footer": {
     "made-with": "Crafted with ❤️ by <link>BestElectronics</link>",

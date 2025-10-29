@@ -4,15 +4,40 @@ import { getLocale } from "next-intl/server";
 import { localePrefixes } from "@/i18n/routing";
 import { DEFAULT_LOCALE, type SupportedLocale } from "@/regions/types";
 
+const resolveBaseUrl = async () => {
+  const headerStore = await headers();
+  const forwardedHost = headerStore.get("x-forwarded-host");
+  const host = forwardedHost ?? headerStore.get("host");
+  const forwardedProto = headerStore.get("x-forwarded-proto");
+  const fallbackProto = host?.includes("localhost") ? "http" : "https";
+  const proto = forwardedProto ?? fallbackProto;
+
+  const envUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL?.trim();
+
+  if (envUrl) {
+    return envUrl.replace(/\/$/, "");
+  }
+
+  if (host) {
+    return `${proto}://${host}`.replace(/\/$/, "");
+  }
+
+  throw new Error("Unable to resolve storefront base URL. Set NEXT_PUBLIC_STOREFRONT_URL.");
+};
+
 export const getStoreUrl = async () => {
   const locale = await getLocale();
-  const domain = `${(await headers()).get("x-forwarded-proto")}://${(
-    await headers()
-  ).get("x-forwarded-host")}`;
+  const baseUrl = await resolveBaseUrl();
 
-  return locale === DEFAULT_LOCALE
-    ? domain
-    : `${domain}${localePrefixes[locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>]}`;
+  if (locale === DEFAULT_LOCALE) {
+    return baseUrl;
+  }
+
+  const prefix = localePrefixes[
+    locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
+  ];
+
+  return `${baseUrl}${prefix}`;
 };
 
 export const getLocalePrefix = async (): Promise<string> => {

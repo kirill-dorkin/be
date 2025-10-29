@@ -8,9 +8,10 @@ import { cmsMenuService } from "@/services/cms";
 import { getNavigationMenu } from "@/services/navigation-menu";
 
 export const Footer = async () => {
-  const [region, t] = await Promise.all([
+  const [region, t, helpNavT] = await Promise.all([
     getCurrentRegion(),
     getTranslations(),
+    getTranslations("help.nav"),
   ]);
 
   const resultMenu = await cmsMenuService.menuGet({
@@ -35,6 +36,40 @@ export const Footer = async () => {
       },
     },
   });
+
+  const helpMenuItems = resultMenu.data?.menu?.items ?? [];
+  const helpLinks =
+    helpMenuItems.length > 0
+      ? helpMenuItems
+      : [
+          {
+            id: "help-overview",
+            label: helpNavT("overview"),
+            url: paths.help.asPath(),
+          },
+          {
+            id: "help-orders",
+            label: helpNavT("orders"),
+            url: paths.help.orders.asPath(),
+          },
+          {
+            id: "help-delivery",
+            label: helpNavT("delivery"),
+            url: paths.help.delivery.asPath(),
+          },
+          {
+            id: "help-repairs",
+            label: helpNavT("repairs"),
+            url: paths.help.repairs.asPath(),
+          },
+          {
+            id: "help-faq",
+            label: helpNavT("faq"),
+            url: paths.help.faq.asPath(),
+          },
+        ];
+
+  const productMenuItems = resultCategories.data?.menu?.items ?? [];
 
   return (
     <footer className="bg-muted text-slate-700 dark:text-primary mt-8 text-sm dark:bg-stone-900">
@@ -75,7 +110,7 @@ export const Footer = async () => {
                 {t("footer.our-products")}
               </span>
               <div className="flex flex-col gap-4">
-                {resultCategories.data?.menu.items.map((item) => (
+                {productMenuItems.map((item) => (
                   <span key={item.id} className="inline">
                     <LocalizedLink
                       href={item.url}
@@ -94,7 +129,7 @@ export const Footer = async () => {
                 {t("footer.help")}
               </span>
               <div className="flex flex-col gap-4">
-                {resultMenu.data?.menu?.items.map((item) => (
+                {helpLinks.map((item) => (
                   <span key={item.id} className="inline">
                     <LocalizedLink
                       href={item.url}

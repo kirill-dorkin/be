@@ -3,11 +3,17 @@ import { getTranslations } from "next-intl/server";
 
 import { Button } from "@nimara/ui/components/button";
 
+import { getAccessToken } from "@/auth";
 import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
+import {
+  getRepairDiscountForUser,
+  toDiscountPercent,
+} from "@/lib/repair/discount";
 import { repairServiceCatalog } from "@/lib/repair-services/data";
 import { getCurrentRegion } from "@/regions/server";
 import type { SupportedLocale } from "@/regions/types";
+import { getUserService } from "@/services/user";
 
 import { ServicesEstimator } from "./_components/services-estimator";
 import { ServicesSections } from "./_components/services-sections";
@@ -28,12 +34,21 @@ export async function generateMetadata(
 }
 
 export default async function ServicesPage() {
-  const [region, t] = await Promise.all([
+  const [accessToken, region, userService, t] = await Promise.all([
+    getAccessToken(),
     getCurrentRegion(),
+    getUserService(),
     getTranslations("services"),
   ]);
 
+  const resultUserGet = await userService.userGet(accessToken);
+  const user = resultUserGet.ok ? resultUserGet.data : null;
+
   const catalog = repairServiceCatalog;
+  const repairDiscount = getRepairDiscountForUser(user);
+  const discountPercent = repairDiscount
+    ? toDiscountPercent(repairDiscount.percentage)
+    : null;
 
   return (
     <div className="bg-background">
@@ -67,6 +82,7 @@ export default async function ServicesPage() {
             categories={catalog}
             currency={region.market.currency}
             locale={region.language.locale}
+            discountRate={repairDiscount?.percentage}
             strings={{
               catalogTitle: t("catalog.title"),
               catalogSubtitle: t("catalog.subtitle"),
@@ -85,6 +101,17 @@ export default async function ServicesPage() {
               freeLabel: t("catalog.freeLabel"),
               cta: t("catalog.action"),
               disclaimer: t("catalog.disclaimer"),
+              discount: repairDiscount
+                ? {
+                    badge: t("catalog.discountBadge", {
+                      percent: discountPercent,
+                    }),
+                    caption: t("catalog.discountCaption", {
+                      percent: discountPercent,
+                    }),
+                    savings: t.raw("catalog.discountSavings"),
+                  }
+                : null,
             }}
           />
         </section>
@@ -94,6 +121,7 @@ export default async function ServicesPage() {
             catalog={catalog}
             currency={region.market.currency}
             locale={region.language.locale}
+            repairDiscount={repairDiscount ?? undefined}
           />
         </section>
       </div>

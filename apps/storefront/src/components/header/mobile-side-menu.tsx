@@ -23,7 +23,7 @@ import { CurrencySwitch } from "../currency-switch";
 import { LocaleSwitch } from "../locale-switch";
 import { LogoClient } from "./logo";
 import { MobileSearch } from "./mobile-search";
-import { ThemeToggle } from "./theme-toggle";
+// import { ThemeToggle } from "./theme-toggle";
 
 export const MobileSideMenu = ({
   checkoutLinesCount,
@@ -79,7 +79,7 @@ export const MobileSideMenu = ({
                 <LogoClient />
                 <div className="flex justify-end gap-1 align-middle">
                   <MobileSearch />
-                  <ThemeToggle />
+                  {/* <ThemeToggle /> */}
                   {children}
                 </div>
               </div>

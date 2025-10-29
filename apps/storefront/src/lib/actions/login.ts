@@ -5,8 +5,13 @@ import { AuthError } from "next-auth";
 
 import { getAccessToken, signIn } from "@/auth";
 import { CACHE_TTL } from "@/config";
+import { serverEnvs } from "@/envs/server";
 import { getCheckoutId, setCheckoutIdCookie } from "@/lib/actions/cart";
 import { paths } from "@/lib/paths";
+import {
+  isApprovedRepairWorker,
+  isPendingRepairWorker,
+} from "@/lib/repair/metadata";
 import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
 import { getCheckoutService } from "@/services/checkout";
@@ -22,6 +27,9 @@ export async function login({
   password: string;
   redirectUrl?: string;
 }) {
+  let isRepairStaff = false;
+  let isPendingWorker = false;
+
   try {
     await signIn("credentials", {
       email,
@@ -39,6 +47,16 @@ export async function login({
 
     const resultUserGet = await userService.userGet(accessToken);
     const user = resultUserGet.ok ? resultUserGet.data : null;
+    const repairGroupName = serverEnvs.SERVICE_WORKER_GROUP_NAME;
+
+    const belongsToRepairGroup = Boolean(
+      user?.isStaff &&
+        user.permissionGroups?.some((group) => group.name === repairGroupName),
+    );
+
+    isRepairStaff =
+      belongsToRepairGroup || isApprovedRepairWorker(user?.metadata);
+    isPendingWorker = isPendingRepairWorker(user?.metadata);
 
     if (user?.checkoutIds.length) {
       const userLatestCheckoutId = user.checkoutIds[0];
@@ -116,8 +134,17 @@ export async function login({
 
   revalidatePath(paths.home.asPath());
 
+  const defaultRedirect = paths.home.asPath({ query: { loggedIn: "true" } });
+
+  const resolvedRedirect = redirectUrl
+    ? redirectUrl
+    : isRepairStaff || isPendingWorker
+      ? paths.staff.orders.asPath()
+      : defaultRedirect;
+
+  revalidatePath(resolvedRedirect);
+
   return {
-    redirectUrl:
-      redirectUrl || paths.home.asPath({ query: { loggedIn: "true" } }),
+    redirectUrl: resolvedRedirect,
   };
 }

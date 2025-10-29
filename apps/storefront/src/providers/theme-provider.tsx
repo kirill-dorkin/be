@@ -25,8 +25,9 @@ export function ClientThemeProvider({
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="light"
+      enableSystem={false}
+      forcedTheme="light"
       disableTransitionOnChange={prefersReducedMotion}
     >
       {children}

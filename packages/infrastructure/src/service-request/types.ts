@@ -67,6 +67,7 @@ export type SaleorServiceRequestConfig = {
   apiURL: string;
   appToken: string;
   channelSlug: string;
+  courierGroupName: string;
   logger: Logger;
   workerGroupName: string;
 };

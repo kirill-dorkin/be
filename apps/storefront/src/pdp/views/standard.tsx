@@ -14,6 +14,7 @@ import { getStoreService } from "@/services/store";
 
 import { AttributesDropdown } from "../components/attributes-dropdown";
 import { ProductBreadcrumbs } from "../components/product-breadcrumbs";
+import { ProductExternalSearch } from "../components/product-external-search";
 import { ProductHighlights } from "../components/product-highlights";
 import { ProductMediaWrapper } from "../components/product-media-wrapper";
 import { ProductTitle } from "../components/product-title";
@@ -52,6 +53,7 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
             <div className="md:col-span-1">
               <section className="sticky top-28">
                 <ProductTitle title={product.name} />
+                <ProductExternalSearch productName={product.name} />
 
                 <VariantSelectorWrapper
                   availability={availability}
@@ -157,6 +159,7 @@ export const StandardPDPViewSkeleton = () => (
       <div className="grid gap-2 md:col-span-1">
         <section className="sticky top-28 flex flex-col items-start gap-4">
           <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-10 w-full md:w-1/2" />
           <Skeleton className="h-8 w-1/4" />
           <Skeleton className="h-8 w-1/2" />
           <Skeleton className="bg-primary h-10 w-full" />

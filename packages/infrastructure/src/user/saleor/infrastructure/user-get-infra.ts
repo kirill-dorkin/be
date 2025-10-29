@@ -42,8 +42,21 @@ export const saleorUserGetInfra =
     const user = result.data.me;
 
     return ok({
-      ...user,
-      metadata: serializeMetadata(user.metadata),
+      id: user.id,
+      email: user.email ?? "",
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
       checkoutIds: user.checkoutIds ?? [],
+      isStaff: Boolean(user.isStaff),
+      metadata: serializeMetadata(user.metadata),
+      permissionGroups:
+        user.permissionGroups
+          ?.filter(
+            (group): group is NonNullable<typeof group> => Boolean(group?.id),
+          )
+          .map((group) => ({
+            id: group.id,
+            name: group.name ?? "",
+          })) ?? [],
     });
   };

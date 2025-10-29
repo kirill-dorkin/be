@@ -10,6 +10,13 @@ fragment OrderFragment on Order {
   number
   displayGrossPrices
   status
+  invoices {
+    id
+    number
+    createdAt
+    status
+    url
+  }
   fulfillments {
     status
     lines {

@@ -4,9 +4,16 @@ import { getTranslations } from "next-intl/server";
 
 import { Badge } from "@nimara/ui/components/badge";
 
+import { getAccessToken } from "@/auth";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { formatAsPrice } from "@/lib/formatters/util";
 import { paths } from "@/lib/paths";
+import {
+  applyRepairDiscount,
+  calculateRepairSavings,
+  getRepairDiscountForUser,
+  toDiscountPercent,
+} from "@/lib/repair/discount";
 import {
   type RepairPricingKind,
   type RepairService,
@@ -15,6 +22,7 @@ import {
 } from "@/lib/repair-services/data";
 import { getCurrentRegion } from "@/regions/server";
 import type { SupportedLocale } from "@/regions/types";
+import { getUserService } from "@/services/user";
 
 import { ServicesEstimator } from "../_components/services-estimator";
 
@@ -80,13 +88,18 @@ const priceBadgeKeyMap: Record<RepairPricingKind, PriceBadgeMessageKey> = {
 const formatPriceLabel = ({
   serviceSlug,
   locale,
+  discountRate,
 }: {
+  discountRate?: number;
   locale: SupportedLocale;
   serviceSlug: string;
 }): {
+  discountedLabel?: string;
+  isDiscounted: boolean;
   isFree: boolean;
   kind: "fixed" | "from" | "range";
   label: string;
+  savingsAmount: number;
 } => {
   const service = repairServiceBySlug(serviceSlug);
 
@@ -94,6 +107,9 @@ const formatPriceLabel = ({
     return {
       label: "",
       kind: "fixed",
+      discountedLabel: undefined,
+      isDiscounted: false,
+      savingsAmount: 0,
       isFree: false,
     };
   }
@@ -111,26 +127,63 @@ const formatPriceLabel = ({
   const isFree =
     price.min === 0 && (price.max === null || price.max === 0);
 
-  if (price.kind === "from" || price.max === null) {
+  const buildLabel = (min: number, max: number | null) => {
+    if (price.kind === "from" || max === null) {
+      return formatPrice(min);
+    }
+
+    if (price.kind === "range" && max !== null) {
+      return `${formatPrice(min)} — ${formatPrice(max)}`;
+    }
+
+    return formatPrice(min);
+  };
+
+  const baseLabel = buildLabel(price.min, price.max);
+
+  if (isFree || !discountRate) {
     return {
-      label: formatPrice(price.min),
-      kind: "from",
+      label: baseLabel,
+      discountedLabel: undefined,
+      kind: price.kind,
       isFree,
+      isDiscounted: false,
+      savingsAmount: 0,
     };
   }
 
-  if (price.kind === "range") {
+  const discountedMin = applyRepairDiscount(price.min, discountRate);
+  const discountedMax =
+    price.max !== null
+      ? applyRepairDiscount(price.max, discountRate)
+      : null;
+
+  const minSavings = calculateRepairSavings(price.min, discountRate);
+  const maxSavings =
+    price.max !== null
+      ? calculateRepairSavings(price.max, discountRate)
+      : 0;
+
+  const hasDiscount = minSavings > 0 || maxSavings > 0;
+
+  if (!hasDiscount) {
     return {
-      label: `${formatPrice(price.min)} — ${formatPrice(price.max)}`,
-      kind: "range",
+      label: baseLabel,
+      discountedLabel: undefined,
+      kind: price.kind,
       isFree,
+      isDiscounted: false,
+      savingsAmount: 0,
     };
   }
 
   return {
-    label: formatPrice(price.min),
-    kind: "fixed",
+    label: baseLabel,
+    discountedLabel: buildLabel(discountedMin, discountedMax),
+    kind: price.kind,
     isFree,
+    isDiscounted: true,
+    savingsAmount: minSavings,
   };
 };
 
@@ -164,8 +217,10 @@ export async function generateMetadata({
 
 export default async function ServiceDetails({ params }: PageProps) {
   const { slug } = await params;
-  const [region, t] = await Promise.all([
+  const [accessToken, region, userService, t] = await Promise.all([
+    getAccessToken(),
     getCurrentRegion(),
+    getUserService(),
     getTranslations("services"),
   ]);
 
@@ -175,6 +230,21 @@ export default async function ServiceDetails({ params }: PageProps) {
     notFound();
   }
 
+  const resultUserGet = await userService.userGet(accessToken);
+  const user = resultUserGet.ok ? resultUserGet.data : null;
+
+  const repairDiscount = getRepairDiscountForUser(user);
+  const discountPercent = repairDiscount
+    ? toDiscountPercent(repairDiscount.percentage)
+    : null;
+
+  const discountStrings = repairDiscount
+    ? {
+        badge: t("catalog.discountBadge", { percent: discountPercent }),
+        caption: t("catalog.discountCaption", { percent: discountPercent }),
+      }
+    : null;
+
   const category = findCategoryByService(slug);
 
   const siblings =
@@ -183,7 +253,19 @@ export default async function ServiceDetails({ params }: PageProps) {
   const formattedPrice = formatPriceLabel({
     serviceSlug: service.slug,
     locale: region.language.locale,
+    discountRate: repairDiscount?.percentage,
   });
+
+  const savingsLabel =
+    formattedPrice.isDiscounted && formattedPrice.savingsAmount > 0
+      ? t("calculator.discountSavings", {
+          amount: formatAsPrice({
+            amount: formattedPrice.savingsAmount,
+            currency: service.price.currency,
+            locale: region.language.locale,
+          }),
+        })
+      : null;
 
   return (
     <div className="bg-background">
@@ -228,9 +310,33 @@ export default async function ServiceDetails({ params }: PageProps) {
                       {t("catalog.freeLabel")}
                     </span>
                   </div>
+                ) : formattedPrice.isDiscounted && discountStrings ? (
+                  <div className="flex flex-col gap-1">
+                    <span className="text-muted-foreground text-sm line-through">
+                      {formattedPrice.label}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-600 text-3xl font-semibold">
+                        {formattedPrice.discountedLabel}
+                      </span>
+                      <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
+                        {discountStrings.badge}
+                      </Badge>
+                    </div>
+                    {savingsLabel && (
+                      <span className="text-emerald-700 text-sm font-medium">
+                        {savingsLabel}
+                      </span>
+                    )}
+                  </div>
                 ) : (
                   <p className="text-primary text-3xl font-bold">
                     {formattedPrice.label}
+                  </p>
+                )}
+                {formattedPrice.isDiscounted && discountStrings && (
+                  <p className="text-emerald-700 text-sm font-medium">
+                    {discountStrings.caption}
                   </p>
                 )}
                 <p className="text-muted-foreground text-sm">
@@ -247,6 +353,7 @@ export default async function ServiceDetails({ params }: PageProps) {
             currency={region.market.currency}
             locale={region.language.locale}
             initialServiceSlug={service.slug}
+            repairDiscount={repairDiscount ?? undefined}
           />
         </section>
 

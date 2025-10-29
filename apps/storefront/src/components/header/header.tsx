@@ -22,7 +22,7 @@ import { MobileSideMenu } from "./mobile-side-menu";
 import { SearchForm } from "./search-form";
 import { ShoppingBagIcon } from "./shopping-bag-icon";
 import { ShoppingBagIconWithCount } from "./shopping-bag-icon-with-count";
-import { ThemeToggle } from "./theme-toggle";
+// import { ThemeToggle } from "./theme-toggle";
 
 export const Header = async () => {
   const [accessToken, userService, region, t] = await Promise.all([
@@ -100,9 +100,9 @@ export const Header = async () => {
               <CurrencySwitch />
             </div>
 
-            <div className="hidden md:block">
+            {/* <div className="hidden md:block">
               <ThemeToggle />
-            </div>
+            </div> */}
 
             <Button
               asChild

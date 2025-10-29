@@ -93,9 +93,11 @@ export type AccountSetDefaultAddressMutation = AccountSetDefaultAddressMutation_
 
 export type AccountUpdateMutation_accountUpdate_AccountUpdate_errors_AccountError = { field: string | null, message: string | null, code: Types.AccountErrorCode, addressType: Types.AddressTypeEnum | null };
 
+export type AccountUpdateMutation_accountUpdate_AccountUpdate_user_User_permissionGroups_Group = { id: string, name: string };
+
 export type AccountUpdateMutation_accountUpdate_AccountUpdate_user_User_metadata_MetadataItem = { key: string, value: string };
 
-export type AccountUpdateMutation_accountUpdate_AccountUpdate_user_User = { id: string, email: string, firstName: string, lastName: string, checkoutIds: Array<string> | null, metadata: Array<AccountUpdateMutation_accountUpdate_AccountUpdate_user_User_metadata_MetadataItem> };
+export type AccountUpdateMutation_accountUpdate_AccountUpdate_user_User = { id: string, email: string, firstName: string, lastName: string, isStaff: boolean, checkoutIds: Array<string> | null, permissionGroups: Array<AccountUpdateMutation_accountUpdate_AccountUpdate_user_User_permissionGroups_Group> | null, metadata: Array<AccountUpdateMutation_accountUpdate_AccountUpdate_user_User_metadata_MetadataItem> };
 
 export type AccountUpdateMutation_accountUpdate_AccountUpdate = { errors: Array<AccountUpdateMutation_accountUpdate_AccountUpdate_errors_AccountError>, user: AccountUpdateMutation_accountUpdate_AccountUpdate_user_User | null };
 
@@ -286,6 +288,11 @@ fragment UserFragment on User {
   email
   firstName
   lastName
+  isStaff
+  permissionGroups {
+    id
+    name
+  }
   metadata {
     ...MetadataItemFragment
   }

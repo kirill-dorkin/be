@@ -1,8 +1,31 @@
 import type { DeepNonNullable, DeepRequired } from "ts-essentials";
 
-import type { Attribute } from "@nimara/domain/objects/Attribute";
+import type { Attribute, AttributeType } from "@nimara/domain/objects/Attribute";
+import type { AttributeInputTypeEnum } from "@nimara/codegen/schema";
 
 import type { SelectionAttributeFragment } from "../../store/saleor/graphql/fragments/generated.ts";
+const mapInputTypeToAttributeType = (inputType: AttributeInputTypeEnum): AttributeType => {
+  switch (inputType) {
+    case "BOOLEAN":
+    case "DATE":
+    case "DATE_TIME":
+    case "DROPDOWN":
+    case "FILE":
+    case "MULTISELECT":
+    case "NUMERIC":
+    case "PLAIN_TEXT":
+    case "RICH_TEXT":
+    case "SWATCH":
+      return inputType;
+    case "REFERENCE":
+    case "SINGLE_REFERENCE":
+      return "REFERENCE";
+    default:
+      return "PLAIN_TEXT";
+  }
+};
+
+
 import { getTranslation } from "../saleor";
 
 export const parseAttributeData = (
@@ -15,7 +38,7 @@ export const parseAttributeData = (
 
   return {
     name: getTranslation("name", attribute),
-    type: inputType,
+    type: mapInputTypeToAttributeType(inputType),
     slug,
     values: values.map(
       ({ slug, boolean, value, date, dateTime, reference, ...choice }) => ({

@@ -23,7 +23,7 @@ export const SUPPORTED_LOCALES = [
   "ky-KG",
 ] as const satisfies AllLocale[];
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE = "en-US" as const satisfies AllLocale;
+export const DEFAULT_LOCALE = "ru-RU" as const satisfies AllLocale;
 
 /**
  * Defines available markets in the App.

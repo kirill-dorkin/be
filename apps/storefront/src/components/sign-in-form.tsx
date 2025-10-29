@@ -11,8 +11,10 @@ import { Form } from "@nimara/ui/components/form";
 import { useToast } from "@nimara/ui/hooks";
 
 import { TextFormField } from "@/components/form/text-form-field";
+import { LocalizedLink } from "@/i18n/routing";
 import { login } from "@/lib/actions/login";
 import { useRouterWithState } from "@/lib/hooks";
+import { paths } from "@/lib/paths";
 
 import { ResetPasswordLink } from "./reset-password-link";
 import { type SignInSchema, signInSchema } from "./schema";
@@ -36,8 +38,10 @@ export function SignInForm({ redirectUrl }: { redirectUrl?: string }) {
 
   const isDisabled = isRedirecting || form.formState?.isSubmitting;
 
+  const redirectTarget = redirectUrl ?? searchParams.get("redirectUrl") ?? undefined;
+
   async function handleSubmit(values: SignInSchema) {
-    const data = await login({ ...values, redirectUrl });
+    const data = await login({ ...values, redirectUrl: redirectTarget });
 
     if (data.redirectUrl) {
       push(data.redirectUrl);
@@ -119,6 +123,18 @@ export function SignInForm({ redirectUrl }: { redirectUrl?: string }) {
           </Button>
         </form>
       </Form>
+      <p className="text-muted-foreground text-sm">
+        {t.rich("staff.apply-cta", {
+          link: (chunks) => (
+            <LocalizedLink
+              href={paths.staff.apply.asPath()}
+              className="underline underline-offset-2"
+            >
+              {chunks}
+            </LocalizedLink>
+          ),
+        })}
+      </p>
     </>
   );
 }

@@ -14,8 +14,11 @@ export const getCurrentRegion = async (): Promise<Readonly<Region>> => {
   const cookieValue = cookieStore.get(COOKIE_KEY.currency)?.value;
   const currencyCookie =
     typeof cookieValue === "string" ? cookieValue : undefined;
+  const fallbackCurrency: Region["market"]["currency"] = "KGS";
 
   return parseRegion(locale, {
-    currency: isSupportedCurrency(currencyCookie) ? currencyCookie : undefined,
+    currency: isSupportedCurrency(currencyCookie)
+      ? currencyCookie
+      : fallbackCurrency,
   });
 };

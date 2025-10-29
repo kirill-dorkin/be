@@ -32,6 +32,7 @@ export const baseCodegenConfig: CodegenConfig["config"] = {
     Hour: "number",
     Minute: "number",
     PositiveDecimal: "number",
+    PositiveInt: "number",
     UUID: "string",
     Upload: "unknown",
     WeightScalar: "unknown",
@@ -48,7 +49,10 @@ const config: IGraphQLConfig = {
   projects: {
     saleor: {
       schema: process.env.NEXT_PUBLIC_SALEOR_API_URL,
-      documents: ["../../**/*.graphql"],
+      documents: [
+        "../../packages/**/*.graphql",
+        "../../apps/**/*.graphql",
+      ],
       extensions: {
         codegen: {
           overwrite: true,

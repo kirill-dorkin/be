@@ -48,7 +48,7 @@ describe("i18nMiddleware", () => {
     expect(cookiesHeader).includes(`${COOKIE_KEY.locale}=en-GB;`);
   });
 
-  it("set the en-US locale when there's a en-GB locale cookie set", async () => {
+  it("sets the default locale when there's an en-GB locale cookie set", async () => {
     const initialRequest = new NextRequest(
       new Request("https://demo.nimara.store/products/test-product"),
     );
@@ -65,7 +65,7 @@ describe("i18nMiddleware", () => {
     const cookiesHeader = resp?.headers.get("set-cookie");
 
     expect(resp?.status).toBe(200);
-    expect(cookiesHeader).includes(`${COOKIE_KEY.locale}=en-US;`);
+    expect(cookiesHeader).includes(`${COOKIE_KEY.locale}=${DEFAULT_LOCALE};`);
   });
 
   it("remove the checkout cookie on locale change from /gb to /", async () => {
@@ -108,12 +108,12 @@ describe("i18nMiddleware", () => {
     const cookiesHeader = resp?.headers.get("set-cookie");
 
     expect(resp?.status).toBe(200);
-    expect(cookiesHeader).includes(`${COOKIE_KEY.locale}=en-US;`);
+    expect(cookiesHeader).includes(`${COOKIE_KEY.locale}=${DEFAULT_LOCALE};`);
     expect(cookiesHeader).includes(`${COOKIE_KEY.checkoutId}=;`);
   });
 
   it.each([
-    { locale: "en-US", path: "products/test-product" },
+    { locale: DEFAULT_LOCALE, path: "products/test-product" },
     { locale: "en-GB", path: "gb/products/test-product" },
   ])(
     "should keep the checkout id cookie between page refresh with $locale locale",

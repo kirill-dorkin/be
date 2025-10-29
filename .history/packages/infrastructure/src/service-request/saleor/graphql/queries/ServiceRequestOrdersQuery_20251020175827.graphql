@@ -1,0 +1,42 @@
+![1760961504253](image/ServiceRequestOrdersQuery/1760961504253.png)query ServiceRequestOrdersQuery(
+  $first: Int!
+  $after: String
+  $filter: OrderFilterInput
+  $sortBy: OrderSortingInput
+) {
+  orders(first: $first, after: $after, filter: $filter, sortBy: $sortBy) {
+    edges {
+      node {
+        id
+        number
+        created
+        status
+        metadata {
+          key
+          value
+        }
+        user {
+          id
+          email
+          firstName
+          lastName
+        }
+        billingAddress {
+          firstName
+          lastName
+          phone
+        }
+        total {
+          gross {
+            amount
+            currency
+          }
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

@@ -19,6 +19,7 @@ import {
 import { DiscountBadge } from "@/components/discount-badge";
 import { ProductImagePlaceholder } from "@/components/product-image-placeholder";
 import { cn } from "@/lib/utils";
+import { ProductMediaEmptyState } from "@/pdp/components/product-media-empty-state";
 import { useSelectedVariantImages } from "@/pdp/hooks/useSelectedVariantImage";
 import { useVariantSelection } from "@/pdp/hooks/useVariantSelection";
 
@@ -50,7 +51,12 @@ export const ProductMedia = ({
   });
 
   if (!media?.length) {
-    return <ProductImagePlaceholder />;
+    return (
+      <ProductMediaEmptyState
+        productName={product.name}
+        className={showAs === "carousel" ? "md:aspect-square" : undefined}
+      />
+    );
   }
 
   return (

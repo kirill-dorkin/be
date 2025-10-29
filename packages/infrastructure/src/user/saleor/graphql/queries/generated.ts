@@ -1,9 +1,11 @@
 import type * as Types from '@nimara/codegen/schema';
 
 import type { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+export type CurrentUser_me_User_permissionGroups_Group = { id: string, name: string };
+
 export type CurrentUser_me_User_metadata_MetadataItem = { key: string, value: string };
 
-export type CurrentUser_me_User = { id: string, email: string, firstName: string, lastName: string, checkoutIds: Array<string> | null, metadata: Array<CurrentUser_me_User_metadata_MetadataItem> };
+export type CurrentUser_me_User = { id: string, email: string, firstName: string, lastName: string, isStaff: boolean, checkoutIds: Array<string> | null, permissionGroups: Array<CurrentUser_me_User_permissionGroups_Group> | null, metadata: Array<CurrentUser_me_User_metadata_MetadataItem> };
 
 export type CurrentUser_Query = { me: CurrentUser_me_User | null };
 
@@ -67,13 +69,15 @@ export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderC
 
 export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_total_TaxedMoney = { net: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_lines_OrderLine_totalPrice_TaxedMoney_net_Money, gross: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_lines_OrderLine_totalPrice_TaxedMoney_gross_Money, tax: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_lines_OrderLine_totalPrice_TaxedMoney_tax_Money };
 
+export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_invoices_Invoice = { id: string, number: string | null, createdAt: string, status: Types.JobStatusEnum, url: string | null };
+
 export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment_lines_FulfillmentLine_orderLine_OrderLine = { id: string, productName: string, productVariantId: string | null };
 
 export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment_lines_FulfillmentLine = { id: string, quantity: number, orderLine: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment_lines_FulfillmentLine_orderLine_OrderLine | null };
 
 export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment = { status: Types.FulfillmentStatus, lines: Array<UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment_lines_FulfillmentLine> | null };
 
-export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order = { id: string, created: string, number: string, displayGrossPrices: boolean, status: Types.OrderStatus, lines: Array<UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_lines_OrderLine>, total: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_total_TaxedMoney, fulfillments: Array<UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment> };
+export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order = { id: string, created: string, number: string, displayGrossPrices: boolean, status: Types.OrderStatus, lines: Array<UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_lines_OrderLine>, total: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_total_TaxedMoney, invoices: Array<UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_invoices_Invoice>, fulfillments: Array<UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order_fulfillments_Fulfillment> };
 
 export type UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge = { node: UserOrdersQuery_me_User_orders_OrderCountableConnection_edges_OrderCountableEdge_node_Order };
 
@@ -123,6 +127,11 @@ export const CurrentUserDocument = new TypedDocumentString(`
   email
   firstName
   lastName
+  isStaff
+  permissionGroups {
+    id
+    name
+  }
   metadata {
     ...MetadataItemFragment
   }
@@ -193,6 +202,13 @@ export const UserOrdersQueryDocument = new TypedDocumentString(`
   number
   displayGrossPrices
   status
+  invoices {
+    id
+    number
+    createdAt
+    status
+    url
+  }
   fulfillments {
     status
     lines {

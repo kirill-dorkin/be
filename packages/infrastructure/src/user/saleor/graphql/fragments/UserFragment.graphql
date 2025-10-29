@@ -3,6 +3,11 @@ fragment UserFragment on User {
   email
   firstName
   lastName
+  isStaff
+  permissionGroups {
+    id
+    name
+  }
   metadata {
     ...MetadataItemFragment
   }

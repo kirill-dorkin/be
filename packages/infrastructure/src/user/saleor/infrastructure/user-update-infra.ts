@@ -48,5 +48,6 @@ export const saleorAccountUpdateInfra =
       ...user,
       metadata: serializeMetadata(user.metadata),
       checkoutIds: user.checkoutIds ?? [],
+      permissionGroups: user.permissionGroups ?? [],
     });
   };

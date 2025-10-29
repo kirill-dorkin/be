@@ -82,7 +82,7 @@ export default async function ContactPage() {
       description: t("channels.support.description"),
       value: t("channels.support.value"),
       action: {
-        href: paths.staticPages.faq.asPath(),
+        href: paths.help.faq.asPath(),
         label: t("channels.support.cta"),
         localized: true,
       },
@@ -93,7 +93,7 @@ export default async function ContactPage() {
     faqLink: (chunks) => (
       <LocalizedLink
         className="text-primary underline-offset-4 hover:underline"
-        href={paths.staticPages.faq.asPath()}
+        href={paths.help.faq.asPath()}
       >
         {chunks}
       </LocalizedLink>

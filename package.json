@@ -34,7 +34,8 @@
     "test:e2e": "dotenv -- turbo run test:e2e",
     "prepare": "husky",
     "format": "pnpm prettier --write '**/*.{js,ts,tsx,json,md}'",
-    "format:check": "pnpm prettier --check '**/*.{js,ts,tsx,json,md}'"
+    "format:check": "pnpm prettier --check '**/*.{js,ts,tsx,json,md}'",
+    "prices:markup": "node scripts/markup_all_prices.js"
   },
   "devDependencies": {
     "commitizen": "4.3.1",

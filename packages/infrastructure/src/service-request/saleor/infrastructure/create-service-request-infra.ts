@@ -1,3 +1,4 @@
+import { type DeliveryStage, type RepairStage } from "@nimara/domain/objects/RepairWorkflow";
 import { err, ok } from "@nimara/domain/objects/Result";
 
 import { graphqlClient } from "#root/graphql/client";
@@ -40,11 +41,19 @@ const isActiveWorker = (
 const serializeBoolean = (value: boolean) => (value ? "true" : "false");
 
 const buildMetadata = ({
+  config,
   createdAt,
+  deliveryStage,
+  repairStage,
   request,
   service,
   worker,
-}: ServiceRequestCreateInput & { worker?: ServiceWorker }): MetadataEntry[] => {
+}: ServiceRequestCreateInput & {
+  config: Pick<SaleorServiceRequestConfig, "courierGroupName" | "workerGroupName">;
+  deliveryStage: DeliveryStage;
+  repairStage: RepairStage;
+  worker?: ServiceWorker;
+}): MetadataEntry[] => {
   const metadata: MetadataEntry[] = [
     { key: "repair:service_slug", value: service.slug },
     { key: "repair:service_name", value: service.name },
@@ -57,6 +66,12 @@ const buildMetadata = ({
     { key: "repair:is_urgent", value: serializeBoolean(request.urgent) },
     { key: "repair:needs_pickup", value: serializeBoolean(request.needsPickup) },
     { key: "repair:consent", value: serializeBoolean(request.consent) },
+    { key: "repair:stage", value: repairStage },
+    { key: "repair:stage_updated_at", value: createdAt },
+    { key: "repair:worker_group", value: config.workerGroupName },
+    { key: "delivery:stage", value: deliveryStage },
+    { key: "delivery:stage_updated_at", value: createdAt },
+    { key: "delivery:courier_group", value: config.courierGroupName },
   ];
 
   if (request.email) {
@@ -99,6 +114,30 @@ const buildMetadata = ({
       key: "repair:calculator_modifiers",
       value: JSON.stringify(request.modifiers),
     });
+
+    const discountPercent = request.modifiers.discountPercent;
+    if (typeof discountPercent === "number" && discountPercent > 0) {
+      metadata.push({
+        key: "repair:discount_percent",
+        value: String(discountPercent),
+      });
+    }
+
+    const discountAmountMin = request.modifiers.discountAmountMin;
+    if (typeof discountAmountMin === "number" && discountAmountMin > 0) {
+      metadata.push({
+        key: "repair:discount_amount_min",
+        value: String(discountAmountMin),
+      });
+    }
+
+    const discountAmountMax = request.modifiers.discountAmountMax;
+    if (typeof discountAmountMax === "number" && discountAmountMax > 0) {
+      metadata.push({
+        key: "repair:discount_amount_max",
+        value: String(discountAmountMax),
+      });
+    }
   }
 
   if (worker) {
@@ -144,23 +183,15 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
 
   if (worker) {
     noteLines.push(
-      `Назначенный работник: ${
+      `Назначенный мастер: ${
         `${worker.firstName ?? ""} ${worker.lastName ?? ""}`.trim() || worker.email
       } (${worker.email}).`,
     );
+  } else {
+    noteLines.push("Мастер будет назначен через портал исполнителей.");
   }
 
   return noteLines.join("\n");
-};
-
-const pickRandomWorker = (workers: ServiceWorker[]): ServiceWorker | undefined => {
-  if (!workers.length) {
-    return undefined;
-  }
-
-  const index = Math.floor(Math.random() * workers.length);
-
-  return workers[index];
 };
 
 export const saleorServiceRequestCreateInfra = (
@@ -303,20 +334,12 @@ export const saleorServiceRequestCreateInfra = (
       }));
 
     if (!availableWorkers.length) {
-      logger.error("[ServiceRequest] No active workers in the group.", {
+      logger.warning("[ServiceRequest] Worker group has no active members.", {
         groupName: config.workerGroupName,
       });
-
-      return err([
-        {
-          code: "NOT_FOUND_ERROR",
-          message: "No active workers found.",
-          context: { groupName: config.workerGroupName },
-        },
-      ]);
     }
 
-    const worker = pickRandomWorker(availableWorkers);
+    const worker: ServiceWorker | null = availableWorkers[0] ?? null;
 
     const price = input.request.priceEstimate?.min ?? 0;
     const email = input.request.email?.trim() || undefined;
@@ -372,9 +395,17 @@ export const saleorServiceRequestCreateInfra = (
       ]);
     }
 
+    const repairStage: RepairStage = "pending_assignment";
+    const deliveryStage: DeliveryStage = input.request.needsPickup
+      ? "pending_assignment"
+      : "not_required";
+
     const metadataEntries = buildMetadata({
       ...input,
       worker,
+      repairStage,
+      deliveryStage,
+      config,
     });
 
     const metadataResult = await client.execute(
@@ -435,13 +466,13 @@ export const saleorServiceRequestCreateInfra = (
 
     logger.info("[ServiceRequest] Draft order created and assigned.", {
       orderId,
-      workerId: worker?.id,
+      workerId: worker?.id ?? null,
     });
 
     const success: ServiceRequestCreateSuccess = {
       orderId,
       orderNumber: draftResult.data.draftOrderCreate?.order?.number,
-      assignedWorker: worker,
+      assignedWorker: worker ?? undefined,
     };
 
     return ok(success);

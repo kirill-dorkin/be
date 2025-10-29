@@ -9,7 +9,7 @@ import {
 
 export const localePrefixes = {
   "en-GB": "/gb",
-  "ru-RU": "/ru",
+  "en-US": "/us",
   "ky-KG": "/kg",
 } as const satisfies Record<
   Exclude<SupportedLocale, typeof DEFAULT_LOCALE>,

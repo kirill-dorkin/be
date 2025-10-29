@@ -38,6 +38,7 @@ export const saleorOrdersGetInfra =
 
 function serializeOrder({
   displayGrossPrices,
+  invoices,
   total,
   ...order
 }: OrderFragment) {
@@ -45,6 +46,14 @@ function serializeOrder({
 
   return {
     ...order,
+    invoices:
+      invoices?.map(({ createdAt, id, number, status, url }) => ({
+        createdAt,
+        id,
+        number,
+        status,
+        url,
+      })) ?? [],
     total: {
       ...total[priceType],
       currency: total[priceType].currency as AllCurrency,

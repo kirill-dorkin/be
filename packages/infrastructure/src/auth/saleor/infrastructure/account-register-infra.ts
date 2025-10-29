@@ -1,4 +1,5 @@
 import { err, ok } from "@nimara/domain/objects/Result";
+import { type NonEmptyArray } from "@nimara/domain/objects/types";
 
 import { graphqlClient } from "#root/graphql/client";
 
@@ -25,16 +26,30 @@ export const saleorAccountRegisterInfra =
       return result;
     }
 
-    if (result.data.accountRegister?.errors.length) {
+    const accountErrors = result.data.accountRegister?.errors ?? [];
+
+    if (accountErrors.length) {
       logger.error("Account register mutation returned errors.", {
-        error: result.data.accountRegister.errors,
+        error: accountErrors,
       });
 
-      return err([
-        {
-          code: "ACCOUNT_REGISTER_ERROR",
-        },
-      ]);
+      const normalizedErrors = accountErrors.map((error) => {
+        const normalizedCode = error.code === "UNIQUE" ? "UNIQUE_ERROR" : "ACCOUNT_REGISTER_ERROR";
+
+        return {
+          code: normalizedCode,
+          field: error.field ?? undefined,
+          message: error.message ?? undefined,
+          originalError: error,
+        };
+      }) as NonEmptyArray<{
+        code: "UNIQUE_ERROR" | "ACCOUNT_REGISTER_ERROR";
+        field: string | undefined;
+        message: string | undefined;
+        originalError: typeof accountErrors[number];
+      }>;
+
+      return err(normalizedErrors);
     }
 
     return ok({ success: true });
