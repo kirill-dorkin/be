@@ -75,10 +75,9 @@ export const Header = async () => {
     >
       <div className="container">
         <div className="grid w-full grid-flow-col grid-cols-[repeat(3,1fr)] justify-between gap-4">
-          <div className="md:hidden">
-            <MobileSideMenu user={user} menu={resultMenu?.data?.menu}>
-              {shoppingBag}
-            </MobileSideMenu>
+          <div className="flex items-center gap-3 md:hidden">
+            <MobileSideMenu user={user} menu={resultMenu?.data?.menu} />
+            {shoppingBag}
           </div>
 
           <div className="flex items-center justify-center md:justify-start">
@@ -123,9 +122,11 @@ export const Header = async () => {
               </LocalizedLink>
             </Button>
 
-            <Suspense fallback={<ShoppingBagIcon />}>
-              <ShoppingBagIconWithCount count={checkoutLinesCount} />
-            </Suspense>
+            <div className="hidden md:block">
+              <Suspense fallback={<ShoppingBagIcon />}>
+                <ShoppingBagIconWithCount count={checkoutLinesCount} />
+              </Suspense>
+            </div>
           </div>
         </div>
       </div>
