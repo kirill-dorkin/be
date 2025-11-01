@@ -132,7 +132,7 @@ return;
   }, [open]);
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 md:py-20">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:py-20">
       <div
         className={cn(
           "absolute inset-0 bg-stone-950/40 transition-opacity duration-300",
@@ -142,11 +142,12 @@ return;
       />
       <div
         className={cn(
-          "relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl bg-background px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
+          "relative z-[61] mx-auto flex w-full max-w-[620px] flex-col rounded-3xl bg-background shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px] max-h-[90vh]",
           open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
         )}
       >
-        <div className="flex items-center justify-between">
+        {/* Fixed Header */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 flex-shrink-0">
           <Label className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
             {t("locale.region-settings")}
           </Label>
@@ -155,33 +156,36 @@ return;
           </Button>
         </div>
 
-        {!!marketsByContinent.asia_pacific.length && (
-          <ContinentRow
-            currentLocale={currentLocale}
-            markets={marketsByContinent.asia_pacific}
-            name={t("locale.continents.asia-pacific")}
-            onLocaleSelect={handleLocaleSelect}
-            pendingLocale={pendingLocale}
-          />
-        )}
-        {!!marketsByContinent.europe.length && (
-          <ContinentRow
-            currentLocale={currentLocale}
-            markets={marketsByContinent.europe}
-            name={t("locale.continents.europe")}
-            onLocaleSelect={handleLocaleSelect}
-            pendingLocale={pendingLocale}
-          />
-        )}
-        {!!marketsByContinent.north_america.length && (
-          <ContinentRow
-            currentLocale={currentLocale}
-            markets={marketsByContinent.north_america}
-            name={t("locale.continents.north-america")}
-            onLocaleSelect={handleLocaleSelect}
-            pendingLocale={pendingLocale}
-          />
-        )}
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto px-5 pb-6 flex flex-col gap-4">
+          {!!marketsByContinent.asia_pacific.length && (
+            <ContinentRow
+              currentLocale={currentLocale}
+              markets={marketsByContinent.asia_pacific}
+              name={t("locale.continents.asia-pacific")}
+              onLocaleSelect={handleLocaleSelect}
+              pendingLocale={pendingLocale}
+            />
+          )}
+          {!!marketsByContinent.europe.length && (
+            <ContinentRow
+              currentLocale={currentLocale}
+              markets={marketsByContinent.europe}
+              name={t("locale.continents.europe")}
+              onLocaleSelect={handleLocaleSelect}
+              pendingLocale={pendingLocale}
+            />
+          )}
+          {!!marketsByContinent.north_america.length && (
+            <ContinentRow
+              currentLocale={currentLocale}
+              markets={marketsByContinent.north_america}
+              name={t("locale.continents.north-america")}
+              onLocaleSelect={handleLocaleSelect}
+              pendingLocale={pendingLocale}
+            />
+          )}
+        </div>
 
         {pendingLocale && (
           <div className="absolute inset-0 flex items-center justify-center rounded-3xl bg-background/85">
