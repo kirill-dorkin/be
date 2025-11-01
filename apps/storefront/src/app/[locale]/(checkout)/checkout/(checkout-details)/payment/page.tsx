@@ -32,6 +32,7 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
+  // Parallelize all initial data fetching
   const [
     { locale },
     searchParams,
@@ -52,15 +53,18 @@ export default async function Page(props: PageProps) {
     getAddressService(),
   ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
+  // Parallelize user and countries fetching
+  const [resultUserGet, resultCountries] = await Promise.all([
+    userService.userGet(accessToken),
+    addressService.countriesGet({
+      channelSlug: region.market.channel,
+      locale,
+    }),
+  ]);
+
   const user = resultUserGet.ok ? resultUserGet.data : null;
 
   await validateCheckoutStepAction({ checkout, user, locale, step: "payment" });
-
-  const resultCountries = await addressService.countriesGet({
-    channelSlug: region.market.channel,
-    locale,
-  });
 
   if (!resultCountries.ok) {
     throw new Error("No countries found for this channel.");
@@ -133,6 +137,7 @@ export default async function Page(props: PageProps) {
   let paymentGatewayCustomer = null;
   let paymentGatewayMethods: PaymentMethod[] = [];
 
+  // Parallelize payment gateway data fetching
   if (user && isPaymentServiceConfigured) {
     const paymentService = await getPaymentService();
     const resultPaymentGatewayCustomer = await paymentService.customerGet({
@@ -144,9 +149,8 @@ export default async function Page(props: PageProps) {
 
     if (resultPaymentGatewayCustomer.ok) {
       paymentGatewayCustomer = resultPaymentGatewayCustomer.data;
-    }
 
-    if (paymentGatewayCustomer) {
+      // Fetch payment methods only if we have a customer
       const resultPaymentGatewayMethods =
         await paymentService.customerPaymentMethodsList({
           customerId: paymentGatewayCustomer.customerId,

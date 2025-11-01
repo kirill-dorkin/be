@@ -8,13 +8,16 @@ import { UpdateNameModal } from "./_modals/update-name-modal";
 import { UpdatePasswordModal } from "./_modals/update-password-modal";
 
 export default async function Page() {
-  const [accessToken, t, userService] = await Promise.all([
+  // Parallelize all data fetching
+  const [accessToken, userService] = await Promise.all([
     getAccessToken(),
-    getTranslations(),
     getUserService(),
   ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
+  const [t, resultUserGet] = await Promise.all([
+    getTranslations(),
+    userService.userGet(accessToken),
+  ]);
 
   const user = resultUserGet.ok ? resultUserGet.data : null;
 

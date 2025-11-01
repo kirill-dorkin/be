@@ -25,16 +25,33 @@ import { ShoppingBagIconWithCount } from "./shopping-bag-icon-with-count";
 // import { ThemeToggle } from "./theme-toggle";
 
 export const Header = async () => {
-  const [accessToken, userService, region, t, checkoutId] = await Promise.all([
-    getAccessToken(),
-    getUserService(),
-    getCurrentRegion(),
-    getTranslations(),
-    getCheckoutId(),
-  ]);
+  // First batch: get initial data
+  const [accessToken, userService, region, t, checkoutId, cartService] =
+    await Promise.all([
+      getAccessToken(),
+      getUserService(),
+      getCurrentRegion(),
+      getTranslations(),
+      getCheckoutId(),
+      getCartService(),
+    ]);
 
-  // Parallelize all data fetches
-  const [resultMenu, resultUserGet, cartService] = await Promise.all([
+  // Second batch: parallelize all remaining data fetches
+  const cartPromise = checkoutId
+    ? cartService.cartGet({
+        cartId: checkoutId,
+        languageCode: region.language.code,
+        countryCode: region.market.countryCode,
+        options: {
+          next: {
+            tags: [`CHECKOUT:${checkoutId}`],
+            revalidate: CACHE_TTL.cart,
+          },
+        },
+      })
+    : Promise.resolve(null);
+
+  const [resultMenu, resultUserGet, resultCartGet] = await Promise.all([
     getNavigationMenu({
       channel: region.market.channel,
       languageCode: region.language.code,
@@ -46,28 +63,11 @@ export const Header = async () => {
       },
     }),
     userService.userGet(accessToken),
-    getCartService(),
+    cartPromise,
   ]);
 
   const user = resultUserGet.ok ? resultUserGet.data : null;
-
-  let checkoutLinesCount = 0;
-
-  if (checkoutId) {
-    const resultCartGet = await cartService.cartGet({
-      cartId: checkoutId,
-      languageCode: region.language.code,
-      countryCode: region.market.countryCode,
-      options: {
-        next: {
-          tags: [`CHECKOUT:${checkoutId}`],
-          revalidate: CACHE_TTL.cart,
-        },
-      },
-    });
-
-    checkoutLinesCount = resultCartGet.data?.linesQuantityCount ?? 0;
-  }
+  const checkoutLinesCount = resultCartGet?.data?.linesQuantityCount ?? 0;
 
   const shoppingBag = <ShoppingBagIconWithCount count={checkoutLinesCount} />;
 

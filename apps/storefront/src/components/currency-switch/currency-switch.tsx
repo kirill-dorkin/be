@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -9,7 +10,10 @@ import { getCurrencySymbol } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 import { useCurrentRegion } from "@/regions/client";
 
-import { CurrencySwitchModal } from "./currency-modal";
+// Dynamically import modal to reduce initial bundle size
+const CurrencySwitchModal = dynamic(() =>
+  import("./currency-modal").then((mod) => ({ default: mod.CurrencySwitchModal })),
+);
 
 export const CurrencySwitch = () => {
   const [isMounted, setIsMounted] = useState(false);

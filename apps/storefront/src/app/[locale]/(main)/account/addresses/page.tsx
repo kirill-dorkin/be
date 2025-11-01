@@ -22,16 +22,17 @@ type PageProps = {
 export default async function Page(props: PageProps) {
   const { locale } = await props.params;
   const searchParams = await props.searchParams;
-  const [accessToken, userService, addressService] = await Promise.all([
+
+  // Parallelize all initial data fetching
+  const [accessToken, userService, addressService, t, region] = await Promise.all([
     getAccessToken(),
     getUserService(),
     getAddressService(),
-  ]);
-  const [t, region, resultUserAddresses] = await Promise.all([
     getTranslations(),
     getCurrentRegion(),
-    userService.addressesGet({ variables: { accessToken } }),
   ]);
+
+  const resultUserAddresses = await userService.addressesGet({ variables: { accessToken } });
 
   const savedAddresses = resultUserAddresses.data ?? [];
   const formattedAddresses =
@@ -82,6 +83,7 @@ export default async function Page(props: PageProps) {
         : "address.default-billing";
   }
 
+  // Fetch countries data earlier
   const resultCountries = await addressService.countriesAllGet({ locale });
 
   if (!resultCountries.ok) {
@@ -106,6 +108,7 @@ export default async function Page(props: PageProps) {
     return paramsCountryCode;
   })() as AllCountryCode;
 
+  // Fetch address form rows based on determined country code
   const resultAddressRows = await addressService.addressFormGetRows({
     countryCode: countryCode,
   });
