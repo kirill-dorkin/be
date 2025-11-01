@@ -333,11 +333,11 @@ const translateFromMap = (
   }
 
   if (lang === "ru") {
-    return entry.ru ?? entry.en ?? value;
+    return entry.ru ?? value;
   }
 
   if (lang === "ky") {
-    return entry.ky ?? entry.ru ?? entry.en ?? value;
+    return entry.ky ?? entry.ru ?? value;
   }
 
   return entry.en ?? entry.ru ?? value;
