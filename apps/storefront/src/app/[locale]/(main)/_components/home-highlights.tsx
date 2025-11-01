@@ -56,10 +56,10 @@ export const HomeHighlights = async () => {
                 </span>
                 <div>
                   <h3 className="text-lg font-semibold hyphens-auto break-words text-neutral-900 dark:text-white">
-                    {t(getItemMessageKey(key, "title"))}
+                    {t(getItemMessageKey(key, "title") as any)}
                   </h3>
                   <p className="mt-2 text-sm text-neutral-600 hyphens-auto break-words dark:text-white/70">
-                    {t(getItemMessageKey(key, "description"))}
+                    {t(getItemMessageKey(key, "description") as any)}
                   </p>
                 </div>
               </div>

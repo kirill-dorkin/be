@@ -47,15 +47,7 @@ export const SearchProductCard = ({
 
   const prefetchProduct = useCallback(() => {
     try {
-      const maybePromise = router.prefetch(productHref);
-      if (
-        maybePromise &&
-        typeof (maybePromise as PromiseLike<unknown>).catch === "function"
-      ) {
-        (maybePromise as PromiseLike<unknown>).catch(() => {
-          // Ignore prefetch errors; navigation will fallback to default behaviour.
-        });
-      }
+      router.prefetch(productHref);
     } catch {
       // Swallow errors on best-effort prefetch.
     }
