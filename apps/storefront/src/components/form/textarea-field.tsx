@@ -35,7 +35,7 @@ export const TextareaField = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={cn("grid gap-2", className)}>
           <FormLabel htmlFor={name}>
             {label}
@@ -45,7 +45,11 @@ export const TextareaField = ({
             <textarea
               id={name}
               {...field}
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[160px] w-full rounded-md border px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={cn(
+                "border-input bg-background placeholder:text-muted-foreground flex min-h-[160px] w-full rounded-md border px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+                fieldState.invalid &&
+                  "border-red-500 bg-red-50 dark:border-red-500 dark:bg-red-900/30"
+              )}
               placeholder={placeholder}
               rows={rows}
               maxLength={maxLength}

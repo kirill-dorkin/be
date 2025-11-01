@@ -836,7 +836,7 @@ export const ServicesEstimator = ({
       <div className="mt-6 grid w-full gap-6 lg:grid-cols-[1.5fr_1fr]">
         <Form {...form}>
           <form
-            className="grid w-full gap-4 overflow-hidden"
+            className="grid w-full gap-4"
             noValidate
             onSubmit={handleSubmit(onSubmit)}
           >
