@@ -823,9 +823,9 @@ export const ServicesEstimator = ({
   };
 
   return (
-    <section className="bg-muted/50 rounded-lg p-6">
+    <section className="bg-muted/50 rounded-lg p-4 sm:p-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold">
+        <h2 className="text-xl font-semibold sm:text-2xl">
           {t("calculator.title")}
         </h2>
         <p className="text-muted-foreground max-w-2xl text-sm">
@@ -943,9 +943,9 @@ export const ServicesEstimator = ({
           </form>
         </Form>
 
-        <div className="bg-background border-muted text-foreground flex flex-col gap-4 rounded-lg border p-6">
+        <div className="bg-background border-muted text-foreground flex flex-col gap-4 rounded-lg border p-4 sm:p-6">
           <div>
-            <h3 className="text-lg font-semibold">
+            <h3 className="text-base font-semibold sm:text-lg">
               {t("calculator.estimateTitle")}
             </h3>
             <p className="text-muted-foreground text-sm">
@@ -953,7 +953,7 @@ export const ServicesEstimator = ({
             </p>
           </div>
 
-          <div className="space-y-4 rounded-lg border border-dashed p-4">
+          <div className="space-y-4 rounded-lg border border-dashed p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <Badge variant="outline" className="uppercase">
                 {t("calculator.estimateBadge")}
@@ -1018,9 +1018,9 @@ export const ServicesEstimator = ({
                 {serviceSummaries.map((summary) => (
                   <div
                     key={summary.id}
-                    className="bg-muted/50 text-muted-foreground flex flex-col gap-1 rounded-lg border border-muted/60 p-3"
+                    className="bg-muted/50 text-muted-foreground flex flex-col gap-1 rounded-lg border border-muted/60 p-2.5 sm:p-3"
                   >
-                    <span className="text-sm font-semibold text-foreground">
+                    <span className="break-words text-sm font-semibold text-foreground">
                       {summary.name}
                     </span>
                     <span className="text-xs text-muted-foreground">
@@ -1045,7 +1045,7 @@ export const ServicesEstimator = ({
                         {summary.basePriceLabel}
                       </span>
                     )}
-                    <span className="text-xs text-muted-foreground">
+                    <span className="break-words text-xs text-muted-foreground">
                       {summary.description}
                     </span>
                   </div>

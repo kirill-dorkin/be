@@ -156,10 +156,10 @@ export const DeviceServiceSelector = ({
           return (
             <div
               key={selection.deviceType}
-              className="border-border/60 bg-card text-card-foreground space-y-4 rounded-xl border p-4 shadow-sm"
+              className="border-border/60 bg-card text-card-foreground space-y-4 rounded-xl border p-3 shadow-sm sm:p-4"
             >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-col gap-1">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     {
                       deviceOptions.find(
@@ -176,6 +176,7 @@ export const DeviceServiceSelector = ({
                   type="button"
                   variant="ghost"
                   size="icon"
+                  className="shrink-0"
                   aria-label={labels.removeDeviceLabel}
                   onClick={() => handleDeviceToggle(selection.deviceType)}
                 >
@@ -192,7 +193,7 @@ export const DeviceServiceSelector = ({
                       type="button"
                       key={serviceSlug}
                       className={cn(
-                        "justify-start rounded-full border px-4 py-2 text-sm font-medium transition",
+                        "h-auto min-h-[2.5rem] justify-start whitespace-normal rounded-full border px-3 py-2 text-left text-sm font-medium transition sm:px-4",
                         isActive
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border bg-muted text-muted-foreground hover:bg-muted/70",
