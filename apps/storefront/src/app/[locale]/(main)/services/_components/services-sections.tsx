@@ -259,12 +259,14 @@ export const ServicesSections = ({
                         {getRepairServiceLabel(service.name, locale)}
                       </CardTitle>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="whitespace-nowrap">
-                          {formatBadgeLabel(
-                            service.price.kind,
-                            strings.price.badge,
-                          )}
-                        </Badge>
+                        {service.price.kind !== "from" && (
+                          <Badge variant="outline" className="whitespace-nowrap">
+                            {formatBadgeLabel(
+                              service.price.kind,
+                              strings.price.badge,
+                            )}
+                          </Badge>
+                        )}
                         {priceInfo.isDiscounted && discountStrings && (
                           <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
                             {discountStrings.badge}
