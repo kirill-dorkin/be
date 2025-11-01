@@ -193,7 +193,7 @@ export const DeviceServiceSelector = ({
                       type="button"
                       key={serviceSlug}
                       className={cn(
-                        "h-auto max-w-full min-h-[2.5rem] justify-start overflow-hidden whitespace-normal rounded-full border px-3 py-2 text-left text-sm font-medium transition sm:px-4",
+                        "h-auto max-w-full min-h-[2.5rem] justify-start whitespace-normal rounded-lg border px-3 py-2 text-left text-sm font-medium transition sm:px-4",
                         isActive
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border bg-muted text-muted-foreground hover:bg-muted/70",
@@ -204,7 +204,7 @@ export const DeviceServiceSelector = ({
                       }
                       aria-pressed={isActive}
                     >
-                      <span className="line-clamp-2 block max-w-full overflow-hidden break-words text-left">
+                      <span className="block w-full break-words text-left">
                         {serviceLabel}
                       </span>
                     </Button>
