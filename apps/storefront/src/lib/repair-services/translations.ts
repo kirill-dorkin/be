@@ -144,6 +144,9 @@ const serviceTranslations: TranslationMap = {
   "Замена кулера": {
     en: "Fan replacement",
   },
+  "Замена кулера (чистка, смазка, замена термопасты без учета стоимости кулера)": {
+    en: "Fan replacement (cleaning, lubrication, thermal paste without fan cost)",
+  },
   "Поиск и удаление вирусов": {
     en: "Virus removal",
   },
