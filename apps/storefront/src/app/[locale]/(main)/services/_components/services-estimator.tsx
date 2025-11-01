@@ -823,7 +823,7 @@ export const ServicesEstimator = ({
   };
 
   return (
-    <section className="bg-muted/50 rounded-lg p-4 sm:p-6">
+    <section className="bg-muted/50 w-full overflow-hidden rounded-lg p-4 sm:p-6">
       <div className="space-y-2">
         <h2 className="text-xl font-semibold sm:text-2xl">
           {t("calculator.title")}
@@ -833,10 +833,10 @@ export const ServicesEstimator = ({
         </p>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+      <div className="mt-6 grid w-full gap-6 lg:grid-cols-[1.5fr_1fr]">
         <Form {...form}>
           <form
-            className="grid gap-4"
+            className="grid w-full gap-4 overflow-hidden"
             noValidate
             onSubmit={handleSubmit(onSubmit)}
           >

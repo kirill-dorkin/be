@@ -111,7 +111,7 @@ export const DeviceServiceSelector = ({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4">
       <div className="flex flex-col gap-1">
         <span className="text-sm font-medium text-foreground">
           {labels.deviceLabel}
@@ -121,7 +121,7 @@ export const DeviceServiceSelector = ({
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
         {deviceOptions.map(({ value: deviceType, label }) => {
           const isSelected = selectedDevices.has(deviceType);
 
@@ -130,7 +130,7 @@ export const DeviceServiceSelector = ({
               key={deviceType}
               type="button"
               className={cn(
-                "justify-start rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                "h-auto min-h-[2.5rem] justify-start whitespace-normal rounded-full border px-3 py-2 text-left text-sm font-medium transition-colors sm:px-4",
                 isSelected
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border bg-muted hover:bg-muted/70",
@@ -138,7 +138,7 @@ export const DeviceServiceSelector = ({
               variant="outline"
               onClick={() => handleDeviceToggle(deviceType)}
             >
-              <span className="truncate">{label}</span>
+              <span className="break-words">{label}</span>
             </Button>
           );
         })}
@@ -148,7 +148,7 @@ export const DeviceServiceSelector = ({
         <p className="text-muted-foreground text-sm">{labels.addDeviceHint}</p>
       )}
 
-      <div className="space-y-4">
+      <div className="w-full space-y-4">
         {selections.map((selection) => {
           const services =
             servicesByDevice.get(selection.deviceType) ?? [];
@@ -156,7 +156,7 @@ export const DeviceServiceSelector = ({
           return (
             <div
               key={selection.deviceType}
-              className="border-border/60 bg-card text-card-foreground space-y-4 rounded-xl border p-3 shadow-sm sm:p-4"
+              className="border-border/60 bg-card text-card-foreground w-full space-y-4 overflow-hidden rounded-xl border p-3 shadow-sm sm:p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
