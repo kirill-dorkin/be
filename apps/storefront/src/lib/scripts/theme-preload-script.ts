@@ -1,12 +1,11 @@
 export const themePreloadScript = `
 try {
-  const theme = localStorage.getItem("theme");
-  const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const isDark = theme === "dark" || (!theme && systemPrefersDark);
-  if (isDark) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
+  // Force light theme only - dark theme is disabled for now
+  // If you want to re-enable dark theme in the future, restore the original logic
+  document.documentElement.classList.remove("dark");
+  // Clear any dark theme stored in localStorage to prevent flashing
+  if (localStorage.getItem("theme") === "dark") {
+    localStorage.setItem("theme", "light");
   }
 } catch(e) {}
 `;
