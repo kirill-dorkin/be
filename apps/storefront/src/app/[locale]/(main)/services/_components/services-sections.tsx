@@ -259,7 +259,7 @@ export const ServicesSections = ({
                         {getRepairServiceLabel(service.name, locale)}
                       </CardTitle>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="whitespace-nowrap">
                           {formatBadgeLabel(
                             service.price.kind,
                             strings.price.badge,
