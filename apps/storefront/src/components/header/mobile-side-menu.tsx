@@ -2,12 +2,7 @@
 
 import { User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import type { User } from "@nimara/domain/objects/User";
@@ -20,8 +15,6 @@ import { cn } from "@/lib/utils";
 
 import { CurrencySwitch } from "../currency-switch";
 import { LocaleSwitch } from "../locale-switch";
-import { LogoClient } from "./logo";
-import { MobileSearch } from "./mobile-search";
 
 const BurgerIcon = ({ isOpen }: { isOpen: boolean }) => {
   const lineClasses =
@@ -56,9 +49,7 @@ const BurgerIcon = ({ isOpen }: { isOpen: boolean }) => {
 export const MobileSideMenu = ({
   menu,
   user,
-  children,
 }: {
-  children: ReactNode;
   menu: Menu | null | undefined;
   user: User | null;
 }) => {
@@ -74,6 +65,7 @@ export const MobileSideMenu = ({
   useEffect(() => {
     const update = () => {
       const el = document.getElementById("site-header");
+
       setHeaderHeight(el ? Math.ceil(el.getBoundingClientRect().height) : 0);
     };
 

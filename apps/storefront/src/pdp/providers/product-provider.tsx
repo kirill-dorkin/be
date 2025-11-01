@@ -7,8 +7,8 @@ import {
 } from "@nimara/domain/objects/Product";
 
 import { CACHE_TTL } from "@/config";
-import { JsonLd, productToJsonLd } from "@/lib/json-ld";
 import { getCheckoutId } from "@/lib/actions/cart";
+import { JsonLd, productToJsonLd } from "@/lib/json-ld";
 import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
 import { getStoreService } from "@/services/store";

@@ -12,7 +12,7 @@ type ContinentRowProps = {
   markets: Market[];
   name: string;
   onLocaleSelect: (locale: SupportedLocale, label: string) => void;
-  pendingLocale?: { locale: SupportedLocale; label: string } | null;
+  pendingLocale?: { label: string, locale: SupportedLocale; } | null;
 };
 
 export function ContinentRow({
@@ -24,6 +24,7 @@ export function ContinentRow({
 }: ContinentRowProps) {
   const handleClick = (market: Market) => {
     const locale = market.defaultLanguage.locale;
+
     if (locale === currentLocale) {
       return;
     }

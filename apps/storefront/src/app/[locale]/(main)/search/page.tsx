@@ -1,11 +1,12 @@
 import { unstable_cache } from "next/cache";
-import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 
 import {
   type AllCurrency,
   ALLOWED_CURRENCY_CODES,
 } from "@nimara/domain/consts";
+import { type SortByOption } from "@nimara/domain/objects/Search";
 import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 import type {
   PageInfo,
@@ -24,7 +25,6 @@ import { JsonLd, mappedSearchProductsToJsonLd } from "@/lib/json-ld";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
-import { type SortByOption } from "@nimara/domain/objects/Search";
 
 import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { ProductsList } from "../_components/products-list";
@@ -337,8 +337,8 @@ async function SearchFilters({
   searchParams,
   sortByOptions,
 }: {
-  serializedArgs: string;
   searchParams: Record<string, string>;
+  serializedArgs: string;
   sortByOptions: SortByOption[];
 }) {
   const facetsResult = await loadFacets(serializedArgs);

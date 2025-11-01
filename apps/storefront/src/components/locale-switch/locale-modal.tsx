@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   useEffect,
@@ -16,7 +17,6 @@ import { Label } from "@nimara/ui/components/label";
 import { Spinner } from "@nimara/ui/components/spinner";
 
 import { usePathname, useRouter } from "@/i18n/routing";
-import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCurrentRegion } from "@/regions/client";
 import { useRegionContext } from "@/regions/client/region-provider";
@@ -45,7 +45,7 @@ export function LocaleSwitchModal({
 
   const [isPending, startTransition] = useTransition();
   const [pendingLocale, setPendingLocale] = useState<
-    { locale: SupportedLocale; label: string } | null
+    { label: string, locale: SupportedLocale; } | null
   >(null);
 
   const markets = useMemo(() => Object.values(MARKETS), []);
@@ -86,7 +86,8 @@ export function LocaleSwitchModal({
   useEffect(() => {
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
-      return;
+      
+return;
     }
 
     if (!open) {

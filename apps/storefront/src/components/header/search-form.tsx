@@ -24,8 +24,8 @@ import { Spinner } from "@nimara/ui/components/spinner";
 
 import { DEFAULT_DEBOUNCE_TIME_IN_MS } from "@/config";
 import { LocalizedLink, usePathname, useRouter } from "@/i18n/routing";
-import { cn } from "@/lib/utils";
 import { paths } from "@/lib/paths";
+import { cn } from "@/lib/utils";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 

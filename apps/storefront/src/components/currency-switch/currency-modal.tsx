@@ -61,7 +61,8 @@ export function CurrencySwitchModal({
   useEffect(() => {
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
-      return;
+      
+return;
     }
 
     if (!open) {
