@@ -25,32 +25,35 @@ import { ShoppingBagIconWithCount } from "./shopping-bag-icon-with-count";
 // import { ThemeToggle } from "./theme-toggle";
 
 export const Header = async () => {
-  const [accessToken, userService, region, t] = await Promise.all([
+  const [accessToken, userService, region, t, checkoutId] = await Promise.all([
     getAccessToken(),
     getUserService(),
     getCurrentRegion(),
     getTranslations(),
+    getCheckoutId(),
   ]);
 
-  const resultMenu = await getNavigationMenu({
-    channel: region.market.channel,
-    languageCode: region.language.code,
-    options: {
-      next: {
-        tags: ["CMS:navbar"],
-        revalidate: CACHE_TTL.cms,
+  // Parallelize all data fetches
+  const [resultMenu, resultUserGet, cartService] = await Promise.all([
+    getNavigationMenu({
+      channel: region.market.channel,
+      languageCode: region.language.code,
+      options: {
+        next: {
+          tags: ["CMS:navbar"],
+          revalidate: CACHE_TTL.cms,
+        },
       },
-    },
-  });
+    }),
+    userService.userGet(accessToken),
+    getCartService(),
+  ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
   const user = resultUserGet.ok ? resultUserGet.data : null;
 
   let checkoutLinesCount = 0;
-  const checkoutId = await getCheckoutId();
 
   if (checkoutId) {
-    const cartService = await getCartService();
     const resultCartGet = await cartService.cartGet({
       cartId: checkoutId,
       languageCode: region.language.code,

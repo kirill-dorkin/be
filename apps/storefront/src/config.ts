@@ -11,8 +11,8 @@ const DAY = HOUR * 24;
 export const CACHE_TTL = {
   pdp: DAY,
   cart: MINUTE * 5,
-  cms: MINUTE * 15,
-  search: MINUTE,
+  cms: MINUTE * 30, // Increased from 15 to 30 minutes - CMS content rarely changes
+  search: MINUTE * 5, // Increased from 1 to 5 minutes - search results don't need to be real-time
 } as const;
 export const DEFAULT_DEBOUNCE_TIME_IN_MS = 500;
 export const DEFAULT_SORT_BY = "price-asc";
