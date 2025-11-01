@@ -10,7 +10,15 @@ import { CartDetails } from "./cart-details";
 import { EmptyCart } from "./empty-cart";
 
 export const Cart = async () => {
-  const checkoutId = await getCheckoutId();
+  // Parallelize all initial data fetching
+  const [checkoutId, region, cartService, accessToken, userService] =
+    await Promise.all([
+      getCheckoutId(),
+      getCurrentRegion(),
+      getCartService(),
+      getAccessToken(),
+      getUserService(),
+    ]);
 
   if (!checkoutId) {
     storefrontLogger.debug("No checkoutId cookie. Rendering empty cart.");
@@ -18,19 +26,18 @@ export const Cart = async () => {
     return <EmptyCart />;
   }
 
-  const [region, cartService] = await Promise.all([
-    getCurrentRegion(),
-    getCartService(),
+  // Parallelize cart and user data fetching
+  const [resultCartGet, resultUserGet] = await Promise.all([
+    cartService.cartGet({
+      cartId: checkoutId,
+      languageCode: region.language.code,
+      countryCode: region.market.countryCode,
+      options: {
+        next: { revalidate: CACHE_TTL.cart, tags: [`CHECKOUT:${checkoutId}`] },
+      },
+    }),
+    userService.userGet(accessToken),
   ]);
-
-  const resultCartGet = await cartService.cartGet({
-    cartId: checkoutId,
-    languageCode: region.language.code,
-    countryCode: region.market.countryCode,
-    options: {
-      next: { revalidate: CACHE_TTL.cart, tags: [`CHECKOUT:${checkoutId}`] },
-    },
-  });
 
   if (!resultCartGet.ok) {
     storefrontLogger.error("Failed to fetch cart", {
@@ -41,11 +48,6 @@ export const Cart = async () => {
   }
 
   if (!!resultCartGet.data.lines.length) {
-    const [accessToken, userService] = await Promise.all([
-      getAccessToken(),
-      getUserService(),
-    ]);
-    const resultUserGet = await userService.userGet(accessToken);
     const user = resultUserGet.ok ? resultUserGet.data : null;
 
     return (

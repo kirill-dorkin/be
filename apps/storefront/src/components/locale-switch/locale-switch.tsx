@@ -1,6 +1,7 @@
 "use client";
 
 import { Globe } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -8,7 +9,10 @@ import { Button } from "@nimara/ui/components/button";
 
 import { useCurrentRegion } from "@/regions/client";
 
-import { LocaleSwitchModal } from "./locale-modal";
+// Dynamically import modal to reduce initial bundle size
+const LocaleSwitchModal = dynamic(() =>
+  import("./locale-modal").then((mod) => ({ default: mod.LocaleSwitchModal })),
+);
 
 export const LocaleSwitch = () => {
   const [isMounted, setIsMounted] = useState(false);

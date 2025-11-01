@@ -23,13 +23,16 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-  const [t, { locale }, searchParams, accessToken, userService] =
+  // Parallelize all initial data fetching
+  const [t, { locale }, searchParams, accessToken, userService, region, storeUrl] =
     await Promise.all([
       getTranslations(),
       props.params,
       props.searchParams,
       getAccessToken(),
       getUserService(),
+      getCurrentRegion(),
+      getStoreUrl(),
     ]);
 
   const resultUserGet = await userService.userGet(accessToken);
@@ -48,10 +51,7 @@ export default async function Page(props: PageProps) {
     );
   }
 
-  const [paymentService, region] = await Promise.all([
-    getPaymentService(),
-    getCurrentRegion(),
-  ]);
+  const paymentService = await getPaymentService();
   const resultCustomerGet = await paymentService.customerGet({
     user: user,
     channel: region.market.channel,
@@ -94,7 +94,6 @@ export default async function Page(props: PageProps) {
       customerId,
     });
 
-  const storeUrl = await getStoreUrl();
   const paymentMethods = resultCustomerPaymentMethods.ok
     ? resultCustomerPaymentMethods.data
     : [];
