@@ -51,7 +51,7 @@ export default async function ServicesPage() {
     : null;
 
   return (
-    <div className="bg-background">
+    <div className="bg-background overflow-x-hidden">
       <div className="container space-y-12 py-12 lg:py-16">
         <section className="bg-muted/60 border-muted mx-auto w-full max-w-5xl rounded-3xl border px-6 py-12 text-center sm:px-10">
           <span className="text-primary inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest">
@@ -77,7 +77,7 @@ export default async function ServicesPage() {
           </div>
         </section>
 
-        <section id="services-catalog">
+        <section id="services-catalog" className="w-full max-w-full">
           <ServicesSections
             categories={catalog}
             currency={region.market.currency}
@@ -116,7 +116,7 @@ export default async function ServicesPage() {
           />
         </section>
 
-        <section id="service-request">
+        <section id="service-request" className="w-full max-w-full overflow-hidden">
           <ServicesEstimator
             catalog={catalog}
             currency={region.market.currency}
