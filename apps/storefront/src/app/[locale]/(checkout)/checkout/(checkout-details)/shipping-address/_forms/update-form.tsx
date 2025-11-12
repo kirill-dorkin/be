@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import {
@@ -25,7 +25,7 @@ import {
   updateShippingAddressSchema,
 } from "./schema";
 
-export const UpdateShippingAddressForm = ({
+const UpdateShippingAddressFormComponent = ({
   address,
   countries,
   addressFormRows,
@@ -55,9 +55,14 @@ export const UpdateShippingAddressForm = ({
     defaultValues: addressFormValues,
   });
 
-  const canProceed = !form.formState.isSubmitting && !isCountryChanging;
+  // Мемоизация флага canProceed
+  const canProceed = useMemo(
+    () => !form.formState.isSubmitting && !isCountryChanging,
+    [form.formState.isSubmitting, isCountryChanging]
+  );
 
-  const handleSubmit: SubmitHandler<UpdateShippingAddressSchema> = async (
+  // Мемоизация обработчика submit
+  const handleSubmit: SubmitHandler<UpdateShippingAddressSchema> = useCallback(async (
     data,
   ) => {
     const result = await accountAddressUpdateAction({
@@ -71,12 +76,13 @@ export const UpdateShippingAddressForm = ({
 
     setEditedAddress(null);
     router.push(paths.checkout.shippingAddress.asPath());
-  };
+  }, [address.id, setEditedAddress, router]);
 
-  function handleFormCancel() {
+  // Мемоизация обработчика отмены
+  const handleFormCancel = useCallback(() => {
     setEditedAddress(null);
     router.push(paths.checkout.shippingAddress.asPath());
-  }
+  }, [setEditedAddress, router]);
 
   return (
     <Form {...form}>
@@ -111,3 +117,11 @@ export const UpdateShippingAddressForm = ({
     </Form>
   );
 };
+
+// Мемоизация - форма обновления адреса доставки в checkout
+export const UpdateShippingAddressForm = memo(UpdateShippingAddressFormComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.address.id === nextProps.address.id &&
+    prevProps.addressFormRows === nextProps.addressFormRows
+  );
+});

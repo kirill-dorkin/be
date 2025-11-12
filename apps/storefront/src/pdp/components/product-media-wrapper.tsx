@@ -1,10 +1,19 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { memo } from "react";
+
 import { type Cart } from "@nimara/domain/objects/Cart";
 import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
+import { Skeleton } from "@nimara/ui/components/skeleton";
 
-import { ProductMedia } from "./product-media";
+const ProductMedia = dynamic(() => import("./product-media").then(mod => ({ default: mod.ProductMedia })), {
+  ssr: false,
+  loading: () => <Skeleton className="aspect-square w-full rounded-lg" />,
+});
 
 type ProductMediaWrapperProps = {
   availability: ProductAvailability;
@@ -13,7 +22,7 @@ type ProductMediaWrapperProps = {
   showAs?: "vertical" | "carousel";
 };
 
-export const ProductMediaWrapper = ({
+const ProductMediaWrapperComponent = ({
   product,
   availability,
   showAs,
@@ -30,3 +39,13 @@ export const ProductMediaWrapper = ({
     />
   );
 };
+
+// Мемоизация - wrapper для медиа галереи товара
+export const ProductMediaWrapper = memo(ProductMediaWrapperComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.product.id === nextProps.product.id &&
+    prevProps.cart?.id === nextProps.cart?.id &&
+    prevProps.showAs === nextProps.showAs &&
+    prevProps.availability === nextProps.availability
+  );
+});

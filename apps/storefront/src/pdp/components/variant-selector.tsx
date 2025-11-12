@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useCallback, useMemo } from "react";
 
 import { type Cart } from "@nimara/domain/objects/Cart";
 import {
@@ -48,9 +49,27 @@ export const VariantSelector = ({
     variantsAvailability,
   } = useVariantSelection({ cart, product, productAvailability });
 
-  const hasFreeVariant = variantsAvailability?.some(
-    (variant) => variant.price.amount === 0,
+  // Мемоизация проверки бесплатных вариантов
+  const hasFreeVariant = useMemo(
+    () => variantsAvailability?.some((variant) => variant.price.amount === 0),
+    [variantsAvailability]
   );
+
+  // Мемоизация обработчика изменения атрибута
+  const handleAttributeChange = useCallback((slug: string, valueSlug: string) => {
+    setDiscriminatedVariantId("");
+    setParams({
+      ...params,
+      [slug]: valueSlug,
+    }).catch((e) => {
+      console.error(e);
+    });
+  }, [params, setDiscriminatedVariantId, setParams]);
+
+  // Мемоизация обработчика выбора варианта
+  const handleVariantSelect = useCallback((variantId: string) => {
+    setDiscriminatedVariantId(variantId);
+  }, [setDiscriminatedVariantId]);
 
   return (
     <>
@@ -97,15 +116,7 @@ export const VariantSelector = ({
                     : "grid grid-cols-2 md:grid-cols-3",
                 )}
                 aria-labelledby={t("products.label-slug", { slug })}
-                onValueChange={(valueSlug) => {
-                  setDiscriminatedVariantId("");
-                  setParams({
-                    ...params,
-                    [slug]: valueSlug,
-                  }).catch((e) => {
-                    console.error(e);
-                  });
-                }}
+                onValueChange={(valueSlug) => handleAttributeChange(slug, valueSlug)}
               >
                 {values
                   .sort((a, b) => a.name.localeCompare(b.name))
@@ -162,9 +173,7 @@ export const VariantSelector = ({
           <div className="flex flex-col gap-1.5">
             <VariantDropdown
               variants={matchingVariants}
-              onVariantSelect={(variantId) => {
-                setDiscriminatedVariantId(variantId);
-              }}
+              onVariantSelect={handleVariantSelect}
               selectedVariantId={discriminatedVariantId}
             />
           </div>

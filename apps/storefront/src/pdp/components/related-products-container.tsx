@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { CACHE_TTL } from "@/config";
 import { RelatedProducts } from "@/pdp/components/related-products";
 import { getCurrentRegion } from "@/regions/server";
@@ -8,9 +10,10 @@ type Props = {
 };
 
 export const RelatedProductsContainer = async ({ slug }: Props) => {
-  const [region, storeService] = await Promise.all([
+  const [region, storeService, t] = await Promise.all([
     getCurrentRegion(),
     getStoreService(),
+    getTranslations("products"),
   ]);
 
   const result = await storeService.getProductRelatedProducts({
@@ -30,5 +33,5 @@ export const RelatedProductsContainer = async ({ slug }: Props) => {
     return null;
   }
 
-  return <RelatedProducts products={result.data.products} />;
+  return <RelatedProducts products={result.data.products} title={t("you-may-also-like")} />;
 };

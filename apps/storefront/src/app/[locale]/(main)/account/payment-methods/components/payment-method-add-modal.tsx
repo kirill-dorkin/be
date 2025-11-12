@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { type ReactNode, useEffect, useState } from "react";
+import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Checkbox } from "@nimara/ui/components/checkbox";
@@ -25,7 +25,7 @@ import {
   isPaymentServiceConfigured,
 } from "@/services/payment";
 
-export const PaymentMethodAddModal = ({
+const PaymentMethodAddModalComponent = ({
   secret,
   storeUrl,
   onClose,
@@ -46,17 +46,23 @@ export const PaymentMethodAddModal = ({
   const [errors, setErrors] = useState<(string | ReactNode)[]>([]);
   const { resolvedTheme } = useTheme();
 
-  const isLoading = !isMounted || isProcessing;
+  // Мемоизация флага загрузки
+  const isLoading = useMemo(
+    () => !isMounted || isProcessing,
+    [isMounted, isProcessing]
+  );
 
-  const isDark = resolvedTheme === "dark";
-  const appearance = {
+  // Мемоизация темы и appearance
+  const isDark = useMemo(() => resolvedTheme === "dark", [resolvedTheme]);
+  const appearance = useMemo(() => ({
     theme: (isDark ? "night" : "stripe") as "night" | "stripe",
     variables: {
       colorBackground: isDark ? "#1C1917" : "#fff",
     },
-  };
+  }), [isDark]);
 
-  const handlePaymentSave = async () => {
+  // Мемоизация обработчика сохранения платежа
+  const handlePaymentSave = useCallback(async () => {
     if (!isPaymentServiceConfigured) {
       setErrors([t("payment.provider-unavailable")]);
 
@@ -76,7 +82,7 @@ export const PaymentMethodAddModal = ({
     }
 
     setIsProcessing(false);
-  };
+  }, [redirectUrl, isDefault, t]);
 
   useEffect(() => {
     if (!isPaymentServiceConfigured) {
@@ -149,3 +155,11 @@ export const PaymentMethodAddModal = ({
     </Dialog>
   );
 };
+
+// Мемоизация - модальное окно добавления метода оплаты
+export const PaymentMethodAddModal = memo(PaymentMethodAddModalComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.secret === nextProps.secret &&
+    prevProps.storeUrl === nextProps.storeUrl
+  );
+});

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { lazy, memo, Suspense, useCallback, useMemo, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
@@ -9,35 +9,42 @@ import { getCurrencySymbol } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 import { useCurrentRegion } from "@/regions/client";
 
-import { CurrencySwitchModal } from "./currency-modal";
+// Lazy loading модального окна для уменьшения initial bundle size
+const CurrencySwitchModal = lazy(() => import("./currency-modal").then((mod) => ({ default: mod.CurrencySwitchModal })));
 
-export const CurrencySwitch = () => {
+const CurrencySwitchComponent = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("currency");
   const region = useCurrentRegion();
 
-  const isSom = region.market.currency === "KGS";
-  const currencySymbol = isSom
-    ? null
-    : getCurrencySymbol(region.market.currency);
-  const symbolClassName = cn(
-    "text-xl font-bold leading-none",
-    currencySymbol === "с" && "text-[1.55rem]",
+  // Мемоизация флагов и значений
+  const isSom = useMemo(() => region.market.currency === "KGS", [region.market.currency]);
+  const currencySymbol = useMemo(
+    () => isSom ? null : getCurrencySymbol(region.market.currency),
+    [isSom, region.market.currency]
+  );
+  const symbolClassName = useMemo(
+    () => cn(
+      "text-xl font-bold leading-none",
+      currencySymbol === "с" && "text-[1.55rem]",
+    ),
+    [currencySymbol]
   );
 
-  const openModal = () => {
+  // Мемоизация обработчиков
+  const openModal = useCallback(() => {
     setIsMounted(true);
     if (typeof window !== "undefined") {
       window.requestAnimationFrame(() => setIsOpen(true));
     } else {
       setIsOpen(true);
     }
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
 
   return (
     <>
@@ -56,15 +63,19 @@ export const CurrencySwitch = () => {
         {region.market.currency}
       </Button>
       {isMounted && (
-        <CurrencySwitchModal
-          currentCurrency={region.market.currency}
-          onClose={closeModal}
-          open={isOpen}
-          onExited={() => setIsMounted(false)}
-        />
+        <Suspense fallback={null}>
+          <CurrencySwitchModal
+            currentCurrency={region.market.currency}
+            onClose={closeModal}
+            open={isOpen}
+            onExited={() => setIsMounted(false)}
+          />
+        </Suspense>
       )}
     </>
   );
 };
 
+// Мемоизация - переключатель валюты в header
+export const CurrencySwitch = memo(CurrencySwitchComponent);
 CurrencySwitch.displayName = "CurrencySwitch";

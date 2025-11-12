@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { type ReactNode } from "react";
+import { memo, type ReactNode,useMemo } from "react";
 
 import { LocalizedLink } from "@/i18n/routing";
 
@@ -25,7 +25,7 @@ const normalizePath = (pathname: string | null): string => {
   return pathname;
 };
 
-export const HelpNavigation = ({
+const HelpNavigationComponent = ({
   heading,
   links,
 }: {
@@ -37,7 +37,9 @@ export const HelpNavigation = ({
   links: HelpNavLink[];
 }) => {
   const pathname = usePathname();
-  const normalized = normalizePath(pathname);
+
+  // Мемоизация нормализованного пути
+  const normalized = useMemo(() => normalizePath(pathname), [pathname]);
 
   return (
     <nav
@@ -86,3 +88,11 @@ export const HelpNavigation = ({
     </nav>
   );
 };
+
+// Мемоизация - навигация help страниц
+export const HelpNavigation = memo(HelpNavigationComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.heading.title === nextProps.heading.title &&
+    prevProps.links.length === nextProps.links.length
+  );
+});

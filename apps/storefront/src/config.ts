@@ -2,19 +2,29 @@
 export const IMAGE_FORMAT: "AVIF" | "ORIGINAL" | "WEBP" = "AVIF";
 export const IMAGE_SIZES = {
   pdp: 1024,
+  catalog: 800,
+  thumbnail: 256,
 };
+
+export const IMAGE_QUALITY = {
+  high: 100,     // Main product images, hero banners - максимальное качество
+  medium: 95,    // Navigation, collections
+  low: 90,       // Thumbnails in cart/orders
+} as const;
 
 const MINUTE = 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
+const isDevelopment = process.env.NODE_ENV === "development";
+
 export const CACHE_TTL = {
-  pdp: DAY,
+  pdp: isDevelopment ? MINUTE * 2 : DAY, // 2 minutes in dev, 1 day in prod
   cart: MINUTE * 5,
-  cms: MINUTE * 30, // Increased from 15 to 30 minutes - CMS content rarely changes
-  search: MINUTE * 5, // Increased from 1 to 5 minutes - search results don't need to be real-time
+  cms: isDevelopment ? MINUTE * 2 : MINUTE * 30, // 2 minutes in dev, 30 minutes in prod
+  search: MINUTE * 5,
 } as const;
-export const DEFAULT_DEBOUNCE_TIME_IN_MS = 500;
+export const DEFAULT_DEBOUNCE_TIME_IN_MS = 300; // Уменьшено с 500мс для более быстрого отклика
 export const DEFAULT_SORT_BY = "price-asc";
 export const DEFAULT_RESULTS_PER_PAGE = 16;
 

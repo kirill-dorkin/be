@@ -9,6 +9,7 @@ export type SearchProduct = {
         url: string;
       }[]
     | null;
+  metadata?: Array<{ key: string; value: string }> | null;
   name: string;
   price: TaxedPrice;
   slug: string;

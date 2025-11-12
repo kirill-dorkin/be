@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { memo, useCallback, useMemo } from "react";
 
 import type { PageInfo } from "@nimara/infrastructure/use-cases/search/types";
 import {
@@ -21,7 +22,7 @@ type Props = {
   searchParams: Record<string, string>;
 };
 
-export const SearchPagination = ({
+const SearchPaginationComponent = ({
   pageInfo,
   searchParams,
   baseUrl,
@@ -29,7 +30,20 @@ export const SearchPagination = ({
   const t = useTranslations("common");
   const locale = useLocale();
 
-  const getPathName = (direction: "next" | "previous") => {
+  // Мемоизация проверки локали
+  const localePrefix = useMemo(() => {
+    const isLocaleDifferent = locale !== DEFAULT_LOCALE;
+
+    
+return isLocaleDifferent
+      ? localePrefixes[
+          locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
+        ]
+      : "";
+  }, [locale]);
+
+  // Мемоизация функции генерации пути
+  const getPathName = useCallback((direction: "next" | "previous") => {
     const params = new URLSearchParams(searchParams);
 
     // Delete all the pagination-related params
@@ -52,13 +66,6 @@ export const SearchPagination = ({
       params.set("page", page.toString());
     }
 
-    // Shadcn use simple <a> tag instead of next-intl <Link> so we need to pass locale explicitly
-    const isLocaleDifferent = locale !== DEFAULT_LOCALE;
-    const localePrefix = isLocaleDifferent
-      ? localePrefixes[
-          locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
-        ]
-      : "";
     const queryString = params.toString();
     const baseUrlWithParams = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
@@ -69,7 +76,7 @@ export const SearchPagination = ({
     return baseUrlWithParams.startsWith(localePrefix)
       ? baseUrlWithParams
       : `${localePrefix}${baseUrlWithParams}`;
-  };
+  }, [pageInfo, searchParams, baseUrl, localePrefix]);
 
   return (
     <div className="flex justify-center gap-4">
@@ -101,3 +108,13 @@ export const SearchPagination = ({
     </div>
   );
 };
+
+// Мемоизация - используется на страницах поиска и категорий
+export const SearchPagination = memo(SearchPaginationComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.baseUrl === nextProps.baseUrl &&
+    prevProps.pageInfo.hasNextPage === nextProps.pageInfo.hasNextPage &&
+    prevProps.pageInfo.hasPreviousPage === nextProps.pageInfo.hasPreviousPage &&
+    JSON.stringify(prevProps.searchParams) === JSON.stringify(nextProps.searchParams)
+  );
+});

@@ -2,32 +2,34 @@
 
 import { Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { lazy, memo, Suspense, useCallback, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
 import { useCurrentRegion } from "@/regions/client";
 
-import { LocaleSwitchModal } from "./locale-modal";
+// Lazy loading модального окна для уменьшения initial bundle size
+const LocaleSwitchModal = lazy(() => import("./locale-modal").then((mod) => ({ default: mod.LocaleSwitchModal })));
 
-export const LocaleSwitch = () => {
+const LocaleSwitchComponent = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("locale");
   const region = useCurrentRegion();
 
-  const openModal = () => {
+  // Мемоизация обработчиков
+  const openModal = useCallback(() => {
     setIsMounted(true);
     if (typeof window !== "undefined") {
       window.requestAnimationFrame(() => setIsOpen(true));
     } else {
       setIsOpen(true);
     }
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
 
   return (
     <>
@@ -41,14 +43,18 @@ export const LocaleSwitch = () => {
         <Globe className="h-4 w-4" /> {region.market.id.toLocaleUpperCase()}
       </Button>
       {isMounted && (
-        <LocaleSwitchModal
-          open={isOpen}
-          onClose={closeModal}
-          onExited={() => setIsMounted(false)}
-        />
+        <Suspense fallback={null}>
+          <LocaleSwitchModal
+            open={isOpen}
+            onClose={closeModal}
+            onExited={() => setIsMounted(false)}
+          />
+        </Suspense>
       )}
     </>
   );
 };
 
+// Мемоизация - переключатель локали в header
+export const LocaleSwitch = memo(LocaleSwitchComponent);
 LocaleSwitch.displayName = "LocaleSwitch";

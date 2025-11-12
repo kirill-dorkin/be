@@ -26,6 +26,15 @@ export const metadata: Metadata = {
     template: `%s | ${clientEnvs.NEXT_PUBLIC_DEFAULT_PAGE_TITLE}`,
     default: clientEnvs.NEXT_PUBLIC_DEFAULT_PAGE_TITLE,
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: { url: "/apple-icon.png", type: "image/png", sizes: "180x180" },
+  },
 };
 
 export default async function LocaleLayout({
@@ -41,6 +50,17 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale ?? "en"} suppressHydrationWarning>
+      <head>
+        {/* Resource Hints для оптимизации производительности */}
+        {/* API и CDN */}
+        <link rel="preconnect" href={clientEnvs.NEXT_PUBLIC_SALEOR_API_URL} crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href={clientEnvs.NEXT_PUBLIC_SALEOR_API_URL} />
+        <link rel="preconnect" href="https://cdn.buttercms.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.buttercms.com" />
+        {/* Google Fonts - критически важно для производительности */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body
         className={cn(
           "min-h-[100dvh]",

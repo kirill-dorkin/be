@@ -1,10 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { memo } from "react";
 
 import { LogoBase } from "./logo-base";
 
-export const LogoClient = () => {
+const LogoClientComponent = () => {
   const t = useTranslations("common");
 
   return (
@@ -12,4 +13,6 @@ export const LogoClient = () => {
   );
 };
 
+// Мемоизация - статичный логотип
+export const LogoClient = memo(LogoClientComponent);
 LogoClient.displayName = "LogoClient";

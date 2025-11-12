@@ -1,11 +1,11 @@
 "use client";
 
 import type Error from "next/error";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import { errorService } from "@/services/error";
 
-export default function GlobalError({ error }: { error: Error }) {
+const GlobalErrorComponent = ({ error }: { error: Error }) => {
   const [traceId, setTraceId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -17,4 +17,9 @@ export default function GlobalError({ error }: { error: Error }) {
       <body>Error: {traceId}</body>
     </html>
   );
-}
+};
+
+// Мемоизация - global error page
+export default memo(GlobalErrorComponent, (prevProps, nextProps) => {
+  return prevProps.error === nextProps.error;
+});

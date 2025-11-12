@@ -1,5 +1,7 @@
 "use client";
 
+import { memo, useCallback } from "react";
+
 import {
   FormControl,
   FormField,
@@ -16,7 +18,7 @@ export interface TextFormFieldProps extends Omit<InputProps, "onChange"> {
   onChange?: (value: string) => void;
 }
 
-export function TextFormField({
+function TextFormFieldComponent({
   label,
   name = "",
   isRequired = false,
@@ -27,6 +29,12 @@ export function TextFormField({
 }: TextFormFieldProps) {
   const { control } = useFormContext();
   const { error } = control.getFieldState(name);
+
+  // Мемоизация обработчика изменения
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, fieldOnChange: (...event: any[]) => void) => {
+    fieldOnChange(e);
+    onChange?.(e.target.value);
+  }, [onChange]);
 
   return (
     <FormField
@@ -47,10 +55,7 @@ export function TextFormField({
                   placeholder={placeholder}
                   {...field}
                   value={field?.value ?? ""}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    onChange?.(e.target.value);
-                  }}
+                  onChange={(e) => handleChange(e, field.onChange)}
                   type={type}
                   error={!!error}
                   {...props}
@@ -64,3 +69,15 @@ export function TextFormField({
     />
   );
 }
+
+// Мемоизация - используется в формах адресов, чекаута
+export const TextFormField = memo(TextFormFieldComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.name === nextProps.name &&
+    prevProps.label === nextProps.label &&
+    prevProps.isRequired === nextProps.isRequired &&
+    prevProps.placeholder === nextProps.placeholder &&
+    prevProps.type === nextProps.type &&
+    prevProps.disabled === nextProps.disabled
+  );
+});

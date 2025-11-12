@@ -1,6 +1,6 @@
 import { CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useWindowSize } from "usehooks-ts";
 
 import type { ProductVariant } from "@nimara/domain/objects/Product";
@@ -24,7 +24,7 @@ type VariantDropdownProps = {
   variants: ProductVariant[];
 };
 
-export const VariantDropdown = ({
+const VariantDropdownComponent = ({
   onVariantSelect,
   selectedVariantId,
   variants,
@@ -33,7 +33,8 @@ export const VariantDropdown = ({
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { width } = useWindowSize();
 
-  const isSmDown = width && width < screenSizes.sm;
+  // Мемоизация проверки размера экрана
+  const isSmDown = useMemo(() => width && width < screenSizes.sm, [width]);
 
   useEffect(() => {
     /**
@@ -42,7 +43,13 @@ export const VariantDropdown = ({
     if (isSheetOpen && !isSmDown) {
       setIsSheetOpen(false);
     }
-  }, [width]);
+  }, [width, isSheetOpen, isSmDown]);
+
+  // Мемоизация обработчика выбора варианта из sheet
+  const handleSheetItemClick = useCallback((id: string) => {
+    onVariantSelect(id);
+    setIsSheetOpen(false);
+  }, [onVariantSelect]);
 
   return (
     <>
@@ -53,10 +60,7 @@ export const VariantDropdown = ({
               <li
                 key={id}
                 className="flex cursor-pointer"
-                onClick={() => {
-                  onVariantSelect(id);
-                  setIsSheetOpen(false);
-                }}
+                onClick={() => handleSheetItemClick(id)}
               >
                 <Button variant="ghost" className="w-full justify-start p-1.5">
                   <CheckIcon
@@ -98,3 +102,12 @@ export const VariantDropdown = ({
     </>
   );
 };
+
+// Мемоизация - используется в VariantSelector при множественных вариантах
+export const VariantDropdown = memo(VariantDropdownComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.selectedVariantId === nextProps.selectedVariantId &&
+    prevProps.variants.length === nextProps.variants.length &&
+    prevProps.variants.every((v, i) => v.id === nextProps.variants[i]?.id)
+  );
+});

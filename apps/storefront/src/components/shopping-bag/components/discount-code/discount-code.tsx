@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState, useTransition } from "react";
+import { memo, useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import type { Checkout } from "@nimara/domain/objects/Checkout";
@@ -16,11 +16,10 @@ import { TextFormField } from "@/components/form/text-form-field";
 import { addPromoCode, removePromoCode } from "../../actions";
 import { type FormSchema, formSchema } from "./schema";
 
-export const DiscountCode = ({ checkout }: { checkout: Checkout }) => {
+const DiscountCodeComponent = ({ checkout }: { checkout: Checkout }) => {
   const t = useTranslations();
   const { toast } = useToast();
   const [isTransitioning, startTransition] = useTransition();
-
   const [isOpen, setIsOpen] = useState(false);
   const [shouldClearInput, setShouldClearInput] = useState(false);
 
@@ -31,15 +30,17 @@ export const DiscountCode = ({ checkout }: { checkout: Checkout }) => {
     },
   });
 
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-  };
-
+  // Мемоизация promoCode и isCodeApplied
   const promoCode = checkout?.voucherCode;
-  const isCodeApplied =
-    !!checkout?.discount?.amount &&
-    !form.formState.isSubmitting &&
-    !form.formState.isLoading;
+  const isCodeApplied = useMemo(
+    () => !!checkout?.discount?.amount && !form.formState.isSubmitting && !form.formState.isLoading,
+    [checkout?.discount?.amount, form.formState.isSubmitting, form.formState.isLoading]
+  );
+
+  // Мемоизация обработчиков
+  const toggleOpen = useCallback(() => {
+    setIsOpen(prev => !prev);
+  }, []);
 
   const handleSubmit = async (values: FormSchema) => {
     startTransition(
@@ -198,3 +199,12 @@ export const DiscountCode = ({ checkout }: { checkout: Checkout }) => {
     </>
   );
 };
+
+// Мемоизация - критичный компонент корзины
+export const DiscountCode = memo(DiscountCodeComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.checkout.id === nextProps.checkout.id &&
+    prevProps.checkout.voucherCode === nextProps.checkout.voucherCode &&
+    prevProps.checkout.discount?.amount === nextProps.checkout.discount?.amount
+  );
+});

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useInterval } from "usehooks-ts";
 
 import { type AppErrorCode } from "@nimara/domain/objects/Error";
@@ -9,7 +9,7 @@ import { Spinner } from "@nimara/ui/components/spinner";
 
 import { useRouter } from "@/i18n/routing";
 
-export const ProcessingInfo = ({
+const ProcessingInfoComponent = ({
   errors,
 }: {
   errors: { code: AppErrorCode }[];
@@ -18,13 +18,18 @@ export const ProcessingInfo = ({
   const t = useTranslations();
   const router = useRouter();
 
-  useInterval(() => {
+  // Мемоизация обработчика таймаута
+  const handleTimeExceeded = useCallback(() => {
     setIsTimeExceeded(true);
-  }, 30 * 1000);
+  }, []);
 
-  useInterval(() => {
+  // Мемоизация обработчика refresh
+  const handleRefresh = useCallback(() => {
     router.refresh();
-  }, 3500);
+  }, [router]);
+
+  useInterval(handleTimeExceeded, 30 * 1000);
+  useInterval(handleRefresh, 3500);
 
   return (
     <div className="py-32 leading-10">
@@ -44,3 +49,8 @@ export const ProcessingInfo = ({
     </div>
   );
 };
+
+// Мемоизация - индикатор обработки платежа
+export const ProcessingInfo = memo(ProcessingInfoComponent, (prevProps, nextProps) => {
+  return prevProps.errors.length === nextProps.errors.length;
+});

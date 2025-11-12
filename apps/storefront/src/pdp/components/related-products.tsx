@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { memo } from "react";
 
 import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 import {
@@ -11,17 +11,17 @@ import {
 
 import { SearchProductCard } from "@/components/search-product-card";
 
-export const RelatedProducts = ({
+const RelatedProductsComponent = ({
   products,
+  title,
 }: {
   products: SearchProduct[];
+  title: string;
 }) => {
-  const t = useTranslations("products");
-
   return (
-    <div className="relative overflow-hidden">
-      <h2 className="text-slate-700 dark:text-primary mb-4 text-4xl">
-        {t("you-may-also-like")}
+    <div className="relative overflow-hidden mt-12 md:mt-0">
+      <h2 className="text-foreground mb-6 text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+        {title}
       </h2>
       <Carousel>
         <CarouselContent>
@@ -43,3 +43,11 @@ export const RelatedProducts = ({
     </div>
   );
 };
+
+// Мемоизация для предотвращения лишних ре-рендеров карусели
+export const RelatedProducts = memo(RelatedProductsComponent, (prevProps, nextProps) => {
+  // Пересоздаем только если изменился список товаров и заголовок
+  return prevProps.products.length === nextProps.products.length &&
+    prevProps.products.every((product, index) => product.id === nextProps.products[index]?.id) &&
+    prevProps.title === nextProps.title;
+});

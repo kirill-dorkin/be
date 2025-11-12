@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { type AllCountryCode } from "@nimara/domain/consts";
@@ -27,7 +27,7 @@ import {
   type UpdateShippingAddressSchema,
 } from "./schema";
 
-export const CreateShippingAddressForm = ({
+const CreateShippingAddressFormComponent = ({
   addressFormRows,
   shouldSaveForFuture,
   checkout,
@@ -63,10 +63,14 @@ export const CreateShippingAddressForm = ({
     },
   });
 
-  const canProceed =
-    !form.formState.isSubmitting && !isCountryChanging && !isRedirecting;
+  // Мемоизация флага canProceed
+  const canProceed = useMemo(
+    () => !form.formState.isSubmitting && !isCountryChanging && !isRedirecting,
+    [form.formState.isSubmitting, isCountryChanging, isRedirecting]
+  );
 
-  const handleSubmit: SubmitHandler<CreateShippingAddressSchema> = async (
+  // Мемоизация обработчика submit
+  const handleSubmit: SubmitHandler<CreateShippingAddressSchema> = useCallback(async (
     data,
   ) => {
     const result = await createCheckoutShippingAddress({
@@ -89,7 +93,7 @@ export const CreateShippingAddressForm = ({
         });
       }
     });
-  };
+  }, [checkout.id, push, toast, t, form]);
 
   return (
     <Form {...form}>
@@ -127,3 +131,13 @@ export const CreateShippingAddressForm = ({
     </Form>
   );
 };
+
+// Мемоизация - форма создания адреса доставки в checkout
+export const CreateShippingAddressForm = memo(CreateShippingAddressFormComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.checkout.id === nextProps.checkout.id &&
+    prevProps.addressFormRows === nextProps.addressFormRows &&
+    prevProps.countryCode === nextProps.countryCode &&
+    prevProps.shouldSaveForFuture === nextProps.shouldSaveForFuture
+  );
+});

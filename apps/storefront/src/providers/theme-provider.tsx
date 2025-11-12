@@ -1,13 +1,13 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
-export function ClientThemeProvider({
+const ClientThemeProviderComponent = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export function ClientThemeProvider({
 
     setPrefersReducedMotion(mediaQuery.matches);
 
+    // Мемоизация обработчика изменения
     const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
 
     mediaQuery.addEventListener("change", handleChange);
@@ -33,4 +34,7 @@ export function ClientThemeProvider({
       {children}
     </ThemeProvider>
   );
-}
+};
+
+// Мемоизация - Provider темы (только children меняется)
+export const ClientThemeProvider = memo(ClientThemeProviderComponent);

@@ -1,5 +1,7 @@
 "use client";
 
+import { memo, useCallback } from "react";
+
 import { Button } from "@nimara/ui/components/button";
 import { Label } from "@nimara/ui/components/label";
 import { Spinner } from "@nimara/ui/components/spinner";
@@ -15,14 +17,15 @@ type ContinentRowProps = {
   pendingLocale?: { label: string, locale: SupportedLocale; } | null;
 };
 
-export function ContinentRow({
+const ContinentRowComponent = ({
   currentLocale,
   markets,
   name,
   onLocaleSelect,
   pendingLocale,
-}: ContinentRowProps) {
-  const handleClick = (market: Market) => {
+}: ContinentRowProps) => {
+  // Мемоизация обработчика клика
+  const handleClick = useCallback((market: Market) => {
     const locale = market.defaultLanguage.locale;
 
     if (locale === currentLocale) {
@@ -30,7 +33,7 @@ export function ContinentRow({
     }
 
     onLocaleSelect(locale, market.defaultLanguage.name);
-  };
+  }, [currentLocale, onLocaleSelect]);
 
   return (
     <section>
@@ -76,6 +79,15 @@ export function ContinentRow({
       </div>
     </section>
   );
-}
+};
 
+// Мемоизация - ряд с континентом в модальном окне локали
+export const ContinentRow = memo(ContinentRowComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.currentLocale === nextProps.currentLocale &&
+    prevProps.name === nextProps.name &&
+    prevProps.markets.length === nextProps.markets.length &&
+    prevProps.pendingLocale?.locale === nextProps.pendingLocale?.locale
+  );
+});
 ContinentRow.displayName = "ContinentRow";

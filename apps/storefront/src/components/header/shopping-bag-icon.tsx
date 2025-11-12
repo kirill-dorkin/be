@@ -2,7 +2,7 @@
 
 import { ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { PropsWithChildren } from "react";
+import { memo, type PropsWithChildren } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
@@ -13,7 +13,7 @@ interface ShoppingBagIconProps extends PropsWithChildren {
   count?: number;
 }
 
-export const ShoppingBagIcon = ({
+const ShoppingBagIconComponent = ({
   children,
   count = 0,
 }: ShoppingBagIconProps) => {
@@ -31,3 +31,8 @@ export const ShoppingBagIcon = ({
     </Button>
   );
 };
+
+// Мемоизация - используется в header на каждой странице
+export const ShoppingBagIcon = memo(ShoppingBagIconComponent, (prevProps, nextProps) => {
+  return prevProps.count === nextProps.count;
+});

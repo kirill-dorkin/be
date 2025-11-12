@@ -4,7 +4,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { AlertCircle, CheckIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useWindowSize } from "usehooks-ts";
 
 import type {
@@ -32,7 +32,9 @@ import { cn } from "@nimara/ui/lib/utils";
 
 import { Price } from "@/components/price"; // Adjust the path as needed
 import { ProductImagePlaceholder } from "@/components/product-image-placeholder";
+import { IMAGE_QUALITY, IMAGE_SIZES } from "@/config";
 import { LocalizedLink } from "@/i18n/routing";
+import { formatProductName } from "@/lib/format-product-name";
 import { paths } from "@/lib/paths";
 
 type LineQuantityChange = (lineId: string, quantity: number) => Promise<void>;
@@ -46,7 +48,7 @@ export type LineProps = {
   onLineQuantityChange?: LineQuantityChange;
 };
 
-export const Line = ({
+const LineComponent = ({
   line: {
     thumbnail,
     product,
@@ -143,10 +145,11 @@ export const Line = ({
               src={thumbnail.url}
               alt={thumbnail.alt ?? name}
               sizes="56px"
-              width={0}
-              height={0}
+              width={IMAGE_SIZES.thumbnail}
+              height={IMAGE_SIZES.thumbnail}
+              quality={IMAGE_QUALITY.low}
               className={cn(
-                "h-[56px] w-[42px] object-cover",
+                "h-[56px] w-[42px] object-contain p-1 bg-muted/30 dark:bg-muted/20 rounded border border-border/40 dark:border-white/10",
                 isOutOfStock && "grayscale",
               )}
             />
@@ -167,11 +170,11 @@ export const Line = ({
       >
         <LocalizedLink title={name} href={href} className="grow">
           <p
-            className={cn("text-foreground text-sm", {
+            className={cn("text-foreground text-sm break-words", {
               "text-stone-400": isOutOfStock,
             })}
           >
-            {name}
+            {formatProductName(name)}
           </p>
         </LocalizedLink>
       </div>
@@ -333,3 +336,18 @@ export const Line = ({
     </div>
   );
 };
+
+// Мемоизация компонента для оптимизации ре-рендеров корзины
+export const Line = memo(LineComponent, (prevProps, nextProps) => {
+  // Пересоздаем только если изменились ключевые данные линии
+  return (
+    prevProps.line.id === nextProps.line.id &&
+    prevProps.line.quantity === nextProps.line.quantity &&
+    prevProps.line.total.amount === nextProps.line.total.amount &&
+    prevProps.line.undiscountedTotalPrice.amount === nextProps.line.undiscountedTotalPrice.amount &&
+    prevProps.line.thumbnail?.url === nextProps.line.thumbnail?.url &&
+    prevProps.isDisabled === nextProps.isDisabled &&
+    prevProps.isLineEditable === nextProps.isLineEditable &&
+    prevProps.isOutOfStock === nextProps.isOutOfStock
+  );
+});

@@ -14,7 +14,6 @@ import { getStoreService } from "@/services/store";
 
 import { AttributesDropdown } from "../components/attributes-dropdown";
 import { ProductBreadcrumbs } from "../components/product-breadcrumbs";
-import { ProductExternalSearch } from "../components/product-external-search";
 import { ProductHighlights } from "../components/product-highlights";
 import { ProductMediaWrapper } from "../components/product-media-wrapper";
 import { ProductTitle } from "../components/product-title";
@@ -35,7 +34,7 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
     <ProductProvider
       slug={slug}
       render={(product, availability, { cart }) => (
-        <div className="relative grid w-full gap-4">
+        <div className="relative grid w-full gap-4 overflow-hidden pt-8 md:pt-0">
           <ProductBreadcrumbs
             category={product.category}
             productName={product.name}
@@ -54,7 +53,13 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
             <div className="md:col-span-1">
               <section className="sticky top-28">
                 <ProductTitle title={product.name} />
-                <ProductExternalSearch productName={product.name} />
+                {/* Поиск фото в интернете - временно отключено */}
+                {/* <Suspense fallback={null}>
+                  <ProductExternalSearch
+                    productName={product.name}
+                    hasImages={!!product.images && product.images.length > 0}
+                  />
+                </Suspense> */}
 
                 <VariantSelectorWrapper
                   availability={availability}

@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { type AllCountryCode } from "@nimara/domain/consts";
 import { type CountryOption } from "@nimara/domain/objects/Address";
@@ -29,13 +29,13 @@ interface AddNewAddressModalProps {
   countryCode: AllCountryCode;
 }
 
-export function AddNewAddressModal({
+const AddNewAddressModalComponent = ({
   addressFormRows,
   buttonContent,
   buttonProps,
   countries,
   countryCode,
-}: AddNewAddressModalProps) {
+}: AddNewAddressModalProps) => {
   const t = useTranslations();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -46,6 +46,9 @@ export function AddNewAddressModal({
       router.push(paths.account.addresses.asPath());
     }
   }, [isOpen]);
+
+  // Мемоизация обработчика закрытия
+  const handleClose = useCallback(() => setIsOpen(false), []);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -63,9 +66,18 @@ export function AddNewAddressModal({
           addressFormRows={addressFormRows}
           countries={countries}
           countryCode={countryCode}
-          onModalClose={() => setIsOpen(false)}
+          onModalClose={handleClose}
         />
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+// Мемоизация - модальное окно добавления адреса
+export const AddNewAddressModal = memo(AddNewAddressModalComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.addressFormRows === nextProps.addressFormRows &&
+    prevProps.countries.length === nextProps.countries.length &&
+    prevProps.countryCode === nextProps.countryCode
+  );
+});

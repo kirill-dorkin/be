@@ -3,11 +3,11 @@
 import { Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
-export const ThemeToggle = () => {
+const ThemeToggleComponent = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const t = useTranslations("common");
 
@@ -17,13 +17,19 @@ export const ThemeToggle = () => {
     setMounted(true);
   }, []);
 
-  const isDark = resolvedTheme === "dark";
+  // Мемоизация флага темной темы
+  const isDark = useMemo(() => resolvedTheme === "dark", [resolvedTheme]);
+
+  // Мемоизация обработчика переключения темы
+  const handleToggle = useCallback(() => {
+    setTheme(theme === "light" ? "dark" : "light");
+  }, [theme, setTheme]);
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={handleToggle}
       aria-label={
         mounted
           ? t(isDark ? "switch-to-light" : "switch-to-dark")
@@ -35,3 +41,6 @@ export const ThemeToggle = () => {
     </Button>
   );
 };
+
+// Мемоизация - переключатель темы
+export const ThemeToggle = memo(ThemeToggleComponent);

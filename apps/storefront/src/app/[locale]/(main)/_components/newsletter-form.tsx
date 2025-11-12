@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { memo, useMemo } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -13,7 +14,7 @@ import { TextFormField } from "@/components/form/text-form-field";
 import { newsletterSubscribeAction } from "./action";
 import { type FormSchema, formSchema } from "./schema";
 
-export const Newsletter = () => {
+const NewsletterComponent = () => {
   const t = useTranslations();
   const { toast } = useToast();
 
@@ -25,7 +26,11 @@ export const Newsletter = () => {
     },
   });
 
-  const isPending = form.formState.isSubmitting;
+  // Мемоизация isPending
+  const isPending = useMemo(
+    () => form.formState.isSubmitting,
+    [form.formState.isSubmitting]
+  );
 
   const handleSubmit: SubmitHandler<FormSchema> = async (values) => {
     const result = await newsletterSubscribeAction(values);
@@ -89,3 +94,6 @@ export const Newsletter = () => {
     </section>
   );
 };
+
+// Мемоизация - статичная форма подписки
+export const Newsletter = memo(NewsletterComponent);

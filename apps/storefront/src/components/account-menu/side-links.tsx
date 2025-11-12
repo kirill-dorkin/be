@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { memo, useCallback, useMemo } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { cn } from "@nimara/ui/lib/utils";
@@ -11,15 +12,15 @@ import { type TranslationMessage } from "@/types";
 
 import { logout } from "./actions";
 
-export function SideLinks() {
+function SideLinksComponent() {
   const t = useTranslations();
-
   const pathname = usePathname();
 
-  const navLinks: {
+  // Мемоизация навигационных ссылок
+  const navLinks = useMemo<{
     href: string;
     title: TranslationMessage;
-  }[] = [
+  }[]>(() => [
     { title: "account.order-history", href: paths.account.orders.asPath() },
     { title: "account.addresses", href: paths.account.addresses.asPath() },
     { title: "account.personal-data", href: paths.account.profile.asPath() },
@@ -31,7 +32,12 @@ export function SideLinks() {
       title: "payment.payment-methods",
       href: paths.account.paymentMethods.asPath(),
     },
-  ];
+  ], []);
+
+  // Мемоизация обработчика logout
+  const handleLogout = useCallback(async () => {
+    await logout();
+  }, []);
 
   return (
     <ul className="no-scrollbar flex gap-x-1 overflow-auto whitespace-nowrap py-3 md:flex-col md:gap-x-0 md:gap-y-0.5 md:whitespace-normal md:py-0">
@@ -51,7 +57,7 @@ export function SideLinks() {
       ))}
       <li>
         <Button
-          onClick={async () => logout()}
+          onClick={handleLogout}
           className="text-slate-700 dark:text-primary w-full justify-start px-4 py-2 text-sm font-medium md:my-4 md:px-2 md:py-1.5 md:font-normal"
           variant="ghost"
         >
@@ -61,3 +67,6 @@ export function SideLinks() {
     </ul>
   );
 }
+
+// Мемоизация - используется на всех страницах аккаунта
+export const SideLinks = memo(SideLinksComponent);

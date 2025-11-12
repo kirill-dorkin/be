@@ -1,5 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
+import { memo, useMemo } from "react";
 
 import type { TaxedPrice } from "@nimara/domain/objects/common";
 
@@ -37,7 +38,7 @@ export const getDiscountInfo = (
   };
 };
 
-export const Price = ({
+const PriceComponent = ({
   className,
   hasFreeVariants,
   price,
@@ -46,6 +47,12 @@ export const Price = ({
 }: Props) => {
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
+
+  // Мемоизация discount info для предотвращения лишних вычислений
+  const discountInfo = useMemo(
+    () => getDiscountInfo(price, undiscountedPrice),
+    [price, undiscountedPrice]
+  );
 
   const renderPrice = (priceToFormat?: TaxedPrice) => {
     if (!priceToFormat || priceToFormat.amount === 0) {
@@ -61,7 +68,7 @@ export const Price = ({
       return <span className={className}>{t("common.free")}</span>;
     }
 
-    const { hasDiscount, oldPrice } = getDiscountInfo(price, undiscountedPrice);
+    const { hasDiscount, oldPrice } = discountInfo;
 
     return (
       <span className={className}>
@@ -93,3 +100,14 @@ export const Price = ({
 
   return null;
 };
+
+// Мемоизация Price компонента для оптимизации ре-рендеров
+export const Price = memo(PriceComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.price?.amount === nextProps.price?.amount &&
+    prevProps.undiscountedPrice?.amount === nextProps.undiscountedPrice?.amount &&
+    prevProps.startPrice?.amount === nextProps.startPrice?.amount &&
+    prevProps.hasFreeVariants === nextProps.hasFreeVariants &&
+    prevProps.className === nextProps.className
+  );
+});

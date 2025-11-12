@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { memo, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -15,7 +16,7 @@ import { paths } from "@/lib/paths";
 
 import { type PasswordFormSchema, passwordFormSchema } from "./schema";
 
-export const UserPasswordForm = ({
+const UserPasswordFormComponent = ({
   userAccountEmail,
 }: {
   userAccountEmail: string;
@@ -31,9 +32,14 @@ export const UserPasswordForm = ({
     },
   });
 
-  const isDisabled = isRedirecting || form.formState?.isSubmitting;
+  // Мемоизация флага disabled
+  const isDisabled = useMemo(
+    () => isRedirecting || form.formState?.isSubmitting,
+    [isRedirecting, form.formState?.isSubmitting]
+  );
 
-  const handleSubmit = async ({ password }: PasswordFormSchema) => {
+  // Мемоизация обработчика submit
+  const handleSubmit = useCallback(async ({ password }: PasswordFormSchema) => {
     const data = await login({
       email: userAccountEmail,
       password,
@@ -47,7 +53,7 @@ export const UserPasswordForm = ({
     if (data?.error) {
       form.setError("password", { message: t("auth.sign-in-error") });
     }
-  };
+  }, [userAccountEmail, push, form, t]);
 
   return (
     <Form {...form}>
@@ -79,3 +85,8 @@ export const UserPasswordForm = ({
     </Form>
   );
 };
+
+// Мемоизация - форма пароля пользователя в checkout
+export const UserPasswordForm = memo(UserPasswordFormComponent, (prevProps, nextProps) => {
+  return prevProps.userAccountEmail === nextProps.userAccountEmail;
+});

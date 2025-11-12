@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import {
@@ -18,6 +18,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@nimara/ui/components/navigation-menu";
 
+import { IMAGE_QUALITY } from "@/config";
 import { LocalizedLink } from "@/i18n/routing";
 import { isValidJson } from "@/lib/helpers";
 import type { Maybe } from "@/lib/types";
@@ -43,7 +44,7 @@ const splitIntoColumns = <T,>(items: T[], chunkSize: number) => {
   return result;
 };
 
-export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
+const NavigationComponent = ({ menu }: { menu: Maybe<Menu> }) => {
   const [currentMenuItem, setCurrentMenuItem] = useState("");
   const t = useTranslations("site");
   const router = useRouter();
@@ -98,15 +99,15 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
     [attemptPrefetch],
   );
 
-  useEffect(() => {
-    if (!menu?.items?.length) {
-      return;
-    }
+  const topMenuUrls = useMemo(() => {
+    return menu?.items?.slice(0, 4).map(item => item?.url).filter(Boolean) ?? [];
+  }, [menu]);
 
-    menu.items.slice(0, 4).forEach((item) => {
-      attemptPrefetch(item?.url);
+  useEffect(() => {
+    topMenuUrls.forEach((url) => {
+      attemptPrefetch(url);
     });
-  }, [attemptPrefetch, menu]);
+  }, [attemptPrefetch, topMenuUrls]);
 
   if (!menu || menu?.items?.length === 0) {
     return null;
@@ -117,7 +118,7 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
       aria-label={t("main-navigation")}
       onValueChange={setCurrentMenuItem}
       value={currentMenuItem}
-      className="mx-auto hidden max-w-screen-xl pb-2 pt-2 md:flex"
+      className="mx-auto hidden max-w-screen-xl md:flex"
     >
       <NavigationMenuList className="gap-6">
         {menu.items.map((item) => {
@@ -150,11 +151,12 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
           const horizontalGapClass = shouldWidenColumns ? "gap-x-6" : "gap-x-4";
 
           return (
-            <NavigationMenuItem key={item.id}>
+            <NavigationMenuItem key={item.id} suppressHydrationWarning>
               {!!item.children?.length ? (
                 <NavigationMenuTrigger
                   asChild
                   onClick={() => setCurrentMenuItem("")}
+                  suppressHydrationWarning
                 >
                   <LocalizedLink
                     href={item.url}
@@ -172,6 +174,7 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                 <NavigationMenuLink
                   asChild
                   className={navigationMenuTriggerStyle()}
+                  suppressHydrationWarning
                 >
                   <LocalizedLink
                     href={item.url}
@@ -246,13 +249,14 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
                           onClick={() => setCurrentMenuItem("")}
                           onPointerEnter={() => prefetchOnIntent(child.url)}
                         >
-                          <div className="relative h-1/2">
+                          <div className="relative h-1/2 p-4 bg-muted/30 dark:bg-muted/20">
                             {child.collectionImageUrl && (
                               <Image
                                 src={child.collectionImageUrl}
                                 alt={child.label}
                                 fill
-                                className="object-cover"
+                                quality={IMAGE_QUALITY.medium}
+                                className="object-contain"
                               />
                             )}
                           </div>
@@ -288,3 +292,9 @@ export const Navigation = ({ menu }: { menu: Maybe<Menu> }) => {
     </NavigationMenu>
   );
 };
+
+// Мемоизация навигации для предотвращения лишних ре-рендеров
+export const Navigation = memo(NavigationComponent, (prevProps, nextProps) => {
+  // Пересоздаем только если изменилось меню
+  return prevProps.menu?.items?.length === nextProps.menu?.items?.length;
+});

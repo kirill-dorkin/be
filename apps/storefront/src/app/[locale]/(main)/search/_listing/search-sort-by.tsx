@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { memo, useCallback, useMemo } from "react";
 
 import type { SortByOption } from "@nimara/domain/objects/Search";
 import {
@@ -17,7 +18,7 @@ import { useRouter } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import type { TranslationMessage } from "@/types";
 
-export const SearchSortBy = ({
+const SearchSortByComponent = ({
   options,
   searchParams,
 }: {
@@ -26,13 +27,19 @@ export const SearchSortBy = ({
 }) => {
   const t = useTranslations();
   const router = useRouter();
-  const defaultValue = options.find(
-    (option) =>
-      option.value === searchParams["sortBy"] ||
-      option.value === DEFAULT_SORT_BY,
-  )?.value;
 
-  const handleValueChange = (value: string) => {
+  // Мемоизация defaultValue
+  const defaultValue = useMemo(
+    () => options.find(
+      (option) =>
+        option.value === searchParams["sortBy"] ||
+        option.value === DEFAULT_SORT_BY,
+    )?.value,
+    [options, searchParams]
+  );
+
+  // Мемоизация обработчика изменения
+  const handleValueChange = useCallback((value: string) => {
     const params = new URLSearchParams(searchParams);
 
     // Clear the pagination
@@ -52,7 +59,7 @@ export const SearchSortBy = ({
       : paths.search.asPath();
 
     router.push(targetPath);
-  };
+  }, [router, searchParams]);
 
   return (
     <div className="flex items-center gap-2">
@@ -60,9 +67,9 @@ export const SearchSortBy = ({
         {t("search.sort-by")}
       </span>
 
-      <div>
+      <div suppressHydrationWarning>
         <Select defaultValue={defaultValue} onValueChange={handleValueChange}>
-          <SelectTrigger className="min-w-40" aria-label={t("search.sort-by")}>
+          <SelectTrigger className="min-w-40" aria-label={t("search.sort-by")} suppressHydrationWarning>
             <SelectValue placeholder={t("search.sort-by")} />
           </SelectTrigger>
           <SelectContent>
@@ -79,3 +86,11 @@ export const SearchSortBy = ({
     </div>
   );
 };
+
+// Мемоизация - используется на всех страницах поиска
+export const SearchSortBy = memo(SearchSortByComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.searchParams["sortBy"] === nextProps.searchParams["sortBy"] &&
+    prevProps.options.length === nextProps.options.length
+  );
+});

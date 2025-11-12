@@ -13,7 +13,8 @@ export const config = {
      * - _vercel (deployment files)
      * - monitoring (Sentry "tunnelRoute")
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     * - icon files (icon.png, icon.svg, apple-icon.png)
      */
-    "/((?!api|_next|_vercel|monitoring|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)",
+    "/((?!api|_next|_vercel|monitoring|favicon.ico|icon.png|icon.svg|apple-icon.png|sitemap.xml|robots.txt|.*\\..*).*)",
   ],
 };

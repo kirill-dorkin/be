@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { type AllCountryCode } from "@nimara/domain/consts";
@@ -65,7 +65,7 @@ interface AddressFormProps {
   schemaPrefix?: string;
 }
 
-export const AddressForm = ({
+const AddressFormComponent = ({
   countries,
   addressFormRows,
   schemaPrefix,
@@ -85,16 +85,18 @@ export const AddressForm = ({
     }
   }, [addressFormRows]);
 
-  const handleChangeCountry = (countryCode: AllCountryCode) => {
+  // Мемоизация обработчика изменения страны
+  const handleChangeCountry = useCallback((countryCode: AllCountryCode) => {
     setIsChangingCountry(true);
     onCountryChange?.(true);
     dynamicFields.forEach((fieldName) =>
       form.resetField(fieldName, { defaultValue: "", keepError: false }),
     );
     router.push(`${pathname}?country=${countryCode}`, { scroll: false });
-  };
+  }, [form, router, pathname, onCountryChange]);
 
-  const countrySelectorFormRow = [
+  // Мемоизация селектора стран
+  const countrySelectorFormRow = useMemo(() => [
     {
       name: "country",
       type: "select" as FieldType,
@@ -105,47 +107,52 @@ export const AddressForm = ({
         label: country.label ?? country.value,
       })),
     },
-  ];
+  ], [countries, handleChangeCountry]);
 
-  let postalCode: AddressFormRow;
-  let city: AddressFormRow;
-  const formattedAddressFormRows: AddressFormRow[] = [];
+  // Мемоизация отформатированных рядов формы
+  const formattedAddressFormRows = useMemo(() => {
+    let postalCode: AddressFormRow | undefined;
+    let city: AddressFormRow | undefined;
+    const result: AddressFormRow[] = [];
 
-  addressFormRows.forEach((row) => {
-    if (row[0].name === "city") {
-      city = row;
-    }
+    addressFormRows.forEach((row) => {
+      if (row[0].name === "city") {
+        city = row;
+      }
 
-    if (row[0].name === "postalCode") {
-      postalCode = row;
-    }
-  });
+      if (row[0].name === "postalCode") {
+        postalCode = row;
+      }
+    });
 
-  addressFormRows.forEach((row) => {
-    if (!["postalCode", "city"].includes(row[0].name)) {
-      return formattedAddressFormRows.push(row);
-    }
+    addressFormRows.forEach((row) => {
+      if (!["postalCode", "city"].includes(row[0].name)) {
+        return result.push(row);
+      }
 
-    const isPostalRowHandled = formattedAddressFormRows.some((r) =>
-      ["postalCode", "city"].includes(r[0].name),
-    );
+      const isPostalRowHandled = result.some((r) =>
+        ["postalCode", "city"].includes(r[0].name),
+      );
 
-    if (isPostalRowHandled) {
-      return;
-    }
+      if (isPostalRowHandled) {
+        return;
+      }
 
-    if (city && postalCode) {
-      return formattedAddressFormRows.push([...postalCode, ...city]);
-    }
+      if (city && postalCode) {
+        return result.push([...postalCode, ...city]);
+      }
 
-    if (!city && postalCode) {
-      return formattedAddressFormRows.push(postalCode);
-    }
+      if (!city && postalCode) {
+        return result.push(postalCode);
+      }
 
-    if (city && !postalCode) {
-      return formattedAddressFormRows.push(city);
-    }
-  });
+      if (city && !postalCode) {
+        return result.push(city);
+      }
+    });
+
+    return result;
+  }, [addressFormRows]);
 
   return (
     <>
@@ -171,3 +178,13 @@ export const AddressForm = ({
     </>
   );
 };
+
+// Мемоизация - форма адреса
+export const AddressForm = memo(AddressFormComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.addressFormRows === nextProps.addressFormRows &&
+    prevProps.countries.length === nextProps.countries.length &&
+    prevProps.isDisabled === nextProps.isDisabled &&
+    prevProps.schemaPrefix === nextProps.schemaPrefix
+  );
+});

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -18,7 +18,7 @@ import { clientEnvs } from "@/envs/client";
 import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 
-export function AccountDeletedModal({ open }: { open: boolean }) {
+const AccountDeletedModalComponent = ({ open }: { open: boolean }) => {
   const [isOpen, setIsOpen] = useState(open);
   const t = useTranslations();
 
@@ -63,4 +63,9 @@ export function AccountDeletedModal({ open }: { open: boolean }) {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+// Мемоизация - модальное окно удаления аккаунта
+export const AccountDeletedModal = memo(AccountDeletedModalComponent, (prevProps, nextProps) => {
+  return prevProps.open === nextProps.open;
+});

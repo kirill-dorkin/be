@@ -2,7 +2,7 @@
 
 import { User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import type { User } from "@nimara/domain/objects/User";
@@ -58,9 +58,14 @@ export const MobileSideMenu = ({
 
   const pathname = usePathname();
   const t = useTranslations();
-  const menuLabel = isOpen
-    ? t("navigation.close-menu", { defaultMessage: "Close menu" })
-    : t("navigation.open-menu", { defaultMessage: "Open menu" });
+
+  // Мемоизация menu label
+  const menuLabel = useMemo(
+    () => isOpen
+      ? t("navigation.close-menu", { defaultMessage: "Close menu" })
+      : t("navigation.open-menu", { defaultMessage: "Open menu" }),
+    [isOpen, t]
+  );
 
   useEffect(() => {
     const update = () => {
@@ -87,9 +92,17 @@ export const MobileSideMenu = ({
     };
   }, [isOpen]);
 
-  const handleMenuItemClick = (isMenuItemClicked: boolean) => {
+  const handleMenuItemClick = useCallback((isMenuItemClicked: boolean) => {
     setIsOpen(!isMenuItemClicked);
-  };
+  }, []);
+
+  const toggleMenu = useCallback(() => {
+    setIsOpen(prev => !prev);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
   useEffect(() => setIsOpen(false), [pathname]);
 
@@ -105,9 +118,19 @@ export const MobileSideMenu = ({
     [isOpen],
   );
 
-  const panelStyle = headerHeight
-    ? { top: headerHeight, height: `calc(100vh - ${headerHeight}px)` }
-    : { top: 64, height: "calc(100vh - 64px)" };
+  // Мемоизация panel style
+  const panelStyle = useMemo(
+    () => headerHeight
+      ? { top: headerHeight, height: `calc(100vh - ${headerHeight}px)` }
+      : { top: 64, height: "calc(100vh - 64px)" },
+    [headerHeight]
+  );
+
+  // Мемоизация overlay style
+  const overlayStyle = useMemo(
+    () => headerHeight ? { top: headerHeight, bottom: 0 } : { top: 64, bottom: 0 },
+    [headerHeight]
+  );
 
   return (
     <>
@@ -115,7 +138,7 @@ export const MobileSideMenu = ({
         variant="ghost"
         size="icon"
         className="gap-1 transition-transform duration-300"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={toggleMenu}
         title={menuLabel}
         aria-label={menuLabel}
         aria-expanded={isOpen}
@@ -126,8 +149,8 @@ export const MobileSideMenu = ({
 
       <div
         className={overlayClasses}
-        style={headerHeight ? { top: headerHeight, bottom: 0 } : { top: 64, bottom: 0 }}
-        onClick={() => setIsOpen(false)}
+        style={overlayStyle}
+        onClick={closeMenu}
       />
 
       <aside

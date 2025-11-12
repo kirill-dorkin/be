@@ -35,17 +35,25 @@
     "prepare": "husky",
     "format": "pnpm prettier --write '**/*.{js,ts,tsx,json,md}'",
     "format:check": "pnpm prettier --check '**/*.{js,ts,tsx,json,md}'",
-    "prices:markup": "node scripts/markup_all_prices.js"
+    "prices:markup": "node scripts/markup_all_prices.js",
+    "chrome:debug": "sh scripts/start_chrome_debug.sh",
+    "images:add": "caffeinate -d dotenv -- node scripts/add_product_images.js",
+    "images:check": "dotenv -- node scripts/check_product_images.js",
+    "images:how": "node scripts/test_upload_mechanism.js",
+    "images:remove-auto": "dotenv -- node scripts/remove_auto_images.js"
   },
   "devDependencies": {
+    "axios": "1.13.2",
     "commitizen": "4.3.1",
     "dotenv-cli": "8.0.0",
     "eslint": "^8.57.0",
     "eslint-config-custom": "workspace:*",
+    "form-data": "4.0.4",
     "husky": "9.1.7",
     "lint-staged": "^16.1.5",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "puppeteer": "24.29.1",
     "turbo": "2.5.6"
   },
   "resolutions": {

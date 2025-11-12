@@ -7,6 +7,7 @@ import {
   type KeyboardEventHandler,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useClickAnyWhere } from "usehooks-ts";
@@ -66,13 +67,21 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     setSearchState,
   ] = useState<SearchState>(initialSearchState);
 
-  const isLoading = status === "LOADING";
-  const isIdle = status === "IDLE";
-  const isNoOptionHighlighted = highlightedOptionIndex === -1;
-  const isLastOptionHighlighted = highlightedOptionIndex === options.length;
-  const hasQuery = inputValue.trim().length > 0;
-  const isNoResultsState =
-    isIdle && showOptions && !options.length && hasQuery;
+  // Мемоизация вычисляемых значений для производительности
+  const computedValues = useMemo(() => ({
+    isLoading: status === "LOADING",
+    isIdle: status === "IDLE",
+    isNoOptionHighlighted: highlightedOptionIndex === -1,
+    isLastOptionHighlighted: highlightedOptionIndex === options.length,
+    hasQuery: inputValue.trim().length > 0,
+  }), [status, highlightedOptionIndex, options.length, inputValue]);
+
+  const { isLoading, isIdle, isNoOptionHighlighted, isLastOptionHighlighted, hasQuery } = computedValues;
+
+  const isNoResultsState = useMemo(
+    () => isIdle && showOptions && !options.length && hasQuery,
+    [isIdle, showOptions, options.length, hasQuery]
+  );
 
   const debouncedInputValue = useDebounce(
     inputValue,
@@ -84,7 +93,7 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     [],
   );
 
-  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback((event) => {
     if (event.code === keyboardCodes.Enter) {
       event.preventDefault();
       resetSearchState();
@@ -131,9 +140,9 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
         highlightedOptionIndex: nextIndex,
       }));
     }
-  };
+  }, [inputValue, isNoOptionHighlighted, isLastOptionHighlighted, highlightedOptionIndex, options, onSubmit, resetSearchState, router]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (isNoOptionHighlighted || isLastOptionHighlighted) {
@@ -144,7 +153,11 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       onSubmit();
     }
     resetSearchState();
-  };
+  }, [inputValue, isNoOptionHighlighted, isLastOptionHighlighted, onSubmit, resetSearchState, router]);
+
+  const handleClear = useCallback(() => {
+    resetSearchState();
+  }, [resetSearchState]);
 
   useClickAnyWhere(() =>
     setSearchState((prevState) => ({ ...prevState, showOptions: false })),
@@ -176,13 +189,9 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
 
   useEffect(() => {
     resetSearchState();
-  }, [pathname]);
+  }, [pathname, resetSearchState]);
 
-  const handleClear = () => {
-    resetSearchState();
-  };
-
-  const renderAdornmentContent = () => {
+  const renderAdornmentContent = useCallback(() => {
     if (isLoading) {
       return <Spinner size={16} />;
     }
@@ -192,13 +201,13 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     }
 
     return <Search aria-hidden={true} height={16} />;
-  };
+  }, [isLoading, isNoResultsState]);
 
-  const adornmentAria = isLoading
+  const adornmentAria = useMemo(() => isLoading
     ? ts("loading-text")
     : isNoResultsState
       ? ts("clear-search")
-      : tc("submit");
+      : tc("submit"), [isLoading, isNoResultsState, ts, tc]);
 
   return (
     <form

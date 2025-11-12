@@ -72,7 +72,7 @@ export const Footer = async () => {
   const productMenuItems = resultCategories.data?.menu?.items ?? [];
 
   return (
-    <footer className="bg-muted text-slate-700 dark:text-primary mt-8 text-sm dark:bg-stone-900">
+    <footer className="bg-muted text-slate-700 dark:text-primary text-sm dark:bg-stone-900 mt-8 md:mt-12">
       <div className="container">
         <div className="flex flex-wrap justify-between gap-8 py-8">
           <div className="grid w-full grid-cols-2 grid-rows-[max-content,max-content] place-items-start justify-start gap-6 md:grid-cols-3">

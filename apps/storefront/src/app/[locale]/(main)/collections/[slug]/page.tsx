@@ -6,7 +6,7 @@ import { RichText } from "@nimara/ui/components/rich-text/rich-text";
 import { editorJSDataToString } from "@nimara/ui/lib/richText";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { CACHE_TTL, DEFAULT_RESULTS_PER_PAGE } from "@/config";
+import { CACHE_TTL, DEFAULT_RESULTS_PER_PAGE, IMAGE_QUALITY } from "@/config";
 import { clientEnvs } from "@/envs/client";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
@@ -128,14 +128,15 @@ export default async function Page(props: PageProps) {
           {collection?.name}
         </h1>
       </div>
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-2xl">
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-2xl rounded-2xl border border-border/60 bg-muted/30 p-6 dark:border-white/10 dark:bg-muted/20">
         {collection?.thumbnail ? (
           <Image
             src={collection.thumbnail.url}
             alt={collection.thumbnail.alt || collection.name}
             fill
+            quality={IMAGE_QUALITY.high}
             sizes="(max-width: 960px) 100vw, 50vw"
-            className="object-cover"
+            className="object-contain"
           />
         ) : null}
       </div>

@@ -44,6 +44,7 @@ export const useVariantSelection = ({
     ),
     {
       history: "replace",
+      shallow: false,
     },
   );
 

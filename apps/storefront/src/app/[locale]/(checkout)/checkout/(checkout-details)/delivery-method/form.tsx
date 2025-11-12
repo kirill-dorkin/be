@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { Fragment } from "react";
+import { Fragment, memo, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import type { Checkout } from "@nimara/domain/objects/Checkout";
@@ -20,7 +20,7 @@ import { type FormSchema, formSchema } from "./schema";
 
 const DELIVERY_METHOD_ID = "deliveryMethodId";
 
-export const DeliveryMethodForm = ({ checkout }: { checkout: Checkout }) => {
+const DeliveryMethodFormComponent = ({ checkout }: { checkout: Checkout }) => {
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
   const { isRedirecting, push } = useRouterWithState();
@@ -33,9 +33,14 @@ export const DeliveryMethodForm = ({ checkout }: { checkout: Checkout }) => {
     },
   });
 
-  const isDisabled = isRedirecting || form.formState?.isSubmitting;
+  // Мемоизация флага disabled
+  const isDisabled = useMemo(
+    () => isRedirecting || form.formState?.isSubmitting,
+    [isRedirecting, form.formState?.isSubmitting]
+  );
 
-  const handleSubmit = async (deliveryMethod: FormSchema) => {
+  // Мемоизация обработчика submit
+  const handleSubmit = useCallback(async (deliveryMethod: FormSchema) => {
     const result = await updateDeliveryMethod({
       checkout,
       deliveryMethodId: deliveryMethod.deliveryMethodId,
@@ -58,9 +63,10 @@ export const DeliveryMethodForm = ({ checkout }: { checkout: Checkout }) => {
         });
       }
     });
-  };
+  }, [checkout, push, form, t]);
 
-  const deliveryMethodFormField = {
+  // Мемоизация поля формы
+  const deliveryMethodFormField = useMemo(() => ({
     label: t("delivery-method.delivery-method"),
     name: DELIVERY_METHOD_ID,
     isSrOnlyLabel: true,
@@ -75,8 +81,13 @@ export const DeliveryMethodForm = ({ checkout }: { checkout: Checkout }) => {
         description: shippingMethodPrice,
       };
     }),
-  };
-  const serverErrorCode = form.formState.errors.root?.serverError?.message;
+  }), [checkout.shippingMethods, formatter, t]);
+
+  // Мемоизация кода ошибки сервера
+  const serverErrorCode = useMemo(
+    () => form.formState.errors.root?.serverError?.message,
+    [form.formState.errors.root?.serverError?.message]
+  );
 
   return (
     <section className="space-y-4 pt-4">
@@ -126,3 +137,8 @@ export const DeliveryMethodForm = ({ checkout }: { checkout: Checkout }) => {
     </section>
   );
 };
+
+// Мемоизация - форма выбора метода доставки
+export const DeliveryMethodForm = memo(DeliveryMethodFormComponent, (prevProps, nextProps) => {
+  return prevProps.checkout.id === nextProps.checkout.id;
+});

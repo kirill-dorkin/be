@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { memo, useCallback, useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
 import type { FieldType } from "@nimara/domain/objects/AddressForm";
@@ -16,7 +17,7 @@ import type { TranslationMessage } from "@/types";
 import { checkIfUserHasAnAccount, updateUserDetails } from "./actions";
 import { type EmailFormSchema } from "./schema";
 
-export const UserEmailForm = ({
+const UserEmailFormComponent = ({
   checkout,
   form,
   setUserAccountEmail,
@@ -28,9 +29,14 @@ export const UserEmailForm = ({
   const t = useTranslations();
   const { isRedirecting, push } = useRouterWithState();
 
-  const isDisabled = isRedirecting || form.formState?.isSubmitting;
+  // Мемоизация флага disabled
+  const isDisabled = useMemo(
+    () => isRedirecting || form.formState?.isSubmitting,
+    [isRedirecting, form.formState?.isSubmitting]
+  );
 
-  const handleSubmit = async ({ email }: EmailFormSchema) => {
+  // Мемоизация обработчика submit
+  const handleSubmit = useCallback(async ({ email }: EmailFormSchema) => {
     const checkResult = await checkIfUserHasAnAccount(email);
 
     if (checkResult.ok && checkResult.data.user) {
@@ -61,9 +67,13 @@ export const UserEmailForm = ({
         });
       }
     });
-  };
+  }, [checkout, setUserAccountEmail, push, form, t]);
 
-  const serverErrorCode = form.formState.errors.root?.message;
+  // Мемоизация кода ошибки сервера
+  const serverErrorCode = useMemo(
+    () => form.formState.errors.root?.message,
+    [form.formState.errors.root?.message]
+  );
 
   return (
     <Form {...form}>
@@ -103,3 +113,8 @@ export const UserEmailForm = ({
     </Form>
   );
 };
+
+// Мемоизация - форма email пользователя в checkout
+export const UserEmailForm = memo(UserEmailFormComponent, (prevProps, nextProps) => {
+  return prevProps.checkout.id === nextProps.checkout.id;
+});

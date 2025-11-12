@@ -453,10 +453,13 @@ async function SearchContent({
 
   return (
     <div className="w-full">
-      <Breadcrumbs pageName={header} />
-      <section className="mx-auto my-8 grid gap-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-slate-700 dark:text-primary text-2xl">
+      <div
+        className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
+        style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
+      >
+        <Breadcrumbs pageName={header} />
+        <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
+          <h2 className="text-foreground text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
             {header}
           </h2>
           <div className="flex gap-4">
@@ -472,7 +475,9 @@ async function SearchContent({
             </Suspense>
           </div>
         </div>
+      </div>
 
+      <section className="mx-auto mt-8 grid gap-8">
         {viewModel.products.length ? (
           <ProductsList products={viewModel.products} />
         ) : (
@@ -506,7 +511,7 @@ function SearchPageSkeleton({
     <div className="w-full">
       <div className="mb-6 h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
       <section className="mx-auto my-8 grid gap-8">
-        <div className="flex items-center justify-between">
+        <div className="bg-background/95 sticky top-[120px] z-40 flex items-center justify-between backdrop-blur supports-[backdrop-filter]:bg-background/60 md:top-[96px]">
           <h2 className="h-8 w-64 animate-pulse rounded bg-neutral-200 dark:bg-white/10">
             <span className="sr-only">{placeholderTitle}</span>
           </h2>

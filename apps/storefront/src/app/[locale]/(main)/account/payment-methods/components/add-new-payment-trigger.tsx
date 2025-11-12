@@ -3,7 +3,7 @@
 import { PlusIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Spinner } from "@nimara/ui/components/spinner";
@@ -23,7 +23,7 @@ const PaymentMethodAddModal = dynamic(
   },
 );
 
-export const AddNewPaymentTrigger = ({
+const AddNewPaymentTriggerComponent = ({
   variant,
   customerId,
   storeUrl,
@@ -35,7 +35,8 @@ export const AddNewPaymentTrigger = ({
   const t = useTranslations();
   const [secret, setSecret] = useState<string | null>(null);
 
-  const handleGenerateSecret = async () => {
+  // Мемоизация обработчика генерации secret
+  const handleGenerateSecret = useCallback(async () => {
     const resultGenerateSecret = await generateSecretAction({ customerId });
 
     if (!resultGenerateSecret.ok) {
@@ -47,9 +48,10 @@ export const AddNewPaymentTrigger = ({
     }
 
     setSecret(resultGenerateSecret.data.secret);
-  };
+  }, [customerId]);
 
-  const handleClose = () => setSecret(null);
+  // Мемоизация обработчика закрытия
+  const handleClose = useCallback(() => setSecret(null), []);
 
   return (
     <>
@@ -80,3 +82,12 @@ export const AddNewPaymentTrigger = ({
     </>
   );
 };
+
+// Мемоизация - триггер добавления метода оплаты
+export const AddNewPaymentTrigger = memo(AddNewPaymentTriggerComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.customerId === nextProps.customerId &&
+    prevProps.variant === nextProps.variant &&
+    prevProps.storeUrl === nextProps.storeUrl
+  );
+});

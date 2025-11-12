@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -29,7 +29,7 @@ const formSchema = ({ t }: { t: GetTranslations }) =>
 
 type FormSchema = z.infer<ReturnType<typeof formSchema>>;
 
-export function ResetPasswordForm() {
+const ResetPasswordFormComponent = () => {
   const t = useTranslations();
   const [isSuccess, setIsSuccess] = useState(false);
   const region = useCurrentRegion();
@@ -41,14 +41,15 @@ export function ResetPasswordForm() {
     },
   });
 
-  async function handleSubmit({ email }: FormSchema) {
+  // Мемоизация обработчика submit
+  const handleSubmit = useCallback(async ({ email }: FormSchema) => {
     setIsSuccess(true);
 
     await requestPasswordResetAction({
       channel: region.market.channel,
       email,
     });
-  }
+  }, [region.market.channel]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -109,4 +110,7 @@ export function ResetPasswordForm() {
       )}
     </div>
   );
-}
+};
+
+// Мемоизация - форма сброса пароля
+export const ResetPasswordForm = memo(ResetPasswordFormComponent);

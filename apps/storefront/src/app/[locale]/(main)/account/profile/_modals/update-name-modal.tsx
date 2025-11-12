@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import { type User } from "@nimara/domain/objects/User";
 import { Button } from "@nimara/ui/components/button";
@@ -15,9 +15,12 @@ import {
 
 import { UpdateNameForm } from "../_forms/update-name-form";
 
-export function UpdateNameModal({ user }: { user: User | null }) {
+const UpdateNameModalComponent = ({ user }: { user: User | null }) => {
   const [open, setOpen] = useState(false);
   const t = useTranslations();
+
+  // Мемоизация обработчика закрытия
+  const handleClose = useCallback(() => setOpen(false), []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -33,8 +36,13 @@ export function UpdateNameModal({ user }: { user: User | null }) {
         <DialogHeader>
           <DialogTitle>{t("account.change-your-name")}</DialogTitle>
         </DialogHeader>
-        <UpdateNameForm user={user} onModalClose={() => setOpen(false)} />
+        <UpdateNameForm user={user} onModalClose={handleClose} />
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+// Мемоизация - модальное окно обновления имени
+export const UpdateNameModal = memo(UpdateNameModalComponent, (prevProps, nextProps) => {
+  return prevProps.user?.id === nextProps.user?.id;
+});

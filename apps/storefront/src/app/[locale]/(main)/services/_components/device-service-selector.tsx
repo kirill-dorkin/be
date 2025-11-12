@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { cn } from "@nimara/ui/lib/utils";
@@ -49,7 +49,7 @@ const toggleItem = <T,>(items: T[], item: T, predicate: (a: T) => boolean) => {
   return [...items, item];
 };
 
-export const DeviceServiceSelector = ({
+const DeviceServiceSelectorComponent = ({
   deviceOptions,
   servicesByDevice,
   value,
@@ -69,7 +69,8 @@ export const DeviceServiceSelector = ({
     return map;
   }, [selections]);
 
-  const handleDeviceToggle = (deviceType: RepairDeviceType) => {
+  // Мемоизация обработчика переключения устройства
+  const handleDeviceToggle = useCallback((deviceType: RepairDeviceType) => {
     const existing = selectionMap.get(deviceType);
 
     if (existing) {
@@ -79,9 +80,10 @@ export const DeviceServiceSelector = ({
     }
 
     onChange([...selections, { deviceType, serviceSlugs: [] }]);
-  };
+  }, [selectionMap, selections, onChange]);
 
-  const handleServiceToggle = (
+  // Мемоизация обработчика переключения услуги
+  const handleServiceToggle = useCallback((
     deviceType: RepairDeviceType,
     serviceSlug: string,
   ) => {
@@ -104,7 +106,7 @@ export const DeviceServiceSelector = ({
     );
 
     onChange(nextSelections);
-  };
+  }, [selectionMap, selections, onChange]);
 
   const selectedDevices = new Set(
     selections.map((selection) => selection.deviceType),
@@ -228,3 +230,13 @@ export const DeviceServiceSelector = ({
     </div>
   );
 };
+
+// Мемоизация - селектор устройств и услуг для калькулятора ремонта
+export const DeviceServiceSelector = memo(DeviceServiceSelectorComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.value === nextProps.value &&
+    prevProps.error === nextProps.error &&
+    prevProps.deviceOptions.length === nextProps.deviceOptions.length &&
+    prevProps.servicesByDevice.size === nextProps.servicesByDevice.size
+  );
+});

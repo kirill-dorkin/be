@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Children, type ReactNode } from "react";
+import { Children, memo, type ReactNode,useCallback } from "react";
 
 import {
   FormControl,
@@ -28,7 +28,7 @@ export interface RadioFormGroupProps {
   placeholder?: string;
 }
 
-export const RadioFormGroup = ({
+const RadioFormGroupComponent = ({
   className,
   isSrOnlyLabel = false,
   isRequired = false,
@@ -40,9 +40,14 @@ export const RadioFormGroup = ({
   label,
 }: RadioFormGroupProps) => {
   const t = useTranslations();
-
   const { control } = useFormContext();
   const { error } = control.getFieldState(name);
+
+  // Мемоизация обработчика изменения
+  const handleValueChange = useCallback((value: string, fieldOnChange: (...event: any[]) => void) => {
+    fieldOnChange(value);
+    onChange?.(value);
+  }, [onChange]);
 
   return (
     <FormField
@@ -60,10 +65,7 @@ export const RadioFormGroup = ({
           <FormControl>
             <RadioGroup
               disabled={isDisabled}
-              onValueChange={(value) => {
-                field.onChange(value);
-                onChange?.(value);
-              }}
+              onValueChange={(value) => handleValueChange(value, field.onChange)}
               defaultValue={
                 typeof field.value === "object"
                   ? JSON.stringify(field.value)
@@ -112,3 +114,16 @@ export const RadioFormGroup = ({
     />
   );
 };
+
+// Мемоизация - используется для выбора способа оплаты, доставки
+export const RadioFormGroup = memo(RadioFormGroupComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.name === nextProps.name &&
+    prevProps.label === nextProps.label &&
+    prevProps.isRequired === nextProps.isRequired &&
+    prevProps.isDisabled === nextProps.isDisabled &&
+    prevProps.isSrOnlyLabel === nextProps.isSrOnlyLabel &&
+    prevProps.options.length === nextProps.options.length &&
+    prevProps.className === nextProps.className
+  );
+});

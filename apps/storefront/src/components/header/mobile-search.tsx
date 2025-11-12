@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -15,15 +15,20 @@ import {
 import { SearchForm } from "@/components/header/search-form";
 import { usePathname } from "@/i18n/routing";
 
-export const MobileSearch = () => {
+const MobileSearchComponent = () => {
   const t = useTranslations("search");
-
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleCloseSheet = () => {
+  // Мемоизация обработчика закрытия
+  const handleCloseSheet = useCallback(() => {
     setIsOpen(false);
-  };
+  }, []);
+
+  // Мемоизация обработчика открытия
+  const handleOpenSheet = useCallback(() => {
+    setIsOpen(true);
+  }, []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -36,7 +41,7 @@ export const MobileSearch = () => {
         size="icon"
         className="gap-1 md:hidden"
         aria-label={t("open-search")}
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenSheet}
       >
         <Search className="h-4 w-4" />
       </Button>
@@ -57,3 +62,6 @@ export const MobileSearch = () => {
     </>
   );
 };
+
+// Мемоизация - используется в mobile header
+export const MobileSearch = memo(MobileSearchComponent);

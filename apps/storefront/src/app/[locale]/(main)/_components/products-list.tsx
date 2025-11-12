@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 
 import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
@@ -11,7 +11,7 @@ type Props = {
   products: SearchProduct[];
 };
 
-const BATCH_SIZE = 12;
+const BATCH_SIZE = 16;
 
 export const ProductsList = ({ products }: Props) => {
   const [visibleCount, setVisibleCount] = useState(() =>
@@ -47,8 +47,8 @@ export const ProductsList = ({ products }: Props) => {
   return (
     <>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-        {visibleProducts.map((product, index) => (
-          <SearchProductCard key={`${product.id}-${index}`} product={product} />
+        {visibleProducts.map((product) => (
+          <MemoizedProductCard key={product.id} product={product} />
         ))}
       </div>
       {visibleCount < products.length ? (
@@ -61,3 +61,8 @@ export const ProductsList = ({ products }: Props) => {
     </>
   );
 };
+
+const MemoizedProductCard = memo(SearchProductCard, (prev, next) => {
+  return prev.product.id === next.product.id &&
+         prev.product.price.amount === next.product.price.amount;
+});

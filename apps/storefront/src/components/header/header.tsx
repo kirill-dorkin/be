@@ -74,7 +74,7 @@ export const Header = async () => {
   return (
     <header
       id="site-header"
-      className="sticky top-0 z-[70] bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
+      className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
     >
       <div className="container">
         <div className="grid w-full grid-flow-col grid-cols-[repeat(3,1fr)] justify-between gap-4">

@@ -1,5 +1,7 @@
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
+import { formatProductName } from "@/lib/format-product-name";
+
 type ProductTitleProps = {
   className?: string;
   title: string;
@@ -8,9 +10,14 @@ type ProductTitleProps = {
 export const ProductTitle = ({ title, className }: ProductTitleProps) => {
   return (
     <h1
-      className={`text-slate-700 dark:text-primary text-center text-3xl md:text-left ${className}`}
+      className={`text-foreground text-left text-2xl font-semibold leading-tight tracking-tight break-words max-w-full md:text-4xl md:leading-tight ${className}`}
+      style={{
+        wordBreak: "break-word",
+        overflowWrap: "break-word",
+        hyphens: "auto"
+      }}
     >
-      {title}
+      {formatProductName(title)}
     </h1>
   );
 };

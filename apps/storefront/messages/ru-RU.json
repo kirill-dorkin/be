@@ -605,7 +605,7 @@
     "open-search": "Открыть поиск",
     "search-label": "Поиск",
     "search-preview": "Предпросмотр поиска",
-    "all-products": "Лучшие товары BestElectronics",
+    "all-products": "Лучшие товары",
     "description": "Находите товары быстрее в BestElectronics — headless-магазине на базе Saleor с умным поиском и фильтрами.",
     "clear-search": "Очистить поиск"
   },
@@ -705,7 +705,8 @@
     "media-placeholder-title": "Фото скоро добавим",
     "media-placeholder-description": "Мы ещё готовим официальные изображения для {productName}.",
     "media-placeholder-hint": "Пока воспользуйтесь кнопкой «Найти фото в интернете» выше.",
-    "grid-placeholder-subtitle": "Откройте карточку товара, чтобы найти подходящие фото в интернете."
+    "grid-placeholder-subtitle": "Откройте карточку товара, чтобы найти подходящие фото в интернете.",
+    "auto-image-label": "Фото из интернета"
   },
   "collections": {
     "associated-products": "Связанные товары",

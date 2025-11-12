@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 
 import { useRouter } from "@/i18n/routing";
 import { paths, QUERY_PARAMS } from "@/lib/paths";
 
 import { clearCheckoutCookieAction } from "../actions";
 
-export const CheckoutRemover = ({
+const CheckoutRemoverComponent = ({
   params,
   searchParams,
 }: {
@@ -32,3 +32,6 @@ export const CheckoutRemover = ({
 
   return null;
 };
+
+// Мемоизация - checkout remover
+export const CheckoutRemover = memo(CheckoutRemoverComponent);

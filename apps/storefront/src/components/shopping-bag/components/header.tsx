@@ -1,13 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { memo, useMemo } from "react";
 
 import { type Price } from "@nimara/domain/objects/common";
 
 import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter";
 import { cn } from "@/lib/utils";
 
-export const Header = ({
+const HeaderComponent = ({
   header,
   totalPrice,
 }: {
@@ -18,6 +19,12 @@ export const Header = ({
   const formatter = useLocalizedFormatter();
 
   const headerTextClass = "text-2xl text-slate-700 dark:text-primary";
+
+  // Мемоизация форматированной цены
+  const formattedPrice = useMemo(
+    () => totalPrice ? formatter.price({ amount: totalPrice.amount }) : null,
+    [totalPrice, formatter]
+  );
 
   return (
     <div
@@ -31,9 +38,17 @@ export const Header = ({
       )}
       {totalPrice && (
         <p className={headerTextClass}>
-          {formatter.price({ amount: totalPrice.amount })}
+          {formattedPrice}
         </p>
       )}
     </div>
   );
 };
+
+// Мемоизация - используется в корзине и чекауте
+export const Header = memo(HeaderComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.header === nextProps.header &&
+    prevProps.totalPrice?.amount === nextProps.totalPrice?.amount
+  );
+});

@@ -2,27 +2,36 @@
 
 import { ExternalLink } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { memo, useMemo } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
 type ProductExternalSearchProps = {
+  hasImages?: boolean;
   productName: string;
 };
 
-export const ProductExternalSearch = ({
+const ProductExternalSearchComponent = ({
   productName,
+  hasImages = false,
 }: ProductExternalSearchProps) => {
   const t = useTranslations("products");
   const locale = useLocale();
 
-  if (!productName) {
+  // Мемоизация query и searchUrl
+  const query = useMemo(
+    () => `${productName} ${t("search-online-query-suffix")}`.trim(),
+    [productName, t]
+  );
+  const searchUrl = useMemo(
+    () => `https://www.google.com/search?tbm=isch&hl=${encodeURIComponent(locale)}&q=${encodeURIComponent(query)}`,
+    [locale, query]
+  );
+
+  // Не показываем кнопку если у товара есть изображения
+  if (!productName || hasImages) {
     return null;
   }
-
-  const query = `${productName} ${t("search-online-query-suffix")}`.trim();
-  const searchUrl = `https://www.google.com/search?tbm=isch&hl=${encodeURIComponent(
-    locale,
-  )}&q=${encodeURIComponent(query)}`;
 
   return (
     <div className="mt-4 flex flex-col items-start gap-1">
@@ -43,3 +52,11 @@ export const ProductExternalSearch = ({
     </div>
   );
 };
+
+// Мемоизация - кнопка внешнего поиска товара
+export const ProductExternalSearch = memo(ProductExternalSearchComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.productName === nextProps.productName &&
+    prevProps.hasImages === nextProps.hasImages
+  );
+});

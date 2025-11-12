@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { memo, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -16,7 +17,7 @@ import { paths } from "@/lib/paths";
 import { registerAccount } from "./actions";
 import { type FormSchema, formSchema } from "./schema";
 
-export function SignUpForm() {
+const SignUpFormComponent = () => {
   const t = useTranslations();
 
   const { isRedirecting, push } = useRouterWithState();
@@ -32,9 +33,14 @@ export function SignUpForm() {
     },
   });
 
-  const isDisabled = isRedirecting || form.formState?.isSubmitting;
+  // Мемоизация isDisabled
+  const isDisabled = useMemo(
+    () => isRedirecting || form.formState?.isSubmitting,
+    [isRedirecting, form.formState?.isSubmitting]
+  );
 
-  async function handleSubmit(values: FormSchema) {
+  // Мемоизация обработчика submit
+  const handleSubmit = useCallback(async (values: FormSchema) => {
     const result = await registerAccount(values);
 
     if (result.ok) {
@@ -56,7 +62,7 @@ export function SignUpForm() {
     });
 
     return;
-  }
+  }, [push, form, t]);
 
   return (
     <Form {...form}>
@@ -141,4 +147,7 @@ export function SignUpForm() {
       </form>
     </Form>
   );
-}
+};
+
+// Мемоизация - форма регистрации
+export const SignUpForm = memo(SignUpFormComponent);

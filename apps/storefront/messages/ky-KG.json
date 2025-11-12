@@ -610,7 +610,7 @@
     "open-search": "Издөөнү ачуу",
     "search-label": "Издөө",
     "search-preview": "Издөөнүн алдын ала көрүнүшү",
-    "all-products": "BestElectronics эң мыкты товарлары",
+    "all-products": "Эң мыкты товарлар",
     "description": "Saleor негизиндеги BestElectronics витринасында акылдуу издөө жана фильтрлер менен товарларды тез табınız.",
     "clear-search": "Издөөнү тазалоо"
   },
@@ -710,7 +710,8 @@
     "media-placeholder-title": "Сүрөт жакында кошулат",
     "media-placeholder-description": "Биз азыр {productName} үчүн расмий сүрөттөрдү даярдап жатабыз.",
     "media-placeholder-hint": "Учурда жогорудагы «Интернеттен сүрөт издөө» баскычын колдонуп, тышкы сүрөттөрдү карап чыгыңыз.",
-    "grid-placeholder-subtitle": "Товар картасын ачып, интернеттен сүрөттөрдү караңыз."
+    "grid-placeholder-subtitle": "Товар картасын ачып, интернеттен сүрөттөрдү караңыз.",
+    "auto-image-label": "Интернеттен сүрөт"
   },
   "collections": {
     "associated-products": "Байланышкан товарлар",

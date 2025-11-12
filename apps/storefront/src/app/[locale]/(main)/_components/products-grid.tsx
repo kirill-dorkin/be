@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
@@ -117,7 +117,7 @@ export const ProductsGrid = async ({
             }}
           >
             <h2
-              className="text-2xl font-semibold hyphens-auto break-words opacity-100"
+              className="text-2xl font-semibold leading-tight tracking-tight hyphens-auto break-words opacity-100"
               style={{
                 color: `${headerFontColor ?? "#1c1917"}`,
               }}
@@ -142,7 +142,7 @@ export const ProductsGrid = async ({
                 href={paths.search.asPath()}
                 aria-label={t("search.all-products-link")}
               >
-                <ArrowRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4" />
               </LocalizedLink>
             </Button>
           </div>
@@ -170,11 +170,11 @@ export const ProductsGrid = async ({
             </CarouselContent>
           </Carousel>
         </div>
-        <div className="mb-14 flex justify-center">
+        <div className="mb-0 flex justify-center pb-8">
           <Button variant="outline" asChild>
             <LocalizedLink href={paths.search.asPath()}>
               {buttonText}
-              <ArrowRight className="h-4 w-5 pl-1" />
+              <ChevronRight className="h-4 w-5 pl-1" />
             </LocalizedLink>
           </Button>
         </div>

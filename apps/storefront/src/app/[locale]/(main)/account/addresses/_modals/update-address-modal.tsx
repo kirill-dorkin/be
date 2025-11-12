@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { type ReactNode, useState } from "react";
+import { memo, type ReactNode, useCallback, useMemo, useState } from "react";
 
 import {
   type Address,
@@ -33,11 +33,11 @@ interface AddNewAddressModalProps {
   countries: CountryOption[];
 }
 
-export function EditAddressModal({
+const EditAddressModalComponent = ({
   address,
   addressFormRows,
   countries,
-}: AddNewAddressModalProps) {
+}: AddNewAddressModalProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -47,11 +47,12 @@ export function EditAddressModal({
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [mode, setMode] = useState<"UPDATE" | "DELETE">("UPDATE");
-  let content: ReactNode;
 
-  params.set("country", address.country);
+  // Мемоизация params
+  useMemo(() => params.set("country", address.country), [params, address.country]);
 
-  async function handleAddressDelete() {
+  // Мемоизация обработчика удаления адреса
+  const handleAddressDelete = useCallback(async () => {
     setIsDeleting(true);
     const result = await deleteAddress(address.id);
 
@@ -67,49 +68,53 @@ export function EditAddressModal({
       position: "center",
       description: t("address.address-has-been-removed"),
     });
-  }
+  }, [address.id, toast, t]);
 
-  if (mode === "UPDATE") {
-    content = (
-      <>
-        <DialogHeader>
-          <DialogTitle>{t("address.edit-address")}</DialogTitle>
-        </DialogHeader>
-        <EditAddressForm
-          address={address}
-          addressFormRows={addressFormRows}
-          countries={countries}
-          onModalClose={() => setIsOpen(false)}
-          onModeChange={() => setMode("DELETE")}
-        />
-      </>
-    );
-  } else {
-    content = (
-      <>
-        <DialogHeader>
-          <DialogTitle>{t("address.delete-address")}</DialogTitle>
-          <DialogDescription className="dark:text-muted-foreground text-sm text-stone-700">
-            {t("address.delete-address-description")}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex justify-end gap-4">
-          <Button
-            loading={isDeleting}
-            disabled={isDeleting}
-            onClick={handleAddressDelete}
-          >
-            {isDeleting ? t("common.please-wait") : t("common.delete")}
-          </Button>
-          <DialogClose asChild>
-            <Button variant="outline" onClick={() => setMode("UPDATE")}>
-              {t("common.cancel")}
+  // Мемоизация content
+  const content: ReactNode = useMemo(() => {
+
+    if (mode === "UPDATE") {
+      return (
+        <>
+          <DialogHeader>
+            <DialogTitle>{t("address.edit-address")}</DialogTitle>
+          </DialogHeader>
+          <EditAddressForm
+            address={address}
+            addressFormRows={addressFormRows}
+            countries={countries}
+            onModalClose={() => setIsOpen(false)}
+            onModeChange={() => setMode("DELETE")}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <DialogHeader>
+            <DialogTitle>{t("address.delete-address")}</DialogTitle>
+            <DialogDescription className="dark:text-muted-foreground text-sm text-stone-700">
+              {t("address.delete-address-description")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-4">
+            <Button
+              loading={isDeleting}
+              disabled={isDeleting}
+              onClick={handleAddressDelete}
+            >
+              {isDeleting ? t("common.please-wait") : t("common.delete")}
             </Button>
-          </DialogClose>
-        </div>
-      </>
-    );
-  }
+            <DialogClose asChild>
+              <Button variant="outline" onClick={() => setMode("UPDATE")}>
+                {t("common.cancel")}
+              </Button>
+            </DialogClose>
+          </div>
+        </>
+      );
+    }
+  }, [mode, t, address, addressFormRows, countries, isDeleting, handleAddressDelete]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -129,4 +134,12 @@ export function EditAddressModal({
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+// Мемоизация - модальное окно редактирования адреса
+export const EditAddressModal = memo(EditAddressModalComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.address.id === nextProps.address.id &&
+    prevProps.addressFormRows === nextProps.addressFormRows
+  );
+});

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { type ReactNode, useState } from "react";
+import { memo, type ReactNode, useCallback, useState } from "react";
 
 import type { Order } from "@nimara/domain/objects/Order";
 import { Button } from "@nimara/ui/components/button";
@@ -15,7 +15,7 @@ import {
 
 import { ReturnProductsForm } from "../_forms/return-products-form";
 
-export const ReturnProductsModal = ({
+const ReturnProductsModalComponent = ({
   children,
   order,
   orderLines,
@@ -26,6 +26,9 @@ export const ReturnProductsModal = ({
 }) => {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Мемоизация обработчика закрытия
+  const handleClose = useCallback(() => setIsOpen(false), []);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -43,7 +46,7 @@ export const ReturnProductsModal = ({
         <ReturnProductsForm
           order={order}
           orderLines={orderLines}
-          onCancel={() => setIsOpen(false)}
+          onCancel={handleClose}
         >
           {children}
         </ReturnProductsForm>
@@ -51,3 +54,11 @@ export const ReturnProductsModal = ({
     </Dialog>
   );
 };
+
+// Мемоизация - модальное окно возврата товаров
+export const ReturnProductsModal = memo(ReturnProductsModalComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.order.id === nextProps.order.id &&
+    prevProps.orderLines.length === nextProps.orderLines.length
+  );
+});

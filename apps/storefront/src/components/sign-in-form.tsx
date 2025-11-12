@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -19,14 +19,21 @@ import { paths } from "@/lib/paths";
 import { ResetPasswordLink } from "./reset-password-link";
 import { type SignInSchema, signInSchema } from "./schema";
 
-export function SignInForm({ redirectUrl }: { redirectUrl?: string }) {
+function SignInFormComponent({ redirectUrl }: { redirectUrl?: string }) {
   const t = useTranslations();
-
   const searchParams = useSearchParams();
-  const hasPasswordChanged = searchParams.get("hasPasswordChanged") === "true";
-  const isFromConfirmation = searchParams.get("confirmationSuccess") === "true";
   const { toast } = useToast();
   const { isRedirecting, push } = useRouterWithState();
+
+  // Мемоизация флагов
+  const hasPasswordChanged = useMemo(
+    () => searchParams.get("hasPasswordChanged") === "true",
+    [searchParams]
+  );
+  const isFromConfirmation = useMemo(
+    () => searchParams.get("confirmationSuccess") === "true",
+    [searchParams]
+  );
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema({ t })),
@@ -36,11 +43,20 @@ export function SignInForm({ redirectUrl }: { redirectUrl?: string }) {
     },
   });
 
-  const isDisabled = isRedirecting || form.formState?.isSubmitting;
+  // Мемоизация isDisabled
+  const isDisabled = useMemo(
+    () => isRedirecting || form.formState?.isSubmitting,
+    [isRedirecting, form.formState?.isSubmitting]
+  );
 
-  const redirectTarget = redirectUrl ?? searchParams.get("redirectUrl") ?? undefined;
+  // Мемоизация redirectTarget
+  const redirectTarget = useMemo(
+    () => redirectUrl ?? searchParams.get("redirectUrl") ?? undefined,
+    [redirectUrl, searchParams]
+  );
 
-  async function handleSubmit(values: SignInSchema) {
+  // Мемоизация handleSubmit
+  const handleSubmit = useCallback(async (values: SignInSchema) => {
     const data = await login({ ...values, redirectUrl: redirectTarget });
 
     if (data.redirectUrl) {
@@ -51,7 +67,7 @@ export function SignInForm({ redirectUrl }: { redirectUrl?: string }) {
       form.setError("email", { message: "" });
       form.setError("password", { message: "" });
     }
-  }
+  }, [redirectTarget, push, form]);
 
   useEffect(() => {
     const toastTimeout = setTimeout(() => {
@@ -138,3 +154,8 @@ export function SignInForm({ redirectUrl }: { redirectUrl?: string }) {
     </>
   );
 }
+
+// Мемоизация - форма входа
+export const SignInForm = memo(SignInFormComponent, (prevProps, nextProps) => {
+  return prevProps.redirectUrl === nextProps.redirectUrl;
+});

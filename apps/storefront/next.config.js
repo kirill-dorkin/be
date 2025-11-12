@@ -74,6 +74,11 @@ const migrateExperimentalTurbo = (config) => {
 };
 
 const baseConfig = withNextIntl({
+    // Оптимизация производительности
+    poweredByHeader: false,
+    compress: true,
+    productionBrowserSourceMaps: false,
+
     redirects: async () => {
       return [
         {
@@ -120,6 +125,18 @@ const baseConfig = withNextIntl({
         fullUrl: false,
       },
     },
+    compiler: {
+      removeConsole: process.env.NODE_ENV === "production" ? {
+        exclude: ["error", "warn"],
+      } : false,
+    },
+    experimental: {
+      optimizePackageImports: ["@nimara/ui", "react", "react-dom"],
+      clientTraceMetadata: ["x-request-id"],
+      optimisticClientCache: true,
+      scrollRestoration: true,
+      webpackMemoryOptimizations: true,
+    },
     turbopack: {
       rules: {
         "*.svg": {
@@ -137,13 +154,51 @@ const baseConfig = withNextIntl({
           hostname: "cdn.buttercms.com",
         },
       ],
-      deviceSizes: [360, 480, 640, 768, 1024],
-      imageSizes: [256, 512, 768, 1024],
+      deviceSizes: [360, 480, 640, 768, 1024, 1280, 1536, 2048, 3840],
+      imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512, 768, 1024, 1536, 2048],
+      formats: ["image/avif", "image/webp"],
+      minimumCacheTTL: 86400,
+      dangerouslyAllowSVG: true,
+      contentDispositionType: "attachment",
+      contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+      unoptimized: false,
+      loader: undefined,
     },
     reactStrictMode: true,
     transpilePackages: ["@nimara/ui"],
     async headers() {
       const headers = [];
+
+      // Кеширование статических ресурсов для производительности
+      headers.push({
+        source: "/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2|ttf|eot)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      });
+
+      // Оптимизация безопасности и производительности
+      headers.push({
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+        ],
+      });
+
       if (process.env.NEXT_PUBLIC_VERCEL_ENV !== "production") {
         headers.push({
           headers: [
@@ -155,6 +210,7 @@ const baseConfig = withNextIntl({
           source: "/:path*",
         });
       }
+
       return headers;
     },
     webpack: (config, { isServer }) => {

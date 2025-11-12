@@ -4,7 +4,6 @@ import { Skeleton } from "@nimara/ui/components/skeleton";
 
 import { ProductBreadcrumbs } from "../components/product-breadcrumbs";
 import { ProductDescription } from "../components/product-description";
-import { ProductExternalSearch } from "../components/product-external-search";
 import { ProductMediaWrapper } from "../components/product-media-wrapper";
 import {
   ProductReviews,
@@ -28,7 +27,7 @@ export const CustomPDPView = async (props: PDPViewProps) => {
     <ProductProvider
       slug={slug}
       render={(product, availability, { cart }) => (
-        <div className="relative grid w-full gap-8">
+        <div className="relative grid w-full gap-8 overflow-hidden pt-8 md:pt-0">
           <ProductBreadcrumbs
             category={product.category}
             productName={product.name}
@@ -44,9 +43,15 @@ export const CustomPDPView = async (props: PDPViewProps) => {
               />
             </div>
 
-            <div className="flex w-full flex-col place-content-start gap-4 md:w-1/2">
-              <ProductTitle title={product.name} className="text-center" />
-              <ProductExternalSearch productName={product.name} />
+            <div className="flex w-full flex-col place-content-start gap-4 md:w-1/2 overflow-hidden">
+              <ProductTitle title={product.name} />
+              {/* Поиск фото в интернете - временно отключено */}
+              {/* <Suspense fallback={null}>
+                <ProductExternalSearch
+                  productName={product.name}
+                  hasImages={!!product.images && product.images.length > 0}
+                />
+              </Suspense> */}
 
               <VariantSelectorWrapper
                 availability={availability}

@@ -2,7 +2,7 @@
 
 import { PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { ToastAction } from "@nimara/ui/components/toast";
@@ -19,12 +19,12 @@ type AddToBagProps = {
   variantId: string;
 };
 
-export const AddToBag = ({ variantId, isVariantAvailable }: AddToBagProps) => {
+const AddToBagComponent = ({ variantId, isVariantAvailable }: AddToBagProps) => {
   const t = useTranslations();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleProductAdd = async () => {
+  const handleProductAdd = useCallback(async () => {
     setIsProcessing(true);
 
     const resultLinesAdd = await addToBagAction({
@@ -59,7 +59,7 @@ export const AddToBag = ({ variantId, isVariantAvailable }: AddToBagProps) => {
     }
 
     setIsProcessing(false);
-  };
+  }, [variantId, toast, t]);
 
   const handleNotifyMe = useCallback(async () => {
     return toast({
@@ -67,7 +67,7 @@ export const AddToBag = ({ variantId, isVariantAvailable }: AddToBagProps) => {
       description: t("errors.product.VARIANT_NOT_AVAILABLE"),
       variant: "destructive",
     });
-  }, []);
+  }, [toast, t]);
 
   return (
     <Button
@@ -87,3 +87,11 @@ export const AddToBag = ({ variantId, isVariantAvailable }: AddToBagProps) => {
     </Button>
   );
 };
+
+// Мемоизация - используется на каждой странице товара (PDP)
+export const AddToBag = memo(AddToBagComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.variantId === nextProps.variantId &&
+    prevProps.isVariantAvailable === nextProps.isVariantAvailable
+  );
+});

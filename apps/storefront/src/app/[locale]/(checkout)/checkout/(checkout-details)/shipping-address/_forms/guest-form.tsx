@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { type AllCountryCode } from "@nimara/domain/consts";
@@ -25,7 +25,7 @@ import { isGlobalError } from "@/lib/errors";
 import { useRouterWithState } from "@/lib/hooks";
 import { paths } from "@/lib/paths";
 
-export function ShippingAddressForm({
+const ShippingAddressFormComponent = ({
   checkout,
   countries,
   addressFormRows,
@@ -35,7 +35,7 @@ export function ShippingAddressForm({
   checkout: Checkout;
   countries: CountryOption[];
   countryCode: AllCountryCode;
-}) {
+}) => {
   const t = useTranslations();
   const { toast } = useToast();
   const [isCountryChanging, setIsCountryChanging] = useState(false);
@@ -55,10 +55,14 @@ export function ShippingAddressForm({
     ),
   });
 
-  const canProceed =
-    !form.formState.isSubmitting && !isCountryChanging && !isRedirecting;
+  // Мемоизация флага canProceed
+  const canProceed = useMemo(
+    () => !form.formState.isSubmitting && !isCountryChanging && !isRedirecting,
+    [form.formState.isSubmitting, isCountryChanging, isRedirecting]
+  );
 
-  const handleSubmit = async (input: AddressSchema) => {
+  // Мемоизация обработчика submit
+  const handleSubmit = useCallback(async (input: AddressSchema) => {
     const result = await updateCheckoutAddressAction({
       checkoutId: checkout.id,
       address: schemaToAddress(input),
@@ -84,7 +88,7 @@ export function ShippingAddressForm({
         });
       }
     });
-  };
+  }, [checkout.id, push, toast, form, t]);
 
   return (
     <section className="space-y-8 pt-8">
@@ -118,4 +122,13 @@ export function ShippingAddressForm({
       </Form>
     </section>
   );
-}
+};
+
+// Мемоизация - форма адреса доставки для гостя в checkout
+export const ShippingAddressForm = memo(ShippingAddressFormComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.checkout.id === nextProps.checkout.id &&
+    prevProps.addressFormRows === nextProps.addressFormRows &&
+    prevProps.countryCode === nextProps.countryCode
+  );
+});

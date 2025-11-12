@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 
 import type { User } from "@nimara/domain/objects/User";
 import { useToast } from "@nimara/ui/hooks";
@@ -16,13 +16,19 @@ const DynamicAccountDeletedModal = dynamic(
   { ssr: false },
 );
 
-export function AccountNotifications({ user }: { user: User | null }) {
+function AccountNotificationsComponent({ user }: { user: User | null }) {
   const t = useTranslations();
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const isLoginSuccessful = searchParams.get("loggedIn") === "true";
-  const isLogoutSuccessful = searchParams.get("loggedOut") === "true";
-  const isAccountDeleted = searchParams.get("accountDeleted") === "true";
+
+  // Мемоизация флагов
+  const flags = useMemo(() => ({
+    isLoginSuccessful: searchParams.get("loggedIn") === "true",
+    isLogoutSuccessful: searchParams.get("loggedOut") === "true",
+    isAccountDeleted: searchParams.get("accountDeleted") === "true",
+  }), [searchParams]);
+
+  const { isLoginSuccessful, isLogoutSuccessful, isAccountDeleted } = flags;
 
   useEffect(() => {
     if (isLoginSuccessful && user?.id) {
@@ -41,3 +47,8 @@ export function AccountNotifications({ user }: { user: User | null }) {
 
   return <DynamicAccountDeletedModal open={isAccountDeleted} />;
 }
+
+// Мемоизация - notifications компонент
+export const AccountNotifications = memo(AccountNotificationsComponent, (prevProps, nextProps) => {
+  return prevProps.user?.id === nextProps.user?.id;
+});

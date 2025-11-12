@@ -1,6 +1,6 @@
+import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
-import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { CACHE_TTL } from "@/config";
 import { getLocalePrefix } from "@/lib/server";
@@ -8,6 +8,10 @@ import { getCurrentRegion } from "@/regions/server";
 import { getNavigationMenu } from "@/services/navigation-menu";
 
 import { Navigation } from "./_components/navigation";
+
+const Footer = dynamic(() => import("@/components/footer").then(mod => ({ default: mod.Footer })), {
+  ssr: true,
+});
 
 async function NavigationWithData() {
   const [region, locale] = await Promise.all([
@@ -33,13 +37,16 @@ async function NavigationWithData() {
 export default async function Layout({ children }: LayoutProps<"/[locale]">) {
   return (
     <>
-      <div className="bg-background sticky top-0 isolate z-50 py-4 md:pb-0">
+      <div
+        className="bg-background sticky top-4 isolate z-50 pb-2 pt-4 md:relative md:top-auto md:pb-0"
+        style={{ '--header-height': '100%', boxShadow: '0 -100vh 0 100vh hsl(var(--background))' } as React.CSSProperties}
+      >
         <Header />
         <Suspense fallback={<div className="h-12" />}>
           <NavigationWithData />
         </Suspense>
       </div>
-      <main className="container flex h-screen flex-1 items-stretch">
+      <main className="container flex min-h-screen flex-1 items-stretch">
         {children}
       </main>
       <Footer />

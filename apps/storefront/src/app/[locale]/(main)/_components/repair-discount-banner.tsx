@@ -28,7 +28,7 @@ export const RepairDiscountBanner = async ({
     : paths.createAccount.asPath();
 
   return (
-    <section className="mb-8 mt-8 w-full px-4 text-neutral-900 sm:px-6 lg:px-8 dark:text-white">
+    <section className="mb-4 mt-8 w-full px-4 text-neutral-900 sm:px-6 lg:px-8 dark:text-white">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-neutral-950 dark:shadow-[0_48px_120px_rgba(0,0,0,0.45)]">
         <div className="absolute -left-24 top-24 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl dark:bg-amber-500/20" />
         <div className="absolute -right-32 -top-12 hidden h-80 w-80 rounded-full bg-orange-300/15 blur-3xl dark:bg-orange-400/10 lg:block" />
@@ -37,7 +37,7 @@ export const RepairDiscountBanner = async ({
             <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-neutral-600 dark:border-white/15 dark:text-white/70">
               {t("badge")}
             </span>
-            <h2 className="text-3xl font-semibold leading-tight hyphens-auto break-words sm:text-4xl lg:text-5xl">
+            <h2 className="text-3xl font-semibold leading-tight tracking-tight hyphens-auto break-words sm:text-4xl lg:text-5xl">
               {title}
             </h2>
             <p className="text-base text-neutral-600 hyphens-auto break-words sm:text-lg dark:text-white/75">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 
 import { type CheckoutProblems } from "@nimara/domain/objects/Checkout";
 import type { Line as LineType } from "@nimara/domain/objects/common";
@@ -23,12 +24,22 @@ export const Lines = ({
   ...props
 }: LinesProps) => {
   const t = useTranslations();
-  const linesWithProblems = [
-    ...problems.insufficientStock,
-    ...problems.variantNotAvailable,
-  ];
-  const lines = props.lines.filter(
-    ({ id }) => !linesWithProblems.some(({ line }) => line.id === id),
+
+  // Мемоизация списка товаров с проблемами для производительности
+  const linesWithProblems = useMemo(
+    () => [
+      ...problems.insufficientStock,
+      ...problems.variantNotAvailable,
+    ],
+    [problems.insufficientStock, problems.variantNotAvailable]
+  );
+
+  // Мемоизация фильтрации товаров без проблем
+  const lines = useMemo(
+    () => props.lines.filter(
+      ({ id }) => !linesWithProblems.some(({ line }) => line.id === id),
+    ),
+    [props.lines, linesWithProblems]
   );
 
   return (

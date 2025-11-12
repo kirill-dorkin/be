@@ -595,12 +595,12 @@
     "go-to-product": "Go to product {name}",
     "name-asc": "Alphabetically",
     "no-results": "No results found",
-    "no-results-for": "No results found for ‘{query}‘",
+    "no-results-for": "No results found for '{query}'",
     "price-asc": "Price (Ascending)",
     "price-desc": "Price (Descending)",
-    "results-for": "Results for ‘{query}‘",
+    "results-for": "Results for '{query}'",
     "loading-text": "Searching...",
-    "search-for": "Search ‘{query}‘",
+    "search-for": "Search '{query}'",
     "search": "Search {test}",
     "search-placeholder": "Search for products...",
     "search-results": "Search results",
@@ -610,7 +610,7 @@
     "open-search": "Open search",
     "search-label": "Search",
     "search-preview": "Search preview",
-    "all-products": "All BestElectronics best products",
+    "all-products": "Best products",
     "description": "Find products fast on BestElectronics — a headless storefront powered by Saleor with smart search and filtering.",
     "clear-search": "Clear search"
   },
@@ -710,7 +710,8 @@
     "media-placeholder-title": "Product photo coming soon",
     "media-placeholder-description": "We are still preparing official pictures for {productName}.",
     "media-placeholder-hint": "Use \"Search images on the web\" to explore external photos.",
-    "grid-placeholder-subtitle": "Open the product page to browse images from the web."
+    "grid-placeholder-subtitle": "Open the product page to browse images from the web.",
+    "auto-image-label": "Image from web"
   },
   "collections": {
     "associated-products": "Associated products",

@@ -1,5 +1,7 @@
 "use client";
 
+import { memo } from "react";
+
 import {
   FormControl,
   FormField,
@@ -20,7 +22,7 @@ export type TextareaFieldProps = {
   rows?: number;
 };
 
-export const TextareaField = ({
+const TextareaFieldComponent = ({
   className,
   isRequired = false,
   label,
@@ -61,3 +63,16 @@ export const TextareaField = ({
     />
   );
 };
+
+// Мемоизация - используется в формах обратной связи, комментариев
+export const TextareaField = memo(TextareaFieldComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.name === nextProps.name &&
+    prevProps.label === nextProps.label &&
+    prevProps.isRequired === nextProps.isRequired &&
+    prevProps.placeholder === nextProps.placeholder &&
+    prevProps.maxLength === nextProps.maxLength &&
+    prevProps.rows === nextProps.rows &&
+    prevProps.className === nextProps.className
+  );
+});

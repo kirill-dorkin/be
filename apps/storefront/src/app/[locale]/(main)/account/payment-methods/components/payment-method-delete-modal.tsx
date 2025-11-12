@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import {
   type PaymentMethod,
@@ -28,7 +28,7 @@ const TYPE_MESSAGE_MAPPING: Record<PaymentMethodType, TranslationMessage> = {
   paypal: "payment.paypal-account",
 };
 
-export const PaymentMethodDeleteModal = ({
+const PaymentMethodDeleteModalComponent = ({
   method: { type, id },
   method,
   onClose,
@@ -42,15 +42,17 @@ export const PaymentMethodDeleteModal = ({
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleClose = () => {
+  // Мемоизация обработчика закрытия
+  const handleClose = useCallback(() => {
     if (isProcessing) {
       return;
     }
 
     onClose();
-  };
+  }, [isProcessing, onClose]);
 
-  const handleDelete = async () => {
+  // Мемоизация обработчика удаления
+  const handleDelete = useCallback(async () => {
     if (isProcessing) {
       return;
     }
@@ -71,7 +73,7 @@ export const PaymentMethodDeleteModal = ({
     }
 
     setIsProcessing(false);
-  };
+  }, [isProcessing, customerId, id, router, onClose]);
 
   return (
     <Dialog open onOpenChange={handleClose}>
@@ -113,3 +115,11 @@ export const PaymentMethodDeleteModal = ({
     </Dialog>
   );
 };
+
+// Мемоизация - модальное окно удаления метода оплаты
+export const PaymentMethodDeleteModal = memo(PaymentMethodDeleteModalComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.method.id === nextProps.method.id &&
+    prevProps.customerId === nextProps.customerId
+  );
+});

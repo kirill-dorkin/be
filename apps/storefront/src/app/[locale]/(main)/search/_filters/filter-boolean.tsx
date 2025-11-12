@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 import type { Facet } from "@nimara/infrastructure/use-cases/search/types";
 import { Checkbox } from "@nimara/ui/components/checkbox";
@@ -9,7 +9,7 @@ import { Label } from "@nimara/ui/components/label";
 
 import { type TranslationMessage } from "@/types";
 
-export const FilterBoolean = ({
+const FilterBooleanComponent = ({
   facet: { name, slug, messageKey },
   searchParams,
 }: {
@@ -20,8 +20,17 @@ export const FilterBoolean = ({
   const isCheckedInitial = searchParams[slug] === "true";
   const [isChecked, setIsChecked] = useState(isCheckedInitial);
 
-  const labelText = name ?? t(messageKey as TranslationMessage) ?? slug;
-  const checkboxId = `boolean-${slug}`;
+  // Мемоизация текста и ID
+  const labelText = useMemo(
+    () => name ?? t(messageKey as TranslationMessage) ?? slug,
+    [name, messageKey, slug, t]
+  );
+  const checkboxId = useMemo(() => `boolean-${slug}`, [slug]);
+
+  // Мемоизация обработчика
+  const handleCheckedChange = useCallback((checked: boolean | "indeterminate") => {
+    setIsChecked(checked === true);
+  }, []);
 
   return (
     <div className="flex items-center space-x-2">
@@ -31,9 +40,7 @@ export const FilterBoolean = ({
       <Checkbox
         id={checkboxId}
         checked={isChecked}
-        onCheckedChange={(checked) => {
-          setIsChecked(checked === true);
-        }}
+        onCheckedChange={handleCheckedChange}
       />
 
       <Label
@@ -45,3 +52,11 @@ export const FilterBoolean = ({
     </div>
   );
 };
+
+// Мемоизация - используется в фильтрах поиска
+export const FilterBoolean = memo(FilterBooleanComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.facet.slug === nextProps.facet.slug &&
+    prevProps.searchParams[prevProps.facet.slug] === nextProps.searchParams[nextProps.facet.slug]
+  );
+});

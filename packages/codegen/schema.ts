@@ -1027,18 +1027,43 @@ export type AppExtension = Node & {
   id: Scalars['ID']['output'];
   /** Label of the extension to show in the dashboard. */
   label: Scalars['String']['output'];
-  /** Place where given extension will be mounted. */
+  /**
+   * Place where given extension will be mounted.
+   * @deprecated Use `mountName` instead.
+   */
   mount: AppExtensionMountEnum;
+  /**
+   * Name of the extension mount point in the dashboard. Replaces `mount`
+   *
+   * Added in Saleor 3.22.
+   */
+  mountName: Scalars['String']['output'];
   /**
    * App extension options.
    *
    * Added in Saleor 3.22.
+   * @deprecated Use `settings` field instead.
    */
   options: Maybe<AppExtensionPossibleOptions>;
   /** List of the app extension's permissions. */
   permissions: Array<Permission>;
-  /** Type of way how app extension will be opened. */
+  /**
+   * App extension settings. Replaces `options` field.
+   *
+   * Added in Saleor 3.22.
+   */
+  settings: Scalars['JSON']['output'];
+  /**
+   * Type of way how app extension will be opened.
+   * @deprecated Use `targetName` instead.
+   */
   target: AppExtensionTargetEnum;
+  /**
+   * Name of the extension target in the dashboard. Replaces `target`
+   *
+   * Added in Saleor 3.22.
+   */
+  targetName: Scalars['String']['output'];
   /** URL of a view where extension's iframe is placed. */
   url: Scalars['String']['output'];
 };
@@ -1110,6 +1135,7 @@ export type AppExtensionMountEnum =
   | 'PRODUCT_DETAILS_WIDGETS'
   | 'PRODUCT_OVERVIEW_CREATE'
   | 'PRODUCT_OVERVIEW_MORE_ACTIONS'
+  | 'TRANSLATIONS_MORE_ACTIONS'
   | 'VOUCHER_DETAILS_MORE_ACTIONS'
   | 'VOUCHER_DETAILS_WIDGETS'
   | 'VOUCHER_OVERVIEW_CREATE'
@@ -1117,13 +1143,19 @@ export type AppExtensionMountEnum =
 
 /** Represents the options for an app extension. */
 export type AppExtensionOptionsNewTab = {
-  /** Options controlling behavior of the NEW_TAB extension target */
+  /**
+   * Options controlling behavior of the NEW_TAB extension target
+   * @deprecated Use `settings` field directly.
+   */
   newTabTarget: Maybe<NewTabTargetOptions>;
 };
 
 /** Represents the options for an app extension. */
 export type AppExtensionOptionsWidget = {
-  /** Options for displaying a Widget */
+  /**
+   * Options for displaying a Widget
+   * @deprecated Use `settings` field directly.
+   */
   widgetTarget: Maybe<WidgetTargetOptions>;
 };
 
@@ -1249,12 +1281,36 @@ export type AppManifestBrandLogoDefaultArgs = {
 export type AppManifestExtension = {
   /** Label of the extension to show in the dashboard. */
   label: Scalars['String']['output'];
-  /** Place where given extension will be mounted. */
+  /**
+   * Place where given extension will be mounted.
+   * @deprecated Use `mountName` instead.
+   */
   mount: AppExtensionMountEnum;
+  /**
+   * Name of the extension mount point in the dashboard. Replaces `mount`
+   *
+   * Added in Saleor 3.22.
+   */
+  mountName: Scalars['String']['output'];
   /** List of the app extension's permissions. */
   permissions: Array<Permission>;
-  /** Type of way how app extension will be opened. */
+  /**
+   * JSON object with settings for this extension.
+   *
+   * Added in Saleor 3.22.
+   */
+  settings: Scalars['JSON']['output'];
+  /**
+   * Type of way how app extension will be opened.
+   * @deprecated Use `targetName` instead.
+   */
   target: AppExtensionTargetEnum;
+  /**
+   * Name of the extension target in the dashboard. Replaces `target`
+   *
+   * Added in Saleor 3.22.
+   */
+  targetName: Scalars['String']['output'];
   /** URL of a view where extension's iframe is placed. */
   url: Scalars['String']['output'];
 };
@@ -14703,7 +14759,10 @@ export type NavigationType =
 
 /** Represents the NEW_TAB target options for an app extension. */
 export type NewTabTargetOptions = {
-  /** HTTP method for New Tab target (GET or POST) */
+  /**
+   * HTTP method for New Tab target (GET or POST)
+   * @deprecated Use `settings` field directly.
+   */
   method: HttpMethod;
 };
 
@@ -30501,7 +30560,10 @@ export type WeightUnitsEnum =
 
 /** Represents the WIDGET target options for an app extension. */
 export type WidgetTargetOptions = {
-  /** HTTP method for Widget target (GET or POST) */
+  /**
+   * HTTP method for Widget target (GET or POST)
+   * @deprecated Use `settings` field directly.
+   */
   method: HttpMethod;
 };
 

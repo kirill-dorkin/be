@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { errorService } from "@/services/error";
 import { storefrontLogger } from "@/services/logging";
 
-export default function Error({
+const ErrorComponent = ({
   error,
   reset,
 }: {
   error: Error;
   reset: () => void;
-}) {
+}) => {
   const [traceId, setTraceId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,6 +19,11 @@ export default function Error({
 
     setTraceId(errorService.logError(error));
   }, [error]);
+
+  // Мемоизация обработчика reset
+  const handleReset = useCallback(() => {
+    reset();
+  }, [reset]);
 
   return (
     <div className="bg-white">
@@ -34,11 +39,16 @@ export default function Error({
         </p>
         <button
           className="mt-8 h-10 rounded-md bg-red-500 px-6 font-semibold text-white"
-          onClick={() => reset()}
+          onClick={handleReset}
         >
           Try again
         </button>
       </div>
     </div>
   );
-}
+};
+
+// Мемоизация - error page
+export default memo(ErrorComponent, (prevProps, nextProps) => {
+  return prevProps.error === nextProps.error;
+});

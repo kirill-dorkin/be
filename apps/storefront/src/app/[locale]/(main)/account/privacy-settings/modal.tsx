@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { type ReactNode, useState } from "react";
+import { memo, type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import { Button, type ButtonProps } from "@nimara/ui/components/button";
@@ -28,17 +28,22 @@ import { requestUserAccountDeletion } from "./actions";
 
 const DELETE_ACCOUNT = "deleteAccount";
 
-export function DeleteAccountModal() {
+const DeleteAccountModalComponent = () => {
   const t = useTranslations();
 
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [isDeleteAccountChecked, setIsDeleteAccountChecked] = useState(false);
 
-  let content: ReactNode;
+  // Мемоизация обработчика изменения checkbox
+  const handleCheckboxChange = useCallback(() => {
+    setIsDeleteAccountChecked(!isDeleteAccountChecked);
+  }, [isDeleteAccountChecked]);
 
-  if (searchParams.get("emailSent")) {
-    content = (
+  // Мемоизация content
+  const content: ReactNode = useMemo(() => {
+    if (searchParams.get("emailSent")) {
+      return (
       <>
         <DialogHeader>
           <DialogTitle>{t("account.confirm-account-deletion")}</DialogTitle>
@@ -56,9 +61,9 @@ export function DeleteAccountModal() {
           </DialogClose>
         </DialogFooter>
       </>
-    );
-  } else {
-    content = (
+      );
+    } else {
+      return (
       <>
         <DialogHeader>
           <DialogTitle>{t("account.delete-account")}</DialogTitle>
@@ -94,9 +99,7 @@ export function DeleteAccountModal() {
             <div className="flex w-full gap-2">
               <Checkbox
                 checked={isDeleteAccountChecked}
-                onCheckedChange={() =>
-                  setIsDeleteAccountChecked(!isDeleteAccountChecked)
-                }
+                onCheckedChange={handleCheckboxChange}
                 className="mt-1"
                 id={DELETE_ACCOUNT}
                 name={DELETE_ACCOUNT}
@@ -113,8 +116,9 @@ export function DeleteAccountModal() {
           </form>
         )}
       </>
-    );
-  }
+      );
+    }
+  }, [searchParams, isDeleteAccountChecked, handleCheckboxChange, t]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -148,3 +152,5 @@ function SubmitButton({ disabled }: Pick<ButtonProps, "disabled">) {
     </Button>
   );
 }
+
+export const DeleteAccountModal = memo(DeleteAccountModalComponent);

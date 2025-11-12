@@ -1,8 +1,7 @@
 "use client";
 
-import NextImage from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import type { Cart } from "@nimara/domain/objects/Cart";
 import { type Image } from "@nimara/domain/objects/common";
@@ -17,7 +16,9 @@ import {
 } from "@nimara/ui/components/carousel";
 
 import { DiscountBadge } from "@/components/discount-badge";
+import { OptimizedImage } from "@/components/optimized-image";
 import { ProductImagePlaceholder } from "@/components/product-image-placeholder";
+import { IMAGE_QUALITY, IMAGE_SIZES } from "@/config";
 import { cn } from "@/lib/utils";
 import { ProductMediaEmptyState } from "@/pdp/components/product-media-empty-state";
 import { useSelectedVariantImages } from "@/pdp/hooks/useSelectedVariantImage";
@@ -78,16 +79,23 @@ export const ProductMedia = ({
           {discountPercent > 0 && <DiscountBadge discount={discountPercent} />}
           <div className="hidden gap-4 md:grid">
             {activeVariantImages.map(({ url, alt }, i) => (
-              <NextImage
-                src={url}
+              <div
                 key={url}
-                alt={alt || altTextFallback || ""}
-                height={500}
-                width={500}
-                priority={i === 0}
-                sizes="(max-width: 960px) 100vw, 50vw"
-                className="h-auto w-full pb-2"
-              />
+                className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-6 dark:border-white/10"
+              >
+                <OptimizedImage
+                  src={url}
+                  alt={alt || altTextFallback || ""}
+                  height={IMAGE_SIZES.pdp}
+                  width={IMAGE_SIZES.pdp}
+                  priority={i === 0}
+                  quality={IMAGE_QUALITY.high}
+                  highQuality
+                  disableGoogleLens
+                  sizes="(max-width: 960px) 100vw, 50vw"
+                  className="h-full w-full object-contain"
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -96,7 +104,7 @@ export const ProductMedia = ({
   );
 };
 
-const ProductMediaCarousel = ({
+const ProductMediaCarouselComponent = ({
   images,
   altTextFallback,
   discountPercent,
@@ -115,17 +123,25 @@ const ProductMediaCarousel = ({
     }
   }, [images]);
 
+  // Мемоизация обработчика клика по миниатюре
+  const handleThumbnailClick = useCallback((image: Image) => {
+    setPreviewImage(image);
+  }, []);
+
   return (
     <div className="hidden flex-col items-center gap-4 md:flex">
-      <div className="bg-background dark:bg-primary relative flex aspect-square items-center justify-center rounded-lg">
+      <div className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-4 dark:border-white/10">
         {discountPercent > 0 && <DiscountBadge discount={discountPercent} />}
         {previewImage ? (
-          <NextImage
+          <OptimizedImage
             src={previewImage.url}
             alt={previewImage.alt || altTextFallback || ""}
-            width={600}
-            height={600}
-            className="w-full object-cover"
+            width={IMAGE_SIZES.pdp}
+            height={IMAGE_SIZES.pdp}
+            quality={IMAGE_QUALITY.high}
+            highQuality
+            disableGoogleLens
+            className="h-full w-full object-contain"
             priority
           />
         ) : (
@@ -138,20 +154,23 @@ const ProductMediaCarousel = ({
           <div
             key={image.url}
             className={cn(
-              "square bg-background border-muted flex w-1/6 min-w-20 items-center justify-center rounded-lg border",
+              "bg-muted/30 dark:bg-muted/20 square flex aspect-square w-1/6 min-w-20 items-center justify-center rounded-lg border p-2 transition-all hover:border-foreground/40",
               {
-                "border-foreground": previewImage?.url === image.url,
+                "border-foreground border-2": previewImage?.url === image.url,
+                "border-border/40 dark:border-white/10": previewImage?.url !== image.url,
               },
             )}
           >
-            <NextImage
+            <OptimizedImage
               src={image.url}
               alt={image.alt || altTextFallback || ""}
-              height={100}
-              width={100}
-              className="cursor-pointer object-cover p-2"
+              height={IMAGE_SIZES.thumbnail}
+              width={IMAGE_SIZES.thumbnail}
+              quality={IMAGE_QUALITY.medium}
+              disableGoogleLens
+              className="h-full w-full cursor-pointer object-contain"
               priority={i === 0}
-              onClick={() => setPreviewImage(image)}
+              onClick={() => handleThumbnailClick(image)}
             />
           </div>
         ))}
@@ -160,7 +179,17 @@ const ProductMediaCarousel = ({
   );
 };
 
-const MobileOnlyCarousel = (props: {
+// Мемоизация карусели - предотвращает ре-рендер при изменении родителя
+const ProductMediaCarousel = memo(ProductMediaCarouselComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.discountPercent === nextProps.discountPercent &&
+    prevProps.altTextFallback === nextProps.altTextFallback &&
+    prevProps.images.length === nextProps.images.length &&
+    prevProps.images.every((img, i) => img.url === nextProps.images[i]?.url)
+  );
+});
+
+const MobileOnlyCarouselComponent = (props: {
   altTextFallback?: string;
   discountPercent: number;
   images: Image[];
@@ -170,19 +199,22 @@ const MobileOnlyCarousel = (props: {
       <CarouselContent>
         {props.images?.map(({ url, alt }, i) => (
           <CarouselItem key={url}>
-            <div className="relative">
+            <div className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-4 dark:border-white/10">
               {props.discountPercent > 0 && (
                 <DiscountBadge discount={props.discountPercent} />
               )}
-              <NextImage
+              <OptimizedImage
                 src={url}
                 alt={alt || props.altTextFallback || ""}
-                width={250}
-                height={250}
+                width={IMAGE_SIZES.catalog}
+                height={IMAGE_SIZES.catalog}
                 priority={i === 0}
+                quality={IMAGE_QUALITY.high}
+                highQuality
+                disableGoogleLens
                 loading={i === 0 ? "eager" : "lazy"}
                 sizes="(max-width: 960px) 100vw, 1vw"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
             </div>
           </CarouselItem>
@@ -191,3 +223,13 @@ const MobileOnlyCarousel = (props: {
     </Carousel>
   </div>
 );
+
+// Мемоизация мобильной карусели для оптимизации
+const MobileOnlyCarousel = memo(MobileOnlyCarouselComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.discountPercent === nextProps.discountPercent &&
+    prevProps.altTextFallback === nextProps.altTextFallback &&
+    prevProps.images.length === nextProps.images.length &&
+    prevProps.images.every((img, i) => img.url === nextProps.images[i]?.url)
+  );
+});

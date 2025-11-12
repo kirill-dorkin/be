@@ -1,6 +1,8 @@
+import { memo } from "react";
+
 import { cn } from "@/lib/utils";
 
-export const DiscountBadge = ({
+const DiscountBadgeComponent = ({
   className,
   discount,
 }: {
@@ -22,3 +24,8 @@ export const DiscountBadge = ({
     </span>
   );
 };
+
+// Мемоизация - используется на каждой карточке товара
+export const DiscountBadge = memo(DiscountBadgeComponent, (prevProps, nextProps) => {
+  return prevProps.discount === nextProps.discount && prevProps.className === nextProps.className;
+});

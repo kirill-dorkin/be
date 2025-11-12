@@ -1,15 +1,19 @@
-import { PlusCircle } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+"use client";
+
+import dynamic from "next/dynamic";
+import { memo } from "react";
 
 import { type Cart } from "@nimara/domain/objects/Cart";
 import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
-import { Button } from "@nimara/ui/components/button";
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
-import { VariantSelector } from "@/pdp/components/variant-selector";
+const VariantSelector = dynamic(() => import("@/pdp/components/variant-selector").then(mod => ({ default: mod.VariantSelector })), {
+  ssr: false,
+  loading: () => <Skeleton className="h-24 w-full rounded-lg" />,
+});
 
 type VariantPickerProps = {
   availability: ProductAvailability;
@@ -18,10 +22,10 @@ type VariantPickerProps = {
 };
 
 /**
- * A thin server wrapper for the VariantSelector component.
+ * A thin client wrapper for the VariantSelector component.
  * Receives cart data from the ProductProvider to avoid duplicate fetches during rendering.
  */
-export const VariantSelectorWrapper = ({
+const VariantSelectorWrapperComponent = ({
   availability,
   cart,
   product,
@@ -35,25 +39,11 @@ export const VariantSelectorWrapper = ({
   );
 };
 
-export const VariantSelectorSkeleton = async () => {
-  const t = await getTranslations();
-
+// Мемоизация - wrapper для селектора вариантов
+export const VariantSelectorWrapper = memo(VariantSelectorWrapperComponent, (prevProps, nextProps) => {
   return (
-    <div>
-      <Skeleton className="mb-4 h-8 w-1/4" />
-      <Skeleton className="mb-4 h-8 w-full" />
-      <Skeleton className="mb-4 h-8 w-full" />
-
-      <div className="flex flex-wrap gap-2">
-        <Skeleton className="mb-4 h-8 w-1/4" />
-        <Skeleton className="mb-4 h-8 w-1/4" />
-        <Skeleton className="mb-4 h-8 w-1/4" />
-      </div>
-
-      <Button className="my-4 w-full" disabled={true}>
-        <PlusCircle className="mr-2 h-4" />
-        {t("common.add-to-bag")}
-      </Button>
-    </div>
+    prevProps.product.id === nextProps.product.id &&
+    prevProps.cart?.id === nextProps.cart?.id &&
+    prevProps.availability === nextProps.availability
   );
-};
+});

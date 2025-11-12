@@ -1,5 +1,7 @@
 "use client";
 
+import { memo, useCallback } from "react";
+
 import {
   FormControl,
   FormField,
@@ -27,7 +29,7 @@ export interface SelectFormFieldProps {
   placeholder?: string;
 }
 
-export const SelectFormField = ({
+const SelectFormFieldComponent = ({
   label,
   name,
   isRequired = false,
@@ -36,6 +38,12 @@ export const SelectFormField = ({
   options,
 }: SelectFormFieldProps) => {
   const { control } = useFormContext();
+
+  // Мемоизация обработчика изменения
+  const handleValueChange = useCallback((value: string, fieldOnChange: (...event: any[]) => void) => {
+    fieldOnChange(value);
+    onChange?.(value);
+  }, [onChange]);
 
   return (
     <FormField
@@ -50,10 +58,7 @@ export const SelectFormField = ({
           </FormLabel>
           <Select
             key={field.value}
-            onValueChange={(value) => {
-              field.onChange(value);
-              onChange?.(value);
-            }}
+            onValueChange={(value) => handleValueChange(value, field.onChange)}
             defaultValue={field.value}
           >
             <FormControl>
@@ -75,3 +80,14 @@ export const SelectFormField = ({
     />
   );
 };
+
+// Мемоизация - используется в формах адресов, чекаута
+export const SelectFormField = memo(SelectFormFieldComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.name === nextProps.name &&
+    prevProps.label === nextProps.label &&
+    prevProps.isRequired === nextProps.isRequired &&
+    prevProps.placeholder === nextProps.placeholder &&
+    prevProps.options?.length === nextProps.options?.length
+  );
+});

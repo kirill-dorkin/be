@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -14,9 +14,13 @@ import {
 
 import { UpdatePasswordForm } from "../_forms/update-password-form";
 
-export function UpdatePasswordModal() {
+const UpdatePasswordModalComponent = () => {
   const [open, setOpen] = useState(false);
   const t = useTranslations();
+
+  // Мемоизация обработчиков
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -24,7 +28,7 @@ export function UpdatePasswordModal() {
         <Button
           variant="outline"
           className="text-slate-700 dark:text-primary"
-          onClick={() => setOpen(true)}
+          onClick={handleOpen}
         >
           {t("common.edit")}
         </Button>
@@ -36,8 +40,11 @@ export function UpdatePasswordModal() {
         <DialogHeader>
           <DialogTitle>{t("account.change-password")}</DialogTitle>
         </DialogHeader>
-        <UpdatePasswordForm onModalClose={() => setOpen(false)} />
+        <UpdatePasswordForm onModalClose={handleClose} />
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+// Мемоизация - модальное окно обновления пароля
+export const UpdatePasswordModal = memo(UpdatePasswordModalComponent);
