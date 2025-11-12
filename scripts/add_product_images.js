@@ -403,7 +403,122 @@ async function fetchProductsWithoutImages() {
   return products;
 }
 
-// Поиск изображения через Google Images с помощью Puppeteer (как человек)
+/**
+ * Упростить название товара для поиска
+ * Убирает лишние детали, оставляет основное
+ */
+function simplifyProductName(name) {
+  return name
+    // Убираем содержимое в скобках
+    .replace(/\([^)]*\)/g, '')
+    // Убираем содержимое после запятой (обычно там характеристики)
+    .replace(/,.*$/, '')
+    // Убираем множественные пробелы
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Проверить релевантность изображения товару
+ * Сравнивает alt/title изображения с названием товара
+ */
+function checkImageRelevance(imageAlt, productName) {
+  if (!imageAlt) return false;
+
+  // Приводим к нижнему регистру для сравнения
+  const altLower = imageAlt.toLowerCase();
+  const nameLower = productName.toLowerCase();
+
+  // Разбиваем название товара на ключевые слова (минимум 3 символа)
+  const keywords = nameLower.split(/[\s,\-_]+/).filter(word => word.length >= 3);
+
+  // Считаем сколько ключевых слов присутствует в alt
+  let matchCount = 0;
+  for (const keyword of keywords) {
+    if (altLower.includes(keyword)) {
+      matchCount++;
+    }
+  }
+
+  // Релевантно если хотя бы 40% ключевых слов совпадают
+  const relevanceScore = matchCount / keywords.length;
+  return relevanceScore >= 0.4;
+}
+
+/**
+ * Извлечь изображения с главной страницы поиска (блок Images)
+ */
+async function extractImagesFromMainPage(page, productName) {
+  try {
+    console.log(`    📸 Ищу изображения на главной странице...`);
+
+    // Ждем появления блока с изображениями
+    await page.waitForSelector('div[data-lpage], div[jsname], img[data-src]', { timeout: 5000 });
+
+    const images = await page.evaluate(() => {
+      const results = [];
+
+      // Способ 1: Ищем изображения в блоке Images на главной странице
+      const imageBlocks = document.querySelectorAll('a[href*="imgurl="]');
+      for (const block of imageBlocks) {
+        const href = block.href;
+        const match = href.match(/imgurl=([^&]+)/);
+        if (match) {
+          const img = block.querySelector('img');
+          results.push({
+            url: decodeURIComponent(match[1]),
+            alt: img?.alt || img?.title || '',
+          });
+        }
+      }
+
+      // Способ 2: Ищем изображения в карточках товаров
+      if (results.length === 0) {
+        const productImages = document.querySelectorAll('img[data-src], img[src]');
+        for (const img of productImages) {
+          const src = img.dataset.src || img.src;
+          if (src && src.startsWith('http') && !src.includes('google.com/images')) {
+            results.push({
+              url: src,
+              alt: img.alt || img.title || '',
+            });
+          }
+        }
+      }
+
+      return results.slice(0, 10); // Первые 10 изображений
+    });
+
+    if (images.length > 0) {
+      console.log(`    ✓ Найдено ${images.length} изображений на главной странице`);
+
+      // Проверяем релевантность каждого изображения
+      for (const image of images) {
+        const isRelevant = checkImageRelevance(image.alt, productName);
+        if (isRelevant) {
+          console.log(`    ✓ Найдено релевантное изображение:`);
+          console.log(`      Alt: "${image.alt.substring(0, 60)}..."`);
+          console.log(`      URL: ${image.url.substring(0, 80)}...`);
+          return image.url;
+        }
+      }
+
+      // Если не нашли релевантное, берем первое
+      console.log(`    ⚠️  Релевантных не найдено, беру первое изображение`);
+      return images[0].url;
+    }
+
+    return null;
+  } catch (error) {
+    console.log(`    ⚠️  Не удалось извлечь изображения с главной страницы`);
+    return null;
+  }
+}
+
+/**
+ * Поиск изображения с помощью Google Search
+ * Fallback стратегия: пробуем несколько способов
+ */
 async function searchProductImage(productName, browser) {
   let page;
   try {
@@ -414,214 +529,273 @@ async function searchProductImage(productName, browser) {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     );
 
-    console.log(`    🔍 Открываю Google: "${productName.substring(0, 50)}..."`);
+    console.log(`    🔍 Ищу изображение для: "${productName.substring(0, 50)}..."`);
 
-    // ШАГ 1: Открываем обычный Google (как человек)
+    // СТРАТЕГИЯ 1: Попытка с полным названием на главной странице
+    console.log(`    📍 Стратегия 1: Полное название на главной странице`);
+    let imageUrl = await trySearchStrategy(page, productName, false);
+    if (imageUrl) {
+      if (page) await page.close();
+      return imageUrl;
+    }
+
+    // СТРАТЕГИЯ 2: Попытка с полным названием на вкладке Images
+    console.log(`    📍 Стратегия 2: Полное название на вкладке Images`);
+    imageUrl = await trySearchStrategy(page, productName, true);
+    if (imageUrl) {
+      if (page) await page.close();
+      return imageUrl;
+    }
+
+    // СТРАТЕГИЯ 3: Упрощенное название на главной странице
+    const simplifiedName = simplifyProductName(productName);
+    if (simplifiedName !== productName) {
+      console.log(`    📍 Стратегия 3: Упрощенное название "${simplifiedName.substring(0, 40)}..."`);
+      imageUrl = await trySearchStrategy(page, simplifiedName, false);
+      if (imageUrl) {
+        if (page) await page.close();
+        return imageUrl;
+      }
+    }
+
+    // СТРАТЕГИЯ 4: Упрощенное название на Images
+    if (simplifiedName !== productName) {
+      console.log(`    📍 Стратегия 4: Упрощенное название на Images`);
+      imageUrl = await trySearchStrategy(page, simplifiedName, true);
+      if (imageUrl) {
+        if (page) await page.close();
+        return imageUrl;
+      }
+    }
+
+    // КРАЙНИЙ СЛУЧАЙ: Берем любое изображение
+    console.log(`    ⚠️  Все стратегии не сработали, пробую взять любое изображение...`);
+    imageUrl = await tryGetAnyImage(page);
+    if (imageUrl) {
+      if (page) await page.close();
+      return imageUrl;
+    }
+
+    // Если ничего не получилось - ошибка
+    if (page) await page.close();
+    throw new Error("Не удалось найти ни одного изображения для товара");
+
+  } catch (error) {
+    if (page) {
+      try {
+        await page.close();
+      } catch (closeError) {
+        // Игнорируем ошибки при закрытии
+      }
+    }
+    throw error;
+  }
+}
+
+/**
+ * Попытка поиска изображения по стратегии
+ * @param {Page} page - страница Puppeteer
+ * @param {string} query - поисковый запрос
+ * @param {boolean} useImagesTab - использовать вкладку Images
+ */
+async function trySearchStrategy(page, query, useImagesTab) {
+  try {
+    // Открываем Google
     await page.goto("https://www.google.com", {
       waitUntil: "networkidle2",
       timeout: 30000,
     });
 
-    // Проверяем капчу сразу после загрузки
+    // Проверяем капчу
     if (await detectCaptcha(page)) {
       await handleCaptcha(page);
     }
 
-    await randomDelay(1500, 2500); // Случайная задержка как человек
+    await randomDelay(1500, 2500);
 
-    // ШАГ 2: Находим поле поиска и вводим запрос (как человек)
+    // Вводим запрос
     const searchBoxSelector = 'textarea[name="q"], input[name="q"]';
     await page.waitForSelector(searchBoxSelector, { timeout: 10000 });
 
-    console.log(`    ⌨️  Ввожу запрос...`);
-    // Печатаем с более случайной задержкой между символами (80-150ms)
-    await page.type(searchBoxSelector, productName, {
+    // Очищаем поле (если там что-то было)
+    await page.click(searchBoxSelector, { clickCount: 3 });
+    await page.keyboard.press('Backspace');
+
+    // Вводим новый запрос
+    await page.type(searchBoxSelector, query, {
       delay: Math.floor(Math.random() * 70) + 80
     });
-    await randomDelay(800, 1200); // Случайная пауза перед Enter
+    await randomDelay(800, 1200);
 
-    // ШАГ 3: Нажимаем Enter (как человек)
+    // Нажимаем Enter
     await page.keyboard.press("Enter");
-    await randomDelay(2500, 3500); // Случайная задержка для результатов
+    await randomDelay(2500, 3500);
 
-    // ШАГ 4: Кликаем на вкладку "Картинки" (как человек)
-    console.log(`    🖱️  Перехожу на вкладку Картинки...`);
-
-    // Проверяем капчу перед переходом на Images
+    // Проверяем капчу
     if (await detectCaptcha(page)) {
       await handleCaptcha(page);
     }
 
-    try {
-      // Ищем ссылку на Images/Картинки
-      await page.waitForSelector('a[href*="tbm=isch"]', { timeout: 5000 });
-      await randomDelay(500, 1000); // Небольшая пауза перед кликом
-      await page.click('a[href*="tbm=isch"]');
-      await randomDelay(3500, 4500); // Случайная задержка для загрузки изображений
-    } catch (e) {
-      // Если не нашли вкладку, пробуем прямой переход
-      const searchQuery = encodeURIComponent(productName);
-      await page.goto(`https://www.google.com/search?q=${searchQuery}&tbm=isch`, {
-        waitUntil: "networkidle2",
-        timeout: 30000,
-      });
-      await randomDelay(2500, 3500);
-    }
+    if (!useImagesTab) {
+      // Ищем на главной странице (вкладка All)
+      return await extractImagesFromMainPage(page, query);
+    } else {
+      // Переходим на вкладку Images
+      console.log(`    🖱️  Перехожу на вкладку Images...`);
 
-    // ШАГ 5: Проверяем капчу перед поиском изображений
-    if (await detectCaptcha(page)) {
-      await handleCaptcha(page);
-    }
+      try {
+        await page.waitForSelector('a[href*="tbm=isch"]', { timeout: 5000 });
+        await randomDelay(500, 1000);
+        await page.click('a[href*="tbm=isch"]');
+        await randomDelay(3500, 4500);
+      } catch (e) {
+        // Прямой переход
+        const searchQuery = encodeURIComponent(query);
+        await page.goto(`https://www.google.com/search?q=${searchQuery}&tbm=isch`, {
+          waitUntil: "networkidle2",
+          timeout: 30000,
+        });
+        await randomDelay(2500, 3500);
+      }
 
-    // ШАГ 6: Ждем загрузки изображений
-    console.log(`    📸 Ищу изображения...`);
-    try {
-      // Ждем появления контейнера с результатами изображений
-      await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
-    } catch (waitError) {
-      // Сохраняем скриншот для отладки
-      const screenshotPath = path.join(os.tmpdir(), `debug-${Date.now()}.png`);
-      await page.screenshot({ path: screenshotPath, fullPage: false });
-      console.log(`    🔍 Скриншот сохранен: ${screenshotPath}`);
-
-      // Возможно это капча
+      // Проверяем капчу
       if (await detectCaptcha(page)) {
         await handleCaptcha(page);
-        // Пробуем еще раз после решения капчи
+      }
+
+      // Извлекаем изображение из Images
+      return await extractImageFromImagesTab(page, query);
+    }
+  } catch (error) {
+    console.log(`    ⚠️  Стратегия не сработала: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Извлечь изображение с вкладки Images
+ */
+async function extractImageFromImagesTab(page, productName) {
+  try {
+    console.log(`    📸 Ищу изображения на вкладке Images...`);
+
+    // Ждем загрузки изображений
+    try {
+      await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
+    } catch (waitError) {
+      // Проверяем капчу
+      if (await detectCaptcha(page)) {
+        await handleCaptcha(page);
         await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
       } else {
-        throw new Error("Не дождались загрузки изображений на странице Google");
+        console.log(`    ⚠️  Изображения не загрузились на Images`);
+        return null;
       }
     }
-    await randomDelay(2000, 3000); // Случайная задержка
 
-    // ШАГ 6: Находим первое изображение в результатах и кликаем на него
+    await randomDelay(2000, 3000);
+
+    // Кликаем на первое изображение
     console.log(`    🖱️  Кликаю на первое изображение...`);
+    const selectors = [
+      'div[data-ri="0"] img',
+      '.ivg-i img',
+      'img[data-src]',
+      'div.isv-r img'
+    ];
+
     let imageClicked = false;
-    try {
-      // Пробуем разные селекторы для нахождения первого изображения в результатах
-      const selectors = [
-        'div[data-ri="0"] img', // Первый результат по data-ri
-        '.ivg-i img',            // Изображения в grid
-        'img[data-src]',         // Изображения с data-src
-        'div.isv-r img'          // Результаты поиска
-      ];
-
-      for (const selector of selectors) {
-        try {
-          await page.waitForSelector(selector, { timeout: 2000 });
-          await page.click(selector);
-          imageClicked = true;
-          console.log(`    ✓ Кликнул на изображение (селектор: ${selector})`);
-          break;
-        } catch (e) {
-          // Пробуем следующий селектор
-        }
+    for (const selector of selectors) {
+      try {
+        await page.waitForSelector(selector, { timeout: 2000 });
+        await page.click(selector);
+        imageClicked = true;
+        console.log(`    ✓ Кликнул (селектор: ${selector})`);
+        break;
+      } catch (e) {
+        // Пробуем следующий
       }
-
-      if (!imageClicked) {
-        throw new Error("Не нашел изображение для клика");
-      }
-
-      await randomDelay(2500, 3500); // Случайная задержка для панели
-    } catch (clickError) {
-      const screenshotPath = path.join(os.tmpdir(), `debug-click-${Date.now()}.png`);
-      await page.screenshot({ path: screenshotPath, fullPage: false });
-      console.log(`    🔍 Скриншот (ошибка клика): ${screenshotPath}`);
-      throw new Error(`Не удалось кликнуть на изображение: ${clickError.message}`);
     }
 
-    // ШАГ 7: Извлекаем URL полноразмерного изображения
-    console.log(`    🔍 Извлекаю URL полноразмерного изображения...`);
-    const imageUrl = await page.evaluate(() => {
-      // После клика Google показывает полноразмерное изображение в панели справа
-      // Пробуем разные способы найти полноразмерное изображение
+    if (!imageClicked) {
+      console.log(`    ⚠️  Не удалось кликнуть на изображение`);
+      return null;
+    }
 
-      // Способ 1: Изображение в панели предпросмотра
+    await randomDelay(2500, 3500);
+
+    // Извлекаем URL
+    console.log(`    🔍 Извлекаю URL изображения...`);
+    const imageUrl = await page.evaluate(() => {
       const previewImg = document.querySelector('img.sFlh5c, img.iPVvYb, img.n3VNCb, img[data-iml]');
       if (previewImg && previewImg.src && previewImg.src.startsWith('http')) {
         return previewImg.src;
       }
 
-      // Способ 2: Ссылка на оригинальное изображение
       const imgLink = document.querySelector('a[href*="imgurl="], a[jsname="sTFXNd"]');
       if (imgLink) {
         const href = imgLink.href;
         const match = href.match(/imgurl=([^&]+)/);
-        if (match) {
-          return decodeURIComponent(match[1]);
-        }
+        if (match) return decodeURIComponent(match[1]);
       }
 
-      // Способ 3: Любое большое изображение на странице (fallback)
+      const allImages = document.querySelectorAll("img");
+      for (const img of allImages) {
+        const src = img.src;
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+        if (src && width > 200 && height > 200 && !src.includes("logo") &&
+            !src.includes("google.com/images") && src.startsWith("http")) {
+          return src;
+        }
+      }
+      return null;
+    });
+
+    if (imageUrl) {
+      console.log(`    ✓ Найдено изображение: ${imageUrl.substring(0, 80)}...`);
+    }
+
+    return imageUrl;
+  } catch (error) {
+    console.log(`    ⚠️  Ошибка извлечения из Images: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Попытка взять любое изображение (крайний случай)
+ */
+async function tryGetAnyImage(page) {
+  try {
+    console.log(`    📸 Пробую взять любое доступное изображение...`);
+
+    const imageUrl = await page.evaluate(() => {
       const allImages = document.querySelectorAll("img");
       for (const img of allImages) {
         const src = img.src;
         const width = img.naturalWidth || img.width;
         const height = img.naturalHeight || img.height;
 
-        if (
-          src &&
-          width > 200 &&
-          height > 200 &&
-          !src.includes("logo") &&
-          !src.includes("google.com/images/branding") &&
-          !src.includes("gstatic.com/images") &&
-          (src.startsWith("http://") || src.startsWith("https://"))
-        ) {
+        // Берем любое изображение больше 100x100
+        if (src && width > 100 && height > 100 &&
+            !src.includes("logo") &&
+            !src.includes("google.com/images/branding") &&
+            src.startsWith("http")) {
           return src;
         }
       }
-
       return null;
     });
 
-    if (!imageUrl) {
-      // Сохраняем скриншот для отладки
-      const screenshotPath = path.join(os.tmpdir(), `debug-no-image-${Date.now()}.png`);
-      await page.screenshot({ path: screenshotPath, fullPage: false });
-      console.log(`    🔍 Скриншот (изображение не найдено): ${screenshotPath}`);
-
-      if (page) {
-        try {
-          await page.close();
-        } catch (closeError) {
-          console.warn(`    ⚠️  Предупреждение при закрытии страницы: ${closeError.message}`);
-        }
-      }
-      throw new Error("Не удалось найти изображение товара");
+    if (imageUrl) {
+      console.log(`    ✓ Найдено изображение: ${imageUrl.substring(0, 80)}...`);
     }
 
-    // Проверяем что URL выглядит валидным
-    const urlPattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp)/i;
-    const isValidImageUrl = urlPattern.test(imageUrl) || imageUrl.length > 50;
-
-    console.log(`    ✓ Найдено изображение:`);
-    console.log(`      URL: ${imageUrl.substring(0, 100)}${imageUrl.length > 100 ? '...' : ''}`);
-    console.log(`      Длина URL: ${imageUrl.length} символов`);
-    console.log(`      Валидный URL: ${isValidImageUrl ? 'Да' : 'Возможно нет (но попробуем)'}`);
-
-    if (!isValidImageUrl) {
-      console.warn(`    ⚠️  Предупреждение: URL может быть невалидным, но продолжаем...`);
-    }
-
-    if (page) {
-      try {
-        await page.close();
-      } catch (closeError) {
-        console.warn(`    ⚠️  Предупреждение при закрытии страницы: ${closeError.message}`);
-      }
-    }
     return imageUrl;
   } catch (error) {
-    if (page) {
-      try {
-        await page.close();
-      } catch (closeError) {
-        // Игнорируем ошибки при закрытии в блоке catch
-      }
-    }
-    throw new Error(`Ошибка поиска: ${error.message}`);
+    console.log(`    ⚠️  Не удалось взять изображение: ${error.message}`);
+    return null;
   }
 }
 
