@@ -627,8 +627,6 @@ function checkImageRelevance(imageAlt, productName) {
  */
 async function extractImagesFromMainPage(page, productName) {
   try {
-    console.log(`    📸 Ищу изображения на главной странице...`);
-
     // Ждем появления блока с изображениями
     await page.waitForSelector('div[data-lpage], div[jsname], img[data-src]', { timeout: 5000 });
 
@@ -667,27 +665,20 @@ async function extractImagesFromMainPage(page, productName) {
     });
 
     if (images.length > 0) {
-      console.log(`    ✓ Найдено ${images.length} изображений на главной странице`);
-
       // Проверяем релевантность каждого изображения
       for (const image of images) {
         const isRelevant = checkImageRelevance(image.alt, productName);
         if (isRelevant) {
-          console.log(`    ✓ Найдено релевантное изображение:`);
-          console.log(`      Alt: "${image.alt.substring(0, 60)}..."`);
-          console.log(`      URL: ${image.url.substring(0, 80)}...`);
           return image.url;
         }
       }
 
       // Если не нашли релевантное, берем первое
-      console.log(`    ⚠️  Релевантных не найдено, беру первое изображение`);
       return images[0].url;
     }
 
     return null;
   } catch (error) {
-    console.log(`    ⚠️  Не удалось извлечь изображения с главной страницы`);
     return null;
   }
 }
@@ -706,10 +697,7 @@ async function searchProductImage(productName, browser) {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     );
 
-    console.log(`    🔍 Ищу изображение для: "${productName.substring(0, 50)}..."`);
-
     // СТРАТЕГИЯ 1: Полное название на вкладке Images (главная стратегия)
-    console.log(`    📍 Стратегия 1: Полное название на Images`);
     let imageUrl = await trySearchStrategy(page, productName, true);
     if (imageUrl) {
       if (page) await page.close();
@@ -719,7 +707,6 @@ async function searchProductImage(productName, browser) {
     // СТРАТЕГИЯ 2: Упрощенное название на Images
     const simplifiedName = simplifyProductName(productName);
     if (simplifiedName !== productName) {
-      console.log(`    📍 Стратегия 2: Упрощенное название "${simplifiedName.substring(0, 40)}..." на Images`);
       imageUrl = await trySearchStrategy(page, simplifiedName, true);
       if (imageUrl) {
         if (page) await page.close();
@@ -728,7 +715,6 @@ async function searchProductImage(productName, browser) {
     }
 
     // FALLBACK СТРАТЕГИЯ 3: Полное название на главной странице (если Images не дал результатов)
-    console.log(`    📍 Fallback 3: Полное название на главной странице`);
     imageUrl = await trySearchStrategy(page, productName, false);
     if (imageUrl) {
       if (page) await page.close();
@@ -737,7 +723,6 @@ async function searchProductImage(productName, browser) {
 
     // FALLBACK СТРАТЕГИЯ 4: Упрощенное название на главной странице
     if (simplifiedName !== productName) {
-      console.log(`    📍 Fallback 4: Упрощенное название на главной странице`);
       imageUrl = await trySearchStrategy(page, simplifiedName, false);
       if (imageUrl) {
         if (page) await page.close();
@@ -746,7 +731,6 @@ async function searchProductImage(productName, browser) {
     }
 
     // КРАЙНИЙ СЛУЧАЙ: Берем любое изображение
-    console.log(`    ⚠️  Все стратегии не сработали, пробую взять любое изображение...`);
     imageUrl = await tryGetAnyImage(page);
     if (imageUrl) {
       if (page) await page.close();
@@ -818,8 +802,6 @@ async function trySearchStrategy(page, query, useImagesTab) {
       return await extractImagesFromMainPage(page, query);
     } else {
       // Переходим на вкладку Images
-      console.log(`    🖱️  Перехожу на вкладку Images...`);
-
       try {
         await page.waitForSelector('a[href*="tbm=isch"]', { timeout: 5000 });
         await randomDelay(500, 1000);
@@ -844,7 +826,6 @@ async function trySearchStrategy(page, query, useImagesTab) {
       return await extractImageFromImagesTab(page, query);
     }
   } catch (error) {
-    console.log(`    ⚠️  Стратегия не сработала: ${error.message}`);
     return null;
   }
 }
@@ -854,8 +835,6 @@ async function trySearchStrategy(page, query, useImagesTab) {
  */
 async function extractImageFromImagesTab(page, productName) {
   try {
-    console.log(`    📸 Ищу изображения на вкладке Images...`);
-
     // Ждем загрузки изображений
     try {
       await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
@@ -865,7 +844,6 @@ async function extractImageFromImagesTab(page, productName) {
         await handleCaptcha(page);
         await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
       } else {
-        console.log(`    ⚠️  Изображения не загрузились на Images`);
         return null;
       }
     }
@@ -873,7 +851,6 @@ async function extractImageFromImagesTab(page, productName) {
     await randomDelay(2000, 3000);
 
     // Кликаем на первое изображение
-    console.log(`    🖱️  Кликаю на первое изображение...`);
     const selectors = [
       'div[data-ri="0"] img',
       '.ivg-i img',
@@ -887,7 +864,6 @@ async function extractImageFromImagesTab(page, productName) {
         await page.waitForSelector(selector, { timeout: 2000 });
         await page.click(selector);
         imageClicked = true;
-        console.log(`    ✓ Кликнул (селектор: ${selector})`);
         break;
       } catch (e) {
         // Пробуем следующий
@@ -895,14 +871,12 @@ async function extractImageFromImagesTab(page, productName) {
     }
 
     if (!imageClicked) {
-      console.log(`    ⚠️  Не удалось кликнуть на изображение`);
       return null;
     }
 
     await randomDelay(2500, 3500);
 
     // Извлекаем URL
-    console.log(`    🔍 Извлекаю URL изображения...`);
     const imageUrl = await page.evaluate(() => {
       const previewImg = document.querySelector('img.sFlh5c, img.iPVvYb, img.n3VNCb, img[data-iml]');
       if (previewImg && previewImg.src && previewImg.src.startsWith('http')) {
@@ -929,13 +903,8 @@ async function extractImageFromImagesTab(page, productName) {
       return null;
     });
 
-    if (imageUrl) {
-      console.log(`    ✓ Найдено изображение: ${imageUrl.substring(0, 80)}...`);
-    }
-
     return imageUrl;
   } catch (error) {
-    console.log(`    ⚠️  Ошибка извлечения из Images: ${error.message}`);
     return null;
   }
 }
@@ -945,8 +914,6 @@ async function extractImageFromImagesTab(page, productName) {
  */
 async function tryGetAnyImage(page) {
   try {
-    console.log(`    📸 Пробую взять любое доступное изображение...`);
-
     const imageUrl = await page.evaluate(() => {
       const allImages = document.querySelectorAll("img");
       for (const img of allImages) {
@@ -965,13 +932,8 @@ async function tryGetAnyImage(page) {
       return null;
     });
 
-    if (imageUrl) {
-      console.log(`    ✓ Найдено изображение: ${imageUrl.substring(0, 80)}...`);
-    }
-
     return imageUrl;
   } catch (error) {
-    console.log(`    ⚠️  Не удалось взять изображение: ${error.message}`);
     return null;
   }
 }
