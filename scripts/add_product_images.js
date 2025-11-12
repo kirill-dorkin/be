@@ -1332,7 +1332,7 @@ async function main() {
       barsize: 20
     }, cliProgress.Presets.shades_classic);
 
-    progressBar.start(productsToProcess.length, 0, {
+    progressBar.start(productsToProcess.length, 1, {
       success: successCount,
       fail: failCount,
       skip: skippedCount
