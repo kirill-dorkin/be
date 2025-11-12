@@ -1418,27 +1418,32 @@ async function main() {
         skip: skippedCount
       });
 
-      // УМНЫЕ ПАУЗЫ - только когда успешно обработано РОВНО 10/30/50 товаров
+      // УМНЫЕ ПАУЗЫ - ПОСЛЕ обновления прогресс-бара
+      // Проверяем что успешно обработано кратное 10/30/50 количество
+      // И это НЕ последний товар в списке
       if (success && productNumber < productsToProcess.length) {
         let pauseSec = 0;
         let pauseType = '';
 
-        // Проверяем successCount (количество успешно обработанных), а не общий номер
-        if (successCount % PAUSE_EVERY_50 === 0) {
+        // Проверяем successCount (количество успешно обработанных)
+        if (successCount % PAUSE_EVERY_50 === 0 && successCount > 0) {
           pauseSec = Math.floor(Math.random() * 15) + 45;
           pauseType = 'длинная';
-        } else if (successCount % PAUSE_EVERY_30 === 0) {
+        } else if (successCount % PAUSE_EVERY_30 === 0 && successCount > 0) {
           pauseSec = Math.floor(Math.random() * 15) + 30;
           pauseType = 'средняя';
-        } else if (successCount % PAUSE_EVERY_10 === 0) {
+        } else if (successCount % PAUSE_EVERY_10 === 0 && successCount > 0) {
           pauseSec = Math.floor(Math.random() * 10) + 15;
           pauseType = 'короткая';
         }
 
         if (pauseSec > 0) {
+          // Останавливаем прогресс-бар ПОСЛЕ того как он показал текущее значение
+          await randomDelay(100, 200); // Даем время прогресс-бару отрисоваться
           progressBar.stop();
           console.log(chalk.cyan(`\n⏸️  Обработано ${successCount} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с...\n`));
           await delay(pauseSec * 1000);
+          // Возобновляем с текущим значением
           progressBar.start(productsToProcess.length, productNumber, {
             success: successCount,
             fail: failCount,
