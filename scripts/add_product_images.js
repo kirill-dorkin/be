@@ -187,20 +187,38 @@ async function injectCaptchaSolution(page, gRecaptchaResponse) {
 
     if (isSorryPage) {
       console.log(`    🔧 Обнаружена страница блокировки Google (/sorry)`);
+
+      // Делаем скриншот до внедрения для отладки
+      try {
+        await page.screenshot({ path: `/tmp/captcha-before-inject-${Date.now()}.png` });
+        console.log(`    📸 Скриншот сохранён в /tmp/`);
+      } catch (e) {
+        // Игнорируем ошибки скриншотов
+      }
     }
 
     // Внедряем токен в страницу
-    await page.evaluate((token) => {
+    const injectionResult = await page.evaluate((token) => {
+      const results = {
+        textareaFound: false,
+        textareaCount: 0,
+        callbackInvoked: false,
+        formFound: false,
+        submitBtnFound: false,
+      };
+
       // Устанавливаем значение в textarea
       const textarea = document.getElementById('g-recaptcha-response');
       if (textarea) {
         textarea.innerHTML = token;
         textarea.value = token;
         textarea.style.display = '';
+        results.textareaFound = true;
       }
 
       // Ищем все textarea с g-recaptcha-response
       const textareas = document.querySelectorAll('textarea[name="g-recaptcha-response"]');
+      results.textareaCount = textareas.length;
       textareas.forEach(t => {
         t.innerHTML = token;
         t.value = token;
@@ -215,47 +233,105 @@ async function injectCaptchaSolution(page, gRecaptchaResponse) {
             const client = clients[key];
             if (client && client.callback) {
               client.callback(token);
+              results.callbackInvoked = true;
             }
           });
         }
       }
+
+      // Проверяем наличие формы и кнопок
+      const form = document.querySelector('form');
+      if (form) {
+        results.formFound = true;
+      }
+
+      const submitBtn = document.querySelector('button[type="submit"], input[type="submit"], button#submit');
+      if (submitBtn) {
+        results.submitBtnFound = true;
+      }
+
+      return results;
     }, gRecaptchaResponse);
 
     console.log(`    ✅ Токен решения внедрён в страницу`);
+    console.log(`       - textarea найдено: ${injectionResult.textareaCount}`);
+    console.log(`       - callback вызван: ${injectionResult.callbackInvoked ? 'Да' : 'Нет'}`);
+    console.log(`       - форма найдена: ${injectionResult.formFound ? 'Да' : 'Нет'}`);
+    console.log(`       - кнопка submit: ${injectionResult.submitBtnFound ? 'Да' : 'Нет'}`);
 
     // Для страницы /sorry нужно отправить форму
     if (isSorryPage) {
       console.log(`    📤 Отправляю форму с решением...`);
 
-      const formSubmitted = await page.evaluate(() => {
-        // Ищем форму с капчей
-        const form = document.querySelector('form');
-        if (form) {
-          form.submit();
-          return true;
-        }
-
-        // Ищем кнопку submit
-        const submitBtn = document.querySelector('button[type="submit"], input[type="submit"]');
+      // СПОСОБ 1: Попробовать кликнуть по кнопке submit
+      const clickResult = await page.evaluate(() => {
+        const submitBtn = document.querySelector('button[type="submit"], input[type="submit"], button#submit, input#submit');
         if (submitBtn) {
           submitBtn.click();
+          return { method: 'button.click()', success: true };
+        }
+        return { method: 'button.click()', success: false };
+      });
+
+      if (clickResult.success) {
+        console.log(`    ✓ Кликнул на кнопку submit`);
+      } else {
+        console.log(`    ⚠️  Кнопка submit не найдена, пробую form.submit()`);
+
+        // СПОСОБ 2: Попробовать отправить форму напрямую
+        const formResult = await page.evaluate(() => {
+          const form = document.querySelector('form');
+          if (form) {
+            form.submit();
+            return { method: 'form.submit()', success: true };
+          }
+          return { method: 'form.submit()', success: false };
+        });
+
+        if (formResult.success) {
+          console.log(`    ✓ Форма отправлена через form.submit()`);
+        } else {
+          console.log(`    ❌ Ни форма, ни кнопка не найдены!`);
+
+          // Делаем скриншот для отладки
+          try {
+            await page.screenshot({ path: `/tmp/captcha-no-form-${Date.now()}.png` });
+            console.log(`    📸 Скриншот для отладки: /tmp/captcha-no-form-*.png`);
+          } catch (e) {
+            // Игнорируем
+          }
+
+          return false;
+        }
+      }
+
+      // Ждем навигации (перенаправления на нормальную страницу)
+      console.log(`    ⏳ Жду перенаправления (до 20 секунд)...`);
+      try {
+        await page.waitForNavigation({ timeout: 20000, waitUntil: 'domcontentloaded' });
+        console.log(`    ✅ Перенаправление выполнено!`);
+        return true;
+      } catch (navError) {
+        console.log(`    ⚠️  Таймаут навигации (${navError.message})`);
+
+        // Делаем скриншот после ожидания
+        try {
+          await page.screenshot({ path: `/tmp/captcha-after-wait-${Date.now()}.png` });
+          console.log(`    📸 Скриншот после ожидания: /tmp/captcha-after-wait-*.png`);
+        } catch (e) {
+          // Игнорируем
+        }
+
+        // Проверяем изменился ли URL несмотря на таймаут
+        const newUrl = page.url();
+        if (newUrl !== currentUrl) {
+          console.log(`    ✓ URL изменился несмотря на таймаут`);
+          console.log(`      Старый: ${currentUrl.substring(0, 60)}...`);
+          console.log(`      Новый:  ${newUrl.substring(0, 60)}...`);
           return true;
         }
 
         return false;
-      });
-
-      if (formSubmitted) {
-        console.log(`    ⏳ Жду перенаправления...`);
-        // Ждем навигации (перенаправления на нормальную страницу)
-        try {
-          await page.waitForNavigation({ timeout: 15000, waitUntil: 'networkidle2' });
-          console.log(`    ✅ Перенаправление выполнено`);
-        } catch (navError) {
-          console.log(`    ⚠️  Таймаут навигации, но возможно капча решена`);
-        }
-      } else {
-        console.log(`    ⚠️  Форма не найдена, пробую альтернативный метод...`);
       }
     }
 
@@ -271,23 +347,27 @@ async function injectCaptchaSolution(page, gRecaptchaResponse) {
  */
 async function solveRecaptchaAutomatically(page) {
   if (!antiCaptchaClient) {
-    console.log(`    ⚠️  Anti-Captcha не настроен, пропускаю автоматическое решение`);
+    console.log(`    ⚠️  Anti-Captcha не настроен (ключ не задан в .env)`);
+    console.log(`    💡 Добавьте ANTICAPTCHA_API_KEY в .env для автоматического решения`);
     return false;
   }
 
   try {
-    console.log(`\n    🤖 ОБНАРУЖЕНА КАПЧА! Запускаю автоматическое решение...`);
+    console.log(`\n    🤖 ОБНАРУЖЕНА КАПЧА! Запускаю автоматическое решение через Anti-Captcha...`);
 
     // Получаем текущий URL
     const currentURL = page.url();
-    console.log(`    🌐 URL: ${currentURL}`);
+    console.log(`    🌐 URL: ${currentURL.substring(0, 100)}...`);
 
     // Извлекаем sitekey
+    console.log(`    🔍 Ищу sitekey на странице...`);
     const siteKey = await extractRecaptchaSiteKey(page);
     if (!siteKey) {
-      console.log(`    ❌ Не удалось извлечь sitekey, пропускаю автоматическое решение`);
+      console.log(`    ❌ Не удалось извлечь sitekey`);
+      console.log(`    💡 Возможно Google изменил структуру страницы`);
       return false;
     }
+    console.log(`    ✓ Sitekey найден: ${siteKey.substring(0, 20)}...`);
 
     // Решаем капчу через Anti-Captcha
     const gRecaptchaResponse = await antiCaptchaClient.solveRecaptchaV2(
@@ -299,37 +379,64 @@ async function solveRecaptchaAutomatically(page) {
     const urlBeforeInject = page.url();
     const wasSorryPage = urlBeforeInject.includes('/sorry');
 
+    console.log(`    ⏳ Даю странице время загрузиться перед внедрением...`);
+    await randomDelay(2000, 3000);
+
     // Внедряем решение в страницу (для /sorry также отправит форму)
-    await injectCaptchaSolution(page, gRecaptchaResponse);
+    const injectionSuccess = await injectCaptchaSolution(page, gRecaptchaResponse);
 
-    // Для страницы /sorry даем больше времени на перенаправление
-    if (wasSorryPage) {
-      await randomDelay(3000, 5000);
-    } else {
-      await randomDelay(2000, 3000);
-    }
-
-    // Проверяем результат
-    const urlAfterInject = page.url();
-    const urlChanged = urlAfterInject !== urlBeforeInject;
-
-    // Если URL изменился - значит перенаправление прошло успешно
-    if (urlChanged) {
-      console.log(`    ✅ URL изменился - капча решена успешно!`);
-      console.log(`    📍 Новый URL: ${urlAfterInject.substring(0, 80)}...`);
-      return true;
-    }
-
-    // Если URL не изменился, проверяем наличие капчи
-    const stillHasCaptcha = await detectCaptcha(page);
-    if (!stillHasCaptcha) {
-      console.log(`    ✅ Капча успешно решена автоматически!\n`);
-      return true;
-    } else {
-      console.log(`    ⚠️  Капча всё ещё присутствует после автоматического решения`);
-      console.log(`    💡 Возможно требуется дополнительная проверка или ручное решение`);
-      await randomDelay(1000, 2000);
+    if (!injectionSuccess) {
+      console.log(`    ❌ Не удалось внедрить решение`);
       return false;
+    }
+
+    // Для страницы /sorry проверяем результат
+    if (wasSorryPage) {
+      // injectCaptchaSolution уже ждёт навигации для /sorry
+      // Просто проверяем изменился ли URL
+      await randomDelay(1000, 2000);
+
+      const currentUrl = page.url();
+      const urlChanged = currentUrl !== urlBeforeInject;
+
+      if (urlChanged) {
+        console.log(`    ✅ URL изменился - капча решена успешно!`);
+        console.log(`    📍 Был:   ${urlBeforeInject.substring(0, 70)}...`);
+        console.log(`    📍 Стал:  ${currentUrl.substring(0, 70)}...`);
+        return true;
+      }
+
+      // Если URL не изменился, проверяем исчезла ли капча
+      console.log(`    🔍 URL не изменился, проверяю исчезла ли капча...`);
+      const stillHasCaptcha = await detectCaptcha(page);
+      if (!stillHasCaptcha) {
+        console.log(`    ✅ Капча исчезла - решение принято!`);
+        return true;
+      }
+
+      console.log(`    ❌ Капча всё ещё присутствует, решение не принято`);
+      console.log(`    💡 Возможно требуется ручное подтверждение`);
+      return false;
+    } else {
+      // Для обычных страниц
+      await randomDelay(2000, 3000);
+
+      const urlAfterInject = page.url();
+      const urlChanged = urlAfterInject !== urlBeforeInject;
+
+      if (urlChanged) {
+        console.log(`    ✅ URL изменился - капча решена успешно!`);
+        return true;
+      }
+
+      const stillHasCaptcha = await detectCaptcha(page);
+      if (!stillHasCaptcha) {
+        console.log(`    ✅ Капча успешно решена автоматически!\n`);
+        return true;
+      } else {
+        console.log(`    ⚠️  Капча всё ещё присутствует, возможно нужна дополнительная обработка`);
+        return false;
+      }
     }
   } catch (error) {
     console.error(`    ❌ Ошибка автоматического решения: ${error.message}`);
