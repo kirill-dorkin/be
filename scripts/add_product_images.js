@@ -531,37 +531,37 @@ async function searchProductImage(productName, browser) {
 
     console.log(`    🔍 Ищу изображение для: "${productName.substring(0, 50)}..."`);
 
-    // СТРАТЕГИЯ 1: Попытка с полным названием на главной странице
-    console.log(`    📍 Стратегия 1: Полное название на главной странице`);
-    let imageUrl = await trySearchStrategy(page, productName, false);
+    // СТРАТЕГИЯ 1: Полное название на вкладке Images (главная стратегия)
+    console.log(`    📍 Стратегия 1: Полное название на Images`);
+    let imageUrl = await trySearchStrategy(page, productName, true);
     if (imageUrl) {
       if (page) await page.close();
       return imageUrl;
     }
 
-    // СТРАТЕГИЯ 2: Попытка с полным названием на вкладке Images
-    console.log(`    📍 Стратегия 2: Полное название на вкладке Images`);
-    imageUrl = await trySearchStrategy(page, productName, true);
-    if (imageUrl) {
-      if (page) await page.close();
-      return imageUrl;
-    }
-
-    // СТРАТЕГИЯ 3: Упрощенное название на главной странице
+    // СТРАТЕГИЯ 2: Упрощенное название на Images
     const simplifiedName = simplifyProductName(productName);
     if (simplifiedName !== productName) {
-      console.log(`    📍 Стратегия 3: Упрощенное название "${simplifiedName.substring(0, 40)}..."`);
-      imageUrl = await trySearchStrategy(page, simplifiedName, false);
+      console.log(`    📍 Стратегия 2: Упрощенное название "${simplifiedName.substring(0, 40)}..." на Images`);
+      imageUrl = await trySearchStrategy(page, simplifiedName, true);
       if (imageUrl) {
         if (page) await page.close();
         return imageUrl;
       }
     }
 
-    // СТРАТЕГИЯ 4: Упрощенное название на Images
+    // FALLBACK СТРАТЕГИЯ 3: Полное название на главной странице (если Images не дал результатов)
+    console.log(`    📍 Fallback 3: Полное название на главной странице`);
+    imageUrl = await trySearchStrategy(page, productName, false);
+    if (imageUrl) {
+      if (page) await page.close();
+      return imageUrl;
+    }
+
+    // FALLBACK СТРАТЕГИЯ 4: Упрощенное название на главной странице
     if (simplifiedName !== productName) {
-      console.log(`    📍 Стратегия 4: Упрощенное название на Images`);
-      imageUrl = await trySearchStrategy(page, simplifiedName, true);
+      console.log(`    📍 Fallback 4: Упрощенное название на главной странице`);
+      imageUrl = await trySearchStrategy(page, simplifiedName, false);
       if (imageUrl) {
         if (page) await page.close();
         return imageUrl;
