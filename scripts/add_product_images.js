@@ -1178,6 +1178,9 @@ async function addProductMetadata(productId, key, value) {
 
 // Основная функция
 async function main() {
+  // Очищаем терминал для чистого вывода
+  console.clear();
+
   // Красивый заголовок
   console.log("\n" + boxen(
     chalk.cyan.bold("🚀 AUTO IMAGE UPLOADER") + "\n\n" +
@@ -1301,21 +1304,27 @@ async function main() {
                     options.barIncompleteString.substring(0, Math.round((1 - params.progress) * options.barsize));
 
         // Выравниваем числа справа (добавляем пробелы слева)
-        const totalDigits = String(params.total).length;
-        const valueStr = String(params.value).padStart(totalDigits, ' ');
-        const totalStr = String(params.total);
+        const totalDigits = String(params.total || 0).length;
+        const valueStr = String(params.value || 0).padStart(totalDigits, ' ');
+        const totalStr = String(params.total || 0);
 
         const successStr = String(payload.success || 0).padStart(3, ' ');
         const failStr = String(payload.fail || 0).padStart(3, ' ');
         const skipStr = String(payload.skip || 0).padStart(3, ' ');
 
+        // Безопасное получение процента и ETA
+        const percentage = (params.percentage !== undefined && params.percentage !== null)
+                          ? params.percentage.toFixed(0)
+                          : '0';
+        const eta = params.eta_formatted || '0s';
+
         return chalk.cyan(bar) +
-               ' | ' + params.percentage.toFixed(0) + '% | ' +
+               ' | ' + percentage + '% | ' +
                valueStr + '/' + totalStr + ' товаров | ' +
                chalk.green('✓' + successStr) + ' ' +
                chalk.red('✗' + failStr) + ' ' +
                chalk.yellow('⏭' + skipStr) + ' | ' +
-               params.eta_formatted;
+               eta;
       },
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
