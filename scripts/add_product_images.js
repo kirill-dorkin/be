@@ -4,6 +4,7 @@ const os = require("os");
 const FormData = require("form-data");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
+const AntiCaptchaClient = require("./anticaptcha-client");
 
 // Загружаем переменные окружения из .env файла
 const envPath = path.join(__dirname, "..", ".env");
@@ -24,11 +25,21 @@ if (fs.existsSync(envPath)) {
 
 const API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL;
 const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
+const ANTICAPTCHA_API_KEY = process.env.ANTICAPTCHA_API_KEY;
 
 if (!API_URL || !APP_TOKEN) {
   throw new Error(
     "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения."
   );
+}
+
+// Инициализируем Anti-Captcha клиент (если ключ задан)
+let antiCaptchaClient = null;
+if (ANTICAPTCHA_API_KEY) {
+  antiCaptchaClient = new AntiCaptchaClient(ANTICAPTCHA_API_KEY);
+  console.log("✅ Anti-Captcha интеграция активна");
+} else {
+  console.log("⚠️  Anti-Captcha ключ не задан, капчи нужно будет решать вручную");
 }
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -124,6 +135,160 @@ async function waitForCaptchaSolution(page, maxWaitMinutes = 5) {
   }
 
   throw new Error(`Капча не была решена за ${maxWaitMinutes} минут`);
+}
+
+/**
+ * Извлечь sitekey reCAPTCHA со страницы
+ */
+async function extractRecaptchaSiteKey(page) {
+  try {
+    const siteKey = await page.evaluate(() => {
+      // Способ 1: Ищем в iframe src
+      const iframe = document.querySelector('iframe[src*="recaptcha"]');
+      if (iframe) {
+        const src = iframe.src;
+        const match = src.match(/[?&]k=([^&]+)/);
+        if (match) return match[1];
+      }
+
+      // Способ 2: Ищем data-sitekey атрибут
+      const recaptchaDiv = document.querySelector('[data-sitekey]');
+      if (recaptchaDiv) {
+        return recaptchaDiv.getAttribute('data-sitekey');
+      }
+
+      // Способ 3: Ищем в grecaptcha.render вызовах в скриптах
+      const scripts = Array.from(document.getElementsByTagName('script'));
+      for (const script of scripts) {
+        if (script.textContent && script.textContent.includes('grecaptcha')) {
+          const match = script.textContent.match(/sitekey['":\s]+(['"])([^'"]+)\1/);
+          if (match) return match[2];
+        }
+      }
+
+      return null;
+    });
+
+    return siteKey;
+  } catch (error) {
+    console.error(`    ❌ Ошибка извлечения sitekey: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Внедрить токен решения капчи в страницу
+ */
+async function injectCaptchaSolution(page, gRecaptchaResponse) {
+  try {
+    await page.evaluate((token) => {
+      // Способ 1: Устанавливаем значение в textarea
+      const textarea = document.getElementById('g-recaptcha-response');
+      if (textarea) {
+        textarea.innerHTML = token;
+        textarea.value = token;
+      }
+
+      // Способ 2: Ищем все textarea с g-recaptcha-response (могут быть несколько)
+      const textareas = document.querySelectorAll('textarea[name="g-recaptcha-response"]');
+      textareas.forEach(t => {
+        t.innerHTML = token;
+        t.value = token;
+      });
+
+      // Способ 3: Вызываем callback если он есть
+      if (typeof window.captchaCallback === 'function') {
+        window.captchaCallback(token);
+      }
+
+      // Способ 4: Триггерим события
+      const event = new Event('change', { bubbles: true });
+      if (textarea) {
+        textarea.dispatchEvent(event);
+      }
+    }, gRecaptchaResponse);
+
+    console.log(`    ✅ Токен решения внедрён в страницу`);
+    return true;
+  } catch (error) {
+    console.error(`    ❌ Ошибка внедрения токена: ${error.message}`);
+    return false;
+  }
+}
+
+/**
+ * Автоматически решить капчу через Anti-Captcha
+ */
+async function solveRecaptchaAutomatically(page) {
+  if (!antiCaptchaClient) {
+    console.log(`    ⚠️  Anti-Captcha не настроен, пропускаю автоматическое решение`);
+    return false;
+  }
+
+  try {
+    console.log(`\n    🤖 ОБНАРУЖЕНА КАПЧА! Запускаю автоматическое решение...`);
+
+    // Получаем текущий URL
+    const currentURL = page.url();
+    console.log(`    🌐 URL: ${currentURL}`);
+
+    // Извлекаем sitekey
+    const siteKey = await extractRecaptchaSiteKey(page);
+    if (!siteKey) {
+      console.log(`    ❌ Не удалось извлечь sitekey, пропускаю автоматическое решение`);
+      return false;
+    }
+
+    // Решаем капчу через Anti-Captcha
+    const gRecaptchaResponse = await antiCaptchaClient.solveRecaptchaV2(
+      currentURL,
+      siteKey
+    );
+
+    // Внедряем решение в страницу
+    await injectCaptchaSolution(page, gRecaptchaResponse);
+
+    // Даём странице время обработать решение
+    await randomDelay(2000, 3000);
+
+    // Проверяем что капча исчезла
+    const stillHasCaptcha = await detectCaptcha(page);
+    if (!stillHasCaptcha) {
+      console.log(`    ✅ Капча успешно решена автоматически!\n`);
+      return true;
+    } else {
+      console.log(`    ⚠️  Капча всё ещё присутствует, возможно нужна дополнительная обработка`);
+      // Пробуем перезагрузить страницу или нажать кнопку продолжить
+      await randomDelay(1000, 2000);
+      return false;
+    }
+  } catch (error) {
+    console.error(`    ❌ Ошибка автоматического решения: ${error.message}`);
+    return false;
+  }
+}
+
+/**
+ * Обработать капчу (автоматически или вручную)
+ * Сначала пробует автоматическое решение, затем fallback на ручное
+ */
+async function handleCaptcha(page) {
+  // Пробуем автоматическое решение
+  const autoSolved = await solveRecaptchaAutomatically(page);
+
+  if (autoSolved) {
+    return true; // Успешно решено автоматически
+  }
+
+  // Если автоматическое решение не сработало, fallback на ручное
+  if (!antiCaptchaClient) {
+    console.log(`    💡 Переключаюсь на ручное решение капчи...`);
+  } else {
+    console.log(`    💡 Автоматическое решение не сработало, переключаюсь на ручное...`);
+  }
+
+  await waitForCaptchaSolution(page);
+  return true;
 }
 
 async function graphqlRequest(query, variables = {}, attempt = 0) {
@@ -259,7 +424,7 @@ async function searchProductImage(productName, browser) {
 
     // Проверяем капчу сразу после загрузки
     if (await detectCaptcha(page)) {
-      await waitForCaptchaSolution(page);
+      await handleCaptcha(page);
     }
 
     await randomDelay(1500, 2500); // Случайная задержка как человек
@@ -284,7 +449,7 @@ async function searchProductImage(productName, browser) {
 
     // Проверяем капчу перед переходом на Images
     if (await detectCaptcha(page)) {
-      await waitForCaptchaSolution(page);
+      await handleCaptcha(page);
     }
 
     try {
@@ -305,7 +470,7 @@ async function searchProductImage(productName, browser) {
 
     // ШАГ 5: Проверяем капчу перед поиском изображений
     if (await detectCaptcha(page)) {
-      await waitForCaptchaSolution(page);
+      await handleCaptcha(page);
     }
 
     // ШАГ 6: Ждем загрузки изображений
@@ -321,7 +486,7 @@ async function searchProductImage(productName, browser) {
 
       // Возможно это капча
       if (await detectCaptcha(page)) {
-        await waitForCaptchaSolution(page);
+        await handleCaptcha(page);
         // Пробуем еще раз после решения капчи
         await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
       } else {
