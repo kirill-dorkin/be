@@ -5,6 +5,10 @@ const FormData = require("form-data");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
 const AntiCaptchaClient = require("./anticaptcha-client");
+const chalk = require("chalk");
+const ora = require("ora");
+const cliProgress = require("cli-progress");
+const boxen = require("boxen");
 
 // Загружаем переменные окружения из .env файла
 const envPath = path.join(__dirname, "..", ".env");
@@ -20,7 +24,7 @@ if (fs.existsSync(envPath)) {
       }
     }
   });
-  console.log("✅ Переменные окружения загружены из .env");
+  // Не выводим сообщение здесь, выведем в начале main()
 }
 
 const API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL;
@@ -28,18 +32,15 @@ const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
 const ANTICAPTCHA_API_KEY = process.env.ANTICAPTCHA_API_KEY;
 
 if (!API_URL || !APP_TOKEN) {
-  throw new Error(
-    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения."
-  );
+  console.error(chalk.red.bold("❌ Ошибка конфигурации!"));
+  console.error(chalk.yellow("NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в .env"));
+  process.exit(1);
 }
 
 // Инициализируем Anti-Captcha клиент (если ключ задан)
 let antiCaptchaClient = null;
 if (ANTICAPTCHA_API_KEY) {
   antiCaptchaClient = new AntiCaptchaClient(ANTICAPTCHA_API_KEY);
-  console.log("✅ Anti-Captcha интеграция активна");
-} else {
-  console.log("⚠️  Anti-Captcha ключ не задан, капчи нужно будет решать вручную");
 }
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -978,9 +979,6 @@ async function tryGetAnyImage(page) {
 // Скачать изображение
 async function downloadImage(imageUrl, productName = null) {
   try {
-    console.log(`    🌐 Скачиваю изображение...`);
-    console.log(`      URL: ${imageUrl.substring(0, 80)}...`);
-
     const response = await axios.get(imageUrl, {
       responseType: "arraybuffer",
       timeout: 30000,
@@ -1002,11 +1000,6 @@ async function downloadImage(imageUrl, productName = null) {
     else if (contentType.includes('jpeg') || contentType.includes('jpg')) extension = 'jpg';
 
     const buffer = Buffer.from(response.data);
-    const sizeKB = (buffer.length / 1024).toFixed(2);
-
-    console.log(`      Content-Type: ${contentType}`);
-    console.log(`      Размер: ${sizeKB} KB`);
-    console.log(`      Расширение: .${extension}`);
 
     // Проверяем что скачали не пустой файл
     if (buffer.length < 1000) {
@@ -1024,8 +1017,6 @@ async function downloadImage(imageUrl, productName = null) {
 
     const tempFilePath = path.join(os.tmpdir(), filename);
     fs.writeFileSync(tempFilePath, buffer);
-
-    console.log(`      ✓ Сохранено во временную папку: ${filename}`);
 
     return tempFilePath;
   } catch (error) {
@@ -1077,9 +1068,6 @@ async function addProductImage(productId, imagePath) {
     const contentType = contentTypeMap[extension] || 'image/jpeg';
     const filename = `product${extension}`;
 
-    console.log(`    📎 Тип файла: ${contentType}`);
-    console.log(`    📎 Имя файла: ${filename}`);
-
     const form = new FormData();
 
     const operations = {
@@ -1126,27 +1114,8 @@ async function addProductImage(productId, imagePath) {
     }
 
     const result = json.data?.productMediaCreate;
-
-    // Выводим информацию о загруженном изображении
-    if (result?.media && result.media.length > 0) {
-      const uploadedMedia = result.media[result.media.length - 1]; // Последнее добавленное изображение
-      console.log(`    ✅ Изображение загружено в Saleor:`);
-      console.log(`       ID: ${uploadedMedia.id}`);
-      console.log(`       URL: ${uploadedMedia.url}`);
-      console.log(`       Тип: ${uploadedMedia.type}`);
-
-      // Проверяем доступность URL
-      if (uploadedMedia.url) {
-        console.log(`    🔗 Изображение будет доступно по ссылке: ${uploadedMedia.url}`);
-      }
-    }
-
     return result?.product;
   } catch (error) {
-    console.error(
-      `Ошибка при добавлении изображения к продукту ${productId}:`,
-      error.message
-    );
     throw error;
   } finally {
     // Удаляем временный файл (если не установлен флаг KEEP_IMAGES)
@@ -1247,13 +1216,37 @@ async function addProductMetadata(productId, key, value) {
 
 // Основная функция
 async function main() {
-  console.log("🚀 Начинаем добавление изображений к продуктам...\n");
+  // Красивый заголовок
+  console.log("\n" + boxen(
+    chalk.cyan.bold("🚀 AUTO IMAGE UPLOADER") + "\n\n" +
+    chalk.gray("Автоматическое добавление изображений из Google Images\n") +
+    chalk.gray("в ваш Saleor каталог продуктов"),
+    {
+      padding: 1,
+      margin: 1,
+      borderStyle: 'double',
+      borderColor: 'cyan',
+      backgroundColor: '#1a1a1a'
+    }
+  ));
 
-  // Подключаемся к уже запущенному Chrome через DevTools Protocol
-  console.log("🌐 Подключаюсь к открытому Chrome...");
-  console.log("⚠️  ВАЖНО: Перед запуском скрипта запустите Chrome с флагом remote debugging:");
-  console.log('   /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222');
-  console.log("   Или используйте уже открытый Chrome, если он запущен с этим флагом.\n");
+  // Статус конфигурации
+  console.log(chalk.bold("📋 Конфигурация:\n"));
+  console.log(chalk.green("  ✓") + " Переменные окружения загружены");
+  console.log(chalk.green("  ✓") + " Saleor API: " + chalk.cyan(API_URL.substring(0, 50) + "..."));
+  if (antiCaptchaClient) {
+    console.log(chalk.green("  ✓") + " Anti-Captcha: " + chalk.green("Активен") + " (автоматическое решение капчи)");
+  } else {
+    console.log(chalk.yellow("  ⚠") + " Anti-Captcha: " + chalk.yellow("Не настроен") + " (ручное решение капчи)");
+  }
+  console.log("");
+
+  // Подключаемся к Chrome
+  const spinner = ora({
+    text: 'Подключаюсь к Chrome...',
+    color: 'cyan',
+    spinner: 'dots'
+  }).start();
 
   let browser;
   try {
@@ -1267,45 +1260,71 @@ async function main() {
       defaultViewport: null,
     });
 
-    console.log("✅ Подключено к Chrome!\n");
+    spinner.succeed(chalk.green('Подключено к Chrome!'));
+    console.log("");
   } catch (error) {
-    console.error("\n❌ Не удалось подключиться к Chrome!");
-    console.error("Убедитесь, что Chrome запущен с флагом --remote-debugging-port=9222");
-    console.error("\nЗапустите в терминале:");
-    console.error('/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222 &\n');
+    spinner.fail(chalk.red('Не удалось подключиться к Chrome!'));
+    console.log("");
+    console.log(boxen(
+      chalk.yellow.bold("⚠️  Chrome не запущен с remote debugging\n\n") +
+      chalk.white("Запустите Chrome командой:\n") +
+      chalk.cyan("pnpm chrome:debug\n\n") +
+      chalk.gray("или вручную:\n") +
+      chalk.gray('/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome\n') +
+      chalk.gray('  --remote-debugging-port=9222 &'),
+      {
+        padding: 1,
+        borderStyle: 'round',
+        borderColor: 'yellow'
+      }
+    ));
+    console.log("");
     throw error;
   }
 
   try {
     // Получаем продукты без изображений
-    console.log("📦 Получаем список продуктов без изображений...");
+    const fetchSpinner = ora('Получаю список продуктов без изображений...').start();
     const productsWithoutImages = await fetchProductsWithoutImages();
-
-    console.log(
-      `\n✅ Найдено ${productsWithoutImages.length} продуктов без изображений\n`
-    );
+    fetchSpinner.succeed(chalk.green(`Найдено ${chalk.bold(productsWithoutImages.length)} продуктов без изображений`));
+    console.log("");
 
     if (productsWithoutImages.length === 0) {
-      console.log("✨ Все продукты уже имеют изображения!");
+      console.log(boxen(
+        chalk.green.bold("✨ Отлично!\n\n") +
+        chalk.white("Все продукты уже имеют изображения"),
+        {
+          padding: 1,
+          borderStyle: 'round',
+          borderColor: 'green'
+        }
+      ));
       return;
     }
 
     // Можно ограничить количество через переменную окружения IMAGES_LIMIT
-    // Например: IMAGES_LIMIT=10 pnpm images:add
     const LIMIT = process.env.IMAGES_LIMIT
       ? Number(process.env.IMAGES_LIMIT)
-      : productsWithoutImages.length; // По умолчанию обрабатываем ВСЕ товары
+      : productsWithoutImages.length;
     const productsToProcess = productsWithoutImages.slice(0, LIMIT);
 
+    // Настройки
+    const PAUSE_EVERY_10 = parseInt(process.env.PAUSE_EVERY_10 || '10', 10);
+    const PAUSE_EVERY_30 = parseInt(process.env.PAUSE_EVERY_30 || '30', 10);
+    const PAUSE_EVERY_50 = parseInt(process.env.PAUSE_EVERY_50 || '50', 10);
+    const MAX_RETRIES = parseInt(process.env.MAX_RETRIES || '2', 10);
+
+    // Выводим настройки обработки
+    console.log(chalk.bold("⚙️  Настройки обработки:\n"));
+    console.log(chalk.cyan("  •") + ` Всего продуктов: ${chalk.bold(productsWithoutImages.length)}`);
     if (LIMIT < productsWithoutImages.length) {
-      console.log(
-        `⚠️  ЛИМИТ УСТАНОВЛЕН: Обрабатываем только первые ${LIMIT} товаров из ${productsWithoutImages.length}\n`
-      );
+      console.log(chalk.yellow("  •") + ` Лимит установлен: ${chalk.bold(LIMIT)} товаров`);
     } else {
-      console.log(
-        `✅ Обрабатываем ВСЕ товары без изображений: ${productsWithoutImages.length}\n`
-      );
+      console.log(chalk.green("  •") + ` Обрабатываем: ${chalk.bold("ВСЕ")} товары`);
     }
+    console.log(chalk.cyan("  •") + ` Макс. попыток: ${chalk.bold(MAX_RETRIES)}`);
+    console.log(chalk.cyan("  •") + ` Умные паузы: каждые ${PAUSE_EVERY_10}/${PAUSE_EVERY_30}/${PAUSE_EVERY_50} товаров`);
+    console.log("");
 
     let successCount = 0;
     let failCount = 0;
@@ -1313,23 +1332,26 @@ async function main() {
     let captchaCount = 0;
     const startTime = Date.now();
 
-    // Настройки пауз из переменных окружения (или по умолчанию)
-    const PAUSE_EVERY_10 = parseInt(process.env.PAUSE_EVERY_10 || '10', 10);
-    const PAUSE_EVERY_30 = parseInt(process.env.PAUSE_EVERY_30 || '30', 10);
-    const PAUSE_EVERY_50 = parseInt(process.env.PAUSE_EVERY_50 || '50', 10);
-    const MAX_RETRIES = parseInt(process.env.MAX_RETRIES || '2', 10);
+    // Создаём прогресс-бар
+    const progressBar = new cliProgress.SingleBar({
+      format: chalk.cyan('{bar}') + ' | {percentage}% | {value}/{total} товаров | ' +
+              chalk.green('✓{success}') + ' ' +
+              chalk.red('✗{fail}') + ' ' +
+              chalk.yellow('⏭{skip}') + ' | {eta_formatted}',
+      barCompleteChar: '\u2588',
+      barIncompleteChar: '\u2591',
+      hideCursor: true
+    }, cliProgress.Presets.shades_classic);
 
-    console.log("💡 Настройки:");
-    console.log(`   • Макс. попыток на товар: ${MAX_RETRIES}`);
-    console.log(`   • После каждых ${PAUSE_EVERY_10} товаров: пауза 15-25 секунд`);
-    console.log(`   • После каждых ${PAUSE_EVERY_30} товаров: пауза 30-45 секунд`);
-    console.log(`   • После каждых ${PAUSE_EVERY_50} товаров: пауза 45-60 секунд`);
-    console.log("   • Случайные задержки между запросами\n");
+    progressBar.start(productsToProcess.length, 0, {
+      success: successCount,
+      fail: failCount,
+      skip: skippedCount
+    });
 
     // Обрабатываем каждый продукт
     for (let i = 0; i < productsToProcess.length; i++) {
       const product = productsToProcess[i];
-      const progress = `[${i + 1}/${productsToProcess.length}]`;
       const productNumber = i + 1;
       const productStartTime = Date.now();
 
@@ -1339,132 +1361,166 @@ async function main() {
       // Retry логика
       while (retries <= MAX_RETRIES && !success) {
         try {
-          if (retries > 0) {
-            console.log(`${progress} 🔄 Повторная попытка ${retries}/${MAX_RETRIES}: ${product.name}`);
-          } else {
-            console.log(`${progress} 📦 Обработка: ${product.name}`);
-          }
-
           // Ищем изображение в Google Images
           const imageUrl = await searchProductImage(product.name, browser);
 
-          // Проверяем что изображение найдено
           if (!imageUrl || imageUrl.length < 10) {
             throw new Error("Не удалось найти валидное изображение");
           }
 
-          // Случайная задержка между поиском и скачиванием (2-4 сек)
           await randomDelay(2000, 4000);
 
-          // Скачиваем изображение (функция сама выводит подробную информацию)
+          // Скачиваем изображение
           const imagePath = await downloadImage(imageUrl, product.name);
           await randomDelay(500, 1000);
 
           // Загружаем изображение в Saleor
-          console.log(`  ⬆️  Загрузка изображения в Saleor...`);
           await addProductImage(product.id, imagePath);
           await randomDelay(1000, 1500);
 
           // Добавляем метаданные
-          console.log(`  🏷️  Добавление метаданных (autoImage: true)...`);
           await addProductMetadata(product.id, "autoImage", "true");
           await randomDelay(800, 1200);
 
-          const productTime = Date.now() - productStartTime;
-          console.log(`  ✅ Успешно добавлено изображение! (${formatDuration(productTime)})\n`);
           successCount++;
           success = true;
 
         } catch (error) {
+          // Останавливаем прогресс-бар для важного сообщения
+          progressBar.stop();
+
           // Проверяем капчу
           if (error.message.includes('captcha') || error.message.includes('Капча')) {
             captchaCount++;
-            console.log(`  ⚠️  Капча обнаружена (всего капч: ${captchaCount})`);
-            console.log(`⏸️  Делаю паузу после капчи (10 секунд)...\n`);
+            console.log(chalk.yellow(`\n⚠️  Капча обнаружена для "${product.name}" (всего: ${captchaCount})`));
+            console.log(chalk.cyan('⏸️  Пауза после капчи (10 секунд)...\n'));
             await delay(10000);
           }
 
           retries++;
 
           if (retries > MAX_RETRIES) {
-            console.error(`  ❌ Ошибка после ${MAX_RETRIES} попыток: ${error.message}\n`);
             failCount++;
+            console.log(chalk.red(`\n❌ Ошибка для "${product.name.substring(0, 50)}...": ${error.message}\n`));
           } else if (retries <= MAX_RETRIES) {
-            console.log(`  ⚠️  Ошибка: ${error.message}`);
-            console.log(`  🔄 Повторю попытку через 5 секунд...\n`);
+            console.log(chalk.yellow(`\n⚠️  Ошибка для "${product.name.substring(0, 50)}...": ${error.message}`));
+            console.log(chalk.cyan('🔄 Повторю попытку через 5 секунд...\n'));
             await delay(5000);
           }
+
+          // Возобновляем прогресс-бар
+          progressBar.start(productsToProcess.length, i + 1, {
+            success: successCount,
+            fail: failCount,
+            skip: skippedCount
+          });
         }
       }
 
-      // Если так и не получилось, пропускаем
+      // Если так и не получилось
       if (!success) {
         skippedCount++;
       }
 
-      // УМНЫЕ ПАУЗЫ: чтобы Google не банил (только если успешно обработали)
+      // Обновляем прогресс-бар
+      progressBar.update(i + 1, {
+        success: successCount,
+        fail: failCount,
+        skip: skippedCount
+      });
+
+      // УМНЫЕ ПАУЗЫ
       if (success && productNumber < productsToProcess.length) {
-        // Каждые 50 товаров - длинная пауза
+        let pauseSec = 0;
+        let pauseType = '';
+
         if (productNumber % PAUSE_EVERY_50 === 0) {
-          const pauseSec = Math.floor(Math.random() * 15) + 45; // 45-60 сек
-          console.log(`⏸️  Обработано ${productNumber} товаров. Длинная пауза ${pauseSec} секунд...\n`);
-          await delay(pauseSec * 1000);
+          pauseSec = Math.floor(Math.random() * 15) + 45;
+          pauseType = 'длинная';
+        } else if (productNumber % PAUSE_EVERY_30 === 0) {
+          pauseSec = Math.floor(Math.random() * 15) + 30;
+          pauseType = 'средняя';
+        } else if (productNumber % PAUSE_EVERY_10 === 0) {
+          pauseSec = Math.floor(Math.random() * 10) + 15;
+          pauseType = 'короткая';
         }
-        // Каждые 30 товаров - средняя пауза
-        else if (productNumber % PAUSE_EVERY_30 === 0) {
-          const pauseSec = Math.floor(Math.random() * 15) + 30; // 30-45 сек
-          console.log(`⏸️  Обработано ${productNumber} товаров. Средняя пауза ${pauseSec} секунд...\n`);
+
+        if (pauseSec > 0) {
+          progressBar.stop();
+          console.log(chalk.cyan(`\n⏸️  Обработано ${productNumber} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с...\n`));
           await delay(pauseSec * 1000);
-        }
-        // Каждые 10 товаров - короткая пауза
-        else if (productNumber % PAUSE_EVERY_10 === 0) {
-          const pauseSec = Math.floor(Math.random() * 10) + 15; // 15-25 сек
-          console.log(`⏸️  Обработано ${productNumber} товаров. Короткая пауза ${pauseSec} секунд...\n`);
-          await delay(pauseSec * 1000);
+          progressBar.start(productsToProcess.length, i + 1, {
+            success: successCount,
+            fail: failCount,
+            skip: skippedCount
+          });
         }
       }
     }
 
+    // Завершаем прогресс-бар
+    progressBar.stop();
+
     const totalTime = Date.now() - startTime;
     const avgTimePerProduct = successCount > 0 ? totalTime / successCount : 0;
+    const successRate = Math.round((successCount / productsToProcess.length) * 100);
 
-    console.log("\n" + "=".repeat(70));
-    console.log(`\n📊 ИТОГОВАЯ СТАТИСТИКА`);
-    console.log("=".repeat(70));
-    console.log(`\n✅ Результаты обработки:`);
-    console.log(`   • Успешно обработано:          ${successCount} товаров`);
-    console.log(`   • Ошибок (после всех попыток): ${failCount} товаров`);
-    console.log(`   • Пропущено:                   ${skippedCount} товаров`);
-    console.log(`   • Всего обработано:            ${productsToProcess.length} товаров`);
-    console.log(`   • Всего найдено без изображ.:  ${productsWithoutImages.length} товаров`);
+    // Финальная статистика в красивой рамке
+    console.log("\n");
+    console.log(boxen(
+      chalk.bold.cyan("📊 ИТОГОВАЯ СТАТИСТИКА\n\n") +
 
-    console.log(`\n⏱️  Время выполнения:`);
-    console.log(`   • Общее время:                 ${formatDuration(totalTime)}`);
-    console.log(`   • Среднее время на товар:      ${formatDuration(avgTimePerProduct)}`);
+      chalk.bold("✅ Результаты обработки:\n") +
+      chalk.green(`   ✓ Успешно:     ${chalk.bold(successCount)} товаров\n`) +
+      (failCount > 0 ? chalk.red(`   ✗ Ошибок:      ${chalk.bold(failCount)} товаров\n`) : '') +
+      (skippedCount > 0 ? chalk.yellow(`   ⏭ Пропущено:   ${chalk.bold(skippedCount)} товаров\n`) : '') +
+      chalk.cyan(`   📦 Обработано:  ${chalk.bold(productsToProcess.length)} товаров\n`) +
+      chalk.gray(`   📋 Всего найдено: ${productsWithoutImages.length} товаров\n\n`) +
 
-    console.log(`\n🤖 Статистика капчи:`);
-    console.log(`   • Капч обнаружено:             ${captchaCount}`);
-    console.log(`   • Частота капчи:               ~${successCount > 0 ? Math.round((captchaCount / successCount) * 100) : 0}% от товаров`);
+      chalk.bold("⏱️  Время выполнения:\n") +
+      chalk.cyan(`   ⏰ Общее время:    ${chalk.bold(formatDuration(totalTime))}\n`) +
+      chalk.cyan(`   ⚡ Среднее/товар:  ${chalk.bold(formatDuration(avgTimePerProduct))}\n\n`) +
 
-    if (successCount > 0) {
-      const successRate = Math.round((successCount / productsToProcess.length) * 100);
-      console.log(`\n📈 Успешность:`);
-      console.log(`   • Процент успешных:            ${successRate}%`);
-    }
+      (captchaCount > 0 ?
+        chalk.bold("🤖 Статистика CAPTCHA:\n") +
+        chalk.yellow(`   🛡️  Капч встречено: ${chalk.bold(captchaCount)}\n`) +
+        chalk.yellow(`   📊 Частота:        ~${Math.round((captchaCount / successCount) * 100)}% от товаров\n\n`)
+        : '') +
 
-    console.log("\n" + "=".repeat(70));
-    console.log("\n✨ Готово!\n");
+      chalk.bold("📈 Успешность:\n") +
+      (successRate >= 90 ? chalk.green(`   🎉 ${chalk.bold(successRate + '%')} - Отлично!`) :
+       successRate >= 70 ? chalk.yellow(`   👍 ${chalk.bold(successRate + '%')} - Хорошо`) :
+       chalk.red(`   ⚠️  ${chalk.bold(successRate + '%')} - Требует внимания`)),
+      {
+        padding: 1,
+        margin: 1,
+        borderStyle: 'double',
+        borderColor: successRate >= 90 ? 'green' : successRate >= 70 ? 'yellow' : 'red'
+      }
+    ));
+
+    console.log(chalk.green.bold("✨ Обработка завершена!\n"));
   } finally {
     // Отключаемся от браузера (НЕ закрываем его, так как он был уже открыт)
     if (browser) {
       await browser.disconnect();
-      console.log("🌐 Отключено от браузера (Chrome остается открытым)");
+      console.log(chalk.gray("🌐 Отключено от браузера (Chrome остается открытым)\n"));
     }
   }
 }
 
 // Запуск скрипта
 main().catch((error) => {
-  console.error("\n❌ Критическая ошибка:", error);
+  console.log("\n");
+  console.log(boxen(
+    chalk.red.bold("❌ КРИТИЧЕСКАЯ ОШИБКА\n\n") +
+    chalk.white(error.message || String(error)),
+    {
+      padding: 1,
+      borderStyle: 'round',
+      borderColor: 'red'
+    }
+  ));
+  console.log("");
   process.exit(1);
 });
