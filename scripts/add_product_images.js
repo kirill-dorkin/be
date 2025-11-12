@@ -1329,10 +1329,10 @@ async function main() {
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
       hideCursor: true,
-      barsize: 30
+      barsize: 20
     }, cliProgress.Presets.shades_classic);
 
-    progressBar.start(productsToProcess.length, 1, {
+    progressBar.start(productsToProcess.length, 0, {
       success: successCount,
       fail: failCount,
       skip: skippedCount
@@ -1346,6 +1346,7 @@ async function main() {
 
       let retries = 0;
       let success = false;
+      let progressBarStopped = false;
 
       // Retry логика
       while (retries <= MAX_RETRIES && !success) {
@@ -1377,6 +1378,7 @@ async function main() {
         } catch (error) {
           // Останавливаем прогресс-бар для важного сообщения
           progressBar.stop();
+          progressBarStopped = true;
 
           // Проверяем капчу
           if (error.message.includes('captcha') || error.message.includes('Капча')) {
@@ -1396,19 +1398,22 @@ async function main() {
             console.log(chalk.cyan('🔄 Повторю попытку через 5 секунд...\n'));
             await delay(5000);
           }
-
-          // Возобновляем прогресс-бар
-          progressBar.start(productsToProcess.length, productNumber, {
-            success: successCount,
-            fail: failCount,
-            skip: skippedCount
-          });
         }
       }
 
       // Если так и не получилось
       if (!success) {
         skippedCount++;
+      }
+
+      // Если прогресс-бар был остановлен, возобновляем его перед update
+      if (progressBarStopped) {
+        progressBar.start(productsToProcess.length, productNumber - 1, {
+          success: successCount,
+          fail: failCount,
+          skip: skippedCount
+        });
+        progressBarStopped = false;
       }
 
       // Обновляем прогресс-бар
@@ -1439,7 +1444,7 @@ async function main() {
 
         if (pauseSec > 0) {
           // Останавливаем прогресс-бар ПОСЛЕ того как он показал текущее значение
-          await randomDelay(100, 200); // Даем время прогресс-бару отрисоваться
+          await randomDelay(300, 500); // Даем время прогресс-бару отрисоваться
           progressBar.stop();
           console.log(chalk.cyan(`\n⏸️  Обработано ${successCount} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с...\n`));
           await delay(pauseSec * 1000);
@@ -1449,6 +1454,7 @@ async function main() {
             fail: failCount,
             skip: skippedCount
           });
+          progressBarStopped = false;
         }
       }
     }
