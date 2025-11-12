@@ -1294,18 +1294,36 @@ async function main() {
     let captchaCount = 0;
     const startTime = Date.now();
 
-    // Создаём прогресс-бар
+    // Создаём прогресс-бар с выравниванием столбцов
     const progressBar = new cliProgress.SingleBar({
-      format: chalk.cyan('{bar}') + ' | {percentage}% | {value}/{total} товаров | ' +
-              chalk.green('✓{success}') + ' ' +
-              chalk.red('✗{fail}') + ' ' +
-              chalk.yellow('⏭{skip}') + ' | {eta_formatted}',
+      format: function(options, params, payload) {
+        const bar = options.barCompleteString.substring(0, Math.round(params.progress * options.barsize)) +
+                    options.barIncompleteString.substring(0, Math.round((1 - params.progress) * options.barsize));
+
+        // Выравниваем числа справа (добавляем пробелы слева)
+        const totalDigits = String(params.total).length;
+        const valueStr = String(params.value).padStart(totalDigits, ' ');
+        const totalStr = String(params.total);
+
+        const successStr = String(payload.success || 0).padStart(3, ' ');
+        const failStr = String(payload.fail || 0).padStart(3, ' ');
+        const skipStr = String(payload.skip || 0).padStart(3, ' ');
+
+        return chalk.cyan(bar) +
+               ' | ' + params.percentage.toFixed(0) + '% | ' +
+               valueStr + '/' + totalStr + ' товаров | ' +
+               chalk.green('✓' + successStr) + ' ' +
+               chalk.red('✗' + failStr) + ' ' +
+               chalk.yellow('⏭' + skipStr) + ' | ' +
+               params.eta_formatted;
+      },
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
-      hideCursor: true
+      hideCursor: true,
+      barsize: 30
     }, cliProgress.Presets.shades_classic);
 
-    progressBar.start(productsToProcess.length, 0, {
+    progressBar.start(productsToProcess.length, 1, {
       success: successCount,
       fail: failCount,
       skip: skippedCount
@@ -1371,7 +1389,7 @@ async function main() {
           }
 
           // Возобновляем прогресс-бар
-          progressBar.start(productsToProcess.length, i + 1, {
+          progressBar.start(productsToProcess.length, productNumber, {
             success: successCount,
             fail: failCount,
             skip: skippedCount
@@ -1385,33 +1403,34 @@ async function main() {
       }
 
       // Обновляем прогресс-бар
-      progressBar.update(i + 1, {
+      progressBar.update(productNumber, {
         success: successCount,
         fail: failCount,
         skip: skippedCount
       });
 
-      // УМНЫЕ ПАУЗЫ
+      // УМНЫЕ ПАУЗЫ - только когда успешно обработано РОВНО 10/30/50 товаров
       if (success && productNumber < productsToProcess.length) {
         let pauseSec = 0;
         let pauseType = '';
 
-        if (productNumber % PAUSE_EVERY_50 === 0) {
+        // Проверяем successCount (количество успешно обработанных), а не общий номер
+        if (successCount % PAUSE_EVERY_50 === 0) {
           pauseSec = Math.floor(Math.random() * 15) + 45;
           pauseType = 'длинная';
-        } else if (productNumber % PAUSE_EVERY_30 === 0) {
+        } else if (successCount % PAUSE_EVERY_30 === 0) {
           pauseSec = Math.floor(Math.random() * 15) + 30;
           pauseType = 'средняя';
-        } else if (productNumber % PAUSE_EVERY_10 === 0) {
+        } else if (successCount % PAUSE_EVERY_10 === 0) {
           pauseSec = Math.floor(Math.random() * 10) + 15;
           pauseType = 'короткая';
         }
 
         if (pauseSec > 0) {
           progressBar.stop();
-          console.log(chalk.cyan(`\n⏸️  Обработано ${productNumber} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с...\n`));
+          console.log(chalk.cyan(`\n⏸️  Обработано ${successCount} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с...\n`));
           await delay(pauseSec * 1000);
-          progressBar.start(productsToProcess.length, i + 1, {
+          progressBar.start(productsToProcess.length, productNumber, {
             success: successCount,
             fail: failCount,
             skip: skippedCount
