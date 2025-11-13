@@ -105,7 +105,12 @@ async function detectCaptcha(page) {
 }
 
 // Ожидание решения капчи пользователем
-async function waitForCaptchaSolution(page, maxWaitMinutes = 5) {
+async function waitForCaptchaSolution(page, maxWaitMinutes = 5, progressBar = null) {
+  // Останавливаем прогресс-бар если передан
+  if (progressBar) {
+    progressBar.stop();
+  }
+
   console.log(`\n    ⚠️  🤖 ОБНАРУЖЕНА КАПЧА!`);
   console.log(`    ⏳ Ожидаю решения капчи...`);
   console.log(`    👉 Пожалуйста, решите капчу в открытом окне Chrome`);
@@ -346,10 +351,15 @@ async function injectCaptchaSolution(page, gRecaptchaResponse) {
 /**
  * Автоматически решить капчу через Anti-Captcha
  */
-async function solveRecaptchaAutomatically(page) {
+async function solveRecaptchaAutomatically(page, progressBar = null) {
+  // Останавливаем прогресс-бар если передан
+  if (progressBar) {
+    progressBar.stop();
+  }
+
   if (!antiCaptchaClient) {
-    console.log(`    ⚠️  Anti-Captcha не настроен (ключ не задан в .env)`);
-    console.log(`    💡 Добавьте ANTICAPTCHA_API_KEY в .env для автоматического решения`);
+    console.log(`\n    ⚠️  Anti-Captcha не настроен (ключ не задан в .env)`);
+    console.log(`    💡 Добавьте ANTICAPTCHA_API_KEY в .env для автоматического решения\n`);
     return false;
   }
 
@@ -449,9 +459,9 @@ async function solveRecaptchaAutomatically(page) {
  * Обработать капчу (автоматически или вручную)
  * Сначала пробует автоматическое решение, затем fallback на ручное
  */
-async function handleCaptcha(page) {
+async function handleCaptcha(page, progressBar = null) {
   // Пробуем автоматическое решение
-  const autoSolved = await solveRecaptchaAutomatically(page);
+  const autoSolved = await solveRecaptchaAutomatically(page, progressBar);
 
   if (autoSolved) {
     return true; // Успешно решено автоматически
@@ -464,7 +474,7 @@ async function handleCaptcha(page) {
     console.log(`    💡 Автоматическое решение не сработало, переключаюсь на ручное...`);
   }
 
-  await waitForCaptchaSolution(page);
+  await waitForCaptchaSolution(page, 5, progressBar);
   return true;
 }
 
@@ -687,7 +697,7 @@ async function extractImagesFromMainPage(page, productName) {
  * Поиск изображения с помощью Google Search
  * Fallback стратегия: пробуем несколько способов
  */
-async function searchProductImage(productName, browser) {
+async function searchProductImage(productName, browser, progressBar = null) {
   let page;
   try {
     page = await browser.newPage();
@@ -698,7 +708,7 @@ async function searchProductImage(productName, browser) {
     );
 
     // СТРАТЕГИЯ 1: Полное название на вкладке Images (главная стратегия)
-    let imageUrl = await trySearchStrategy(page, productName, true);
+    let imageUrl = await trySearchStrategy(page, productName, true, progressBar);
     if (imageUrl) {
       if (page) await page.close();
       return imageUrl;
@@ -707,7 +717,7 @@ async function searchProductImage(productName, browser) {
     // СТРАТЕГИЯ 2: Упрощенное название на Images
     const simplifiedName = simplifyProductName(productName);
     if (simplifiedName !== productName) {
-      imageUrl = await trySearchStrategy(page, simplifiedName, true);
+      imageUrl = await trySearchStrategy(page, simplifiedName, true, progressBar);
       if (imageUrl) {
         if (page) await page.close();
         return imageUrl;
@@ -715,7 +725,7 @@ async function searchProductImage(productName, browser) {
     }
 
     // FALLBACK СТРАТЕГИЯ 3: Полное название на главной странице (если Images не дал результатов)
-    imageUrl = await trySearchStrategy(page, productName, false);
+    imageUrl = await trySearchStrategy(page, productName, false, progressBar);
     if (imageUrl) {
       if (page) await page.close();
       return imageUrl;
@@ -723,7 +733,7 @@ async function searchProductImage(productName, browser) {
 
     // FALLBACK СТРАТЕГИЯ 4: Упрощенное название на главной странице
     if (simplifiedName !== productName) {
-      imageUrl = await trySearchStrategy(page, simplifiedName, false);
+      imageUrl = await trySearchStrategy(page, simplifiedName, false, progressBar);
       if (imageUrl) {
         if (page) await page.close();
         return imageUrl;
@@ -731,7 +741,7 @@ async function searchProductImage(productName, browser) {
     }
 
     // КРАЙНИЙ СЛУЧАЙ: Берем любое изображение
-    imageUrl = await tryGetAnyImage(page);
+    imageUrl = await tryGetAnyImage(page, progressBar);
     if (imageUrl) {
       if (page) await page.close();
       return imageUrl;
@@ -758,8 +768,9 @@ async function searchProductImage(productName, browser) {
  * @param {Page} page - страница Puppeteer
  * @param {string} query - поисковый запрос
  * @param {boolean} useImagesTab - использовать вкладку Images
+ * @param {Object} progressBar - прогресс-бар для остановки при капче
  */
-async function trySearchStrategy(page, query, useImagesTab) {
+async function trySearchStrategy(page, query, useImagesTab, progressBar = null) {
   try {
     // Открываем Google
     await page.goto("https://www.google.com", {
@@ -769,7 +780,7 @@ async function trySearchStrategy(page, query, useImagesTab) {
 
     // Проверяем капчу
     if (await detectCaptcha(page)) {
-      await handleCaptcha(page);
+      await handleCaptcha(page, progressBar);
     }
 
     await randomDelay(1500, 2500);
@@ -794,7 +805,7 @@ async function trySearchStrategy(page, query, useImagesTab) {
 
     // Проверяем капчу
     if (await detectCaptcha(page)) {
-      await handleCaptcha(page);
+      await handleCaptcha(page, progressBar);
     }
 
     if (!useImagesTab) {
@@ -819,11 +830,11 @@ async function trySearchStrategy(page, query, useImagesTab) {
 
       // Проверяем капчу
       if (await detectCaptcha(page)) {
-        await handleCaptcha(page);
+        await handleCaptcha(page, progressBar);
       }
 
       // Извлекаем изображение из Images
-      return await extractImageFromImagesTab(page, query);
+      return await extractImageFromImagesTab(page, query, progressBar);
     }
   } catch (error) {
     return null;
@@ -833,7 +844,7 @@ async function trySearchStrategy(page, query, useImagesTab) {
 /**
  * Извлечь изображение с вкладки Images
  */
-async function extractImageFromImagesTab(page, productName) {
+async function extractImageFromImagesTab(page, productName, progressBar = null) {
   try {
     // Ждем загрузки изображений
     try {
@@ -841,7 +852,7 @@ async function extractImageFromImagesTab(page, productName) {
     } catch (waitError) {
       // Проверяем капчу
       if (await detectCaptcha(page)) {
-        await handleCaptcha(page);
+        await handleCaptcha(page, progressBar);
         await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
       } else {
         return null;
@@ -912,7 +923,7 @@ async function extractImageFromImagesTab(page, productName) {
 /**
  * Попытка взять любое изображение (крайний случай)
  */
-async function tryGetAnyImage(page) {
+async function tryGetAnyImage(page, progressBar = null) {
   try {
     const imageUrl = await page.evaluate(() => {
       const allImages = document.querySelectorAll("img");
@@ -1105,7 +1116,7 @@ async function addProductImage(productId, imagePath) {
         }
 
         fs.copyFileSync(imagePath, finalPath);
-        console.log(`    💾 Изображение сохранено: ${path.basename(finalPath)}`);
+        // Тихо сохраняем без вывода (не портит прогресс-бар)
 
         // Удаляем временный файл
         fs.unlinkSync(imagePath);
@@ -1312,10 +1323,10 @@ async function main() {
         const failStr = String(payload.fail || 0).padStart(3, ' ');
         const skipStr = String(payload.skip || 0).padStart(3, ' ');
 
-        // Безопасное получение процента и ETA
-        const percentage = (params.percentage !== undefined && params.percentage !== null)
-                          ? params.percentage.toFixed(0)
-                          : '0';
+        // Вычисляем процент вручную (библиотека даёт 0% когда value=1)
+        const value = params.value || 0;
+        const total = params.total || 1;
+        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
         const eta = params.eta_formatted || '0s';
 
         return chalk.cyan(bar) +
@@ -1352,7 +1363,7 @@ async function main() {
       while (retries <= MAX_RETRIES && !success) {
         try {
           // Ищем изображение в Google Images
-          const imageUrl = await searchProductImage(product.name, browser);
+          const imageUrl = await searchProductImage(product.name, browser, progressBar);
 
           if (!imageUrl || imageUrl.length < 10) {
             throw new Error("Не удалось найти валидное изображение");
@@ -1406,15 +1417,20 @@ async function main() {
         skippedCount++;
       }
 
-      // Если прогресс-бар был остановлен, возобновляем его перед update
-      if (progressBarStopped) {
+      // Всегда возобновляем прогресс-бар перед update (на случай если он был остановлен капчей)
+      // Используем try-catch потому что start() может быть вызван когда бар уже запущен
+      try {
+        // Проверяем что бар не запущен через internal state (нет публичного API для проверки)
+        // Просто всегда вызываем start - это безопасно
         progressBar.start(productsToProcess.length, productNumber - 1, {
           success: successCount,
           fail: failCount,
           skip: skippedCount
         });
-        progressBarStopped = false;
+      } catch (e) {
+        // Игнорируем если уже запущен
       }
+      progressBarStopped = false;
 
       // Обновляем прогресс-бар
       progressBar.update(productNumber, {
