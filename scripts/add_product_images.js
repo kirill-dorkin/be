@@ -45,6 +45,50 @@ if (ANTICAPTCHA_API_KEY) {
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Глобальный трекер капчи для адаптивного поведения
+const captchaTracker = {
+  totalCaptchas: 0,
+  recentCaptchas: [],
+  lastCaptchaTime: 0,
+
+  // Регистрируем капчу
+  recordCaptcha() {
+    this.totalCaptchas++;
+    const now = Date.now();
+    this.lastCaptchaTime = now;
+    this.recentCaptchas.push(now);
+
+    // Очищаем старые записи (старше 5 минут)
+    const fiveMinutesAgo = now - 5 * 60 * 1000;
+    this.recentCaptchas = this.recentCaptchas.filter(time => time > fiveMinutesAgo);
+  },
+
+  // Получить задержку после капчи (экспоненциальный backoff)
+  getPostCaptchaDelay() {
+    const recentCount = this.recentCaptchas.length;
+
+    if (recentCount === 0) return 0;
+    if (recentCount === 1) return 30000; // 30 сек после первой капчи
+    if (recentCount === 2) return 60000; // 1 мин после второй
+    if (recentCount === 3) return 120000; // 2 мин после третьей
+    return 180000; // 3 мин после 4+ капчи за последние 5 минут
+  },
+
+  // Нужно ли быть осторожнее
+  shouldBeCareful() {
+    return this.recentCaptchas.length >= 2;
+  },
+
+  // Множитель задержки (чем больше капч, тем медленнее работаем)
+  getDelayMultiplier() {
+    const recentCount = this.recentCaptchas.length;
+    if (recentCount === 0) return 1;
+    if (recentCount === 1) return 1.5;
+    if (recentCount === 2) return 2;
+    return 3; // 3x медленнее после 3+ капчи
+  }
+};
+
 // Случайная задержка с нормальным распределением (более человечная)
 const randomDelay = (min, max) => {
   // Используем нормальное распределение для более реалистичных задержек
@@ -110,10 +154,15 @@ const humanBehavior = {
     await this.randomScroll(page);
   },
 
-  // Случайная пауза между действиями (вариативная)
+  // Случайная пауза между действиями (вариативная + адаптивная)
   async naturalPause(baseMin = 500, baseMax = 1500) {
     // Иногда делаем паузу длиннее (как будто отвлеклись)
-    const multiplier = Math.random() > 0.9 ? 2 : 1; // 10% шанс долгой паузы
+    let multiplier = Math.random() > 0.9 ? 2 : 1; // 10% шанс долгой паузы
+
+    // Адаптивная логика: если были капчи, замедляемся
+    const captchaMultiplier = captchaTracker.getDelayMultiplier();
+    multiplier *= captchaMultiplier;
+
     await randomDelay(baseMin * multiplier, baseMax * multiplier);
   }
 };
@@ -489,14 +538,40 @@ async function solveRecaptchaAutomatically(page, progressBar = null) {
       const urlChanged = currentUrl !== urlBeforeInject;
 
       if (urlChanged) {
-        console.log(`✅ Капча решена успешно!\n`);
+        console.log(`✅ Капча решена успешно!`);
+
+        // Регистрируем капчу и делаем адаптивную паузу
+        captchaTracker.recordCaptcha();
+        const pauseDelay = captchaTracker.getPostCaptchaDelay();
+
+        if (pauseDelay > 0) {
+          const pauseSec = Math.round(pauseDelay / 1000);
+          console.log(chalk.cyan(`⏸️  Адаптивная пауза ${pauseSec}с после капчи (снижаем подозрения)...\n`));
+          await delay(pauseDelay);
+        } else {
+          console.log(``);
+        }
+
         return true;
       }
 
       // Если URL не изменился, проверяем исчезла ли капча
       const stillHasCaptcha = await detectCaptcha(page);
       if (!stillHasCaptcha) {
-        console.log(`✅ Капча решена!\n`);
+        console.log(`✅ Капча решена!`);
+
+        // Регистрируем капчу и делаем адаптивную паузу
+        captchaTracker.recordCaptcha();
+        const pauseDelay = captchaTracker.getPostCaptchaDelay();
+
+        if (pauseDelay > 0) {
+          const pauseSec = Math.round(pauseDelay / 1000);
+          console.log(chalk.cyan(`⏸️  Адаптивная пауза ${pauseSec}с после капчи...\n`));
+          await delay(pauseDelay);
+        } else {
+          console.log(``);
+        }
+
         return true;
       }
 
@@ -508,7 +583,20 @@ async function solveRecaptchaAutomatically(page, progressBar = null) {
 
       const stillHasCaptcha = await detectCaptcha(page);
       if (!stillHasCaptcha) {
-        console.log(`✅ Капча решена!\n`);
+        console.log(`✅ Капча решена!`);
+
+        // Регистрируем капчу и делаем адаптивную паузу
+        captchaTracker.recordCaptcha();
+        const pauseDelay = captchaTracker.getPostCaptchaDelay();
+
+        if (pauseDelay > 0) {
+          const pauseSec = Math.round(pauseDelay / 1000);
+          console.log(chalk.cyan(`⏸️  Адаптивная пауза ${pauseSec}с после капчи...\n`));
+          await delay(pauseDelay);
+        } else {
+          console.log(``);
+        }
+
         return true;
       } else {
         console.log(`❌ Капча не принята`);
@@ -1407,6 +1495,14 @@ async function main() {
     }
     console.log(chalk.cyan("  •") + ` Макс. попыток: ${chalk.bold(MAX_RETRIES)}`);
     console.log(chalk.cyan("  •") + ` Умные паузы: каждые ${PAUSE_EVERY_10}/${PAUSE_EVERY_30}/${PAUSE_EVERY_50} товаров`);
+
+    // Показываем предупреждение если работаем в адаптивном режиме
+    const currentMultiplier = captchaTracker.getDelayMultiplier();
+    if (currentMultiplier > 1) {
+      console.log(chalk.yellow("  •") + ` Адаптивный режим: ${chalk.bold('x' + currentMultiplier)} (недавно были капчи)`);
+    } else {
+      console.log(chalk.green("  •") + ` Адаптивный режим: ${chalk.bold('Нормальная скорость')}`);
+    }
     console.log("");
 
     let successCount = 0;
@@ -1558,14 +1654,17 @@ async function main() {
         // Добавляем вариативность: иногда делаем паузу на 1-2 товара раньше/позже
         const variance = Math.floor(Math.random() * 3) - 1; // -1, 0, или 1
 
+        // Адаптивный множитель на основе частоты капч
+        const captchaMultiplier = captchaTracker.getDelayMultiplier();
+
         if (Math.abs((successCount + variance) % PAUSE_EVERY_50) <= 1 && successCount >= PAUSE_EVERY_50 - 1) {
-          pauseSec = Math.floor(Math.random() * 20) + 45; // 45-65 сек
+          pauseSec = Math.floor((Math.random() * 20 + 45) * captchaMultiplier); // 45-65 сек * multiplier
           pauseType = 'длинная';
         } else if (Math.abs((successCount + variance) % PAUSE_EVERY_30) <= 1 && successCount >= PAUSE_EVERY_30 - 1) {
-          pauseSec = Math.floor(Math.random() * 20) + 30; // 30-50 сек
+          pauseSec = Math.floor((Math.random() * 20 + 30) * captchaMultiplier); // 30-50 сек * multiplier
           pauseType = 'средняя';
         } else if (Math.abs((successCount + variance) % PAUSE_EVERY_10) <= 1 && successCount >= PAUSE_EVERY_10 - 1) {
-          pauseSec = Math.floor(Math.random() * 15) + 15; // 15-30 сек
+          pauseSec = Math.floor((Math.random() * 15 + 15) * captchaMultiplier); // 15-30 сек * multiplier
           pauseType = 'короткая';
         }
 
@@ -1573,7 +1672,10 @@ async function main() {
           // Останавливаем прогресс-бар ПОСЛЕ того как он показал текущее значение
           await randomDelay(300, 500); // Даем время прогресс-бару отрисоваться
           progressBar.stop();
-          console.log(chalk.cyan(`\n⏸️  Обработано ${successCount} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с...\n`));
+
+          // Показываем адаптивное сообщение если замедляемся из-за капч
+          const adaptiveNote = captchaMultiplier > 1 ? chalk.yellow(` (адаптивно увеличена x${captchaMultiplier})`) : '';
+          console.log(chalk.cyan(`\n⏸️  Обработано ${successCount} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с${adaptiveNote}...\n`));
           await delay(pauseSec * 1000);
           // Возобновляем с текущим значением
           progressBar.start(productsToProcess.length, productNumber, {
@@ -1612,7 +1714,8 @@ async function main() {
       (captchaCount > 0 ?
         chalk.bold("🤖 Статистика CAPTCHA:\n") +
         chalk.yellow(`   🛡️  Капч встречено: ${chalk.bold(captchaCount)}\n`) +
-        chalk.yellow(`   📊 Частота:        ~${Math.round((captchaCount / successCount) * 100)}% от товаров\n\n`)
+        chalk.yellow(`   📊 Частота:        ~${Math.round((captchaCount / successCount) * 100)}% от товаров\n`) +
+        chalk.cyan(`   🧠 Адаптивных замедлений: ${chalk.bold(captchaTracker.totalCaptchas)} раз\n\n`)
         : '') +
 
       chalk.bold("📈 Успешность:\n") +
