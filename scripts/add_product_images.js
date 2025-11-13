@@ -76,28 +76,32 @@ function formatDuration(ms) {
 // Проверка наличия капчи на странице
 async function detectCaptcha(page) {
   try {
-    const captchaSelectors = [
+    const currentUrl = page.url();
+
+    // Главная проверка: страница /sorry от Google - это точно капча
+    if (currentUrl.includes('/sorry')) {
+      return true;
+    }
+
+    // Если не /sorry, проверяем наличие iframe reCAPTCHA (строгая проверка)
+    const strictCaptchaSelectors = [
       'iframe[src*="recaptcha"]',
-      '#recaptcha',
-      '.g-recaptcha',
       'iframe[title*="reCAPTCHA"]',
-      '[id*="captcha"]',
-      '[class*="captcha"]',
     ];
 
-    for (const selector of captchaSelectors) {
+    for (const selector of strictCaptchaSelectors) {
       const captchaElement = await page.$(selector);
       if (captchaElement) {
         return true;
       }
     }
 
-    // Проверяем текст на странице
-    const pageText = await page.evaluate(() => document.body.innerText.toLowerCase());
-    if (pageText.includes('captcha') || pageText.includes('unusual traffic')) {
+    // Дополнительная проверка: если URL содержит "sorry" или "unusual traffic"
+    if (currentUrl.includes('unusual') || currentUrl.includes('blocked')) {
       return true;
     }
 
+    // НЕ проверяем текст страницы - слишком много ложных срабатываний
     return false;
   } catch (error) {
     return false;
@@ -111,14 +115,15 @@ async function waitForCaptchaSolution(page, maxWaitMinutes = 5, progressBar = nu
     progressBar.stop();
   }
 
-  console.log(`\n    ⚠️  🤖 ОБНАРУЖЕНА КАПЧА!`);
-  console.log(`    ⏳ Ожидаю решения капчи...`);
-  console.log(`    👉 Пожалуйста, решите капчу в открытом окне Chrome`);
-  console.log(`    ⏰ Жду максимум ${maxWaitMinutes} минут\n`);
+  console.log(`\n⚠️  Требуется ручное решение капчи`);
+  console.log(`👉 Откройте Chrome и решите капчу вручную`);
+  console.log(`⏰ Жду максимум ${maxWaitMinutes} минут\n`);
 
   const maxWaitMs = maxWaitMinutes * 60 * 1000;
-  const checkInterval = 3000; // Проверяем каждые 3 секунды
+  const checkInterval = 5000; // Проверяем каждые 5 секунд
+  const messageInterval = 60000; // Сообщение раз в минуту
   let elapsedMs = 0;
+  let lastMessageTime = 0;
 
   while (elapsedMs < maxWaitMs) {
     await delay(checkInterval);
@@ -127,16 +132,17 @@ async function waitForCaptchaSolution(page, maxWaitMinutes = 5, progressBar = nu
     const hasCaptcha = await detectCaptcha(page);
 
     if (!hasCaptcha) {
-      console.log(`    ✅ Капча решена! Продолжаю работу...\n`);
+      console.log(`✅ Капча решена! Продолжаю работу...\n`);
       // Дополнительная пауза после решения капчи
       await randomDelay(3000, 5000);
       return true;
     }
 
-    // Показываем прогресс каждые 15 секунд
-    if (elapsedMs % 15000 === 0) {
+    // Показываем прогресс раз в минуту
+    if (elapsedMs - lastMessageTime >= messageInterval) {
       const minutesElapsed = Math.floor(elapsedMs / 60000);
-      console.log(`    ⏳ Прошло ${minutesElapsed} мин, всё еще жду решения капчи...`);
+      console.log(`⏳ Прошло ${minutesElapsed} мин, жду решения...`);
+      lastMessageTime = elapsedMs;
     }
   }
 
@@ -364,21 +370,27 @@ async function solveRecaptchaAutomatically(page, progressBar = null) {
   }
 
   try {
-    console.log(`\n    🤖 ОБНАРУЖЕНА КАПЧА! Запускаю автоматическое решение через Anti-Captcha...`);
-
     // Получаем текущий URL
     const currentURL = page.url();
-    console.log(`    🌐 URL: ${currentURL.substring(0, 100)}...`);
+    const isSorryPage = currentURL.includes('/sorry');
+
+    console.log(`\n🤖 Обнаружена капча! Запускаю автоматическое решение через Anti-Captcha...`);
+    console.log(`📍 URL: ${currentURL.substring(0, 80)}...`);
 
     // Извлекаем sitekey
-    console.log(`    🔍 Ищу sitekey на странице...`);
     const siteKey = await extractRecaptchaSiteKey(page);
     if (!siteKey) {
-      console.log(`    ❌ Не удалось извлечь sitekey`);
-      console.log(`    💡 Возможно Google изменил структуру страницы`);
+      // Если это не страница /sorry, скорее всего ложное срабатывание - продолжаем
+      if (!isSorryPage) {
+        console.log(`✓ Это не страница блокировки, продолжаю работу...\n`);
+        return true; // Считаем что капчи нет
+      }
+
+      console.log(`❌ Не удалось извлечь sitekey с /sorry страницы`);
       return false;
     }
-    console.log(`    ✓ Sitekey найден: ${siteKey.substring(0, 20)}...`);
+    console.log(`✓ Sitekey найден`);
+    console.log(`💰 Решаю капчу...`);
 
     // Решаем капчу через Anti-Captcha
     const gRecaptchaResponse = await antiCaptchaClient.solveRecaptchaV2(
@@ -390,14 +402,13 @@ async function solveRecaptchaAutomatically(page, progressBar = null) {
     const urlBeforeInject = page.url();
     const wasSorryPage = urlBeforeInject.includes('/sorry');
 
-    console.log(`    ⏳ Даю странице время загрузиться перед внедрением...`);
     await randomDelay(2000, 3000);
 
     // Внедряем решение в страницу (для /sorry также отправит форму)
     const injectionSuccess = await injectCaptchaSolution(page, gRecaptchaResponse);
 
     if (!injectionSuccess) {
-      console.log(`    ❌ Не удалось внедрить решение`);
+      console.log(`❌ Не удалось внедрить решение`);
       return false;
     }
 
@@ -411,46 +422,34 @@ async function solveRecaptchaAutomatically(page, progressBar = null) {
       const urlChanged = currentUrl !== urlBeforeInject;
 
       if (urlChanged) {
-        console.log(`    ✅ URL изменился - капча решена успешно!`);
-        console.log(`    📍 Был:   ${urlBeforeInject.substring(0, 70)}...`);
-        console.log(`    📍 Стал:  ${currentUrl.substring(0, 70)}...`);
+        console.log(`✅ Капча решена успешно!\n`);
         return true;
       }
 
       // Если URL не изменился, проверяем исчезла ли капча
-      console.log(`    🔍 URL не изменился, проверяю исчезла ли капча...`);
       const stillHasCaptcha = await detectCaptcha(page);
       if (!stillHasCaptcha) {
-        console.log(`    ✅ Капча исчезла - решение принято!`);
+        console.log(`✅ Капча решена!\n`);
         return true;
       }
 
-      console.log(`    ❌ Капча всё ещё присутствует, решение не принято`);
-      console.log(`    💡 Возможно требуется ручное подтверждение`);
+      console.log(`❌ Капча не принята, требуется ручное решение`);
       return false;
     } else {
       // Для обычных страниц
       await randomDelay(2000, 3000);
 
-      const urlAfterInject = page.url();
-      const urlChanged = urlAfterInject !== urlBeforeInject;
-
-      if (urlChanged) {
-        console.log(`    ✅ URL изменился - капча решена успешно!`);
-        return true;
-      }
-
       const stillHasCaptcha = await detectCaptcha(page);
       if (!stillHasCaptcha) {
-        console.log(`    ✅ Капча успешно решена автоматически!\n`);
+        console.log(`✅ Капча решена!\n`);
         return true;
       } else {
-        console.log(`    ⚠️  Капча всё ещё присутствует, возможно нужна дополнительная обработка`);
+        console.log(`❌ Капча не принята`);
         return false;
       }
     }
   } catch (error) {
-    console.error(`    ❌ Ошибка автоматического решения: ${error.message}`);
+    console.error(`❌ Ошибка решения капчи: ${error.message}`);
     return false;
   }
 }
@@ -469,9 +468,9 @@ async function handleCaptcha(page, progressBar = null) {
 
   // Если автоматическое решение не сработало, fallback на ручное
   if (!antiCaptchaClient) {
-    console.log(`    💡 Переключаюсь на ручное решение капчи...`);
+    console.log(`💡 Переключаюсь на ручное решение...`);
   } else {
-    console.log(`    💡 Автоматическое решение не сработало, переключаюсь на ручное...`);
+    console.log(`💡 Автоматическое решение не сработало, переключаюсь на ручное...`);
   }
 
   await waitForCaptchaSolution(page, 5, progressBar);
@@ -1394,8 +1393,8 @@ async function main() {
           // Проверяем капчу
           if (error.message.includes('captcha') || error.message.includes('Капча')) {
             captchaCount++;
-            console.log(chalk.yellow(`\n⚠️  Капча обнаружена для "${product.name}" (всего: ${captchaCount})`));
-            console.log(chalk.cyan('⏸️  Пауза после капчи (10 секунд)...\n'));
+            console.log(chalk.yellow(`\n⚠️  Капча обнаружена для "${product.name.substring(0, 60)}..." (всего: ${captchaCount})`));
+            console.log(chalk.cyan('⏸️  Пауза после капчи (10 секунд)...'));
             await delay(10000);
           }
 
@@ -1403,10 +1402,10 @@ async function main() {
 
           if (retries > MAX_RETRIES) {
             failCount++;
-            console.log(chalk.red(`\n❌ Ошибка для "${product.name.substring(0, 50)}...": ${error.message}\n`));
+            console.log(chalk.red(`\n❌ "${product.name.substring(0, 60)}..." - ${error.message}`));
           } else if (retries <= MAX_RETRIES) {
-            console.log(chalk.yellow(`\n⚠️  Ошибка для "${product.name.substring(0, 50)}...": ${error.message}`));
-            console.log(chalk.cyan('🔄 Повторю попытку через 5 секунд...\n'));
+            console.log(chalk.yellow(`\n⚠️  "${product.name.substring(0, 60)}..." - ${error.message}`));
+            console.log(chalk.cyan(`🔄 Повторяю попытку ${retries}/${MAX_RETRIES}... (через 5 сек)`));
             await delay(5000);
           }
         }
