@@ -10,6 +10,17 @@ const ora = require("ora");
 const cliProgress = require("cli-progress");
 const boxen = require("boxen");
 
+// Простое логирование в файл
+const logFilePath = path.join(__dirname, `image-add-${new Date().toISOString().split('T')[0]}.log`);
+const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
+
+function log(level, message, productName = null) {
+  const timestamp = new Date().toISOString();
+  const productInfo = productName ? ` [${productName.substring(0, 50)}]` : '';
+  const logLine = `[${timestamp}] [${level}]${productInfo} ${message}\n`;
+  logStream.write(logLine);
+}
+
 // Загружаем переменные окружения из .env файла
 const envPath = path.join(__dirname, "..", ".env");
 if (fs.existsSync(envPath)) {
@@ -928,11 +939,6 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
       timeout: 30000,
     });
 
-    // Проверяем капчу
-    if (await detectCaptcha(page)) {
-      await handleCaptcha(page, progressBar);
-    }
-
     // Человекоподобное поведение: осматриваемся на странице
     await humanBehavior.lookAround(page);
     await humanBehavior.naturalPause(800, 1500);
@@ -967,11 +973,6 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
     // Ждём результаты с вариативностью
     await humanBehavior.naturalPause(2000, 3500);
 
-    // Проверяем капчу
-    if (await detectCaptcha(page)) {
-      await handleCaptcha(page, progressBar);
-    }
-
     // Смотрим на результаты (человекоподобно)
     await humanBehavior.lookAround(page);
 
@@ -1004,11 +1005,6 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
         await humanBehavior.naturalPause(2500, 3500);
       }
 
-      // Проверяем капчу
-      if (await detectCaptcha(page)) {
-        await handleCaptcha(page, progressBar);
-      }
-
       // Смотрим на изображения (человекоподобно)
       await humanBehavior.randomScroll(page);
       await randomDelay(500, 1200);
@@ -1030,13 +1026,7 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
     try {
       await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
     } catch (waitError) {
-      // Проверяем капчу
-      if (await detectCaptcha(page)) {
-        await handleCaptcha(page, progressBar);
-        await page.waitForSelector('div[data-ri], img[data-src], .ivg-i img', { timeout: 10000 });
-      } else {
-        return null;
-      }
+      return null;
     }
 
     // Смотрим на изображения (человекоподобно)
@@ -1432,10 +1422,16 @@ async function main() {
     }
   ));
 
+  // Логируем старт
+  log('INFO', '=== НАЧАЛО РАБОТЫ СКРИПТА ===');
+  log('INFO', `API URL: ${API_URL}`);
+  log('INFO', `Anti-Captcha: ${antiCaptchaClient ? 'Включен' : 'Выключен'}`);
+
   // Статус конфигурации
   console.log(chalk.bold("📋 Конфигурация:\n"));
   console.log(chalk.green("  ✓") + " Переменные окружения загружены");
   console.log(chalk.green("  ✓") + " Saleor API: " + chalk.cyan(API_URL.substring(0, 50) + "..."));
+  console.log(chalk.cyan("  ℹ") + " Лог файл: " + chalk.gray(logFilePath));
   if (antiCaptchaClient) {
     console.log(chalk.green("  ✓") + " Anti-Captcha: " + chalk.green("Активен") + " (автоматическое решение капчи)");
   } else {
@@ -1620,17 +1616,22 @@ async function main() {
 
           successCount++;
           success = true;
+          log('SUCCESS', 'Изображение успешно добавлено', product.name);
 
         } catch (error) {
-          // Останавливаем прогресс-бар для важного сообщения
-          progressBar.stop();
-          progressBarStopped = true;
+          // Логируем в файл, НЕ в консоль
+          log('ERROR', `Попытка ${retries + 1}/${MAX_RETRIES + 1}: ${error.message}`, product.name);
 
           // Проверяем капчу
           if (error.message.includes('captcha') || error.message.includes('Капча')) {
             captchaCount++;
+            log('CAPTCHA', `Капча обнаружена (всего: ${captchaCount})`, product.name);
+
+            // Останавливаем прогресс-бар только для капчи
+            progressBar.stop();
+            progressBarStopped = true;
             console.log(chalk.yellow(`\n⚠️  Капча обнаружена для "${product.name.substring(0, 60)}..." (всего: ${captchaCount})`));
-            console.log(chalk.cyan('⏸️  Пауза после капчи (10 секунд)...'));
+            console.log(chalk.cyan('⏸️  Пауза после капчи (10 секунд)...\n'));
             await delay(10000);
           }
 
@@ -1638,10 +1639,9 @@ async function main() {
 
           if (retries > MAX_RETRIES) {
             failCount++;
-            console.log(chalk.red(`\n❌ "${product.name.substring(0, 60)}..." - ${error.message}`));
+            log('FAILED', `Все попытки исчерпаны: ${error.message}`, product.name);
           } else if (retries <= MAX_RETRIES) {
-            console.log(chalk.yellow(`\n⚠️  "${product.name.substring(0, 60)}..." - ${error.message}`));
-            console.log(chalk.cyan(`🔄 Повторяю попытку ${retries}/${MAX_RETRIES}... (через 5 сек)`));
+            log('RETRY', `Повторяю попытку ${retries}/${MAX_RETRIES}`, product.name);
             await delay(5000);
           }
         }
@@ -1762,12 +1762,16 @@ async function main() {
     ));
 
     console.log(chalk.green.bold("✨ Обработка завершена!\n"));
+    console.log(chalk.gray(`📝 Детальный лог сохранен: ${logFilePath}\n`));
   } finally {
     // Отключаемся от браузера (НЕ закрываем его, так как он был уже открыт)
     if (browser) {
       await browser.disconnect();
       console.log(chalk.gray("🌐 Отключено от браузера (Chrome остается открытым)\n"));
     }
+
+    // Закрываем лог файл
+    logStream.end();
   }
 }
 
@@ -1786,12 +1790,15 @@ async function gracefulShutdown(signal) {
     {
       padding: 1,
       borderStyle: 'round',
-      borderColor: 'yellow'
+      borderColor: 'yellow',
+      textAlignment: 'center'
     }
   ));
   console.log("");
 
   // Browser будет отключен в finally блоке main()
+  log('INFO', `Graceful shutdown: ${signal}`);
+  logStream.end();
   process.exit(0);
 }
 
