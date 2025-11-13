@@ -45,10 +45,77 @@ if (ANTICAPTCHA_API_KEY) {
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Случайная задержка (более человечная)
+// Случайная задержка с нормальным распределением (более человечная)
 const randomDelay = (min, max) => {
-  const ms = Math.floor(Math.random() * (max - min + 1)) + min;
+  // Используем нормальное распределение для более реалистичных задержек
+  const mean = (min + max) / 2;
+  const stdDev = (max - min) / 6;
+
+  // Box-Muller transform для нормального распределения
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+
+  let ms = Math.round(mean + stdDev * z0);
+
+  // Ограничиваем значения диапазоном
+  ms = Math.max(min, Math.min(max, ms));
+
   return delay(ms);
+};
+
+// Человекоподобные действия для имитации реального пользователя
+const humanBehavior = {
+  // Случайное движение мыши (иногда)
+  async randomMouseMove(page) {
+    if (Math.random() > 0.3) return; // 30% шанс
+
+    const viewport = await page.viewport();
+    const x = Math.floor(Math.random() * viewport.width);
+    const y = Math.floor(Math.random() * viewport.height);
+
+    await page.mouse.move(x, y, { steps: Math.floor(Math.random() * 5) + 3 });
+    await randomDelay(100, 300);
+  },
+
+  // Случайный скроллинг (как будто читаем страницу)
+  async randomScroll(page) {
+    if (Math.random() > 0.4) return; // 40% шанс
+
+    const scrollAmount = Math.floor(Math.random() * 300) + 100;
+    const direction = Math.random() > 0.8 ? -1 : 1; // 80% вниз, 20% вверх
+
+    await page.evaluate((amount, dir) => {
+      window.scrollBy({
+        top: amount * dir,
+        behavior: 'smooth'
+      });
+    }, scrollAmount, direction);
+
+    await randomDelay(500, 1500); // Пауза как будто читаем
+  },
+
+  // Пауза "подумать" перед действием
+  async thinkingPause() {
+    if (Math.random() > 0.2) return; // 20% шанс
+    await randomDelay(800, 2000);
+  },
+
+  // Имитация просмотра результатов (движение мыши + скролл)
+  async lookAround(page) {
+    if (Math.random() > 0.5) return; // 50% шанс
+
+    await this.randomMouseMove(page);
+    await randomDelay(300, 800);
+    await this.randomScroll(page);
+  },
+
+  // Случайная пауза между действиями (вариативная)
+  async naturalPause(baseMin = 500, baseMax = 1500) {
+    // Иногда делаем паузу длиннее (как будто отвлеклись)
+    const multiplier = Math.random() > 0.9 ? 2 : 1; // 10% шанс долгой паузы
+    await randomDelay(baseMin * multiplier, baseMax * multiplier);
+  }
 };
 
 // Очистка имени файла от недопустимых символов
@@ -782,30 +849,47 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
       await handleCaptcha(page, progressBar);
     }
 
-    await randomDelay(1500, 2500);
+    // Человекоподобное поведение: осматриваемся на странице
+    await humanBehavior.lookAround(page);
+    await humanBehavior.naturalPause(800, 1500);
 
     // Вводим запрос
     const searchBoxSelector = 'textarea[name="q"], input[name="q"]';
     await page.waitForSelector(searchBoxSelector, { timeout: 10000 });
 
-    // Очищаем поле (если там что-то было)
+    // Небольшая пауза перед кликом (как будто нашли поле глазами)
+    await humanBehavior.thinkingPause();
+
+    // Кликаем с движением мыши
+    await humanBehavior.randomMouseMove(page);
     await page.click(searchBoxSelector, { clickCount: 3 });
+    await randomDelay(50, 150);
     await page.keyboard.press('Backspace');
+
+    // Маленькая пауза "подумать что искать"
+    await randomDelay(100, 300);
 
     // Вводим новый запрос (быстрая печать как у опытного пользователя)
     await page.type(searchBoxSelector, query, {
       delay: Math.floor(Math.random() * 30) + 35 // 35-65ms между символами
     });
-    await randomDelay(200, 400); // Короткая пауза перед Enter
+
+    // Короткая пауза перед Enter (проверяем что ввели)
+    await randomDelay(150, 400);
 
     // Нажимаем Enter
     await page.keyboard.press("Enter");
-    await randomDelay(2500, 3500);
+
+    // Ждём результаты с вариативностью
+    await humanBehavior.naturalPause(2000, 3500);
 
     // Проверяем капчу
     if (await detectCaptcha(page)) {
       await handleCaptcha(page, progressBar);
     }
+
+    // Смотрим на результаты (человекоподобно)
+    await humanBehavior.lookAround(page);
 
     if (!useImagesTab) {
       // Ищем на главной странице (вкладка All)
@@ -814,9 +898,18 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
       // Переходим на вкладку Images
       try {
         await page.waitForSelector('a[href*="tbm=isch"]', { timeout: 5000 });
-        await randomDelay(500, 1000);
+
+        // Пауза перед кликом (как будто ищем вкладку Images глазами)
+        await humanBehavior.thinkingPause();
+        await randomDelay(300, 700);
+
+        // Движение мыши к вкладке
+        await humanBehavior.randomMouseMove(page);
+
         await page.click('a[href*="tbm=isch"]');
-        await randomDelay(3500, 4500);
+
+        // Ждём загрузки изображений
+        await humanBehavior.naturalPause(3000, 4500);
       } catch (e) {
         // Прямой переход
         const searchQuery = encodeURIComponent(query);
@@ -824,13 +917,17 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
           waitUntil: "networkidle2",
           timeout: 30000,
         });
-        await randomDelay(2500, 3500);
+        await humanBehavior.naturalPause(2500, 3500);
       }
 
       // Проверяем капчу
       if (await detectCaptcha(page)) {
         await handleCaptcha(page, progressBar);
       }
+
+      // Смотрим на изображения (человекоподобно)
+      await humanBehavior.randomScroll(page);
+      await randomDelay(500, 1200);
 
       // Извлекаем изображение из Images
       return await extractImageFromImagesTab(page, query, progressBar);
@@ -858,7 +955,9 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
       }
     }
 
-    await randomDelay(2000, 3000);
+    // Смотрим на изображения (человекоподобно)
+    await humanBehavior.randomScroll(page);
+    await humanBehavior.naturalPause(1500, 2500);
 
     // Кликаем на первое изображение
     const selectors = [
@@ -872,6 +971,11 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
     for (const selector of selectors) {
       try {
         await page.waitForSelector(selector, { timeout: 2000 });
+
+        // Движение мыши перед кликом (как будто выбираем изображение)
+        await humanBehavior.randomMouseMove(page);
+        await humanBehavior.thinkingPause();
+
         await page.click(selector);
         imageClicked = true;
         break;
@@ -884,7 +988,11 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
       return null;
     }
 
-    await randomDelay(2500, 3500);
+    // Ждём загрузки превью с вариативностью
+    await humanBehavior.naturalPause(2000, 3500);
+
+    // "Смотрим" на превью
+    await humanBehavior.randomMouseMove(page);
 
     // Извлекаем URL
     const imageUrl = await page.evaluate(() => {
@@ -1368,19 +1476,20 @@ async function main() {
             throw new Error("Не удалось найти валидное изображение");
           }
 
-          await randomDelay(2000, 4000);
+          // Вариативная пауза перед скачиванием
+          await humanBehavior.naturalPause(1500, 3500);
 
           // Скачиваем изображение
           const imagePath = await downloadImage(imageUrl, product.name);
-          await randomDelay(500, 1000);
+          await randomDelay(300, 800);
 
           // Загружаем изображение в Saleor
           await addProductImage(product.id, imagePath);
-          await randomDelay(1000, 1500);
+          await humanBehavior.naturalPause(800, 1500);
 
           // Добавляем метаданные
           await addProductMetadata(product.id, "autoImage", "true");
-          await randomDelay(800, 1200);
+          await randomDelay(500, 1000);
 
           successCount++;
           success = true;
@@ -1446,14 +1555,17 @@ async function main() {
         let pauseType = '';
 
         // Проверяем successCount (количество успешно обработанных)
-        if (successCount % PAUSE_EVERY_50 === 0 && successCount > 0) {
-          pauseSec = Math.floor(Math.random() * 15) + 45;
+        // Добавляем вариативность: иногда делаем паузу на 1-2 товара раньше/позже
+        const variance = Math.floor(Math.random() * 3) - 1; // -1, 0, или 1
+
+        if (Math.abs((successCount + variance) % PAUSE_EVERY_50) <= 1 && successCount >= PAUSE_EVERY_50 - 1) {
+          pauseSec = Math.floor(Math.random() * 20) + 45; // 45-65 сек
           pauseType = 'длинная';
-        } else if (successCount % PAUSE_EVERY_30 === 0 && successCount > 0) {
-          pauseSec = Math.floor(Math.random() * 15) + 30;
+        } else if (Math.abs((successCount + variance) % PAUSE_EVERY_30) <= 1 && successCount >= PAUSE_EVERY_30 - 1) {
+          pauseSec = Math.floor(Math.random() * 20) + 30; // 30-50 сек
           pauseType = 'средняя';
-        } else if (successCount % PAUSE_EVERY_10 === 0 && successCount > 0) {
-          pauseSec = Math.floor(Math.random() * 10) + 15;
+        } else if (Math.abs((successCount + variance) % PAUSE_EVERY_10) <= 1 && successCount >= PAUSE_EVERY_10 - 1) {
+          pauseSec = Math.floor(Math.random() * 15) + 15; // 15-30 сек
           pauseType = 'короткая';
         }
 
