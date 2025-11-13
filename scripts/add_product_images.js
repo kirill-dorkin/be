@@ -792,11 +792,11 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
     await page.click(searchBoxSelector, { clickCount: 3 });
     await page.keyboard.press('Backspace');
 
-    // Вводим новый запрос
+    // Вводим новый запрос (быстрая печать как у опытного пользователя)
     await page.type(searchBoxSelector, query, {
-      delay: Math.floor(Math.random() * 70) + 80
+      delay: Math.floor(Math.random() * 30) + 35 // 35-65ms между символами
     });
-    await randomDelay(800, 1200);
+    await randomDelay(200, 400); // Короткая пауза перед Enter
 
     // Нажимаем Enter
     await page.keyboard.press("Enter");
