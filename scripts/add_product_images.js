@@ -31,11 +31,7 @@ const API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL;
 const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
 const ANTICAPTCHA_API_KEY = process.env.ANTICAPTCHA_API_KEY;
 
-if (!API_URL || !APP_TOKEN) {
-  console.error(chalk.red.bold("❌ Ошибка конфигурации!"));
-  console.error(chalk.yellow("NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в .env"));
-  process.exit(1);
-}
+// Validation moved to main() function for better UX
 
 // Инициализируем Anti-Captcha клиент (если ключ задан)
 let antiCaptchaClient = null;
@@ -1284,6 +1280,20 @@ async function addProductImage(productId, imagePath) {
     const result = json.data?.productMediaCreate;
     return result?.product;
   } catch (error) {
+    // Enhanced error messages for common issues
+    if (error.code === 'ECONNREFUSED') {
+      throw new Error('Не удалось подключиться к Saleor API. Проверьте URL в .env');
+    } else if (error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
+      throw new Error('Таймаут подключения к Saleor API. Проверьте интернет-соединение');
+    } else if (error.response?.status === 401) {
+      throw new Error('Неверный токен авторизации. Проверьте SALEOR_APP_TOKEN в .env');
+    } else if (error.response?.status === 403) {
+      throw new Error('Доступ запрещен. Проверьте права токена Saleor');
+    } else if (error.response?.status === 413) {
+      throw new Error('Изображение слишком большое для загрузки');
+    } else if (error.response?.status >= 500) {
+      throw new Error(`Ошибка сервера Saleor (${error.response.status}). Попробуйте позже`);
+    }
     throw error;
   } finally {
     // Удаляем временный файл (если не установлен флаг KEEP_IMAGES)
@@ -1386,6 +1396,27 @@ async function addProductMetadata(productId, key, value) {
 async function main() {
   // Очищаем терминал для чистого вывода
   console.clear();
+
+  // Валидация обязательных переменных окружения
+  const missingVars = [];
+  if (!API_URL) missingVars.push('NEXT_PUBLIC_SALEOR_API_URL');
+  if (!APP_TOKEN) missingVars.push('SALEOR_APP_TOKEN');
+
+  if (missingVars.length > 0) {
+    console.log("\n" + boxen(
+      chalk.red.bold("❌ ОШИБКА КОНФИГУРАЦИИ\n\n") +
+      chalk.white("Отсутствуют обязательные переменные окружения:\n\n") +
+      missingVars.map(v => chalk.yellow(`  • ${v}`)).join('\n') + '\n\n' +
+      chalk.gray("Убедитесь что файл .env содержит все необходимые переменные"),
+      {
+        padding: 1,
+        borderStyle: 'round',
+        borderColor: 'red'
+      }
+    ));
+    console.log("");
+    process.exit(1);
+  }
 
   // Красивый заголовок
   console.log("\n" + boxen(
@@ -1739,6 +1770,33 @@ async function main() {
     }
   }
 }
+
+// Graceful shutdown handling
+let isShuttingDown = false;
+
+async function gracefulShutdown(signal) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  console.log("\n\n");
+  console.log(boxen(
+    chalk.yellow.bold("⏸️  ОСТАНОВКА СКРИПТА\n\n") +
+    chalk.white(`Получен сигнал: ${signal}\n`) +
+    chalk.gray("Корректно завершаю работу..."),
+    {
+      padding: 1,
+      borderStyle: 'round',
+      borderColor: 'yellow'
+    }
+  ));
+  console.log("");
+
+  // Browser будет отключен в finally блоке main()
+  process.exit(0);
+}
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT (Ctrl+C)'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 // Запуск скрипта
 main().catch((error) => {
