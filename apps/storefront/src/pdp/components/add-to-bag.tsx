@@ -56,6 +56,7 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
           });
         }
       });
+      setIsProcessing(false);
     } else {
       toast({
         description: t("common.product-added"),
@@ -70,10 +71,13 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
           </ToastAction>
         ),
       });
-      router.refresh();
-    }
 
-    setIsProcessing(false);
+      // Small delay to ensure cache is revalidated before refresh
+      setTimeout(() => {
+        router.refresh();
+        setIsProcessing(false);
+      }, 300);
+    }
   }, [variantId, toast, t, router]);
 
   const handleProductRemove = useCallback(async () => {
@@ -94,14 +98,18 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
           });
         }
       });
+      setIsProcessing(false);
     } else {
       toast({
         description: t("common.product-removed"),
       });
-      router.refresh();
-    }
 
-    setIsProcessing(false);
+      // Small delay to ensure cache is revalidated before refresh
+      setTimeout(() => {
+        router.refresh();
+        setIsProcessing(false);
+      }, 300);
+    }
   }, [variantId, toast, t, router]);
 
   const handleNotifyMe = useCallback(async () => {

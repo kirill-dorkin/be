@@ -84,7 +84,7 @@ export const removeFromBagAction = async ({
   });
 
   if (result.ok) {
-    void revalidateCart(cookieCartId);
+    await revalidateCart(cookieCartId);
   }
 
   return result;
