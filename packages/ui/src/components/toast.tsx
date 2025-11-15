@@ -57,8 +57,6 @@ const Toast: React.FC<
   return (
     <ToastPrimitives.Root
       className={cn(toastVariants({ variant }), className)}
-      swipeDirection="right"
-      swipeThreshold={50}
       {...props}
     />
   );
