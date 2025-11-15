@@ -16,7 +16,7 @@ export function Toaster() {
   const { toasts } = useToast();
 
   return (
-    <ToastProvider swipeDirection="right" swipeThreshold={50}>
+    <ToastProvider swipeDirection="up" swipeThreshold={30}>
       {toasts.map(function ({
         id,
         title,

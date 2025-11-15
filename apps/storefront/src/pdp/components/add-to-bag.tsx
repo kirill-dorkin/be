@@ -1,9 +1,11 @@
 "use client";
 
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
+import { type Cart } from "@nimara/domain/objects/Cart";
 import { Button } from "@nimara/ui/components/button";
 import { ToastAction } from "@nimara/ui/components/toast";
 import { useToast } from "@nimara/ui/hooks";
@@ -13,16 +15,28 @@ import { paths } from "@/lib/paths";
 import type { TranslationMessage } from "@/types";
 
 import { addToBagAction } from "../actions/add-to-bag";
+import { removeFromBagAction } from "../actions/remove-from-bag";
 
 type AddToBagProps = {
+  cart: Cart | null;
   isVariantAvailable: boolean;
   variantId: string;
 };
 
-const AddToBagComponent = ({ variantId, isVariantAvailable }: AddToBagProps) => {
+const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProps) => {
   const t = useTranslations();
   const { toast } = useToast();
+  const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Check if item is already in cart
+  const isInCart = useMemo(() => {
+    if (!cart || !variantId) {
+      return false;
+    }
+
+    return cart.lines.some((line) => line.variant.id === variantId);
+  }, [cart, variantId]);
 
   const handleProductAdd = useCallback(async () => {
     setIsProcessing(true);
@@ -56,10 +70,39 @@ const AddToBagComponent = ({ variantId, isVariantAvailable }: AddToBagProps) => 
           </ToastAction>
         ),
       });
+      router.refresh();
     }
 
     setIsProcessing(false);
-  }, [variantId, toast, t]);
+  }, [variantId, toast, t, router]);
+
+  const handleProductRemove = useCallback(async () => {
+    setIsProcessing(true);
+
+    const resultLinesRemove = await removeFromBagAction({
+      variantId,
+    });
+
+    if (!resultLinesRemove.ok) {
+      resultLinesRemove.errors.forEach((error) => {
+        if (error.field) {
+          toast({
+            description: t(
+              `checkout-errors.${error.field}` as TranslationMessage,
+            ),
+            variant: "destructive",
+          });
+        }
+      });
+    } else {
+      toast({
+        description: t("common.product-removed"),
+      });
+      router.refresh();
+    }
+
+    setIsProcessing(false);
+  }, [variantId, toast, t, router]);
 
   const handleNotifyMe = useCallback(async () => {
     return toast({
@@ -73,10 +116,22 @@ const AddToBagComponent = ({ variantId, isVariantAvailable }: AddToBagProps) => 
     <Button
       className="w-full"
       disabled={!variantId || isProcessing}
-      onClick={isVariantAvailable ? handleProductAdd : handleNotifyMe}
+      onClick={
+        isInCart
+          ? handleProductRemove
+          : isVariantAvailable
+            ? handleProductAdd
+            : handleNotifyMe
+      }
       loading={isProcessing}
+      variant={isInCart ? "destructive" : "default"}
     >
-      {isVariantAvailable ? (
+      {isInCart ? (
+        <>
+          <Trash2 className="mr-2 h-4" />
+          {t("common.remove-from-bag")}
+        </>
+      ) : isVariantAvailable ? (
         <>
           <PlusCircle className="mr-2 h-4" />
           {t("common.add-to-bag")}
@@ -92,6 +147,7 @@ const AddToBagComponent = ({ variantId, isVariantAvailable }: AddToBagProps) => 
 export const AddToBag = memo(AddToBagComponent, (prevProps, nextProps) => {
   return (
     prevProps.variantId === nextProps.variantId &&
-    prevProps.isVariantAvailable === nextProps.isVariantAvailable
+    prevProps.isVariantAvailable === nextProps.isVariantAvailable &&
+    prevProps.cart?.id === nextProps.cart?.id
   );
 });

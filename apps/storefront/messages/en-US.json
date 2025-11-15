@@ -617,6 +617,7 @@
   "common": {
     "checkout": "Checkout",
     "add-to-bag": "Add to bag",
+    "remove-from-bag": "Remove from bag",
     "close": "Close",
     "go-to-next-page": "Go to next page",
     "go-to-previous-page": "Go to previous page",
@@ -631,6 +632,7 @@
     "go-to-checkout": "Go to checkout",
     "go-to-bag": "Go to bag",
     "product-added": "Product has been added to your bag.",
+    "product-removed": "Product has been removed from your bag.",
     "edit": "Edit",
     "go-to-homepage": "Go to home page",
     "show-summary": "Show summary",

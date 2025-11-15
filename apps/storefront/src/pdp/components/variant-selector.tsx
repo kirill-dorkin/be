@@ -181,6 +181,7 @@ export const VariantSelector = ({
       </div>
 
       <AddToBag
+        cart={cart}
         variantId={
           matchingVariants?.length > 1
             ? discriminatedVariantId
