@@ -41,6 +41,41 @@ export const addToBagAction = async ({
     }
   }
 
+  // Check if item already exists in cart
+  if (cookieCartId) {
+    const cartGetResult = await cartService.cartGet({
+      cartId: cookieCartId,
+      languageCode: region.language.code,
+      countryCode: region.market.countryCode,
+      options: {
+        next: {
+          tags: [`CHECKOUT:${cookieCartId}`],
+          revalidate: CACHE_TTL.cart,
+        },
+      },
+    });
+
+    if (cartGetResult.ok) {
+      const existingItem = cartGetResult.data.lines.find(
+        (line) => line.variant.id === variantId,
+      );
+
+      if (existingItem) {
+        storefrontLogger.debug("Item already exists in cart", { variantId });
+
+        return {
+          ok: false,
+          errors: [
+            {
+              field: "ITEM_ALREADY_IN_CART",
+              message: "This item is already in your cart",
+            },
+          ],
+        } as const;
+      }
+    }
+  }
+
   const result = await cartService.linesAdd({
     email: user?.email,
     channel: region.market.channel,

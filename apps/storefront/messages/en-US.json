@@ -816,7 +816,8 @@
     "INVALID": "Invalid value",
     "REQUIRED": "Required",
     "INSUFFICIENT_STOCK": "Product has insufficient stock.",
-    "QUANTITY_GREATER_THAN_LIMIT": "Sorry, the maximum quantity you can order has been reached."
+    "QUANTITY_GREATER_THAN_LIMIT": "Sorry, the maximum quantity you can order has been reached.",
+    "ITEM_ALREADY_IN_CART": "This item is already in your cart"
   },
   "errors": {
     "ACCESS_TOKEN_NOT_FOUND_ERROR": "Access token not found.",

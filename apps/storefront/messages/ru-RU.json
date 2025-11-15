@@ -811,7 +811,8 @@
     "INVALID": "Некорректное значение",
     "REQUIRED": "Обязательное поле",
     "INSUFFICIENT_STOCK": "Недостаточно товара на складе.",
-    "QUANTITY_GREATER_THAN_LIMIT": "Достигнуто максимальное количество для заказа."
+    "QUANTITY_GREATER_THAN_LIMIT": "Достигнуто максимальное количество для заказа.",
+    "ITEM_ALREADY_IN_CART": "Этот товар уже в корзине"
   },
   "errors": {
     "ACCESS_TOKEN_NOT_FOUND_ERROR": "Токен доступа не найден.",
