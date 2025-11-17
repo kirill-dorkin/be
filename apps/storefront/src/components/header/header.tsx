@@ -77,8 +77,8 @@ export const Header = async () => {
       className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
     >
       <div className="container">
-        <div className="grid w-full grid-flow-col grid-cols-[repeat(3,1fr)] justify-between gap-4">
-          <div className="flex items-center gap-3 md:hidden">
+        <div className="grid w-full grid-flow-col grid-cols-[repeat(3,1fr)] justify-between gap-2 py-3 md:gap-4 md:py-4">
+          <div className="flex items-center gap-2 md:hidden">
             <MobileSideMenu user={user} menu={resultMenu?.data?.menu} />
             {shoppingBag}
           </div>
@@ -90,7 +90,7 @@ export const Header = async () => {
             <SearchForm />
           </div>
 
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center justify-end gap-2 md:gap-3">
             <MobileSearch />
 
             <div className="hidden md:block">

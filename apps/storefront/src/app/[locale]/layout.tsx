@@ -37,6 +37,14 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
+};
+
 export default async function LocaleLayout({
   children,
   params,
@@ -66,7 +74,8 @@ export default async function LocaleLayout({
           "min-h-[100dvh]",
           "flex flex-col",
           "bg-background",
-          "text-foreground text-[17px] leading-[1.55] font-medium",
+          "text-foreground text-base md:text-[17px] leading-[1.55] font-medium",
+          "overscroll-none",
           aspekta.className,
         )}
       >

@@ -17,29 +17,51 @@ import { CurrencySwitch } from "../currency-switch";
 import { LocaleSwitch } from "../locale-switch";
 
 const BurgerIcon = ({ isOpen }: { isOpen: boolean }) => {
-  const lineClasses =
-    "absolute left-0 h-0.5 w-6 rounded-full bg-stone-700 transition-transform duration-300 ease-in-out";
-
   return (
-    <span className="relative flex h-5 w-6 items-center justify-center">
+    <span className="relative flex h-6 w-6 items-center justify-center">
+      {/* Верхняя линия */}
       <span
-        className={cn(
-          lineClasses,
-          isOpen ? "translate-y-0 rotate-45" : "-translate-y-1.5 rotate-0",
-        )}
+        style={{
+          position: 'absolute',
+          left: 0,
+          height: '2px',
+          width: '24px',
+          borderRadius: '9999px',
+          backgroundColor: 'currentColor',
+          transition: 'all 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isOpen
+            ? 'translateY(0) rotate(45deg) scale(1.1)'
+            : 'translateY(-8px) rotate(0deg) scale(1)',
+        }}
       />
+      {/* Средняя линия */}
       <span
-        className={cn(
-          lineClasses,
-          "transition-opacity duration-200",
-          isOpen ? "opacity-0" : "opacity-100",
-        )}
+        style={{
+          position: 'absolute',
+          left: 0,
+          height: '2px',
+          width: '24px',
+          borderRadius: '9999px',
+          backgroundColor: 'currentColor',
+          transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity: isOpen ? 0 : 1,
+          transform: isOpen ? 'scale(0.8)' : 'scale(1)',
+        }}
       />
+      {/* Нижняя линия */}
       <span
-        className={cn(
-          lineClasses,
-          isOpen ? "translate-y-0 -rotate-45" : "translate-y-1.5 rotate-0",
-        )}
+        style={{
+          position: 'absolute',
+          left: 0,
+          height: '2px',
+          width: '24px',
+          borderRadius: '9999px',
+          backgroundColor: 'currentColor',
+          transition: 'all 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isOpen
+            ? 'translateY(0) rotate(-45deg) scale(1.1)'
+            : 'translateY(8px) rotate(0deg) scale(1)',
+        }}
       />
     </span>
   );
@@ -137,7 +159,7 @@ export const MobileSideMenu = ({
       <Button
         variant="ghost"
         size="icon"
-        className="gap-1 transition-transform duration-300"
+        className="gap-1 transition-all duration-300 hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-95"
         onClick={toggleMenu}
         title={menuLabel}
         aria-label={menuLabel}
@@ -164,7 +186,7 @@ export const MobileSideMenu = ({
           },
         )}
       >
-        <div className="flex h-full flex-col gap-6 px-6 pb-10 pt-6">
+        <div className="flex h-full flex-col gap-6 px-6 pb-safe pt-6">
           <span className="pointer-events-none absolute inset-y-0 right-[-1px] w-8 bg-gradient-to-r from-background via-background/40 to-transparent" />
           <div className="no-scrollbar flex-1 overflow-y-auto pr-1">
             <MobileNavigation

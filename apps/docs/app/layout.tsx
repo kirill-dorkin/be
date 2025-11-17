@@ -11,8 +11,9 @@ export const metadata = {
     default: "Nimara Storefront",
     template: "%s | Nimara Storefront",
   },
-  viewport: "width=device-width, initial-scale=1.0",
 };
+
+export const viewport = "width=device-width, initial-scale=1.0";
 
 const navbar = (
   <Navbar

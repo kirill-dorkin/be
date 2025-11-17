@@ -4,11 +4,11 @@ const os = require("os");
 const FormData = require("form-data");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
-const AntiCaptchaClient = require("./anticaptcha-client");
 const chalk = require("chalk");
 const ora = require("ora");
 const cliProgress = require("cli-progress");
 const boxen = require("boxen");
+const stringWidth = require("string-width").default;
 
 // Простое логирование в файл
 const logFilePath = path.join(__dirname, `image-add-${new Date().toISOString().split('T')[0]}.log`);
@@ -40,139 +40,8 @@ if (fs.existsSync(envPath)) {
 
 const API_URL = process.env.NEXT_PUBLIC_SALEOR_API_URL;
 const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
-const ANTICAPTCHA_API_KEY = process.env.ANTICAPTCHA_API_KEY;
-
-// Validation moved to main() function for better UX
-
-// Инициализируем Anti-Captcha клиент (если ключ задан)
-let antiCaptchaClient = null;
-if (ANTICAPTCHA_API_KEY) {
-  antiCaptchaClient = new AntiCaptchaClient(ANTICAPTCHA_API_KEY);
-}
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// Глобальный трекер капчи для адаптивного поведения
-const captchaTracker = {
-  totalCaptchas: 0,
-  recentCaptchas: [],
-  lastCaptchaTime: 0,
-
-  // Регистрируем капчу
-  recordCaptcha() {
-    this.totalCaptchas++;
-    const now = Date.now();
-    this.lastCaptchaTime = now;
-    this.recentCaptchas.push(now);
-
-    // Очищаем старые записи (старше 5 минут)
-    const fiveMinutesAgo = now - 5 * 60 * 1000;
-    this.recentCaptchas = this.recentCaptchas.filter(time => time > fiveMinutesAgo);
-  },
-
-  // Получить задержку после капчи (экспоненциальный backoff)
-  getPostCaptchaDelay() {
-    const recentCount = this.recentCaptchas.length;
-
-    if (recentCount === 0) return 0;
-    if (recentCount === 1) return 30000; // 30 сек после первой капчи
-    if (recentCount === 2) return 60000; // 1 мин после второй
-    if (recentCount === 3) return 120000; // 2 мин после третьей
-    return 180000; // 3 мин после 4+ капчи за последние 5 минут
-  },
-
-  // Нужно ли быть осторожнее
-  shouldBeCareful() {
-    return this.recentCaptchas.length >= 2;
-  },
-
-  // Множитель задержки (чем больше капч, тем медленнее работаем)
-  getDelayMultiplier() {
-    const recentCount = this.recentCaptchas.length;
-    if (recentCount === 0) return 1;
-    if (recentCount === 1) return 1.5;
-    if (recentCount === 2) return 2;
-    return 3; // 3x медленнее после 3+ капчи
-  }
-};
-
-// Случайная задержка с нормальным распределением (более человечная)
-const randomDelay = (min, max) => {
-  // Используем нормальное распределение для более реалистичных задержек
-  const mean = (min + max) / 2;
-  const stdDev = (max - min) / 6;
-
-  // Box-Muller transform для нормального распределения
-  const u1 = Math.random();
-  const u2 = Math.random();
-  const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-
-  let ms = Math.round(mean + stdDev * z0);
-
-  // Ограничиваем значения диапазоном
-  ms = Math.max(min, Math.min(max, ms));
-
-  return delay(ms);
-};
-
-// Человекоподобные действия для имитации реального пользователя
-const humanBehavior = {
-  // Случайное движение мыши (иногда)
-  async randomMouseMove(page) {
-    if (Math.random() > 0.3) return; // 30% шанс
-
-    const viewport = await page.viewport();
-    const x = Math.floor(Math.random() * viewport.width);
-    const y = Math.floor(Math.random() * viewport.height);
-
-    await page.mouse.move(x, y, { steps: Math.floor(Math.random() * 5) + 3 });
-    await randomDelay(100, 300);
-  },
-
-  // Случайный скроллинг (как будто читаем страницу)
-  async randomScroll(page) {
-    if (Math.random() > 0.4) return; // 40% шанс
-
-    const scrollAmount = Math.floor(Math.random() * 300) + 100;
-    const direction = Math.random() > 0.8 ? -1 : 1; // 80% вниз, 20% вверх
-
-    await page.evaluate((amount, dir) => {
-      window.scrollBy({
-        top: amount * dir,
-        behavior: 'smooth'
-      });
-    }, scrollAmount, direction);
-
-    await randomDelay(500, 1500); // Пауза как будто читаем
-  },
-
-  // Пауза "подумать" перед действием
-  async thinkingPause() {
-    if (Math.random() > 0.2) return; // 20% шанс
-    await randomDelay(800, 2000);
-  },
-
-  // Имитация просмотра результатов (движение мыши + скролл)
-  async lookAround(page) {
-    if (Math.random() > 0.5) return; // 50% шанс
-
-    await this.randomMouseMove(page);
-    await randomDelay(300, 800);
-    await this.randomScroll(page);
-  },
-
-  // Случайная пауза между действиями (вариативная + адаптивная)
-  async naturalPause(baseMin = 500, baseMax = 1500) {
-    // Иногда делаем паузу длиннее (как будто отвлеклись)
-    let multiplier = Math.random() > 0.9 ? 2 : 1; // 10% шанс долгой паузы
-
-    // Адаптивная логика: если были капчи, замедляемся
-    const captchaMultiplier = captchaTracker.getDelayMultiplier();
-    multiplier *= captchaMultiplier;
-
-    await randomDelay(baseMin * multiplier, baseMax * multiplier);
-  }
-};
 
 // Очистка имени файла от недопустимых символов
 function sanitizeFilename(name) {
@@ -188,8 +57,13 @@ function sanitizeFilename(name) {
 function formatDuration(ms) {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
   const remainingSeconds = seconds % 60;
 
+  if (hours > 0) {
+    return `${hours}ч ${remainingMinutes}м ${remainingSeconds}с`;
+  }
   if (minutes > 0) {
     return `${minutes}м ${remainingSeconds}с`;
   }
@@ -232,13 +106,13 @@ async function detectCaptcha(page) {
 }
 
 // Ожидание решения капчи пользователем
-async function waitForCaptchaSolution(page, maxWaitMinutes = 5, progressBar = null) {
+async function waitForCaptchaSolution(page, maxWaitMinutes = 10, progressBar = null) {
   // Останавливаем прогресс-бар если передан
   if (progressBar) {
     progressBar.stop();
   }
 
-  console.log(`\n⚠️  Требуется ручное решение капчи`);
+  console.log(`\n⚠️  Обнаружена капча! Требуется ручное решение`);
   console.log(`👉 Откройте Chrome и решите капчу вручную`);
   console.log(`⏰ Жду максимум ${maxWaitMinutes} минут\n`);
 
@@ -256,8 +130,7 @@ async function waitForCaptchaSolution(page, maxWaitMinutes = 5, progressBar = nu
 
     if (!hasCaptcha) {
       console.log(`✅ Капча решена! Продолжаю работу...\n`);
-      // Дополнительная пауза после решения капчи
-      await randomDelay(3000, 5000);
+      await delay(2000);
       return true;
     }
 
@@ -273,369 +146,10 @@ async function waitForCaptchaSolution(page, maxWaitMinutes = 5, progressBar = nu
 }
 
 /**
- * Извлечь sitekey reCAPTCHA со страницы
- */
-async function extractRecaptchaSiteKey(page) {
-  try {
-    const siteKey = await page.evaluate(() => {
-      // Способ 1: Ищем в iframe src
-      const iframe = document.querySelector('iframe[src*="recaptcha"]');
-      if (iframe) {
-        const src = iframe.src;
-        const match = src.match(/[?&]k=([^&]+)/);
-        if (match) return match[1];
-      }
-
-      // Способ 2: Ищем data-sitekey атрибут
-      const recaptchaDiv = document.querySelector('[data-sitekey]');
-      if (recaptchaDiv) {
-        return recaptchaDiv.getAttribute('data-sitekey');
-      }
-
-      // Способ 3: Ищем в grecaptcha.render вызовах в скриптах
-      const scripts = Array.from(document.getElementsByTagName('script'));
-      for (const script of scripts) {
-        if (script.textContent && script.textContent.includes('grecaptcha')) {
-          const match = script.textContent.match(/sitekey['":\s]+(['"])([^'"]+)\1/);
-          if (match) return match[2];
-        }
-      }
-
-      return null;
-    });
-
-    return siteKey;
-  } catch (error) {
-    console.error(`    ❌ Ошибка извлечения sitekey: ${error.message}`);
-    return null;
-  }
-}
-
-/**
- * Внедрить токен решения капчи в страницу и отправить форму
- */
-async function injectCaptchaSolution(page, gRecaptchaResponse) {
-  try {
-    // Проверяем что мы на странице /sorry (блокировка Google)
-    const currentUrl = page.url();
-    const isSorryPage = currentUrl.includes('/sorry');
-
-    if (isSorryPage) {
-      console.log(`    🔧 Обнаружена страница блокировки Google (/sorry)`);
-
-      // Делаем скриншот до внедрения для отладки
-      try {
-        await page.screenshot({ path: `/tmp/captcha-before-inject-${Date.now()}.png` });
-        console.log(`    📸 Скриншот сохранён в /tmp/`);
-      } catch (e) {
-        // Игнорируем ошибки скриншотов
-      }
-    }
-
-    // Внедряем токен в страницу
-    const injectionResult = await page.evaluate((token) => {
-      const results = {
-        textareaFound: false,
-        textareaCount: 0,
-        callbackInvoked: false,
-        formFound: false,
-        submitBtnFound: false,
-      };
-
-      // Устанавливаем значение в textarea
-      const textarea = document.getElementById('g-recaptcha-response');
-      if (textarea) {
-        textarea.innerHTML = token;
-        textarea.value = token;
-        textarea.style.display = '';
-        results.textareaFound = true;
-      }
-
-      // Ищем все textarea с g-recaptcha-response
-      const textareas = document.querySelectorAll('textarea[name="g-recaptcha-response"]');
-      results.textareaCount = textareas.length;
-      textareas.forEach(t => {
-        t.innerHTML = token;
-        t.value = token;
-        t.style.display = '';
-      });
-
-      // Вызываем callback если он есть
-      if (typeof window.___grecaptcha_cfg !== 'undefined') {
-        const clients = window.___grecaptcha_cfg.clients;
-        if (clients) {
-          Object.keys(clients).forEach(key => {
-            const client = clients[key];
-            if (client && client.callback) {
-              client.callback(token);
-              results.callbackInvoked = true;
-            }
-          });
-        }
-      }
-
-      // Проверяем наличие формы и кнопок
-      const form = document.querySelector('form');
-      if (form) {
-        results.formFound = true;
-      }
-
-      const submitBtn = document.querySelector('button[type="submit"], input[type="submit"], button#submit');
-      if (submitBtn) {
-        results.submitBtnFound = true;
-      }
-
-      return results;
-    }, gRecaptchaResponse);
-
-    console.log(`    ✅ Токен решения внедрён в страницу`);
-    console.log(`       - textarea найдено: ${injectionResult.textareaCount}`);
-    console.log(`       - callback вызван: ${injectionResult.callbackInvoked ? 'Да' : 'Нет'}`);
-    console.log(`       - форма найдена: ${injectionResult.formFound ? 'Да' : 'Нет'}`);
-    console.log(`       - кнопка submit: ${injectionResult.submitBtnFound ? 'Да' : 'Нет'}`);
-
-    // Для страницы /sorry нужно отправить форму
-    if (isSorryPage) {
-      console.log(`    📤 Отправляю форму с решением...`);
-
-      // СПОСОБ 1: Попробовать кликнуть по кнопке submit
-      const clickResult = await page.evaluate(() => {
-        const submitBtn = document.querySelector('button[type="submit"], input[type="submit"], button#submit, input#submit');
-        if (submitBtn) {
-          submitBtn.click();
-          return { method: 'button.click()', success: true };
-        }
-        return { method: 'button.click()', success: false };
-      });
-
-      if (clickResult.success) {
-        console.log(`    ✓ Кликнул на кнопку submit`);
-      } else {
-        console.log(`    ⚠️  Кнопка submit не найдена, пробую form.submit()`);
-
-        // СПОСОБ 2: Попробовать отправить форму напрямую
-        const formResult = await page.evaluate(() => {
-          const form = document.querySelector('form');
-          if (form) {
-            form.submit();
-            return { method: 'form.submit()', success: true };
-          }
-          return { method: 'form.submit()', success: false };
-        });
-
-        if (formResult.success) {
-          console.log(`    ✓ Форма отправлена через form.submit()`);
-        } else {
-          console.log(`    ❌ Ни форма, ни кнопка не найдены!`);
-
-          // Делаем скриншот для отладки
-          try {
-            await page.screenshot({ path: `/tmp/captcha-no-form-${Date.now()}.png` });
-            console.log(`    📸 Скриншот для отладки: /tmp/captcha-no-form-*.png`);
-          } catch (e) {
-            // Игнорируем
-          }
-
-          return false;
-        }
-      }
-
-      // Ждем навигации (перенаправления на нормальную страницу)
-      console.log(`    ⏳ Жду перенаправления (до 20 секунд)...`);
-      try {
-        await page.waitForNavigation({ timeout: 20000, waitUntil: 'domcontentloaded' });
-        console.log(`    ✅ Перенаправление выполнено!`);
-        return true;
-      } catch (navError) {
-        console.log(`    ⚠️  Таймаут навигации (${navError.message})`);
-
-        // Делаем скриншот после ожидания
-        try {
-          await page.screenshot({ path: `/tmp/captcha-after-wait-${Date.now()}.png` });
-          console.log(`    📸 Скриншот после ожидания: /tmp/captcha-after-wait-*.png`);
-        } catch (e) {
-          // Игнорируем
-        }
-
-        // Проверяем изменился ли URL несмотря на таймаут
-        const newUrl = page.url();
-        if (newUrl !== currentUrl) {
-          console.log(`    ✓ URL изменился несмотря на таймаут`);
-          console.log(`      Старый: ${currentUrl.substring(0, 60)}...`);
-          console.log(`      Новый:  ${newUrl.substring(0, 60)}...`);
-          return true;
-        }
-
-        return false;
-      }
-    }
-
-    return true;
-  } catch (error) {
-    console.error(`    ❌ Ошибка внедрения токена: ${error.message}`);
-    return false;
-  }
-}
-
-/**
- * Автоматически решить капчу через Anti-Captcha
- */
-async function solveRecaptchaAutomatically(page, progressBar = null) {
-  // Останавливаем прогресс-бар если передан
-  if (progressBar) {
-    progressBar.stop();
-  }
-
-  if (!antiCaptchaClient) {
-    console.log(`\n    ⚠️  Anti-Captcha не настроен (ключ не задан в .env)`);
-    console.log(`    💡 Добавьте ANTICAPTCHA_API_KEY в .env для автоматического решения\n`);
-    return false;
-  }
-
-  try {
-    // Получаем текущий URL
-    const currentURL = page.url();
-    const isSorryPage = currentURL.includes('/sorry');
-
-    console.log(`\n🤖 Обнаружена капча! Запускаю автоматическое решение через Anti-Captcha...`);
-    console.log(`📍 URL: ${currentURL.substring(0, 80)}...`);
-
-    // Извлекаем sitekey
-    const siteKey = await extractRecaptchaSiteKey(page);
-    if (!siteKey) {
-      // Если это не страница /sorry, скорее всего ложное срабатывание - продолжаем
-      if (!isSorryPage) {
-        console.log(`✓ Это не страница блокировки, продолжаю работу...\n`);
-        return true; // Считаем что капчи нет
-      }
-
-      console.log(`❌ Не удалось извлечь sitekey с /sorry страницы`);
-      return false;
-    }
-    console.log(`✓ Sitekey найден`);
-    console.log(`💰 Решаю капчу...`);
-
-    // Решаем капчу через Anti-Captcha
-    const gRecaptchaResponse = await antiCaptchaClient.solveRecaptchaV2(
-      currentURL,
-      siteKey
-    );
-
-    // Сохраняем текущий URL перед внедрением
-    const urlBeforeInject = page.url();
-    const wasSorryPage = urlBeforeInject.includes('/sorry');
-
-    await randomDelay(2000, 3000);
-
-    // Внедряем решение в страницу (для /sorry также отправит форму)
-    const injectionSuccess = await injectCaptchaSolution(page, gRecaptchaResponse);
-
-    if (!injectionSuccess) {
-      console.log(`❌ Не удалось внедрить решение`);
-      return false;
-    }
-
-    // Для страницы /sorry проверяем результат
-    if (wasSorryPage) {
-      // injectCaptchaSolution уже ждёт навигации для /sorry
-      // Просто проверяем изменился ли URL
-      await randomDelay(1000, 2000);
-
-      const currentUrl = page.url();
-      const urlChanged = currentUrl !== urlBeforeInject;
-
-      if (urlChanged) {
-        console.log(`✅ Капча решена успешно!`);
-
-        // Регистрируем капчу и делаем адаптивную паузу
-        captchaTracker.recordCaptcha();
-        const pauseDelay = captchaTracker.getPostCaptchaDelay();
-
-        if (pauseDelay > 0) {
-          const pauseSec = Math.round(pauseDelay / 1000);
-          console.log(chalk.cyan(`⏸️  Адаптивная пауза ${pauseSec}с после капчи (снижаем подозрения)...\n`));
-          await delay(pauseDelay);
-        } else {
-          console.log(``);
-        }
-
-        return true;
-      }
-
-      // Если URL не изменился, проверяем исчезла ли капча
-      const stillHasCaptcha = await detectCaptcha(page);
-      if (!stillHasCaptcha) {
-        console.log(`✅ Капча решена!`);
-
-        // Регистрируем капчу и делаем адаптивную паузу
-        captchaTracker.recordCaptcha();
-        const pauseDelay = captchaTracker.getPostCaptchaDelay();
-
-        if (pauseDelay > 0) {
-          const pauseSec = Math.round(pauseDelay / 1000);
-          console.log(chalk.cyan(`⏸️  Адаптивная пауза ${pauseSec}с после капчи...\n`));
-          await delay(pauseDelay);
-        } else {
-          console.log(``);
-        }
-
-        return true;
-      }
-
-      console.log(`❌ Капча не принята, требуется ручное решение`);
-      return false;
-    } else {
-      // Для обычных страниц
-      await randomDelay(2000, 3000);
-
-      const stillHasCaptcha = await detectCaptcha(page);
-      if (!stillHasCaptcha) {
-        console.log(`✅ Капча решена!`);
-
-        // Регистрируем капчу и делаем адаптивную паузу
-        captchaTracker.recordCaptcha();
-        const pauseDelay = captchaTracker.getPostCaptchaDelay();
-
-        if (pauseDelay > 0) {
-          const pauseSec = Math.round(pauseDelay / 1000);
-          console.log(chalk.cyan(`⏸️  Адаптивная пауза ${pauseSec}с после капчи...\n`));
-          await delay(pauseDelay);
-        } else {
-          console.log(``);
-        }
-
-        return true;
-      } else {
-        console.log(`❌ Капча не принята`);
-        return false;
-      }
-    }
-  } catch (error) {
-    console.error(`❌ Ошибка решения капчи: ${error.message}`);
-    return false;
-  }
-}
-
-/**
- * Обработать капчу (автоматически или вручную)
- * Сначала пробует автоматическое решение, затем fallback на ручное
+ * Обработать капчу - ожидаем ручное решение пользователем
  */
 async function handleCaptcha(page, progressBar = null) {
-  // Пробуем автоматическое решение
-  const autoSolved = await solveRecaptchaAutomatically(page, progressBar);
-
-  if (autoSolved) {
-    return true; // Успешно решено автоматически
-  }
-
-  // Если автоматическое решение не сработало, fallback на ручное
-  if (!antiCaptchaClient) {
-    console.log(`💡 Переключаюсь на ручное решение...`);
-  } else {
-    console.log(`💡 Автоматическое решение не сработало, переключаюсь на ручное...`);
-  }
-
-  await waitForCaptchaSolution(page, 5, progressBar);
+  await waitForCaptchaSolution(page, 10, progressBar);
   return true;
 }
 
@@ -939,42 +453,17 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
       timeout: 30000,
     });
 
-    // Человекоподобное поведение: осматриваемся на странице
-    await humanBehavior.lookAround(page);
-    await humanBehavior.naturalPause(800, 1500);
-
     // Вводим запрос
     const searchBoxSelector = 'textarea[name="q"], input[name="q"]';
     await page.waitForSelector(searchBoxSelector, { timeout: 10000 });
 
-    // Небольшая пауза перед кликом (как будто нашли поле глазами)
-    await humanBehavior.thinkingPause();
-
-    // Кликаем с движением мыши
-    await humanBehavior.randomMouseMove(page);
     await page.click(searchBoxSelector, { clickCount: 3 });
-    await randomDelay(50, 150);
     await page.keyboard.press('Backspace');
-
-    // Маленькая пауза "подумать что искать"
-    await randomDelay(100, 300);
-
-    // Вводим новый запрос (быстрая печать как у опытного пользователя)
-    await page.type(searchBoxSelector, query, {
-      delay: Math.floor(Math.random() * 30) + 35 // 35-65ms между символами
-    });
-
-    // Короткая пауза перед Enter (проверяем что ввели)
-    await randomDelay(150, 400);
-
-    // Нажимаем Enter
+    await page.type(searchBoxSelector, query, { delay: 50 });
     await page.keyboard.press("Enter");
 
-    // Ждём результаты с вариативностью
-    await humanBehavior.naturalPause(2000, 3500);
-
-    // Смотрим на результаты (человекоподобно)
-    await humanBehavior.lookAround(page);
+    // Ждём результаты
+    await delay(2000);
 
     if (!useImagesTab) {
       // Ищем на главной странице (вкладка All)
@@ -983,18 +472,8 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
       // Переходим на вкладку Images
       try {
         await page.waitForSelector('a[href*="tbm=isch"]', { timeout: 5000 });
-
-        // Пауза перед кликом (как будто ищем вкладку Images глазами)
-        await humanBehavior.thinkingPause();
-        await randomDelay(300, 700);
-
-        // Движение мыши к вкладке
-        await humanBehavior.randomMouseMove(page);
-
         await page.click('a[href*="tbm=isch"]');
-
-        // Ждём загрузки изображений
-        await humanBehavior.naturalPause(3000, 4500);
+        await delay(2000);
       } catch (e) {
         // Прямой переход
         const searchQuery = encodeURIComponent(query);
@@ -1002,12 +481,8 @@ async function trySearchStrategy(page, query, useImagesTab, progressBar = null) 
           waitUntil: "networkidle2",
           timeout: 30000,
         });
-        await humanBehavior.naturalPause(2500, 3500);
+        await delay(2000);
       }
-
-      // Смотрим на изображения (человекоподобно)
-      await humanBehavior.randomScroll(page);
-      await randomDelay(500, 1200);
 
       // Извлекаем изображение из Images
       return await extractImageFromImagesTab(page, query, progressBar);
@@ -1029,10 +504,6 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
       return null;
     }
 
-    // Смотрим на изображения (человекоподобно)
-    await humanBehavior.randomScroll(page);
-    await humanBehavior.naturalPause(1500, 2500);
-
     // Кликаем на первое изображение
     const selectors = [
       'div[data-ri="0"] img',
@@ -1045,11 +516,6 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
     for (const selector of selectors) {
       try {
         await page.waitForSelector(selector, { timeout: 2000 });
-
-        // Движение мыши перед кликом (как будто выбираем изображение)
-        await humanBehavior.randomMouseMove(page);
-        await humanBehavior.thinkingPause();
-
         await page.click(selector);
         imageClicked = true;
         break;
@@ -1062,11 +528,8 @@ async function extractImageFromImagesTab(page, productName, progressBar = null) 
       return null;
     }
 
-    // Ждём загрузки превью с вариативностью
-    await humanBehavior.naturalPause(2000, 3500);
-
-    // "Смотрим" на превью
-    await humanBehavior.randomMouseMove(page);
+    // Ждём загрузки превью
+    await delay(2000);
 
     // Извлекаем URL
     const imageUrl = await page.evaluate(() => {
@@ -1425,18 +888,12 @@ async function main() {
   // Логируем старт
   log('INFO', '=== НАЧАЛО РАБОТЫ СКРИПТА ===');
   log('INFO', `API URL: ${API_URL}`);
-  log('INFO', `Anti-Captcha: ${antiCaptchaClient ? 'Включен' : 'Выключен'}`);
 
   // Статус конфигурации
   console.log(chalk.bold("📋 Конфигурация:\n"));
   console.log(chalk.green("  ✓") + " Переменные окружения загружены");
   console.log(chalk.green("  ✓") + " Saleor API: " + chalk.cyan(API_URL.substring(0, 50) + "..."));
   console.log(chalk.cyan("  ℹ") + " Лог файл: " + chalk.gray(logFilePath));
-  if (antiCaptchaClient) {
-    console.log(chalk.green("  ✓") + " Anti-Captcha: " + chalk.green("Активен") + " (автоматическое решение капчи)");
-  } else {
-    console.log(chalk.yellow("  ⚠") + " Anti-Captcha: " + chalk.yellow("Не настроен") + " (ручное решение капчи)");
-  }
   console.log("");
 
   // Подключаемся к Chrome
@@ -1507,9 +964,6 @@ async function main() {
     const productsToProcess = productsWithoutImages.slice(0, LIMIT);
 
     // Настройки
-    const PAUSE_EVERY_10 = parseInt(process.env.PAUSE_EVERY_10 || '10', 10);
-    const PAUSE_EVERY_30 = parseInt(process.env.PAUSE_EVERY_30 || '30', 10);
-    const PAUSE_EVERY_50 = parseInt(process.env.PAUSE_EVERY_50 || '50', 10);
     const MAX_RETRIES = parseInt(process.env.MAX_RETRIES || '2', 10);
 
     // Выводим настройки обработки
@@ -1521,21 +975,11 @@ async function main() {
       console.log(chalk.green("  •") + ` Обрабатываем: ${chalk.bold("ВСЕ")} товары`);
     }
     console.log(chalk.cyan("  •") + ` Макс. попыток: ${chalk.bold(MAX_RETRIES)}`);
-    console.log(chalk.cyan("  •") + ` Умные паузы: каждые ${PAUSE_EVERY_10}/${PAUSE_EVERY_30}/${PAUSE_EVERY_50} товаров`);
-
-    // Показываем предупреждение если работаем в адаптивном режиме
-    const currentMultiplier = captchaTracker.getDelayMultiplier();
-    if (currentMultiplier > 1) {
-      console.log(chalk.yellow("  •") + ` Адаптивный режим: ${chalk.bold('x' + currentMultiplier)} (недавно были капчи)`);
-    } else {
-      console.log(chalk.green("  •") + ` Адаптивный режим: ${chalk.bold('Нормальная скорость')}`);
-    }
     console.log("");
 
     let successCount = 0;
     let failCount = 0;
     let skippedCount = 0;
-    let captchaCount = 0;
     const startTime = Date.now();
 
     // Создаём прогресс-бар с выравниванием столбцов
@@ -1549,23 +993,26 @@ async function main() {
         const valueStr = String(params.value || 0).padStart(totalDigits, ' ');
         const totalStr = String(params.total || 0);
 
-        const successStr = String(payload.success || 0).padStart(3, ' ');
-        const failStr = String(payload.fail || 0).padStart(3, ' ');
-        const skipStr = String(payload.skip || 0).padStart(3, ' ');
+        const successStr = String(payload.success || 0);
+        const failStr = String(payload.fail || 0);
+        const skipStr = String(payload.skip || 0);
 
         // Вычисляем процент вручную (библиотека даёт 0% когда value=1)
         const value = params.value || 0;
         const total = params.total || 1;
         const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-        const eta = params.eta_formatted || '0s';
 
-        return chalk.cyan(bar) +
+        // Вычисляем затраченное время
+        const elapsed = Date.now() - startTime;
+        const elapsedTime = formatDuration(elapsed);
+
+        return '📦 ' + chalk.cyan(bar) +
                ' | ' + percentage + '% | ' +
                valueStr + '/' + totalStr + ' товаров | ' +
-               chalk.green('✓' + successStr) + ' ' +
-               chalk.red('✗' + failStr) + ' ' +
-               chalk.yellow('⏭' + skipStr) + ' | ' +
-               eta;
+               chalk.green('✓ ' + successStr) + ' ' +
+               chalk.red('✗ ' + failStr) + ' ' +
+               chalk.yellow('⏭ ' + skipStr) + ' | ' +
+               chalk.gray(elapsedTime);
       },
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591',
@@ -1588,6 +1035,7 @@ async function main() {
       let retries = 0;
       let success = false;
       let progressBarStopped = false;
+      const failCountBefore = failCount; // Запоминаем failCount до обработки
 
       // Retry логика
       while (retries <= MAX_RETRIES && !success) {
@@ -1599,20 +1047,14 @@ async function main() {
             throw new Error("Не удалось найти валидное изображение");
           }
 
-          // Вариативная пауза перед скачиванием
-          await humanBehavior.naturalPause(1500, 3500);
-
           // Скачиваем изображение
           const imagePath = await downloadImage(imageUrl, product.name);
-          await randomDelay(300, 800);
 
           // Загружаем изображение в Saleor
           await addProductImage(product.id, imagePath);
-          await humanBehavior.naturalPause(800, 1500);
 
           // Добавляем метаданные
           await addProductMetadata(product.id, "autoImage", "true");
-          await randomDelay(500, 1000);
 
           successCount++;
           success = true;
@@ -1622,19 +1064,6 @@ async function main() {
           // Логируем в файл, НЕ в консоль
           log('ERROR', `Попытка ${retries + 1}/${MAX_RETRIES + 1}: ${error.message}`, product.name);
 
-          // Проверяем капчу
-          if (error.message.includes('captcha') || error.message.includes('Капча')) {
-            captchaCount++;
-            log('CAPTCHA', `Капча обнаружена (всего: ${captchaCount})`, product.name);
-
-            // Останавливаем прогресс-бар только для капчи
-            progressBar.stop();
-            progressBarStopped = true;
-            console.log(chalk.yellow(`\n⚠️  Капча обнаружена для "${product.name.substring(0, 60)}..." (всего: ${captchaCount})`));
-            console.log(chalk.cyan('⏸️  Пауза после капчи (10 секунд)...\n'));
-            await delay(10000);
-          }
-
           retries++;
 
           if (retries > MAX_RETRIES) {
@@ -1642,14 +1071,18 @@ async function main() {
             log('FAILED', `Все попытки исчерпаны: ${error.message}`, product.name);
           } else if (retries <= MAX_RETRIES) {
             log('RETRY', `Повторяю попытку ${retries}/${MAX_RETRIES}`, product.name);
-            await delay(5000);
+            await delay(3000);
           }
         }
       }
 
       // Если так и не получилось
       if (!success) {
-        skippedCount++;
+        // Проверяем: был ли увеличен failCount для этого товара?
+        // Если нет - значит это пропуск (не ошибка)
+        if (failCount === failCountBefore) {
+          skippedCount++;
+        }
       }
 
       // Всегда возобновляем прогресс-бар перед update (на случай если он был остановлен капчей)
@@ -1674,49 +1107,8 @@ async function main() {
         skip: skippedCount
       });
 
-      // УМНЫЕ ПАУЗЫ - ПОСЛЕ обновления прогресс-бара
-      // Проверяем что успешно обработано кратное 10/30/50 количество
-      // И это НЕ последний товар в списке
-      if (success && productNumber < productsToProcess.length) {
-        let pauseSec = 0;
-        let pauseType = '';
-
-        // Проверяем successCount (количество успешно обработанных)
-        // Добавляем вариативность: иногда делаем паузу на 1-2 товара раньше/позже
-        const variance = Math.floor(Math.random() * 3) - 1; // -1, 0, или 1
-
-        // Адаптивный множитель на основе частоты капч
-        const captchaMultiplier = captchaTracker.getDelayMultiplier();
-
-        if (Math.abs((successCount + variance) % PAUSE_EVERY_50) <= 1 && successCount >= PAUSE_EVERY_50 - 1) {
-          pauseSec = Math.floor((Math.random() * 20 + 45) * captchaMultiplier); // 45-65 сек * multiplier
-          pauseType = 'длинная';
-        } else if (Math.abs((successCount + variance) % PAUSE_EVERY_30) <= 1 && successCount >= PAUSE_EVERY_30 - 1) {
-          pauseSec = Math.floor((Math.random() * 20 + 30) * captchaMultiplier); // 30-50 сек * multiplier
-          pauseType = 'средняя';
-        } else if (Math.abs((successCount + variance) % PAUSE_EVERY_10) <= 1 && successCount >= PAUSE_EVERY_10 - 1) {
-          pauseSec = Math.floor((Math.random() * 15 + 15) * captchaMultiplier); // 15-30 сек * multiplier
-          pauseType = 'короткая';
-        }
-
-        if (pauseSec > 0) {
-          // Останавливаем прогресс-бар ПОСЛЕ того как он показал текущее значение
-          await randomDelay(300, 500); // Даем время прогресс-бару отрисоваться
-          progressBar.stop();
-
-          // Показываем адаптивное сообщение если замедляемся из-за капч
-          const adaptiveNote = captchaMultiplier > 1 ? chalk.yellow(` (адаптивно увеличена x${captchaMultiplier})`) : '';
-          console.log(chalk.cyan(`\n⏸️  Обработано ${successCount} товаров. ${pauseType.charAt(0).toUpperCase() + pauseType.slice(1)} пауза ${pauseSec}с${adaptiveNote}...\n`));
-          await delay(pauseSec * 1000);
-          // Возобновляем с текущим значением
-          progressBar.start(productsToProcess.length, productNumber, {
-            success: successCount,
-            fail: failCount,
-            skip: skippedCount
-          });
-          progressBarStopped = false;
-        }
-      }
+      // Небольшая задержка между товарами
+      await delay(1000);
     }
 
     // Завершаем прогресс-бар
@@ -1728,38 +1120,66 @@ async function main() {
 
     // Финальная статистика в красивой рамке
     console.log("\n");
-    console.log(boxen(
-      chalk.bold.cyan("📊 ИТОГОВАЯ СТАТИСТИКА\n\n") +
 
-      chalk.bold("✅ Результаты обработки:\n") +
-      chalk.green(`   ✓ Успешно:     ${chalk.bold(successCount)} товаров\n`) +
-      (failCount > 0 ? chalk.red(`   ✗ Ошибок:      ${chalk.bold(failCount)} товаров\n`) : '') +
-      (skippedCount > 0 ? chalk.yellow(`   ⏭ Пропущено:   ${chalk.bold(skippedCount)} товаров\n`) : '') +
-      chalk.cyan(`   📦 Обработано:  ${chalk.bold(productsToProcess.length)} товаров\n`) +
-      chalk.gray(`   📋 Всего найдено: ${productsWithoutImages.length} товаров\n\n`) +
+    // Собираем все строки с ПРАВИЛЬНЫМ выравниванием
+    const lines = [];
 
-      chalk.bold("⏱️  Время выполнения:\n") +
-      chalk.cyan(`   ⏰ Общее время:    ${chalk.bold(formatDuration(totalTime))}\n`) +
-      chalk.cyan(`   ⚡ Среднее/товар:  ${chalk.bold(formatDuration(avgTimePerProduct))}\n\n`) +
+    // Находим максимальную длину чисел
+    const maxNumLength = Math.max(
+      String(successCount).length,
+      String(failCount).length,
+      String(skippedCount).length,
+      String(productsToProcess.length).length,
+      String(productsWithoutImages.length).length
+    );
 
-      (captchaCount > 0 ?
-        chalk.bold("🤖 Статистика CAPTCHA:\n") +
-        chalk.yellow(`   🛡️  Капч встречено: ${chalk.bold(captchaCount)}\n`) +
-        chalk.yellow(`   📊 Частота:        ~${Math.round((captchaCount / successCount) * 100)}% от товаров\n`) +
-        chalk.cyan(`   🧠 Адаптивных замедлений: ${chalk.bold(captchaTracker.totalCaptchas)} раз\n\n`)
-        : '') +
+    // Находим максимальную длину меток для выравнивания колонки с числами/значениями
+    const labels = ['Успешно:', 'Ошибок:', 'Пропущено:', 'Обработано:', 'Всего найдено:', 'Общее время:', 'Среднее/товар:'];
+    const maxLabelLength = Math.max(...labels.map(l => stringWidth(l)));
 
-      chalk.bold("📈 Успешность:\n") +
-      (successRate >= 90 ? chalk.green(`   🎉 ${chalk.bold(successRate + '%')} - Отлично!`) :
-       successRate >= 70 ? chalk.yellow(`   👍 ${chalk.bold(successRate + '%')} - Хорошо`) :
-       chalk.red(`   ⚠️  ${chalk.bold(successRate + '%')} - Требует внимания`)),
-      {
-        padding: 1,
-        margin: 1,
-        borderStyle: 'double',
-        borderColor: successRate >= 90 ? 'green' : successRate >= 70 ? 'yellow' : 'red'
-      }
-    ));
+    lines.push(chalk.bold.cyan("📊 ИТОГОВАЯ СТАТИСТИКА"));
+    lines.push('');
+    lines.push(chalk.bold("✅ Результаты обработки:"));
+    lines.push(chalk.green(`   ✓ ${'Успешно:'.padEnd(maxLabelLength)} ${chalk.bold(String(successCount).padStart(maxNumLength))} товаров`));
+    if (failCount > 0) lines.push(chalk.red(`   ✗ ${'Ошибок:'.padEnd(maxLabelLength)} ${chalk.bold(String(failCount).padStart(maxNumLength))} товаров`));
+    if (skippedCount > 0) lines.push(chalk.yellow(`   ⏭ ${'Пропущено:'.padEnd(maxLabelLength)} ${chalk.bold(String(skippedCount).padStart(maxNumLength))} товаров`));
+    lines.push(chalk.cyan(`   📦 ${'Обработано:'.padEnd(maxLabelLength)} ${chalk.bold(String(productsToProcess.length).padStart(maxNumLength))} товаров`));
+    lines.push(chalk.gray(`   📋 ${'Всего найдено:'.padEnd(maxLabelLength)} ${String(productsWithoutImages.length).padStart(maxNumLength)} товаров`));
+    lines.push('');
+    lines.push(chalk.bold("⏱️  Время выполнения:"));
+    lines.push(chalk.cyan(`   ⏰ ${'Общее время:'.padEnd(maxLabelLength)} ${chalk.bold(formatDuration(totalTime))}`));
+    lines.push(chalk.cyan(`   ⚡ ${'Среднее/товар:'.padEnd(maxLabelLength)} ${chalk.bold(formatDuration(avgTimePerProduct))}`));
+    lines.push('');
+    lines.push(chalk.bold("📈 Успешность:"));
+    lines.push(successRate >= 90 ? chalk.green(`   🎉 ${chalk.bold(successRate + '%')} - Отлично!`) :
+               successRate >= 70 ? chalk.yellow(`   👍 ${chalk.bold(successRate + '%')} - Хорошо`) :
+               chalk.red(`   ⚠️  ${chalk.bold(successRate + '%')} - Требует внимания`));
+
+    // Вручную выравниваем все строки используя string-width для правильного подсчета ширины
+    const stripAnsi = (str) => str.replace(/\x1B\[[0-9;]*m/g, '');
+
+    // Находим максимальную визуальную ширину среди всех строк
+    const maxWidth = Math.max(...lines.map(line => {
+      const clean = stripAnsi(line);
+      return stringWidth(clean);
+    }));
+
+    // Дополняем каждую строку пробелами до максимальной ширины
+    const paddedLines = lines.map(line => {
+      const clean = stripAnsi(line);
+      const width = stringWidth(clean);
+      const padding = maxWidth - width;
+      return line + ' '.repeat(Math.max(0, padding));
+    });
+
+    const content = paddedLines.join('\n');
+
+    console.log(boxen(content, {
+      padding: 1,
+      margin: 1,
+      borderStyle: 'double',
+      borderColor: successRate >= 90 ? 'green' : successRate >= 70 ? 'yellow' : 'red'
+    }));
 
     console.log(chalk.green.bold("✨ Обработка завершена!\n"));
     console.log(chalk.gray(`📝 Детальный лог сохранен: ${logFilePath}\n`));

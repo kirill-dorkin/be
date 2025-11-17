@@ -45,6 +45,16 @@
     --input: 240 5.9% 90%;
     --ring: 240 5% 64.9%;
     --radius: 0.5rem;
+
+    /* Safe area insets для устройств с вырезами (notch, dynamic island) */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
+
+    /* Адаптивная высота header */
+    --header-height-mobile: 56px;
+    --header-height-desktop: 64px;
   }
 
   .dark {
@@ -68,5 +78,126 @@
     --border: 240 3.7% 15.9%;
     --input: 30, 6.1%, 32.2%;
     --ring: 240 4.9% 83.9%;
+  }
+
+  /* Безопасная область для мобильных устройств */
+  html {
+    /* Поддержка полноэкранного режима на iOS */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  @supports (padding: max(0px)) {
+    body {
+      /* Учитываем safe area для устройств с вырезами */
+      padding-left: max(0px, var(--safe-area-inset-left));
+      padding-right: max(0px, var(--safe-area-inset-right));
+    }
+  }
+}
+
+@layer utilities {
+  /* Утилиты для работы с safe area */
+  .pt-safe {
+    padding-top: max(0.5rem, var(--safe-area-inset-top));
+  }
+
+  .pb-safe {
+    padding-bottom: max(0.5rem, var(--safe-area-inset-bottom));
+  }
+
+  .pl-safe {
+    padding-left: max(1rem, var(--safe-area-inset-left));
+  }
+
+  .pr-safe {
+    padding-right: max(1rem, var(--safe-area-inset-right));
+  }
+
+  /* Адаптивная высота header */
+  .h-header {
+    height: var(--header-height-mobile);
+  }
+
+  @media (min-width: 768px) {
+    .h-header {
+      height: var(--header-height-desktop);
+    }
+  }
+
+  /* Убираем лишние отступы на скролле для мобильных */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Плавные анимации для кнопок корзины */
+  @keyframes progress-bar {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-progress-bar {
+    animation: progress-bar 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* Плавное появление/исчезновение контента кнопки */
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.96);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(4px) scale(0.96);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-fade-out {
+    animation: fade-out 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  /* Четкое disabled состояние */
+  button:disabled,
+  [disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  button:not(:disabled),
+  :not([disabled]) {
+    opacity: 1;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Плавные переходы для всех интерактивных элементов */
+  button,
+  a,
+  [role="button"] {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }

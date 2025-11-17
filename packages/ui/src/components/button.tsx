@@ -6,14 +6,14 @@ import { cn } from "../lib/utils";
 import { Spinner } from "./spinner";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 dark:hover:bg-stone-100",
+          "bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] dark:hover:bg-stone-100",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:scale-[0.98]",
         outline:
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
@@ -58,6 +58,7 @@ const Button = ({
   asChild = false,
   loading = false,
   children,
+  disabled,
   ...props
 }: ButtonProps) => {
   const Comp = asChild ? Slot : "button";
@@ -65,6 +66,7 @@ const Button = ({
   return (
     <Comp
       className={cn(buttonVariants({ variant, size, className }))}
+      disabled={disabled}
       {...props}
     >
       {loading ? (

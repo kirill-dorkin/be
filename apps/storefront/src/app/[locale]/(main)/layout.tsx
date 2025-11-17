@@ -38,8 +38,8 @@ export default async function Layout({ children }: LayoutProps<"/[locale]">) {
   return (
     <>
       <div
-        className="bg-background sticky top-4 isolate z-50 pb-2 pt-4 md:relative md:top-auto md:pb-0"
-        style={{ '--header-height': '100%', boxShadow: '0 -100vh 0 100vh hsl(var(--background))' } as React.CSSProperties}
+        className="bg-background sticky top-0 isolate z-50 pt-safe md:relative md:top-auto"
+        style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' } as React.CSSProperties}
       >
         <Header />
         <Suspense fallback={<div className="h-12" />}>

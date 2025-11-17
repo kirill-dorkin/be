@@ -1084,8 +1084,30 @@ export type AppExtensionCountableEdge = {
 };
 
 export type AppExtensionFilterInput = {
+  /**
+   * DEPRECATED: Use `mountName` instead.
+   *
+   * DEPRECATED: this field will be removed.
+   */
   mount?: InputMaybe<Array<AppExtensionMountEnum>>;
+  /**
+   * Plain-text mount name (case insensitive)
+   *
+   * Added in Saleor 3.22.
+   */
+  mountName?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * DEPRECATED: Use `targetName` instead.
+   *
+   * DEPRECATED: this field will be removed.
+   */
   target?: InputMaybe<AppExtensionTargetEnum>;
+  /**
+   * Plain-text target name (case insensitive)
+   *
+   * Added in Saleor 3.22.
+   */
+  targetName?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** All places where app extension can be mounted. */

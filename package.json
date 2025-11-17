@@ -70,5 +70,8 @@
       "disableSubjectLowerCase": true,
       "maxHeaderWidth": 150
     }
+  },
+  "dependencies": {
+    "string-width": "8.1.0"
   }
 }

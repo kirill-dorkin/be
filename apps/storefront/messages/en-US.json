@@ -617,7 +617,9 @@
   "common": {
     "checkout": "Checkout",
     "add-to-bag": "Add to bag",
+    "adding-to-bag": "Adding...",
     "remove-from-bag": "Remove from bag",
+    "removing-from-bag": "Removing...",
     "close": "Close",
     "go-to-next-page": "Go to next page",
     "go-to-previous-page": "Go to previous page",
@@ -1098,7 +1100,8 @@
   "not-found": {
     "title": "Page not found",
     "description": "We couldn't find the page you're looking for.",
-    "cta": "Back to homepage"
+    "cta": "Back to homepage",
+    "search-products": "Search products"
   },
   "currency": {
     "currency-settings": "Currency settings",

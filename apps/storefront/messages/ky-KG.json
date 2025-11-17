@@ -617,6 +617,9 @@
   "common": {
     "checkout": "Төлөм",
     "add-to-bag": "Себетке кошуу",
+    "adding-to-bag": "Кошулууда...",
+    "remove-from-bag": "Себеттен алып салуу",
+    "removing-from-bag": "Өчүрүлүүдө...",
     "close": "Жабуу",
     "go-to-next-page": "Кийинки бетке өтүү",
     "go-to-previous-page": "Мурунку бетке өтүү",
@@ -1095,7 +1098,8 @@
   "not-found": {
     "title": "Бет табылган жок",
     "description": "Сиз издеген бет табылган жок.",
-    "cta": "Башкы бетке кайтуу"
+    "cta": "Башкы бетке кайтуу",
+    "search-products": "Товарларды издөө"
   },
   "currency": {
     "currency-settings": "Валютаны тандаңыз",

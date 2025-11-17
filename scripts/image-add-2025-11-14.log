@@ -1,0 +1,377 @@
+[2025-11-14T06:09:19.643Z] [INFO] === НАЧАЛО РАБОТЫ СКРИПТА ===
+[2025-11-14T06:09:19.643Z] [INFO] API URL: https://bestelectronics.saleor.cloud/graphql/
+[2025-11-14T06:10:42.014Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T06:10:42.015Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 1/2
+[2025-11-14T06:11:06.419Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T06:11:06.419Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 2/2
+[2025-11-14T06:11:30.775Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T06:11:30.775Z] [FAILED] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T06:11:55.070Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 1/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T06:11:55.070Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 1/2
+[2025-11-14T06:12:21.212Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 2/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T06:12:21.212Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 2/2
+[2025-11-14T06:12:47.397Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 3/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T06:12:47.397Z] [FAILED] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Все попытки исчерпаны: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T06:13:09.929Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T06:13:09.929Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 1/2
+[2025-11-14T06:13:35.081Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T06:13:35.081Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 2/2
+[2025-11-14T06:13:59.823Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T06:13:59.823Z] [FAILED] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T06:14:21.244Z] [ERROR] [TV coaxial cable (красный)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:14:21.244Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 1/2
+[2025-11-14T06:14:44.283Z] [ERROR] [TV coaxial cable (красный)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:14:44.283Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 2/2
+[2025-11-14T06:15:07.408Z] [ERROR] [TV coaxial cable (красный)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:15:07.408Z] [FAILED] [TV coaxial cable (красный)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:15:32.005Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:15:32.005Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 1/2
+[2025-11-14T06:15:57.719Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:15:57.719Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 2/2
+[2025-11-14T06:16:23.556Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:16:23.556Z] [FAILED] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T06:17:27.499Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T06:17:27.499Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 1/2
+[2025-11-14T06:18:32.657Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T06:18:32.657Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 2/2
+[2025-11-14T06:19:38.481Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T06:19:38.481Z] [FAILED] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T06:20:02.013Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T06:20:02.013Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 1/2
+[2025-11-14T06:20:27.232Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T06:20:27.232Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 2/2
+[2025-11-14T06:20:52.413Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T06:20:52.413Z] [FAILED] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T06:21:19.064Z] [SUCCESS] [Gaming Desk AD-D-PT-1600-01-B AndaSeat Wind Seeker] Изображение успешно добавлено
+[2025-11-14T06:21:44.663Z] [SUCCESS] [Gaming Desk AD-D-DD1-1600L-01-B AndaSeat Terminato] Изображение успешно добавлено
+[2025-11-14T06:22:10.571Z] [SUCCESS] [Gaming Desk AD-D-DD1-1600L-02-B AndaSeat Shadow Wa] Изображение успешно добавлено
+[2025-11-14T06:22:33.099Z] [SUCCESS] [Кабель HDMI TO HDMI UHD 4K 10M] Изображение успешно добавлено
+[2025-11-14T06:22:58.850Z] [SUCCESS] [MB LGA1700 GIGABYTE B760 GAMING X,4xDDR5,15xUSB,4x] Изображение успешно добавлено
+[2025-11-14T06:23:24.411Z] [SUCCESS] [Lenovo IP3 Celeron DC N4020 1.1-2.8GHz,4GB,SSD 240] Изображение успешно добавлено
+[2025-11-14T06:23:49.901Z] [SUCCESS] [Lenovo IP3 Celeron DC N4020 1.1-2.8GHz,4GB,SSD 480] Изображение успешно добавлено
+[2025-11-14T06:24:13.226Z] [SUCCESS] [SSD KINGSTON KC3000 2TB M.2 2280 NVMe] Изображение успешно добавлено
+[2025-11-14T06:24:38.417Z] [SUCCESS] [SSD KINGSTON Fury Renegade 500GB SFYRSK (с радиато] Изображение успешно добавлено
+[2025-11-14T06:25:03.031Z] [SUCCESS] [SSD KINGSTON Fury Renegade 1TB SFYRSK (с радиаторо] Изображение успешно добавлено
+[2025-11-14T06:25:28.111Z] [SUCCESS] [SSD KINGSTON Fury Renegade 2TB SFYRDK (с радиаторо] Изображение успешно добавлено
+[2025-11-14T06:25:51.020Z] [SUCCESS] [PEN DRIVE 256GB USB 3.2 KINGSTON DTMC3G2] Изображение успешно добавлено
+[2025-11-14T06:26:17.339Z] [SUCCESS] [HUB Switch HIKVISION DS-3E0310HP-E 1x10/100MbpsHi-] Изображение успешно добавлено
+[2025-11-14T06:26:41.301Z] [SUCCESS] [WD 4TB 5400rpm 64MB WD42PURU PURPLE SURVEILLANCE S] Изображение успешно добавлено
+[2025-11-14T06:27:06.207Z] [SUCCESS] [Gaming Chair AEROCOOL Crown PLUS BLACK&RED 4D Armr] Изображение успешно добавлено
+[2025-11-14T06:27:30.096Z] [SUCCESS] [Gaming Chair ThunderX3 BC3 BLACK&RED 65mm wheels P] Изображение успешно добавлено
+[2025-11-14T06:27:54.303Z] [SUCCESS] [Gaming Chair ThunderX3 BC3 BLACK 65mm wheels PVC L] Изображение успешно добавлено
+[2025-11-14T06:28:18.582Z] [SUCCESS] [SSD WD SN530 256GB M.2 2242 PCI-E NVMe Gen3 X2 BUL] Изображение успешно добавлено
+[2025-11-14T06:28:45.311Z] [SUCCESS] [DDR5 32GB (2x16GB) PC-51200 (6400MHz) KINGSTON FUR] Изображение успешно добавлено
+[2025-11-14T06:29:10.234Z] [SUCCESS] [SSD KIOXIA KBG50ZNV256G 256GB M.2 2280 PCIe 3.1 x4] Изображение успешно добавлено
+[2025-11-14T06:29:35.384Z] [SUCCESS] [Microlab Subwoofer M-105R 2.1 10W (5W+2.5W*2) FM,U] Изображение успешно добавлено
+[2025-11-14T06:29:59.148Z] [SUCCESS] [Web Cam Logitech C920s PRO Full HD] Изображение успешно добавлено
+[2025-11-14T06:30:24.640Z] [SUCCESS] [NVR HIWATCH DS-N308(D) (80mbps,8 IP,1ch/8MP,4ch@10] Изображение успешно добавлено
+[2025-11-14T06:30:51.313Z] [SUCCESS] [NVR HIWATCH DS-N316(D) (80mbps,16 IP,1ch/8MP,4ch@1] Изображение успешно добавлено
+[2025-11-14T06:31:16.548Z] [SUCCESS] [Терминал доступа HIKVISION DS-K1T341CMF(STD) распо] Изображение успешно добавлено
+[2025-11-14T06:31:42.271Z] [SUCCESS] [Wireless AP+Router HIKVISION DS-3WR3N 300Mbps N Ro] Изображение успешно добавлено
+[2025-11-14T06:32:08.331Z] [SUCCESS] [Wireless AP+Router HIKVISION DS-3WR12C AC1200 Dual] Изображение успешно добавлено
+[2025-11-14T06:32:34.896Z] [SUCCESS] [Wireless AP+Router HIKVISION DS-3WR12GC AC1200 Dua] Изображение успешно добавлено
+[2025-11-14T06:33:00.087Z] [SUCCESS] [HDVR HIKVISION DS-E04HGHI-B (4channel/2MP,1 IP/2MP] Изображение успешно добавлено
+[2025-11-14T06:33:25.198Z] [SUCCESS] [IP camera HIKVISION DS-2CD2067G2-L(2.8mm)(C)(O-STD] Изображение успешно добавлено
+[2025-11-14T06:33:51.186Z] [SUCCESS] [IP camera HIKVISION DS-2CD2087G2-LU(4mm)(C) (O-STD] Изображение успешно добавлено
+[2025-11-14T06:34:16.786Z] [SUCCESS] [NVR HIKVISION DS-7608NI-Q1(D)(O-STD)(80mbps,8 IP,1] Изображение успешно добавлено
+[2025-11-14T06:34:42.108Z] [SUCCESS] [NVR HIKVISION DS-7608NI-Q2(D)(80mbps,8 IP,1ch/8MP,] Изображение успешно добавлено
+[2025-11-14T06:35:07.206Z] [SUCCESS] [NVR HIKVISION DS-7616NI-Q2(D) (160mbps,16 IP,1ch/8] Изображение успешно добавлено
+[2025-11-14T06:35:12.825Z] [INFO] Graceful shutdown: SIGINT (Ctrl+C)
+[2025-11-14T07:58:46.989Z] [INFO] === НАЧАЛО РАБОТЫ СКРИПТА ===
+[2025-11-14T07:58:46.989Z] [INFO] API URL: https://bestelectronics.saleor.cloud/graphql/
+[2025-11-14T08:00:03.975Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T08:00:03.976Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 1/2
+[2025-11-14T08:00:28.523Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T08:00:28.523Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 2/2
+[2025-11-14T08:00:53.616Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T08:00:53.616Z] [FAILED] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T08:01:17.836Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 1/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T08:01:17.836Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 1/2
+[2025-11-14T08:01:44.190Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 2/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T08:01:44.190Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 2/2
+[2025-11-14T08:02:10.096Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 3/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T08:02:10.096Z] [FAILED] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Все попытки исчерпаны: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T08:02:32.846Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T08:02:32.846Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 1/2
+[2025-11-14T08:02:58.275Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T08:02:58.275Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 2/2
+[2025-11-14T08:03:23.125Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T08:03:23.125Z] [FAILED] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T08:03:43.635Z] [ERROR] [TV coaxial cable (красный)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:03:43.635Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 1/2
+[2025-11-14T08:04:06.037Z] [ERROR] [TV coaxial cable (красный)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:04:06.037Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 2/2
+[2025-11-14T08:04:28.479Z] [ERROR] [TV coaxial cable (красный)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:04:28.479Z] [FAILED] [TV coaxial cable (красный)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:04:51.979Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:04:51.979Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 1/2
+[2025-11-14T08:05:17.726Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:05:17.726Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 2/2
+[2025-11-14T08:05:43.336Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:05:43.336Z] [FAILED] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T08:06:46.508Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T08:06:46.508Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 1/2
+[2025-11-14T08:07:52.062Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T08:07:52.062Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 2/2
+[2025-11-14T08:08:57.736Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T08:08:57.736Z] [FAILED] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T08:09:21.024Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T08:09:21.024Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 1/2
+[2025-11-14T08:09:46.227Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T08:09:46.227Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 2/2
+[2025-11-14T08:10:11.270Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T08:10:11.270Z] [FAILED] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T08:10:40.950Z] [SUCCESS] [NVR HIKVISION DS-7764NI-M4(O-STD)(400mbps,64 IP,2c] Изображение успешно добавлено
+[2025-11-14T08:11:05.858Z] [SUCCESS] [External HDD 2TB HIKVISION HS-EHDD-T30 (5400RPM, U] Изображение успешно добавлено
+[2025-11-14T08:11:49.789Z] [SUCCESS] [DEEPCOOL MATX CC360 ARGB w/o PSU USB3.0×2 Front + ] Изображение успешно добавлено
+[2025-11-14T08:12:14.979Z] [SUCCESS] [DEEPCOOL MATX CC360 WH ARGB WHITE w/o PSU USB3.0×2] Изображение успешно добавлено
+[2025-11-14T08:13:09.256Z] [SUCCESS] [DEEPCOOL ATX CK560 WH WHITE w/o PSU USB3.0×2 Front] Изображение успешно добавлено
+[2025-11-14T08:13:38.233Z] [SUCCESS] [DEEPCOOL ATX CK500 WH WHITE w/o PSU USB3.0×2 Front] Изображение успешно добавлено
+[2025-11-14T08:14:02.342Z] [SUCCESS] [Cooler for notebook DEEPCOOL N8 BLACK 15,6"] Изображение успешно добавлено
+[2025-11-14T08:14:28.353Z] [SUCCESS] [Cooler for PSU/CASE DEEPCOOL FK120(3IN1 SET) BLACK] Изображение успешно добавлено
+[2025-11-14T08:15:31.538Z] [SUCCESS] [Microlab Subwoofer M-110 2.1 BLACK 10W(5W+2.5W*2) ] Изображение успешно добавлено
+[2025-11-14T08:15:56.734Z] [SUCCESS] [SSD ADATA LEGEND 800 2TB 3D NAND M.2 2280 PCIe NVM] Изображение успешно добавлено
+[2025-11-14T08:16:22.915Z] [SUCCESS] [SSD ADATA LEGEND 960M MAX 2TB 3D NAND M.2 2280 PCI] Изображение успешно добавлено
+[2025-11-14T08:16:46.694Z] [SUCCESS] [Microlab Subwoofer M-111(09) 2.1 BLACK 12W(3W*2+6W] Изображение успешно добавлено
+[2025-11-14T08:17:12.005Z] [SUCCESS] [Xprinter XP-58IIL 58mm desktop receipt printer, US] Изображение успешно добавлено
+[2025-11-14T08:17:35.340Z] [SUCCESS] [Microlab Subwoofer M-223II 2.1 BLACK 17W(9+2*4)] Изображение успешно добавлено
+[2025-11-14T08:18:03.506Z] [SUCCESS] [Xprinter XP-C58H 58mm desktop receipt printer, aut] Изображение успешно добавлено
+[2025-11-14T08:18:36.662Z] [SUCCESS] [Xprinter XP-Q200 80mm direct thermal Receipt print] Изображение успешно добавлено
+[2025-11-14T08:19:02.709Z] [SUCCESS] [MB LGA1700 GIGABYTE H610M K DDR4,2xDDR4,12xUSB,2xS] Изображение успешно добавлено
+[2025-11-14T08:19:29.152Z] [SUCCESS] [DDR5 32GB (2x16GB) PC-41600 (5200MHz) KINGSTON FUR] Изображение успешно добавлено
+[2025-11-14T08:19:55.114Z] [SUCCESS] [DELL 27" Alienware AW2723DF IPS 1ms 600 кд/м2,QHD ] Изображение успешно добавлено
+[2025-11-14T08:20:19.177Z] [SUCCESS] [HyperX Pulsefire Haste 2 6N0A7AA Gaming Mouse,USB ] Изображение успешно добавлено
+[2025-11-14T08:20:43.140Z] [SUCCESS] [HyperX Pulsefire Haste 2 6N0A8AA Gaming Mouse,USB ] Изображение успешно добавлено
+[2025-11-14T08:21:09.253Z] [SUCCESS] [Gaming Chair AD12YDC-XL-01-K-PV/C AndaSeat Kaiser ] Изображение успешно добавлено
+[2025-11-14T08:21:35.778Z] [SUCCESS] [Gaming Chair AD12YDC-XL-01-E-PV/C AndaSeat Kaiser ] Изображение успешно добавлено
+[2025-11-14T08:22:02.297Z] [SUCCESS] [Gaming Chair AD19-01-BR-PV AndaSeat Dark Demon L B] Изображение успешно добавлено
+[2025-11-14T08:22:28.447Z] [SUCCESS] [Gaming Chair AD12XLLA-01-B-F AndaSeat T-Pro II Pre] Изображение успешно добавлено
+[2025-11-14T08:22:54.318Z] [SUCCESS] [ASUS ATX GT301 TUF GAMING 3x 120mm AURA RGB fan + ] Изображение успешно добавлено
+[2025-11-14T08:23:21.351Z] [SUCCESS] [Наушники с микрофоном ASUS ROG FUSION II 300 RGB V] Изображение успешно добавлено
+[2025-11-14T08:23:46.836Z] [SUCCESS] [Lenovo IP3 i3-10110U 2.1-4.1GHz, 4GB, SSD 120GB, 1] Изображение успешно добавлено
+[2025-11-14T08:24:13.168Z] [SUCCESS] [CPU LGA1200 Intel Core i3-10105 3.7-4.4GHz,6MB Cac] Изображение успешно добавлено
+[2025-11-14T08:24:38.523Z] [SUCCESS] [Lenovo IP3 i3-10110U 2.1-4.1GHz, 4GB, 1TB, 15.6"HD] Изображение успешно добавлено
+[2025-11-14T08:25:00.887Z] [SUCCESS] [Рация Xiaomi Beebest A308 black] Изображение успешно добавлено
+[2025-11-14T08:25:26.702Z] [SUCCESS] [IP многоквартирная вызывная панель HIKVISION DS-KD] Изображение успешно добавлено
+[2025-11-14T08:25:53.419Z] [SUCCESS] [RJ- 45 Cable UTP-5e (8-жильный,медный,уличный) HIK] Изображение успешно добавлено
+[2025-11-14T08:26:17.693Z] [SUCCESS] [Big memory lumbar pillow AC-YZL-01-B-F-J-B01 AndaS] Изображение успешно добавлено
+[2025-11-14T08:26:42.031Z] [SUCCESS] [Big memory head pillow AC-TZXL-01-B-PV-J-B01 AndaS] Изображение успешно добавлено
+[2025-11-14T08:27:08.275Z] [SUCCESS] [IP camera EZVIZ H1c кубическая 2MP,2,8mm,IR 12M,Wi] Изображение успешно добавлено
+[2025-11-14T08:27:34.808Z] [SUCCESS] [IP camera EZVIZ H8c 2K+ уличн поворотн 4MP,4mm,LED] Изображение успешно добавлено
+[2025-11-14T08:28:01.052Z] [SUCCESS] [IP camera EZVIZ Н3с (2.8mm) цилиндр, уличная 4MP,L] Изображение успешно добавлено
+[2025-11-14T08:28:25.805Z] [SUCCESS] [Micro Secure Digital Card (Trans Flash) 64GB HC10 ] Изображение успешно добавлено
+[2025-11-14T08:28:51.611Z] [SUCCESS] [CPU cooler DEEPCOOL AG400 BLACK LGA115*/1700/1200/] Изображение успешно добавлено
+[2025-11-14T08:29:17.611Z] [SUCCESS] [MB LGA1700 GIGABYTE B760M H DDR4,2xDDR4,12xUSB,4xS] Изображение успешно добавлено
+[2025-11-14T08:29:43.699Z] [SUCCESS] [MB LGA1700 GIGABYTE H610M S2H,2xDDR5,12xUSB,4xSATA] Изображение успешно добавлено
+[2025-11-14T08:30:10.378Z] [SUCCESS] [ASUS VivoBook Pro M7600Q Ryzen 7 5800H 3.2-4.4GHz,] Изображение успешно добавлено
+[2025-11-14T08:30:35.844Z] [SUCCESS] [LG 27" 27GP750-B IPS 1ms/100000000:1 400kd/m2 178/] Изображение успешно добавлено
+[2025-11-14T08:31:01.903Z] [SUCCESS] [HUB Switch HIKVISION DS-3E0326P-E/M(B)24x100MbpsPo] Изображение успешно добавлено
+[2025-11-14T08:31:27.758Z] [SUCCESS] [IP camera HIKVISION DS-2CD2483G2-I(2.8mm)(O-STD) к] Изображение успешно добавлено
+[2025-11-14T08:31:53.614Z] [SUCCESS] [IP camera HIKVISION DS-2CD2383G2-I(2.8mm)(O-STD) к] Изображение успешно добавлено
+[2025-11-14T08:32:19.681Z] [SUCCESS] [IP camera HIKVISION DS-2CD2T43G2-4I(2.8mm)(O-STD) ] Изображение успешно добавлено
+[2025-11-14T08:32:44.973Z] [SUCCESS] [IP camera HIKVISION DS-2CD2441G0-I(2.8mm)(C)(O-STD] Изображение успешно добавлено
+[2025-11-14T08:33:11.085Z] [SUCCESS] [Gaming Chair AD19-05-Y-PV AndaSeat NAVI Edition L ] Изображение успешно добавлено
+[2025-11-14T08:33:37.403Z] [SUCCESS] [Gaming Chair AD5-04-BR-PV AndaSeat MARVEL Edition ] Изображение успешно добавлено
+[2025-11-14T08:34:03.639Z] [SUCCESS] [Gaming Chair AD19-08-B-PV AndaSeat MARVEL Edition ] Изображение успешно добавлено
+[2025-11-14T08:34:29.767Z] [SUCCESS] [HUB Switch HIKVISION DS-3E0106HP-E 4x10/100Mbps Po] Изображение успешно добавлено
+[2025-11-14T08:34:55.844Z] [SUCCESS] [NVR HIKVISION DS-E04NI-Q1/4P(O-STD)(40mbps,4 IP,2c] Изображение успешно добавлено
+[2025-11-14T08:35:21.248Z] [SUCCESS] [NVR HIKVISION DS-E04NI-Q1(O-STD)(40mbps,4 IP,2ch/4] Изображение успешно добавлено
+[2025-11-14T08:35:46.843Z] [SUCCESS] [NVR HIKVISION DS-E08NI-Q1(O-STD)(60mbps,8 IP,2ch/4] Изображение успешно добавлено
+[2025-11-14T08:36:13.141Z] [SUCCESS] [IP camera HIKVISION DS-2CD2047G2H-LIU(2.8mm) (O-ST] Изображение успешно добавлено
+[2025-11-14T08:36:38.557Z] [SUCCESS] [IP camera HIKVISION DS-2CD2T47G2H-LI(2.8mm)(eF)цил] Изображение успешно добавлено
+[2025-11-14T08:37:01.556Z] [SUCCESS] [Keyboard Xiaomi JXJP01MW RED SWITCH USB] Изображение успешно добавлено
+[2025-11-14T08:37:25.096Z] [SUCCESS] [WINSTAR RAZEAK GSP-X6 Speakers 2*3W 2.0 7-COLOR LE] Изображение успешно добавлено
+[2025-11-14T08:37:49.121Z] [SUCCESS] [Наушники с микрофоном WINSTAR RH-10 GAMING LED USB] Изображение успешно добавлено
+[2025-11-14T08:38:14.679Z] [SUCCESS] [UNIVIEW 21.5" MW-LC22 LED VA FHD 16:9/75Hz/14ms/30] Изображение успешно добавлено
+[2025-11-14T08:38:40.209Z] [SUCCESS] [IP camera HIKVISION DS-2CD2347G2-LU(2.8mm)(C) купо] Изображение успешно добавлено
+[2025-11-14T08:39:05.399Z] [SUCCESS] [HD-TVI camera HIKVISION DS-2CE56D0T-IPF(2.8mm) куп] Изображение успешно добавлено
+[2025-11-14T08:39:31.120Z] [SUCCESS] [HD-TVI camera HIKVISION DS-2CE12HFT-F28(2.8mm) цил] Изображение успешно добавлено
+[2025-11-14T08:39:56.804Z] [SUCCESS] [HD-TVI camera HIKVISION DS-2CE10HFT-F28(2.8mm) цил] Изображение успешно добавлено
+[2025-11-14T08:40:23.111Z] [SUCCESS] [MB LGA1700 GIGABYTE H610M H,2xDDR5,12xUSB,4xSATAII] Изображение успешно добавлено
+[2025-11-14T08:40:47.905Z] [SUCCESS] [Беспроводное зарядное устройство Xiaomi P05ZM 5000] Изображение успешно добавлено
+[2025-11-14T08:41:10.846Z] [SUCCESS] [Power Bank Xiaomi 3.0 Quick PB1022ZM 10000mAH] Изображение успешно добавлено
+[2025-11-14T08:41:36.716Z] [SUCCESS] [Power Unit DEEPCOOL DN550 V2 550W 80 PLUS 230V/ In] Изображение успешно добавлено
+[2025-11-14T08:42:02.862Z] [SUCCESS] [DEEPCOOL EATX CH560 DIG. WH WHITE w/o PSU USB3.0×2] Изображение успешно добавлено
+[2025-11-14T08:42:29.532Z] [SUCCESS] [DEEPCOOL EATX CH560 DIG. w/o PSU USB3.0×2 Type-C*1] Изображение успешно добавлено
+[2025-11-14T08:42:55.786Z] [SUCCESS] [DEEPCOOL EATX CH560 w/o PSU USB3.0×2 Type-C*1 ARGB] Изображение успешно добавлено
+[2025-11-14T08:43:22.107Z] [SUCCESS] [Power Unit DEEPCOOL PX1200G WH WHITE 1200W 80 PLUS] Изображение успешно добавлено
+[2025-11-14T08:43:47.936Z] [SUCCESS] [Power Unit DEEPCOOL PX1000G 1000W 80 PLUS GOLD cer] Изображение успешно добавлено
+[2025-11-14T08:44:13.971Z] [SUCCESS] [CPU cooler DEEPCOOL ASSASSIN IV LGA1700/1200/115*/] Изображение успешно добавлено
+[2025-11-14T08:44:39.913Z] [SUCCESS] [CPU cooler DEEPCOOL AK400 DIG. LGA1700/1200/115*/A] Изображение успешно добавлено
+[2025-11-14T08:45:06.200Z] [SUCCESS] [CPU cooler DEEPCOOL AK620 DIG. LGA1700/1200/115*/2] Изображение успешно добавлено
+[2025-11-14T08:45:29.015Z] [SUCCESS] [PEN DRIVE 256GB USB 3.2 A-DATA UV150 BLACK] Изображение успешно добавлено
+[2025-11-14T08:45:54.943Z] [SUCCESS] [Наушники с микрофоном HYPERX 727A8AA HYPERX Cloud ] Изображение успешно добавлено
+[2025-11-14T08:46:21.465Z] [SUCCESS] [Наушники с микрофоном HYPERX 727A9AA HYPERX Cloud ] Изображение успешно добавлено
+[2025-11-14T08:46:46.760Z] [SUCCESS] [Наушники с микрофоном HYPERX 70N24AA Cloud Earbuds] Изображение успешно добавлено
+[2025-11-14T08:47:12.471Z] [SUCCESS] [IP camera HIKVISION DS-2CD1363G2-LIU (2.8mm)(O-STD] Изображение успешно добавлено
+[2025-11-14T08:47:38.092Z] [SUCCESS] [IP camera HIKVISION DS-2CD1347G2-LUF(C)(2.8mm) куп] Изображение успешно добавлено
+[2025-11-14T08:48:04.018Z] [SUCCESS] [IP camera HIKVISION iDS-2CD7D47G0-XS(2.8) (O-STD)к] Изображение успешно добавлено
+[2025-11-14T08:48:28.721Z] [SUCCESS] [IP camera HIWATCH DS-I202 (E) (2.8mm) купольная,ан] Изображение успешно добавлено
+[2025-11-14T08:48:54.352Z] [SUCCESS] [IP camera HIKVISION DS-2CD2023G2-IU(2.8mm)(O-STD) ] Изображение успешно добавлено
+[2025-11-14T08:49:20.159Z] [SUCCESS] [IP camera EZVIZ Н3С (2.8mm) цилиндр, уличная 2MP,I] Изображение успешно добавлено
+[2025-11-14T08:49:51.288Z] [SUCCESS] [IP camera EZVIZ Н3С LED(2.8mm) цилиндр, уличная 2M] Изображение успешно добавлено
+[2025-11-14T08:50:17.623Z] [SUCCESS] [IP camera EZVIZ H4 (2.8mm) купольн, уличная 3MP,LE] Изображение успешно добавлено
+[2025-11-14T08:50:42.263Z] [SUCCESS] [A4TECH BLOODY P91S RGB GAMING MOUSE STONE BLACK ME] Изображение успешно добавлено
+[2025-11-14T08:51:08.436Z] [SUCCESS] [A4TECH BLOODY S98 BLOODY RED GAMING MECHANICAL BLM] Изображение успешно добавлено
+[2025-11-14T08:51:33.596Z] [SUCCESS] [Наушники с микрофоном бeспроводные A4Tech BLOODY M] Изображение успешно добавлено
+[2025-11-14T08:51:59.086Z] [SUCCESS] [Наушники с микрофоном A4Tech BLOODY G560 RGB Gamin] Изображение успешно добавлено
+[2025-11-14T08:52:23.498Z] [SUCCESS] [Web Cam A4Tech PK-940HA 1080p FHD AutoFocus USB 2M] Изображение успешно добавлено
+[2025-11-14T08:52:47.690Z] [SUCCESS] [Web Cam A4Tech PK-1000HA 4K 2160P UHD AutoFocus US] Изображение успешно добавлено
+[2025-11-14T08:53:14.164Z] [SUCCESS] [ASUS 27" ProArt PA279CRV IPS 5ms 300000000:1 400kd] Изображение успешно добавлено
+[2025-11-14T08:53:40.056Z] [SUCCESS] [DDR5 128GB (4x32GB) PC-44800 (5600MHz) KINGSTON FU] Изображение успешно добавлено
+[2025-11-14T08:54:06.285Z] [SUCCESS] [DDR5 32GB (2x16GB) PC-44800 (5600MHz) KINGSTON FUR] Изображение успешно добавлено
+[2025-11-14T08:54:32.279Z] [SUCCESS] [DDR5 32GB (2x16GB) PC-44800 (5600MHz) KINGSTON FUR] Изображение успешно добавлено
+[2025-11-14T08:54:57.500Z] [SUCCESS] [DDR5 64GB (2x32GB) PC-44800 (5600MHz) KINGSTON FUR] Изображение успешно добавлено
+[2025-11-14T08:55:20.131Z] [SUCCESS] [PEN DRIVE 256GB USB 3.2 KINGSTON DTXON] Изображение успешно добавлено
+[2025-11-14T08:55:42.805Z] [SUCCESS] [PEN DRIVE 64GB USB 3.2 KINGSTON DTXON] Изображение успешно добавлено
+[2025-11-14T08:56:06.286Z] [SUCCESS] [Portable SSD KINGSTON XS1000 1TB USB 3.2 Type-C] Изображение успешно добавлено
+[2025-11-14T08:56:29.553Z] [SUCCESS] [Portable SSD KINGSTON XS1000 2TB USB 3.2 Type-C] Изображение успешно добавлено
+[2025-11-14T08:56:55.030Z] [SUCCESS] [Power Unit DELUX DLP-21D 250W CE,20+4PIN, 2*big 4P] Изображение успешно добавлено
+[2025-11-14T08:57:19.401Z] [SUCCESS] [DEEPCOOL LS520 WH WHITE RGB120*2 FAN LGA20xx/1700/] Изображение успешно добавлено
+[2025-11-14T08:57:43.365Z] [SUCCESS] [DEEPCOOL LE520 ARGB120*2 FAN LGA20xx/1700/1200/115] Изображение успешно добавлено
+[2025-11-14T08:58:09.987Z] [SUCCESS] [CPU cooler DEEPCOOL AK620 DIG. WH LGA1700/1200/115] Изображение успешно добавлено
+[2025-11-14T08:58:35.919Z] [SUCCESS] [CPU cooler DEEPCOOL AK500 DIG. WH LGA1700/1200/115] Изображение успешно добавлено
+[2025-11-14T08:59:01.570Z] [SUCCESS] [CPU cooler DEEPCOOL AN600 LGA1700/1200/115*/AMD 12] Изображение успешно добавлено
+[2025-11-14T08:59:27.112Z] [SUCCESS] [CPU cooler DEEPCOOL AG300 WH WHITE ARGB LED LGA115] Изображение успешно добавлено
+[2025-11-14T08:59:52.979Z] [SUCCESS] [CPU cooler DEEPCOOL AK500 DIG. LGA1700/1200/115*/2] Изображение успешно добавлено
+[2025-11-14T09:00:18.807Z] [SUCCESS] [SSD ADATA LEGEND 850 LITE 2TB 3D NAND M.2 2280 PCI] Изображение успешно добавлено
+[2025-11-14T09:00:44.469Z] [SUCCESS] [SSD ADATA LEGEND 900 1TB 3D NAND M.2 2280 PCIe NVM] Изображение успешно добавлено
+[2025-11-14T09:01:10.222Z] [SUCCESS] [SSD ADATA LEGEND 900 2TB 3D NAND M.2 2280 PCIe NVM] Изображение успешно добавлено
+[2025-11-14T09:01:36.489Z] [SUCCESS] [Power Unit DELUX DLP-25D 300W(360A)20+4PIN,2*SATA,] Изображение успешно добавлено
+[2025-11-14T09:02:03.036Z] [SUCCESS] [A4TECH BLOODY B865 LIGHT STRIKE GUN GREY BKLT GAMI] Изображение успешно добавлено
+[2025-11-14T09:02:26.132Z] [SUCCESS] [Гарнитура Bluetooth Youpin Beebest 1S BE608] Изображение успешно добавлено
+[2025-11-14T09:02:52.077Z] [SUCCESS] [ASUS XA05 ROG STRIX SCOPE RX/RD/RU RGB GAMING MECH] Изображение успешно добавлено
+[2025-11-14T09:03:17.764Z] [SUCCESS] [A4TECH BLOODY W95 MAX GAMING MOUSE 12000CPI SPORT ] Изображение успешно добавлено
+[2025-11-14T09:03:43.168Z] [SUCCESS] [A4TECH BLOODY W95 MAX GAMING MOUSE 12000CPI SPORT ] Изображение успешно добавлено
+[2025-11-14T09:04:07.474Z] [SUCCESS] [IP camera HIWATCH DS-I203 (E) (2.8mm) купольная,ул] Изображение успешно добавлено
+[2025-11-14T09:04:33.148Z] [SUCCESS] [IP camera HIKVISION DS-2CD2043G2-IU(2.8mm)(O-STD) ] Изображение успешно добавлено
+[2025-11-14T09:04:59.551Z] [SUCCESS] [IP camera HIKVISION DS-2CD2143G2-IS(2.8mm) (O-STD)] Изображение успешно добавлено
+[2025-11-14T09:05:24.844Z] [SUCCESS] [Терминал доступа HIKVISION DS-K1T805MBFWX Mifare,о] Изображение успешно добавлено
+[2025-11-14T09:05:50.038Z] [SUCCESS] [Терминал доступа-аудиодомофон HIKVISION DS-K1T502D] Изображение успешно добавлено
+[2025-11-14T09:06:15.840Z] [SUCCESS] [Терминал доступа-аудиодомофон HIKVISION DS-K1T502D] Изображение успешно добавлено
+[2025-11-14T09:06:40.983Z] [SUCCESS] [MB LGA1700 ASUS B760M-K,2xDDR5,10xUSB,4xSATAIII,mA] Изображение успешно добавлено
+[2025-11-14T09:07:04.070Z] [SUCCESS] [PEN DRIVE 512GB USB 3.2 A-DATA UV150 BLACK] Изображение успешно добавлено
+[2025-11-14T09:07:27.725Z] [SUCCESS] [PEN DRIVE 512GB USB 3.2 A-DATA UV320 WHITE/GREEN] Изображение успешно добавлено
+[2025-11-14T09:07:50.663Z] [SUCCESS] [Аккумулятор Ritar RA12-40, 12V, 40.0AH] Изображение успешно добавлено
+[2025-11-14T09:08:13.600Z] [SUCCESS] [Аккумулятор Ritar RA12-100,12V, 100.0AH] Изображение успешно добавлено
+[2025-11-14T09:08:36.338Z] [SUCCESS] [SODIMM DDR4 4GB PC-25600 (3200MHz) M] Изображение успешно добавлено
+[2025-11-14T09:09:02.446Z] [SUCCESS] [ASUS ATX GX601/BK/AL/WITH HANDLE 4xUSB3.1 1xUSB Ty] Изображение успешно добавлено
+[2025-11-14T09:09:27.601Z] [SUCCESS] [ASUS NC11-ROG SCABBARD II MEDIUM GAMING MOUSE PAD ] Изображение успешно добавлено
+[2025-11-14T09:09:52.932Z] [SUCCESS] [MB AM5 GIGABYTE A620M H,2xDDR5,12xUSB,USB3.2 mATX,] Изображение успешно добавлено
+[2025-11-14T09:10:17.440Z] [SUCCESS] [Microlab Speakers B77BT 2.0 18W*2 + 14W*2W WOOD, B] Изображение успешно добавлено
+[2025-11-14T09:10:44.249Z] [SUCCESS] [Microlab Portable Speakers BP11 8W LED, Bluetooth,] Изображение успешно добавлено
+[2025-11-14T09:11:08.810Z] [SUCCESS] [Microlab Soundbar MS213A 5W*2 LED, Bluetooth 5.0, ] Изображение успешно добавлено
+[2025-11-14T09:11:34.614Z] [SUCCESS] [Microlab Soundbar MS213C 5W*2 LED, Bluetooth 5.0, ] Изображение успешно добавлено
+[2025-11-14T09:11:58.699Z] [SUCCESS] [Microlab Soundbar Onebar 03 10W*2 LED Bluetooth 5.] Изображение успешно добавлено
+[2025-11-14T09:12:23.194Z] [SUCCESS] [Microlab Subwoofer M-660BT 2.1 BLACK 52W(24W+2*14W] Изображение успешно добавлено
+[2025-11-14T09:12:48.958Z] [SUCCESS] [Microlab Subwoofer G200BT Gaming 7-Colour LED 2.1 ] Изображение успешно добавлено
+[2025-11-14T09:13:13.124Z] [SUCCESS] [Наушники с микрофоном Microlab G7 GAMING BLACK/RED] Изображение успешно добавлено
+[2025-11-14T09:13:36.680Z] [SUCCESS] [Microlab Subwoofer X2 2.1 BLACK 46W(13W*2 + 20W)] Изображение успешно добавлено
+[2025-11-14T09:14:00.839Z] [SUCCESS] [DDR4 32GB PC-25600 (3200MHz) KINGSTON FURY BEAST B] Изображение успешно добавлено
+[2025-11-14T09:14:25.085Z] [SUCCESS] [HD-TVI camera HIWATCH DS-T520A (2.8mm) цилиндр,ули] Изображение успешно добавлено
+[2025-11-14T09:14:51.966Z] [SUCCESS] [Power Unit WINSTAR ATX-600 500W 80 PLUS Bronze,Int] Изображение успешно добавлено
+[2025-11-14T09:15:18.022Z] [SUCCESS] [Power Unit WINSTAR ATX-700 600W 80 PLUS Bronze,Int] Изображение успешно добавлено
+[2025-11-14T09:15:43.977Z] [SUCCESS] [Wireless AP+Router Tenda TX12 Pro AX3000 Smart Dua] Изображение успешно добавлено
+[2025-11-14T09:16:08.866Z] [SUCCESS] [HUB Switch Tenda TEF1109P-8-102W 8-port PoE 10/100] Изображение успешно добавлено
+[2025-11-14T09:16:34.114Z] [SUCCESS] [HUB Switch Tenda TEF1110P-8-102W 8-port PoE 10/100] Изображение успешно добавлено
+[2025-11-14T09:16:59.965Z] [SUCCESS] [Wireless Adapter Tenda U10 AC650 Dualband up to 20] Изображение успешно добавлено
+[2025-11-14T09:17:26.768Z] [SUCCESS] [IP camera EZVIZ H6C Pro 2K+ кубич 4MP,4mm,IR 10M,W] Изображение успешно добавлено
+[2025-11-14T09:17:49.215Z] [SUCCESS] [Кабель HDMI TO HDMI UHD 4K 1,8M] Изображение успешно добавлено
+[2025-11-14T09:18:13.790Z] [SUCCESS] [SODIMM DDR4 8GB PC-25600 (3200MHz) MICRON (M) MTA8] Изображение успешно добавлено
+[2025-11-14T09:18:40.974Z] [SUCCESS] [NVR HIKVISION DS-9664NI-M8(O-STD)(400mbps,64 IP,2c] Изображение успешно добавлено
+[2025-11-14T09:19:06.438Z] [SUCCESS] [IP camera HIKVISION DS-2CD1323G2-LIU(2.8mm)(O-STD)] Изображение успешно добавлено
+[2025-11-14T09:19:31.756Z] [SUCCESS] [IP camera HIKVISION DS-2CD1343G2-LIU(2.8mm) (O-STD] Изображение успешно добавлено
+[2025-11-14T09:19:56.597Z] [SUCCESS] [IP camera HIKVISION DS-2CD1T43G2-LIU(4mm) (O-STD) ] Изображение успешно добавлено
+[2025-11-14T09:20:21.652Z] [SUCCESS] [IP camera HIKVISION DS-2CD1T63G2-LIU(4mm)(O-STD) ц] Изображение успешно добавлено
+[2025-11-14T09:20:46.771Z] [SUCCESS] [IP camera HIKVISION DS-2CD1T83G2-LIU(4mm) (O-STD) ] Изображение успешно добавлено
+[2025-11-14T09:21:12.360Z] [SUCCESS] [IP camera HIKVISION DS-2CD1367G2-L(2.8mm)(O-STD) к] Изображение успешно добавлено
+[2025-11-14T09:21:38.113Z] [SUCCESS] [IP camera HIKVISION DS-2CD1367G2-LUF(2.8mm) куполь] Изображение успешно добавлено
+[2025-11-14T09:22:03.362Z] [SUCCESS] [HD-TVI camera HIWATCH DS-T200L(B)(2.8mm) цилиндр,у] Изображение успешно добавлено
+[2025-11-14T09:34:18.433Z] [INFO] === НАЧАЛО РАБОТЫ СКРИПТА ===
+[2025-11-14T09:34:18.433Z] [INFO] API URL: https://bestelectronics.saleor.cloud/graphql/
+[2025-11-14T09:35:35.746Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:35:35.746Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 1/2
+[2025-11-14T09:36:00.212Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:36:00.212Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 2/2
+[2025-11-14T09:36:24.750Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:36:24.750Z] [FAILED] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:36:48.818Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 1/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:36:48.818Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 1/2
+[2025-11-14T09:37:14.987Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 2/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:37:14.987Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 2/2
+[2025-11-14T09:37:40.936Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 3/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:37:40.937Z] [FAILED] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Все попытки исчерпаны: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:38:03.714Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:38:03.714Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 1/2
+[2025-11-14T09:38:28.683Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:38:28.683Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 2/2
+[2025-11-14T09:38:53.496Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:38:53.496Z] [FAILED] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:39:14.028Z] [ERROR] [TV coaxial cable (красный)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:39:14.028Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 1/2
+[2025-11-14T09:39:36.663Z] [ERROR] [TV coaxial cable (красный)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:39:36.663Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 2/2
+[2025-11-14T09:39:59.208Z] [ERROR] [TV coaxial cable (красный)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:39:59.208Z] [FAILED] [TV coaxial cable (красный)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:40:23.293Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:40:23.293Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 1/2
+[2025-11-14T09:40:49.127Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:40:49.127Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 2/2
+[2025-11-14T09:41:14.795Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:41:14.796Z] [FAILED] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:42:18.287Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T09:42:18.287Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 1/2
+[2025-11-14T09:43:23.397Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T09:43:23.397Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 2/2
+[2025-11-14T09:44:29.370Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T09:44:29.370Z] [FAILED] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T09:44:52.784Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T09:44:52.785Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 1/2
+[2025-11-14T09:45:18.269Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T09:45:18.269Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 2/2
+[2025-11-14T09:45:43.564Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T09:45:43.564Z] [FAILED] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T09:51:01.194Z] [INFO] === НАЧАЛО РАБОТЫ СКРИПТА ===
+[2025-11-14T09:51:01.194Z] [INFO] API URL: https://bestelectronics.saleor.cloud/graphql/
+[2025-11-14T09:52:23.243Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:52:23.244Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 1/2
+[2025-11-14T09:52:47.813Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:52:47.813Z] [RETRY] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Повторяю попытку 2/2
+[2025-11-14T09:53:12.680Z] [ERROR] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:53:12.680Z] [FAILED] [HUB Switch HIWATCH DS-S0106-MP 6-port 10/100Mbps 4] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (740 байт), возможно это не изображение
+[2025-11-14T09:53:37.335Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 1/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:53:37.335Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 1/2
+[2025-11-14T09:54:03.329Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 2/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:54:03.329Z] [RETRY] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Повторяю попытку 2/2
+[2025-11-14T09:54:29.447Z] [ERROR] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Попытка 3/3: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:54:29.447Z] [FAILED] [PoE Repeater HIKVISION DS-3E0503DP-E/R 1 × Gigabit] Все попытки исчерпаны: Не удалось скачать изображение: unable to get local issuer certificate
+[2025-11-14T09:54:52.723Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:54:52.723Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 1/2
+[2025-11-14T09:55:17.594Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:55:17.594Z] [RETRY] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Повторяю попытку 2/2
+[2025-11-14T09:55:42.552Z] [ERROR] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:55:42.552Z] [FAILED] [Power Bank Baseus Magnetic Bracket Wireless Fast C] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (762 байт), возможно это не изображение
+[2025-11-14T09:56:03.264Z] [ERROR] [TV coaxial cable (красный)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:56:03.264Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 1/2
+[2025-11-14T09:56:25.769Z] [ERROR] [TV coaxial cable (красный)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:56:25.769Z] [RETRY] [TV coaxial cable (красный)] Повторяю попытку 2/2
+[2025-11-14T09:56:48.278Z] [ERROR] [TV coaxial cable (красный)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:56:48.278Z] [FAILED] [TV coaxial cable (красный)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:57:12.384Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 1/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:57:12.384Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 1/2
+[2025-11-14T09:57:38.270Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 2/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:57:38.270Z] [RETRY] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Повторяю попытку 2/2
+[2025-11-14T09:58:04.001Z] [ERROR] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Попытка 3/3: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:58:04.001Z] [FAILED] [Кулер видеокарты GeForce GTX1070 JetStream (Palit)] Все попытки исчерпаны: Не удалось скачать изображение: HTTP 403 Forbidden
+[2025-11-14T09:59:07.841Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T09:59:07.841Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 1/2
+[2025-11-14T10:00:13.962Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T10:00:13.962Z] [RETRY] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Повторяю попытку 2/2
+[2025-11-14T10:01:19.913Z] [ERROR] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T10:01:19.913Z] [FAILED] [Резиновый вал картриджа (PCR) НР 1200/1300/1010/11] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (427 байт), возможно это не изображение
+[2025-11-14T10:01:43.277Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 1/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T10:01:43.277Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 1/2
+[2025-11-14T10:02:08.877Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 2/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T10:02:08.877Z] [RETRY] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Повторяю попытку 2/2
+[2025-11-14T10:02:34.096Z] [ERROR] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Попытка 3/3: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
+[2025-11-14T10:02:34.096Z] [FAILED] [HIKVISION AX PRO DS-PDCL12-EG2-WB(O-STD) PIR-датчи] Все попытки исчерпаны: Не удалось скачать изображение: Файл слишком маленький (824 байт), возможно это не изображение
