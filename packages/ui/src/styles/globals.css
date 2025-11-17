@@ -180,6 +180,37 @@
     animation: fade-out 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
   }
 
+  /* Анимация для элементов меню */
+  @keyframes menu-item-enter {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  @keyframes menu-item-exit {
+    0% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-20px) scale(0.95);
+    }
+  }
+
+  .animate-menu-item-enter {
+    animation: menu-item-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-menu-item-exit {
+    animation: menu-item-exit 0.3s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
   /* Четкое disabled состояние */
   button:disabled,
   [disabled] {

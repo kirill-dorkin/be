@@ -131,7 +131,7 @@ export const MobileSideMenu = ({
   const overlayClasses = useMemo(
     () =>
       cn(
-        "fixed inset-x-0 z-40 bg-black/30 transition-opacity duration-300",
+        "fixed inset-x-0 z-40 bg-black/30 backdrop-blur-sm transition-all duration-500",
         {
           "pointer-events-none opacity-0": !isOpen,
           "opacity-100": isOpen,
@@ -178,13 +178,13 @@ export const MobileSideMenu = ({
       <aside
         id="mobile-navigation-drawer"
         aria-label={menuLabel}
-        style={panelStyle}
-        className={cn(
-          "fixed left-0 z-50 w-[min(88vw,18rem)] translate-x-0 bg-background shadow-xl transition-transform duration-300",
-          {
-            "-translate-x-full": !isOpen,
-          },
-        )}
+        style={{
+          ...panelStyle,
+          transform: isOpen ? 'translateX(0) scale(1)' : 'translateX(-100%) scale(0.95)',
+          opacity: isOpen ? 1 : 0,
+          transition: 'all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+        }}
+        className="fixed left-0 z-50 w-[min(88vw,18rem)] bg-background shadow-xl"
       >
         <div className="flex h-full flex-col gap-6 px-6 pb-safe pt-6">
           <span className="pointer-events-none absolute inset-y-0 right-[-1px] w-8 bg-gradient-to-r from-background via-background/40 to-transparent" />

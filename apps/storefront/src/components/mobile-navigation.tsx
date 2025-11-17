@@ -37,6 +37,14 @@ import {
   ShieldCheck,
   Home,
   BadgePercent,
+  Watch,
+  Utensils,
+  Sparkles,
+  Tag,
+  Hammer,
+  Code,
+  Clapperboard,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 
@@ -114,6 +122,32 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Видеонаблюдение": Camera,
   "Доступ": Lock,
 
+  // Mobility subcategories (Russian)
+  "Аксессуары": Watch,
+  "Питание мобильных": Battery,
+  "Устройства": Smartphone,
+
+  // Home subcategories (Russian)
+  "Ремонт": Wrench,
+  "Развлечения": Clapperboard,
+  "Кухня": Utensils,
+  "Уход": Sparkles,
+
+  // Service subcategories (Russian)
+  "Маркировка": Tag,
+  "Инструменты": Hammer,
+  "Программное обеспечение": Code,
+  "Расходники": Package,
+  "Запчасти": Settings,
+
+  // Sale subcategories (Russian)
+  "Комплектующие (уценка)": Cpu,
+  "Сеть (уценка)": Network,
+  "Периферия (уценка)": Plug,
+  "Ноутбуки (уценка)": Laptop,
+  "Аксессуары (уценка)": Watch,
+  "Прочее (уценка)": Package,
+
   // Subcategories (English)
   "Motherboards": CircuitBoard,
   "Cooling": Fan,
@@ -152,6 +186,35 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "CCTV": Camera,
   "Access": Lock,
   "Access Control": Lock,
+
+  // Mobility subcategories (English)
+  "Accessories": Watch,
+  "Mobile Power": Battery,
+  "Devices": Smartphone,
+
+  // Home subcategories (English)
+  "Repair": Wrench,
+  "Entertainment": Clapperboard,
+  "Kitchen": Utensils,
+  "Care": Sparkles,
+
+  // Service subcategories (English)
+  "Labeling": Tag,
+  "Marking": Tag,
+  "Tools": Hammer,
+  "Software": Code,
+  "Consumables": Package,
+  "Parts": Settings,
+  "Spare Parts": Settings,
+
+  // Sale subcategories (English)
+  "Components (sale)": Cpu,
+  "Network (sale)": Network,
+  "Peripherals (sale)": Plug,
+  "Laptops (sale)": Laptop,
+  "Accessories (sale)": Watch,
+  "Other (sale)": Package,
+  "Misc (sale)": Package,
 };
 
 const getIconForLabel = (label: string): LucideIcon | null => {
@@ -171,11 +234,15 @@ export const MobileNavigation = ({
 
   return (
     <ul className="grid gap-1 py-4">
-      {menu.items.map((item) => {
+      {menu.items.map((item, index) => {
         const Icon = getIconForLabel(item.label);
 
         return (
-          <li key={item.id} className="group">
+          <li
+            key={item.id}
+            className="group animate-menu-item-enter"
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
             <LocalizedLink
               href={item.url}
               onClick={() => onMenuItemClick(true)}
@@ -188,11 +255,16 @@ export const MobileNavigation = ({
             </LocalizedLink>
             {!!item.children?.length && (
               <ul className="mt-1 space-y-0.5 pl-6">
-                {item.children.map((child) => {
+                {item.children.map((child, childIndex) => {
                   const ChildIcon = getIconForLabel(child.label);
+                  const childDelay = index * 50 + (childIndex + 1) * 30;
 
                   return (
-                    <li key={child.id}>
+                    <li
+                      key={child.id}
+                      className="animate-menu-item-enter"
+                      style={{ animationDelay: `${childDelay}ms` }}
+                    >
                       <LocalizedLink
                         href={child.url}
                         onClick={() => onMenuItemClick(true)}
