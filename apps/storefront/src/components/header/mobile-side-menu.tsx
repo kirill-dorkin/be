@@ -2,7 +2,7 @@
 
 import { User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import type { User } from "@nimara/domain/objects/User";
@@ -77,6 +77,8 @@ export const MobileSideMenu = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [overscrollOffset, setOverscrollOffset] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
   const t = useTranslations();
@@ -127,6 +129,87 @@ export const MobileSideMenu = ({
   }, []);
 
   useEffect(() => setIsOpen(false), [pathname]);
+
+  // Обработка overscroll эффекта
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || !isOpen) return;
+
+    let isScrolling = false;
+    let scrollTimeout: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+      const isAtTop = scrollTop <= 5;
+
+      if (!isScrolling) {
+        isScrolling = true;
+      }
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+        setOverscrollOffset(0);
+      }, 150);
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+      const isAtTop = scrollTop <= 5;
+
+      if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+        e.preventDefault();
+        const offset = Math.min(Math.abs(e.deltaY) / 10, 15);
+        setOverscrollOffset(e.deltaY > 0 ? offset : -offset);
+
+        setTimeout(() => {
+          setOverscrollOffset(0);
+        }, 200);
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      container.dataset.touchStartY = String(touch.clientY);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+      const isAtTop = scrollTop <= 5;
+
+      const touch = e.touches[0];
+      const startY = parseFloat(container.dataset.touchStartY || '0');
+      const deltaY = startY - touch.clientY;
+
+      if ((isAtBottom && deltaY < 0) || (isAtTop && deltaY > 0)) {
+        const offset = Math.min(Math.abs(deltaY) / 10, 20);
+        setOverscrollOffset(deltaY < 0 ? offset : -offset);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      setOverscrollOffset(0);
+      delete container.dataset.touchStartY;
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    container.addEventListener('touchstart', handleTouchStart);
+    container.addEventListener('touchmove', handleTouchMove);
+    container.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      container.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+      clearTimeout(scrollTimeout);
+    };
+  }, [isOpen]);
 
   const overlayClasses = useMemo(
     () =>
@@ -188,7 +271,14 @@ export const MobileSideMenu = ({
       >
         <div className="flex h-full flex-col gap-6 px-6 pb-safe pt-6">
           <span className="pointer-events-none absolute inset-y-0 right-[-1px] w-8 bg-gradient-to-r from-background via-background/40 to-transparent" />
-          <div className="no-scrollbar flex-1 overflow-y-auto pr-1">
+          <div
+            ref={scrollContainerRef}
+            className="no-scrollbar flex-1 overflow-y-auto pr-1"
+            style={{
+              transform: `translateY(${overscrollOffset}px)`,
+              transition: overscrollOffset === 0 ? 'transform 300ms cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+            }}
+          >
             <MobileNavigation
               menu={menu}
               onMenuItemClick={handleMenuItemClick}

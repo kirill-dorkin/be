@@ -715,7 +715,8 @@
     "media-placeholder-description": "We are still preparing official pictures for {productName}.",
     "media-placeholder-hint": "Use \"Search images on the web\" to explore external photos.",
     "grid-placeholder-subtitle": "Open the product page to browse images from the web.",
-    "auto-image-label": "Image from web"
+    "auto-image-label": "Image from web",
+    "internet-image-label": "Image from web"
   },
   "collections": {
     "associated-products": "Associated products",

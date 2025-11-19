@@ -710,7 +710,8 @@
     "media-placeholder-description": "Мы ещё готовим официальные изображения для {productName}.",
     "media-placeholder-hint": "Пока воспользуйтесь кнопкой «Найти фото в интернете» выше.",
     "grid-placeholder-subtitle": "Откройте карточку товара, чтобы найти подходящие фото в интернете.",
-    "auto-image-label": "Фото из интернета"
+    "auto-image-label": "Фото из интернета",
+    "internet-image-label": "Фото из интернета"
   },
   "collections": {
     "associated-products": "Связанные товары",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { memo, useCallback, useEffect, useState } from "react";
 
 import type { Cart } from "@nimara/domain/objects/Cart";
@@ -32,6 +33,19 @@ type ProductMediaProps = {
   product: Product;
   showAs?: "vertical" | "carousel";
   variants: Product["variants"];
+};
+
+const InternetImageBadge = () => {
+  const t = useTranslations();
+
+  return (
+    <div className="absolute bottom-2 right-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/90 px-2.5 py-1 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur dark:border-white/20 dark:bg-muted/80">
+      <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      {t("products.internet-image-label")}
+    </div>
+  );
 };
 
 export const ProductMedia = ({
@@ -95,6 +109,7 @@ export const ProductMedia = ({
                   sizes="(max-width: 960px) 100vw, 50vw"
                   className="h-full w-full object-contain"
                 />
+                <InternetImageBadge />
               </div>
             ))}
           </div>
@@ -133,17 +148,20 @@ const ProductMediaCarouselComponent = ({
       <div className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-4 dark:border-white/10">
         {discountPercent > 0 && <DiscountBadge discount={discountPercent} />}
         {previewImage ? (
-          <OptimizedImage
-            src={previewImage.url}
-            alt={previewImage.alt || altTextFallback || ""}
-            width={IMAGE_SIZES.pdp}
-            height={IMAGE_SIZES.pdp}
-            quality={IMAGE_QUALITY.high}
-            highQuality
-            disableGoogleLens
-            className="h-full w-full object-contain"
-            priority
-          />
+          <>
+            <OptimizedImage
+              src={previewImage.url}
+              alt={previewImage.alt || altTextFallback || ""}
+              width={IMAGE_SIZES.pdp}
+              height={IMAGE_SIZES.pdp}
+              quality={IMAGE_QUALITY.high}
+              highQuality
+              disableGoogleLens
+              className="h-full w-full object-contain"
+              priority
+            />
+            <InternetImageBadge />
+          </>
         ) : (
           <ProductImagePlaceholder />
         )}
@@ -216,6 +234,7 @@ const MobileOnlyCarouselComponent = (props: {
                 sizes="(max-width: 960px) 100vw, 1vw"
                 className="h-full w-full object-contain"
               />
+              <InternetImageBadge />
             </div>
           </CarouselItem>
         ))}

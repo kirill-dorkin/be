@@ -59,7 +59,6 @@ const SearchProductCardComponent = ({
   const productHref = paths.products.asPath({ slug });
 
   const { discountPercent } = getDiscountInfo(price, undiscountedPrice);
-  const isAutoImage = metadata?.some((meta) => meta.key === "autoImage" && meta.value === "true");
 
   const prefetchProduct = useCallback(() => {
     try {
@@ -115,11 +114,12 @@ const SearchProductCardComponent = ({
                   "(max-width: 720px) 100vw, (max-width: 1024px) 50vw, (max-width: 1294px) 33vw, 25vw"
                 }
               />
-              {isAutoImage && (
-                <div className="absolute bottom-2 right-2 inline-flex items-center rounded-full border border-border/60 bg-muted/90 px-2 py-1 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur dark:border-white/20 dark:bg-muted/80">
-                  {t("products.auto-image-label")}
-                </div>
-              )}
+              <div className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/90 px-2.5 py-1 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur dark:border-white/20 dark:bg-muted/80">
+                <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {t("products.internet-image-label")}
+              </div>
             </>
           ) : (
             <ProductThumbnailFallback
@@ -148,19 +148,11 @@ const SearchProductCardComponent = ({
 // Мемоизация компонента для оптимизации ре-рендеров
 export const SearchProductCard = memo(SearchProductCardComponent, (prevProps, nextProps) => {
   // Пересоздаем только если изменились ключевые данные продукта
-  const prevAutoImage = prevProps.product.metadata?.some(
-    (m) => m.key === "autoImage" && m.value === "true"
-  );
-  const nextAutoImage = nextProps.product.metadata?.some(
-    (m) => m.key === "autoImage" && m.value === "true"
-  );
-
   return (
     prevProps.product.slug === nextProps.product.slug &&
     prevProps.product.price.amount === nextProps.product.price.amount &&
     prevProps.product.undiscountedPrice?.amount === nextProps.product.undiscountedPrice?.amount &&
-    prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url &&
-    prevAutoImage === nextAutoImage
+    prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
   );
 });
 

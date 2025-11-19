@@ -714,7 +714,8 @@
     "media-placeholder-description": "Биз азыр {productName} үчүн расмий сүрөттөрдү даярдап жатабыз.",
     "media-placeholder-hint": "Учурда жогорудагы «Интернеттен сүрөт издөө» баскычын колдонуп, тышкы сүрөттөрдү карап чыгыңыз.",
     "grid-placeholder-subtitle": "Товар картасын ачып, интернеттен сүрөттөрдү караңыз.",
-    "auto-image-label": "Интернеттен сүрөт"
+    "auto-image-label": "Интернеттен сүрөт",
+    "internet-image-label": "Интернеттен сүрөт"
   },
   "collections": {
     "associated-products": "Байланышкан товарлар",

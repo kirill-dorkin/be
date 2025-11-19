@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { Menu } from "@nimara/domain/objects/Menu";
 import {
   Wrench,
@@ -45,6 +47,8 @@ import {
   Code,
   Clapperboard,
   Settings,
+  ChevronDown,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 
@@ -121,6 +125,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Кабельная": Cable,
   "Видеонаблюдение": Camera,
   "Доступ": Lock,
+  "Оповещение": Bell,
 
   // Mobility subcategories (Russian)
   "Аксессуары": Watch,
@@ -186,6 +191,10 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "CCTV": Camera,
   "Access": Lock,
   "Access Control": Lock,
+  "Notification": Bell,
+  "Notifications": Bell,
+  "Alert": Bell,
+  "Alerting": Bell,
 
   // Mobility subcategories (English)
   "Accessories": Watch,
@@ -228,14 +237,23 @@ export const MobileNavigation = ({
   menu: Maybe<Menu>;
   onMenuItemClick: (isMenuItemClicked: boolean) => void;
 }) => {
+  const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
+
   if (!menu || menu?.items?.length === 0) {
     return null;
   }
+
+  const toggleCategory = (categoryId: string, hasChildren: boolean) => {
+    if (!hasChildren) return;
+    setOpenCategoryId(openCategoryId === categoryId ? null : categoryId);
+  };
 
   return (
     <ul className="grid gap-1 py-4">
       {menu.items.map((item, index) => {
         const Icon = getIconForLabel(item.label);
+        const hasChildren = !!item.children?.length;
+        const isOpen = openCategoryId === item.id;
 
         return (
           <li
@@ -243,42 +261,80 @@ export const MobileNavigation = ({
             className="group animate-menu-item-enter"
             style={{ animationDelay: `${index * 50}ms` }}
           >
-            <LocalizedLink
-              href={item.url}
-              onClick={() => onMenuItemClick(true)}
-              className="flex items-center gap-3 rounded-lg p-3 font-medium text-stone-800 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-800"
-            >
-              {Icon && (
-                <Icon className="h-5 w-5 flex-shrink-0 text-stone-600 dark:text-stone-400" />
-              )}
-              <span className="text-[15px] leading-tight">{item.label}</span>
-            </LocalizedLink>
-            {!!item.children?.length && (
-              <ul className="mt-1 space-y-0.5 pl-6">
-                {item.children.map((child, childIndex) => {
-                  const ChildIcon = getIconForLabel(child.label);
-                  const childDelay = index * 50 + (childIndex + 1) * 30;
+            {hasChildren ? (
+              <button
+                onClick={() => toggleCategory(item.id, hasChildren)}
+                className="flex w-full items-center gap-3 rounded-lg p-3 font-medium text-stone-800 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-800"
+              >
+                {Icon && (
+                  <Icon className="h-5 w-5 flex-shrink-0 text-stone-600 dark:text-stone-400" />
+                )}
+                <span className="flex-1 text-left text-[15px] leading-tight">{item.label}</span>
+                <ChevronDown
+                  className="h-4 w-4 flex-shrink-0 text-stone-500 dark:text-stone-400"
+                  style={{
+                    transform: isOpen ? 'rotate(180deg) scale(1.1)' : 'rotate(0deg) scale(1)',
+                    transition: 'all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  }}
+                />
+              </button>
+            ) : (
+              <LocalizedLink
+                href={item.url}
+                onClick={() => onMenuItemClick(true)}
+                className="flex items-center gap-3 rounded-lg p-3 font-medium text-stone-800 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-800"
+              >
+                {Icon && (
+                  <Icon className="h-5 w-5 flex-shrink-0 text-stone-600 dark:text-stone-400" />
+                )}
+                <span className="text-[15px] leading-tight">{item.label}</span>
+              </LocalizedLink>
+            )}
+            {hasChildren && (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateRows: isOpen ? '1fr' : '0fr',
+                  transition: 'grid-template-rows 600ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                }}
+              >
+                <ul
+                  className="overflow-hidden"
+                  style={{
+                    opacity: isOpen ? 1 : 0,
+                    transform: isOpen ? 'translateY(0)' : 'translateY(-8px)',
+                    transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  <div className="mt-1 space-y-0.5 pl-6 pb-1">
+                    {item.children?.map((child, childIndex) => {
+                      const ChildIcon = getIconForLabel(child.label);
 
-                  return (
-                    <li
-                      key={child.id}
-                      className="animate-menu-item-enter"
-                      style={{ animationDelay: `${childDelay}ms` }}
-                    >
-                      <LocalizedLink
-                        href={child.url}
-                        onClick={() => onMenuItemClick(true)}
-                        className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-stone-50 dark:text-slate-300 dark:hover:bg-stone-800/50"
-                      >
-                        {ChildIcon && (
-                          <ChildIcon className="h-4 w-4 flex-shrink-0 text-stone-500 dark:text-stone-500" />
-                        )}
-                        <span>{child.label}</span>
-                      </LocalizedLink>
-                    </li>
-                  );
-                })}
-              </ul>
+                      return (
+                        <li
+                          key={child.id}
+                          style={{
+                            opacity: isOpen ? 1 : 0,
+                            transform: isOpen ? 'translateX(0)' : 'translateX(-12px)',
+                            transition: `opacity 400ms cubic-bezier(0.16, 1, 0.3, 1) ${childIndex * 40 + 100}ms, transform 400ms cubic-bezier(0.16, 1, 0.3, 1) ${childIndex * 40 + 100}ms`,
+                          }}
+                        >
+                          <LocalizedLink
+                            href={child.url}
+                            onClick={() => onMenuItemClick(true)}
+                            className="flex items-center gap-2.5 rounded-md px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-stone-50 dark:text-slate-300 dark:hover:bg-stone-800/50"
+                          >
+                            {ChildIcon && (
+                              <ChildIcon className="h-4 w-4 flex-shrink-0 text-stone-500 dark:text-stone-500" />
+                            )}
+                            <span>{child.label}</span>
+                          </LocalizedLink>
+                        </li>
+                      );
+                    })}
+                  </div>
+                </ul>
+              </div>
             )}
           </li>
         );
