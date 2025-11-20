@@ -37,26 +37,35 @@ const UserEmailFormComponent = ({
 
   // Мемоизация обработчика submit
   const handleSubmit = useCallback(async ({ email }: EmailFormSchema) => {
+    console.log("🔵 Form submitted with email:", email);
+
     try {
+      console.log("🔵 Checking if user exists...");
       const checkResult = await checkIfUserHasAnAccount(email);
+      console.log("🔵 Check result:", checkResult);
 
       if (checkResult.ok && checkResult.data.user) {
+        console.log("🔵 User found, setting email:", checkResult.data.user.email);
         setUserAccountEmail(checkResult.data.user.email);
 
         return;
       }
 
+      console.log("🔵 User not found, updating checkout email...");
       const result = await updateUserDetails({
         checkout,
         email,
       });
+      console.log("🔵 Update result:", result);
 
       if (result.ok) {
+        console.log("🔵 Redirecting to:", result.data.redirectUrl);
         push(result.data.redirectUrl);
 
         return;
       }
 
+      console.log("🔴 Update failed with errors:", result.errors);
       result.errors.map((error) => {
         if (error.field) {
           form.setError(error.field as keyof EmailFormSchema, {
@@ -69,7 +78,7 @@ const UserEmailFormComponent = ({
         }
       });
     } catch (error) {
-      console.error("Email form submission error:", error);
+      console.error("🔴 Email form submission error:", error);
       form.setError("root", {
         message: t("errors.UNKNOWN_ERROR"),
       });
@@ -82,10 +91,15 @@ const UserEmailFormComponent = ({
     [form.formState.errors.root?.message]
   );
 
+  console.log("🟡 Email form render - isDisabled:", isDisabled, "isRedirecting:", isRedirecting, "isSubmitting:", form.formState.isSubmitting);
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={(e) => {
+          console.log("🟢 Form onSubmit event triggered");
+          form.handleSubmit(handleSubmit)(e);
+        }}
         className="flex flex-col gap-y-2"
         id="user-details-email-form"
         noValidate
@@ -106,6 +120,7 @@ const UserEmailFormComponent = ({
               form="user-details-email-form"
               disabled={isDisabled}
               loading={isDisabled}
+              onClick={() => console.log("🟢 Button clicked")}
             >
               {isDisabled ? t("common.saving") : t("common.continue")}
             </Button>

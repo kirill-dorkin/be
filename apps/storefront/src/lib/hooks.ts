@@ -9,6 +9,7 @@ export const useRouterWithState = () => {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const push = (href: string, options?: { scroll?: boolean }) => {
+    console.log("🟢 [Router] push called with:", href, options);
     setIsRedirecting(true);
     router.push(href, options);
 
@@ -16,6 +17,7 @@ export const useRouterWithState = () => {
   };
 
   const replace = (href: string, options?: { scroll?: boolean }) => {
+    console.log("🟢 [Router] replace called with:", href, options);
     setIsRedirecting(true);
     router.replace(href, options);
 
@@ -23,8 +25,13 @@ export const useRouterWithState = () => {
   };
 
   useEffect(() => {
-    return () => setIsRedirecting(false);
+    return () => {
+      console.log("🟢 [Router] Component unmounting, resetting isRedirecting");
+      setIsRedirecting(false);
+    };
   }, []);
+
+  console.log("🟡 [Router] Current state - isRedirecting:", isRedirecting);
 
   return { isRedirecting, push, replace };
 };
