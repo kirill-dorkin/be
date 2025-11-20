@@ -23,7 +23,7 @@ const dynamicFields: Array<keyof Address> = [
   "postalCode",
   "cityArea",
   "streetAddress1",
-  "streetAddress2",
+  // "streetAddress2", // Убрано - не нужно второе поле адреса
   "countryArea",
 ];
 
@@ -49,13 +49,14 @@ const phoneCodeRow = [
   },
 ];
 
-const companyNameRow = [
-  {
-    name: "companyName",
-    type: "text" as FieldType,
-    isRequired: false,
-  },
-];
+// Убрано поле companyName - не нужно для обычных покупателей
+// const companyNameRow = [
+//   {
+//     name: "companyName",
+//     type: "text" as FieldType,
+//     isRequired: false,
+//   },
+// ];
 
 interface AddressFormProps {
   addressFormRows: readonly AddressFormRow[];
@@ -161,7 +162,6 @@ const AddressFormComponent = ({
         schemaPrefix={schemaPrefix}
         addressFormRows={[
           nameFormRow,
-          companyNameRow,
           countrySelectorFormRow,
           phoneCodeRow,
         ]}
