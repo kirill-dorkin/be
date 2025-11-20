@@ -68,26 +68,26 @@ export default async function HelpOverviewPage(props: PageProps) {
 
   return (
     <>
-      <section className="space-y-6 rounded-3xl border border-primary/20 bg-gradient-to-b from-primary/10 via-background to-background p-8 text-center shadow-sm sm:p-12">
-        <span className="text-primary inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em]">
+      <section className="space-y-5 rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 via-background to-background p-6 text-center shadow-sm sm:space-y-6 sm:rounded-3xl sm:p-10 lg:p-12">
+        <span className="text-primary inline-flex items-center justify-center rounded-full bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] sm:px-4 sm:text-xs sm:tracking-[0.35em]">
           {t("hero.badge")}
         </span>
-        <div className="space-y-4">
-          <h1 className="text-foreground text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+        <div className="space-y-3 sm:space-y-4">
+          <h1 className="text-foreground text-2xl font-semibold leading-tight tracking-tight sm:text-3xl lg:text-4xl xl:text-5xl">
             {t("hero.title")}
           </h1>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-base sm:text-lg">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-sm leading-relaxed sm:text-base lg:text-lg">
             {t("hero.subtitle")}
           </p>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button asChild size="lg">
+        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
+          <Button asChild size="lg" className="w-full sm:w-auto">
             <LocalizedLink href={paths.help.orders.asPath()}>
               {t("hero.primaryCta")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </LocalizedLink>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
             <LocalizedLink href={paths.staticPages.contact.asPath()}>
               {t("hero.secondaryCta")}
             </LocalizedLink>
@@ -95,37 +95,37 @@ export default async function HelpOverviewPage(props: PageProps) {
         </div>
       </section>
 
-      <section className="space-y-6">
+      <section className="space-y-5 sm:space-y-6">
         <div className="space-y-2 text-center">
-          <h2 className="text-foreground text-2xl font-semibold sm:text-3xl">
+          <h2 className="text-foreground text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">
             {t("shortcuts.title")}
           </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-sm sm:text-base">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-sm leading-relaxed sm:text-base">
             {t("shortcuts.subtitle")}
           </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
           {quickLinks.map((link) => {
             const Icon = link.icon;
 
             return (
               <Card
                 key={link.href}
-                className="group border border-border/60 transition hover:border-primary/40 hover:shadow-md"
+                className="group overflow-hidden border border-border/60 transition-all duration-300 hover:border-primary/40 hover:shadow-lg active:scale-[0.98]"
               >
                 <LocalizedLink
                   href={link.href}
-                  className="flex h-full flex-col p-6 text-left"
+                  className="flex h-full flex-col p-5 text-left sm:p-6"
                 >
-                  <span className="bg-primary/10 text-primary inline-flex h-12 w-12 items-center justify-center rounded-full transition group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="h-6 w-6" aria-hidden />
+                  <span className="bg-primary/10 text-primary inline-flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground sm:h-12 sm:w-12">
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
                   </span>
-                  <CardHeader className="px-0 pb-2 pt-5">
-                    <CardTitle className="text-xl font-semibold">
+                  <CardHeader className="px-0 pb-2 pt-4 sm:pt-5">
+                    <CardTitle className="text-lg font-semibold leading-tight sm:text-xl">
                       {link.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="px-0 pb-0 text-muted-foreground text-sm">
+                  <CardContent className="px-0 pb-0 text-muted-foreground text-sm leading-relaxed">
                     {link.description}
                   </CardContent>
                 </LocalizedLink>
@@ -135,36 +135,39 @@ export default async function HelpOverviewPage(props: PageProps) {
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <Card className="border border-border/70">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <LifeBuoy className="h-5 w-5 text-primary" />
+      <section className="grid gap-4 sm:gap-5 lg:grid-cols-2 lg:gap-6">
+        <Card className="border border-border/70 shadow-sm transition-shadow duration-300 hover:shadow-md">
+          <CardHeader className="space-y-1 pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <LifeBuoy className="h-5 w-5 flex-shrink-0 text-primary" />
               {t("support.title")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground text-sm">
+          <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
             <p>{t("support.description")}</p>
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {supportItems.map((item) => (
-                <li key={item}>• {item}</li>
+                <li key={item} className="flex items-start gap-2">
+                  <span className="text-primary mt-1.5 flex h-1 w-1 flex-shrink-0 rounded-full bg-primary" />
+                  <span className="flex-1">{item}</span>
+                </li>
               ))}
             </ul>
-            <Button asChild variant="secondary" size="sm">
+            <Button asChild variant="secondary" size="default" className="w-full sm:w-auto">
               <LocalizedLink href={paths.help.faq.asPath()}>
                 {t("support.cta")}
               </LocalizedLink>
             </Button>
           </CardContent>
         </Card>
-        <Card className="border border-border/70">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <MapPin className="h-5 w-5 text-primary" />
+        <Card className="border border-border/70 shadow-sm transition-shadow duration-300 hover:shadow-md">
+          <CardHeader className="space-y-1 pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <MapPin className="h-5 w-5 flex-shrink-0 text-primary" />
               {t("visit.title")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground text-sm">
+          <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
             <p>{t("visit.description")}</p>
             <div className="space-y-1 text-foreground text-sm font-medium">
               {t("visit.address")
@@ -173,8 +176,8 @@ export default async function HelpOverviewPage(props: PageProps) {
                   <div key={line}>{line}</div>
                 ))}
             </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild variant="outline" size="sm">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <Button asChild variant="outline" size="default" className="w-full sm:w-auto sm:flex-1">
                 <a
                   href="https://maps.google.com/maps?q=Кулатова%208%2F1%20Бишкек&output=classic"
                   target="_blank"
@@ -183,7 +186,7 @@ export default async function HelpOverviewPage(props: PageProps) {
                   {t("visit.actions.google")}
                 </a>
               </Button>
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="default" className="w-full sm:w-auto sm:flex-1">
                 <a
                   href="https://2gis.kg/bishkek/search/%D0%9A%D1%83%D0%BB%D0%B0%D1%82%D0%BE%D0%B2%D0%B0%208%2F1"
                   target="_blank"

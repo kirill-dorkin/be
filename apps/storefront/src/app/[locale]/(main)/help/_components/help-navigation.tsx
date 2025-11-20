@@ -44,20 +44,20 @@ const HelpNavigationComponent = ({
   return (
     <nav
       aria-label="Help navigation"
-      className="sticky top-28 space-y-4 self-start rounded-2xl border border-border/60 bg-card p-6 shadow-sm"
+      className="sticky top-20 space-y-4 self-start rounded-xl border border-border/60 bg-card p-4 shadow-sm sm:top-24 sm:rounded-2xl sm:p-5 lg:p-6"
     >
-      <div className="space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="space-y-1.5 sm:space-y-2">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
           {heading.overline}
         </p>
-        <h2 className="text-foreground text-xl font-semibold">
+        <h2 className="text-foreground text-lg font-semibold leading-tight sm:text-xl">
           {heading.title}
         </h2>
         {heading.subtitle ? (
-          <p className="text-muted-foreground text-sm">{heading.subtitle}</p>
+          <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">{heading.subtitle}</p>
         ) : null}
       </div>
-      <ul className="space-y-2">
+      <ul className="space-y-1.5 sm:space-y-2">
         {links.map((link) => {
           const isActive = normalized === link.href;
 
@@ -66,17 +66,17 @@ const HelpNavigationComponent = ({
               <LocalizedLink
                 href={link.href}
                 className={[
-                  "block rounded-xl border px-4 py-3 transition-colors",
+                  "block rounded-lg border px-3 py-2.5 transition-all duration-200 sm:rounded-xl sm:px-4 sm:py-3",
                   isActive
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-transparent hover:border-border hover:bg-muted",
+                    ? "border-primary bg-primary/10 text-primary shadow-sm"
+                    : "border-transparent hover:border-border hover:bg-muted active:scale-[0.98]",
                 ].join(" ")}
               >
-                <span className="block text-sm font-semibold">
+                <span className="block text-sm font-semibold leading-tight">
                   {link.label}
                 </span>
                 {link.description ? (
-                  <span className="text-muted-foreground block text-xs">
+                  <span className="text-muted-foreground mt-0.5 block text-xs leading-relaxed">
                     {link.description}
                   </span>
                 ) : null}

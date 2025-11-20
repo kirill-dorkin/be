@@ -50,8 +50,8 @@ export default async function HelpLayout({
 
   return (
     <div className="bg-background">
-      <div className="container py-12 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)]">
+      <div className="container py-6 sm:py-10 lg:py-14 xl:py-16">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[18rem_minmax(0,1fr)]">
           <HelpNavigation
             heading={{
               overline: headingT("overline"),
@@ -60,7 +60,7 @@ export default async function HelpLayout({
             }}
             links={links}
           />
-          <div className="space-y-12">{children}</div>
+          <div className="space-y-8 sm:space-y-10 lg:space-y-12">{children}</div>
         </div>
       </div>
     </div>
