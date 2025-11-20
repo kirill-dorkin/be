@@ -137,7 +137,7 @@ const LineComponent = ({
   }, [width]);
 
   return (
-    <div className="group relative flex flex-col gap-3 rounded-xl border border-border/50 bg-card p-4 transition-all duration-200 hover:border-border/80 hover:shadow-md md:flex-row md:items-center md:gap-4 md:p-5">
+    <div className="group relative flex flex-col gap-3 rounded-xl border border-border/50 bg-card p-4 pr-12 transition-all duration-200 hover:border-border/80 hover:shadow-md md:flex-row md:items-center md:gap-4 md:p-5 md:pr-5">
       <div className="flex gap-3 md:gap-4">
         <LocalizedLink title={name} href={href} className="block shrink-0">
           {thumbnail ? (
@@ -277,7 +277,7 @@ const LineComponent = ({
           disabled={isDisabled}
           onClick={handleLineDelete}
           aria-label={t("cart.remove-button")}
-          className="absolute right-2 top-2 hover:bg-destructive/10 hover:text-destructive md:relative md:right-0 md:top-0 md:ml-auto"
+          className="absolute right-3 top-3 hover:bg-destructive/10 hover:text-destructive md:relative md:right-0 md:top-0 md:ml-auto"
         >
           <X height={18} width={18} />
         </Button>
