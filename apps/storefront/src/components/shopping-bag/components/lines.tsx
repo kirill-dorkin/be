@@ -44,7 +44,7 @@ export const Lines = ({
 
   return (
     <>
-      <div className="flex flex-col gap-4 py-8">
+      <div className="flex flex-col gap-4 py-6 sm:gap-5 sm:py-8">
         {lines.map((line) => (
           <Line
             key={line.id}
@@ -55,19 +55,18 @@ export const Lines = ({
         ))}
 
         {linesWithProblems.map(({ line }) => (
-          <>
-            <h2 className="text-stone-500">{t("cart.unavailable-products")}</h2>
+          <div key={line.id} className="space-y-3">
+            <h2 className="text-muted-foreground text-sm font-medium">{t("cart.unavailable-products")}</h2>
             <Line
-              key={line.id}
               line={line}
               {...props}
               isLineEditable={true}
               isOutOfStock
             />
-          </>
+          </div>
         ))}
       </div>
-      <hr className="border-stone-200" />
+      <hr className="border-border/60" />
     </>
   );
 };

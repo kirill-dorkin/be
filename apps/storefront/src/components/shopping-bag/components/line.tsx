@@ -137,27 +137,27 @@ const LineComponent = ({
   }, [width]);
 
   return (
-    <div className="grid grid-cols-12 grid-rows-2 items-start gap-2 md:grid-rows-1 md:items-center [&>*]:transition-colors">
-      <div className="col-span-2 row-span-2 h-full p-[5px] md:row-span-1">
-        <LocalizedLink title={name} href={href}>
+    <div className="grid grid-cols-12 grid-rows-2 items-start gap-3 rounded-lg border border-border/40 bg-card p-3 transition-all duration-200 hover:border-border/60 hover:shadow-sm md:grid-rows-1 md:items-center md:gap-4 md:p-4 [&>*]:transition-colors">
+      <div className="col-span-2 row-span-2 h-full md:row-span-1">
+        <LocalizedLink title={name} href={href} className="block">
           {thumbnail ? (
             <Image
               src={thumbnail.url}
               alt={thumbnail.alt ?? name}
-              sizes="56px"
+              sizes="80px"
               width={IMAGE_SIZES.thumbnail}
               height={IMAGE_SIZES.thumbnail}
               quality={IMAGE_QUALITY.low}
               className={cn(
-                "h-[56px] w-[42px] object-contain p-1 bg-muted/30 dark:bg-muted/20 rounded border border-border/40 dark:border-white/10",
-                isOutOfStock && "grayscale",
+                "h-16 w-16 object-contain rounded border border-border/40 bg-muted/30 p-1.5 transition-opacity duration-200 hover:opacity-80 sm:h-20 sm:w-20",
+                isOutOfStock && "grayscale opacity-60",
               )}
             />
           ) : (
             <ProductImagePlaceholder
-              height={56}
-              width={42}
-              className={cn(isOutOfStock && "grayscale")}
+              height={80}
+              width={80}
+              className={cn("rounded", isOutOfStock && "grayscale opacity-60")}
             />
           )}
         </LocalizedLink>
@@ -170,8 +170,8 @@ const LineComponent = ({
       >
         <LocalizedLink title={name} href={href} className="grow">
           <p
-            className={cn("text-foreground text-sm break-words", {
-              "text-stone-400": isOutOfStock,
+            className={cn("text-foreground text-sm font-medium break-words transition-colors hover:text-primary sm:text-base", {
+              "text-muted-foreground opacity-60": isOutOfStock,
             })}
           >
             {formatProductName(name)}
@@ -320,8 +320,9 @@ const LineComponent = ({
             disabled={isDisabled}
             onClick={handleLineDelete}
             aria-label={t("cart.remove-button")}
+            className="hover:bg-destructive/10 hover:text-destructive"
           >
-            <X height={16} width={16} />
+            <X height={18} width={18} />
           </Button>
         </div>
       )}

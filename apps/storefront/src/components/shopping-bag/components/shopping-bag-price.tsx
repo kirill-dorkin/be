@@ -46,21 +46,22 @@ return `-${formatter.price({ amount: discount.amount })}`;
 
   return (
     <>
-      {isPrimary && <hr className="border-stone-200" />}
+      {isPrimary && <hr className="border-border/60" />}
 
       <div
         className={cn(
-          "text-content text-foreground flex justify-between text-sm",
+          "text-content text-foreground flex justify-between text-sm sm:text-base",
           {
-            "[&>*]:font-[650]": isPrimary,
+            "[&>*]:font-semibold [&>*]:text-base sm:[&>*]:text-lg": isPrimary,
+            "text-muted-foreground": !isPrimary,
           },
         )}
         data-testid={`shopping-bag-price-${dataTestId}`}
       >
         <p>{heading}</p>
-        {formattedPrice && <p>{formattedPrice}</p>}
+        {formattedPrice && <p className={cn(isPrimary && "text-primary")}>{formattedPrice}</p>}
         {formattedDiscount && (
-          <p className="text-slate-700 dark:text-primary">{formattedDiscount}</p>
+          <p className="text-primary font-medium">{formattedDiscount}</p>
         )}
       </div>
     </>

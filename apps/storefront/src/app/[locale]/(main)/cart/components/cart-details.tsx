@@ -113,7 +113,7 @@ export const CartDetails = ({
   }, [redirectReason]);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-10 lg:space-y-12">
       <ShoppingBag>
         <ShoppingBag.Header />
         <ShoppingBag.Lines
@@ -127,8 +127,8 @@ export const CartDetails = ({
           <ShoppingBag.Subtotal price={cart.subtotal} />
         </ShoppingBag.Pricing>
       </ShoppingBag>
-      <div className="w-full text-center">
-        <Button asChild size="lg" disabled={isDisabled} loading={isProcessing}>
+      <div className="sticky bottom-0 w-full bg-background py-4 text-center">
+        <Button asChild size="lg" disabled={isDisabled} loading={isProcessing} className="w-full shadow-md sm:w-auto sm:min-w-[280px]">
           <LocalizedLink
             href={
               !!user ? paths.checkout.asPath() : paths.checkout.signIn.asPath()

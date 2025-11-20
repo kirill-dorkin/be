@@ -18,7 +18,7 @@ const HeaderComponent = ({
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
 
-  const headerTextClass = "text-2xl text-slate-700 dark:text-primary";
+  const headerTextClass = "text-xl sm:text-2xl font-semibold text-foreground";
 
   // Мемоизация форматированной цены
   const formattedPrice = useMemo(
@@ -28,16 +28,16 @@ const HeaderComponent = ({
 
   return (
     <div
-      className={cn("flex justify-between", {
+      className={cn("flex items-center justify-between border-b border-border/60 pb-4", {
         "justify-start gap-2 md:justify-between": totalPrice,
       })}
     >
       <h1 className={headerTextClass}>{header || t("cart.your-bag")}</h1>
       {totalPrice && (
-        <p className={cn(headerTextClass, "block md:hidden")}>•</p>
+        <p className={cn("text-muted-foreground", "block md:hidden")}>•</p>
       )}
       {totalPrice && (
-        <p className={headerTextClass}>
+        <p className={cn(headerTextClass, "text-primary")}>
           {formattedPrice}
         </p>
       )}
