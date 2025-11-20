@@ -620,6 +620,9 @@
     "adding-to-bag": "Adding...",
     "remove-from-bag": "Remove from bag",
     "removing-from-bag": "Removing...",
+    "update-quantity": "Update quantity",
+    "updating-quantity": "Updating...",
+    "quantity-updated": "Quantity updated",
     "close": "Close",
     "go-to-next-page": "Go to next page",
     "go-to-previous-page": "Go to previous page",
@@ -716,7 +719,11 @@
     "media-placeholder-hint": "Use \"Search images on the web\" to explore external photos.",
     "grid-placeholder-subtitle": "Open the product page to browse images from the web.",
     "auto-image-label": "Image from web",
-    "internet-image-label": "Image from web"
+    "internet-image-label": "Image from web",
+    "quantity": "Quantity",
+    "decrease-quantity": "Decrease quantity",
+    "increase-quantity": "Increase quantity",
+    "quantity-input": "Quantity input"
   },
   "collections": {
     "associated-products": "Associated products",
@@ -1107,5 +1114,10 @@
   "currency": {
     "currency-settings": "Currency settings",
     "available-currencies": "Available currencies"
+  },
+  "view-toggle": {
+    "grid": "Grid View",
+    "compact": "Compact View",
+    "list": "List View"
   }
 }

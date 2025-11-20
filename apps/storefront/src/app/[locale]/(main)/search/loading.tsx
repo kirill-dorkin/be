@@ -1,27 +1,47 @@
-import { Skeleton } from "@nimara/ui/components/skeleton";
+"use client";
 
-import { DEFAULT_RESULTS_PER_PAGE } from "@/config";
+import { useEffect, useState } from "react";
+
+import { type ViewMode } from "@/components/view-toggle";
+import { getViewModeSync } from "@/lib/view-mode-storage";
+
+import { ProductsSkeleton } from "./_components/products-skeleton";
 
 export default function Loading() {
+  const [mounted, setMounted] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("compact");
+
+  useEffect(() => {
+    setMounted(true);
+    setViewMode(getViewModeSync());
+  }, []);
+
   return (
     <div className="w-full">
-      <section className="mx-auto my-6 grid">
-        <div className="my-8 flex h-4 items-center justify-between">
-          <Skeleton className="h-10 w-1/5" />
+      <div className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0">
+        {/* Breadcrumbs skeleton */}
+        <div className="mb-4 h-4 w-32 animate-pulse rounded bg-muted/50" />
 
-          <div className="flex w-48 gap-4">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+        <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
+          {/* Title skeleton */}
+          <div className="h-8 w-64 animate-pulse rounded bg-muted/50" />
+
+          <div className="flex gap-3">
+            {/* ViewToggle skeleton */}
+            <div className="h-10 w-28 animate-pulse rounded-lg bg-muted/50" />
+
+            <div className="flex gap-4">
+              {/* Sort skeleton */}
+              <div className="hidden h-10 w-32 animate-pulse rounded-lg bg-muted/50 md:block" />
+              {/* Filter skeleton */}
+              <div className="h-10 w-10 animate-pulse rounded-xl bg-muted/50 sm:w-28" />
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-          {Array(DEFAULT_RESULTS_PER_PAGE)
-            .fill(null)
-            .map((_, idx) => (
-              <Skeleton key={idx} className="aspect-square w-full" />
-            ))}
-        </div>
+      <section className="mx-auto mt-8 grid gap-8">
+        <ProductsSkeleton viewMode={mounted ? viewMode : "compact"} count={16} />
       </section>
     </div>
   );

@@ -615,6 +615,9 @@
     "adding-to-bag": "Добавление...",
     "remove-from-bag": "Убрать из корзины",
     "removing-from-bag": "Удаление...",
+    "update-quantity": "Обновить количество",
+    "updating-quantity": "Обновление...",
+    "quantity-updated": "Количество обновлено",
     "close": "Закрыть",
     "go-to-next-page": "На следующую страницу",
     "go-to-previous-page": "На предыдущую страницу",
@@ -711,7 +714,11 @@
     "media-placeholder-hint": "Пока воспользуйтесь кнопкой «Найти фото в интернете» выше.",
     "grid-placeholder-subtitle": "Откройте карточку товара, чтобы найти подходящие фото в интернете.",
     "auto-image-label": "Фото из интернета",
-    "internet-image-label": "Фото из интернета"
+    "internet-image-label": "Фото из интернета",
+    "quantity": "Количество",
+    "decrease-quantity": "Уменьшить количество",
+    "increase-quantity": "Увеличить количество",
+    "quantity-input": "Ввод количества"
   },
   "collections": {
     "associated-products": "Связанные товары",
@@ -1102,5 +1109,10 @@
   "currency": {
     "currency-settings": "Настройки валюты",
     "available-currencies": "Доступные валюты"
+  },
+  "view-toggle": {
+    "grid": "Большие карточки",
+    "compact": "Компактный вид",
+    "list": "Список"
   }
 }

@@ -65,7 +65,11 @@ const PriceComponent = ({
   // A specific variant is selected (price is defined).
   if (price) {
     if (price.amount === 0) {
-      return <span className={className}>{t("common.free")}</span>;
+      return (
+        <span className={`text-3xl font-bold ${className}`}>
+          {t("common.free")}
+        </span>
+      );
     }
 
     const { hasDiscount, oldPrice } = discountInfo;
@@ -73,24 +77,28 @@ const PriceComponent = ({
     return (
       <span className={className}>
         {hasDiscount && oldPrice && (
-          <span className="mr-2 text-gray-500 line-through dark:text-gray-400">
+          <span className="mr-2 text-base text-gray-500 line-through md:mr-3 md:text-lg dark:text-gray-400">
             {renderPrice(oldPrice)}
           </span>
         )}
-        <span>{renderPrice(price)}</span>
+        <span className="text-2xl font-bold md:text-3xl lg:text-4xl">{renderPrice(price)}</span>
       </span>
     );
   }
 
   // No specific variant is selected.
   if (hasFreeVariants) {
-    return <span className={className}>{t("common.free")}</span>;
+    return (
+      <span className={`text-2xl font-bold md:text-3xl lg:text-4xl ${className}`}>
+        {t("common.free")}
+      </span>
+    );
   }
 
   //  No free variants.
   if (startPrice) {
     return (
-      <span className={className}>
+      <span className={`text-2xl font-bold md:text-3xl lg:text-4xl ${className}`}>
         {startPrice.amount === 0
           ? t("common.free")
           : t("common.from-price", { price: renderPrice(startPrice) })}

@@ -30,22 +30,26 @@ export const ProductHighlights = async (props: Props) => {
     { hasFreeShipping: false, hasFreeReturn: false },
   );
 
+  if (!hasFreeShipping && !hasFreeReturn) {
+    return null;
+  }
+
   return (
-    <>
+    <div className="border-border/30 dark:border-white/10 my-8 space-y-3 border-t pt-6">
       {hasFreeShipping && (
-        <Alert className="text-slate-700 dark:text-primary">
+        <Alert className="border-green-200 bg-green-50/50 text-slate-700 dark:border-green-900/30 dark:bg-green-900/10 dark:text-green-100">
           <Truck className="size-4" />
-          <AlertTitle>{t("free-shipping")}</AlertTitle>
+          <AlertTitle className="font-semibold">{t("free-shipping")}</AlertTitle>
           <AlertDescription>{t("standard-parcel")}</AlertDescription>
         </Alert>
       )}
 
       {hasFreeReturn && (
-        <Alert className="mt-2">
+        <Alert className="border-blue-200 bg-blue-50/50 text-slate-700 dark:border-blue-900/30 dark:bg-blue-900/10 dark:text-blue-100">
           <Undo2 className="size-4" />
-          <AlertTitle>{t("free-30-days")}</AlertTitle>
+          <AlertTitle className="font-semibold">{t("free-30-days")}</AlertTitle>
         </Alert>
       )}
-    </>
+    </div>
   );
 };

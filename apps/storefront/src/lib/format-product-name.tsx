@@ -1,6 +1,37 @@
 import type { ReactElement } from "react";
 
 /**
+ * Normalizes spaces around brackets and commas in product names
+ * Rules:
+ * - "(" - one space before, no space after
+ * - ")" - no space before, one space after
+ * - "," - no space before, one space after
+ *
+ * @param name - Product name to normalize
+ * @returns Normalized product name
+ *
+ * @example
+ * normalizeProductName("MB(new)old,value")
+ * // Returns: "MB (new) old, value"
+ */
+function normalizeProductName(name: string): string {
+  return name
+    // Normalize spaces around opening bracket "("
+    // Remove all spaces before and after, then add one space before
+    .replace(/\s*\(\s*/g, ' (')
+    // Normalize spaces around closing bracket ")"
+    // Remove all spaces before and after, then add one space after
+    .replace(/\s*\)\s*/g, ') ')
+    // Normalize spaces around comma ","
+    // Remove all spaces before and after, then add one space after
+    .replace(/\s*,\s*/g, ', ')
+    // Clean up multiple consecutive spaces
+    .replace(/\s{2,}/g, ' ')
+    // Trim leading/trailing spaces
+    .trim();
+}
+
+/**
  * Formats product name by adding word break opportunities after commas,
  * spaces, and other separators to prevent layout breaking
  *
@@ -9,21 +40,24 @@ import type { ReactElement } from "react";
  *
  * @example
  * formatProductName("MB H310M,2xDDR4,10xUSB")
- * // Returns: <>MB H310M,<wbr />2xDDR4,<wbr />10xUSB</>
+ * // Returns: <>MB H310M, <wbr />2xDDR4, <wbr />10xUSB</>
  *
  * @example
  * formatProductName("Price: 2,500") // Comma between digits - no break
  * // Returns: <>Price: 2,500</>
  */
 export function formatProductName(name: string): ReactElement {
+  // First normalize spaces around brackets and commas
+  const normalized = normalizeProductName(name);
+
   const parts: (string | ReactElement)[] = [];
   let currentPart = "";
   let charsSinceLastBreak = 0;
 
-  for (let i = 0; i < name.length; i++) {
-    const char = name[i];
-    const prevChar = i > 0 ? name[i - 1] : "";
-    const nextChar = i < name.length - 1 ? name[i + 1] : "";
+  for (let i = 0; i < normalized.length; i++) {
+    const char = normalized[i];
+    const prevChar = i > 0 ? normalized[i - 1] : "";
+    const nextChar = i < normalized.length - 1 ? normalized[i + 1] : "";
 
     currentPart += char;
     charsSinceLastBreak++;

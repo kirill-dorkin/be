@@ -41,41 +41,6 @@ export const addToBagAction = async ({
     }
   }
 
-  // Check if item already exists in cart
-  if (cookieCartId) {
-    const cartGetResult = await cartService.cartGet({
-      cartId: cookieCartId,
-      languageCode: region.language.code,
-      countryCode: region.market.countryCode,
-      options: {
-        next: {
-          tags: [`CHECKOUT:${cookieCartId}`],
-          revalidate: CACHE_TTL.cart,
-        },
-      },
-    });
-
-    if (cartGetResult.ok) {
-      const existingItem = cartGetResult.data.lines.find(
-        (line) => line.variant.id === variantId,
-      );
-
-      if (existingItem) {
-        storefrontLogger.debug("Item already exists in cart", { variantId });
-
-        return {
-          ok: false,
-          errors: [
-            {
-              field: "ITEM_ALREADY_IN_CART",
-              message: "This item is already in your cart",
-            },
-          ],
-        } as const;
-      }
-    }
-  }
-
   const result = await cartService.linesAdd({
     email: user?.email,
     channel: region.market.channel,
@@ -93,12 +58,20 @@ export const addToBagAction = async ({
   });
 
   if (result.ok) {
+    const finalCartId = cookieCartId ?? result.data.cartId;
+
     if (!cookieCartId) {
       // Save the cartId in the cookie for future requests
       await setCheckoutIdCookie(result.data.cartId);
     }
 
-    await revalidateCart(cookieCartId ?? result.data.cartId);
+    // Revalidate cart cache immediately
+    await revalidateCart(finalCartId);
+
+    storefrontLogger.debug("Item added to cart successfully", {
+      variantId,
+      cartId: finalCartId
+    });
   }
 
   return result;

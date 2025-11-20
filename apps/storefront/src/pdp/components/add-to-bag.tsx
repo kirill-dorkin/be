@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusCircle, Trash2, Loader2 } from "lucide-react";
+import { Loader2,PlusCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { memo, useCallback, useEffect, useMemo, useState, useTransition } from "react";
@@ -16,16 +16,18 @@ import type { TranslationMessage } from "@/types";
 
 import { addToBagAction } from "../actions/add-to-bag";
 import { removeFromBagAction } from "../actions/remove-from-bag";
+import { updateBagAction } from "../actions/update-bag";
 
 type AddToBagProps = {
   cart: Cart | null;
   isVariantAvailable: boolean;
+  quantity?: number;
   variantId: string;
 };
 
-type ProcessingState = "adding" | "removing" | null;
+type ProcessingState = "adding" | "removing" | "updating" | null;
 
-const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProps) => {
+const AddToBagComponent = ({ cart, variantId, isVariantAvailable, quantity = 1 }: AddToBagProps) => {
   const t = useTranslations();
   const { toast } = useToast();
   const router = useRouter();
@@ -38,8 +40,24 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
     if (!cart || !variantId) {
       return false;
     }
-    return cart.lines.some((line) => line.variant.id === variantId);
+
+return cart.lines.some((line) => line.variant.id === variantId);
   }, [cart, variantId]);
+
+  // Get cart line info (quantity and lineId)
+  const cartLineInfo = useMemo(() => {
+    if (!cart || !variantId) {
+      return null;
+    }
+    const line = cart.lines.find((line) => line.variant.id === variantId);
+    return line ? { quantity: line.quantity, lineId: line.id } : null;
+  }, [cart, variantId]);
+
+  // Check if quantity has changed from what's in cart
+  const quantityChanged = useMemo(() => {
+    if (!cartLineInfo) return false;
+    return cartLineInfo.quantity !== quantity;
+  }, [cartLineInfo, quantity]);
 
   // Clear optimistic state when actual cart data is updated and matches
   useEffect(() => {
@@ -58,7 +76,8 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
     if (optimisticInCart !== null) {
       return optimisticInCart;
     }
-    return actualIsInCart;
+    
+return actualIsInCart;
   }, [actualIsInCart, optimisticInCart]);
 
   const handleProductAdd = useCallback(() => {
@@ -69,6 +88,7 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
 
       const resultLinesAdd = await addToBagAction({
         variantId,
+        quantity,
       });
 
       if (!resultLinesAdd.ok) {
@@ -101,11 +121,11 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
           ),
         });
 
-        // Refresh data in background - optimistic state will clear automatically via useEffect
+        // Force refresh to update cart state immediately
         router.refresh();
       }
     });
-  }, [variantId, toast, t, router]);
+  }, [variantId, quantity, toast, t, router]);
 
   const handleProductRemove = useCallback(() => {
     startTransition(async () => {
@@ -143,6 +163,44 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
     });
   }, [variantId, toast, t, router]);
 
+  const handleProductUpdate = useCallback(() => {
+    if (!cartLineInfo) return;
+
+    startTransition(async () => {
+      // Set loading state immediately
+      setProcessingState("updating");
+
+      const resultLinesUpdate = await updateBagAction({
+        lineId: cartLineInfo.lineId,
+        quantity,
+      });
+
+      if (!resultLinesUpdate.ok) {
+        // Revert on error
+        setProcessingState(null);
+
+        resultLinesUpdate.errors.forEach((error) => {
+          if (error.field) {
+            toast({
+              description: t(
+                `checkout-errors.${error.field}` as TranslationMessage,
+              ),
+              variant: "destructive",
+            });
+          }
+        });
+      } else {
+        toast({
+          description: t("common.quantity-updated"),
+        });
+
+        // Refresh data to get updated cart
+        router.refresh();
+        setProcessingState(null);
+      }
+    });
+  }, [cartLineInfo, quantity, toast, t, router]);
+
   const handleNotifyMe = useCallback(async () => {
     return toast({
       title: t("errors.product.NOT_AVAILABLE"),
@@ -156,10 +214,16 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
 
   // Determine button variant with smooth transitions
   const buttonVariant = useMemo(() => {
-    if (processingState === "adding") return "default";
-    if (processingState === "removing") return "destructive";
-    return isInCart ? "destructive" : "default";
-  }, [processingState, isInCart]);
+    if (processingState === "adding") {return "default";}
+    if (processingState === "removing") {return "destructive";}
+    if (processingState === "updating") {return "default";}
+
+// If in cart and quantity changed, show update style (default)
+    // If in cart and quantity same, show remove style (destructive)
+    if (isInCart && quantityChanged) {return "default";}
+
+return isInCart ? "destructive" : "default";
+  }, [processingState, isInCart, quantityChanged]);
 
   // Determine button content based on state
   const buttonContent = useMemo(() => {
@@ -178,7 +242,23 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
       };
     }
 
+    if (processingState === "updating") {
+      return {
+        icon: <Loader2 className="h-4 w-4 animate-spin" />,
+        text: t("common.updating-quantity"),
+      };
+    }
+
     // Show final states
+    // If in cart and quantity changed, show update button
+    if (isInCart && quantityChanged) {
+      return {
+        icon: <PlusCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />,
+        text: t("common.update-quantity"),
+      };
+    }
+
+    // If in cart and quantity same, show remove button
     if (isInCart) {
       return {
         icon: <Trash2 className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />,
@@ -197,23 +277,26 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable }: AddToBagProp
       icon: null,
       text: t("common.notify-me"),
     };
-  }, [processingState, isInCart, isVariantAvailable, t]);
+  }, [processingState, isInCart, quantityChanged, isVariantAvailable, t]);
 
   // Generate key for animation trigger
   const contentKey = `${processingState || ''}-${isInCart ? 'in-cart' : 'not-in-cart'}`;
 
   return (
     <Button
-      className="group relative w-full overflow-hidden"
+      className="group relative mt-5 h-12 w-full overflow-hidden text-base font-semibold shadow-lg transition-all duration-300 hover:shadow-xl md:mt-6 md:h-14 md:text-lg"
       disabled={!variantId || isPending}
       onClick={
-        isInCart
-          ? handleProductRemove
-          : isVariantAvailable
-            ? handleProductAdd
-            : handleNotifyMe
+        isInCart && quantityChanged
+          ? handleProductUpdate
+          : isInCart
+            ? handleProductRemove
+            : isVariantAvailable
+              ? handleProductAdd
+              : handleNotifyMe
       }
       variant={buttonVariant}
+      size="lg"
     >
       <span
         key={contentKey}
@@ -255,6 +338,7 @@ export const AddToBag = memo(AddToBagComponent, (prevProps, nextProps) => {
   return (
     prevProps.variantId === nextProps.variantId &&
     prevProps.isVariantAvailable === nextProps.isVariantAvailable &&
+    prevProps.quantity === nextProps.quantity &&
     prevInCart === nextInCart
   );
 });

@@ -19,16 +19,16 @@ const RelatedProductsComponent = ({
   title: string;
 }) => {
   return (
-    <div className="relative overflow-hidden mt-12 md:mt-0">
-      <h2 className="text-foreground mb-6 text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+    <div className="border-border/30 dark:border-white/10 relative mt-16 overflow-hidden border-t pt-12">
+      <h2 className="text-foreground mb-8 text-2xl font-bold leading-tight tracking-tight md:text-3xl">
         {title}
       </h2>
       <Carousel>
-        <CarouselContent>
+        <CarouselContent className="-ml-4">
           {products.map((product) => (
             <CarouselItem
               key={product.id}
-              className="flex h-auto w-4/5 flex-none flex-col md:w-1/5"
+              className="flex h-auto w-4/5 flex-none flex-col pl-4 md:w-1/5"
             >
               <SearchProductCard
                 product={product}

@@ -55,7 +55,7 @@ export const ProductProvider = async ({
         countryCode: region.market.countryCode,
         options: {
           next: {
-            revalidate: CACHE_TTL.cart,
+            revalidate: 0, // Always fetch fresh cart data on PDP
             tags: [`CHECKOUT:${checkoutId}`],
           },
         },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type Cart } from "@nimara/domain/objects/Cart";
 import {
@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 
 import { useVariantSelection } from "../hooks/useVariantSelection";
 import { AddToBag } from "./add-to-bag";
+import { QuantitySelector } from "./quantity-selector";
 import { VariantDropdown } from "./variant-dropdown";
 
 type VariantSelectorProps = {
@@ -33,6 +34,7 @@ export const VariantSelector = ({
   cart,
 }: VariantSelectorProps) => {
   const t = useTranslations();
+  const [quantity, setQuantity] = useState(1);
   const {
     allSelectionAttributes,
     areAllRequiredSelectionAttributesChosen,
@@ -48,6 +50,21 @@ export const VariantSelector = ({
     startPrice,
     variantsAvailability,
   } = useVariantSelection({ cart, product, productAvailability });
+
+  // Sync quantity with cart when variant changes or cart updates
+  const currentVariantId = matchingVariants?.length > 1
+    ? discriminatedVariantId
+    : chosenVariant?.id;
+
+  // Sync local quantity state with cart quantity when item is in cart
+  useEffect(() => {
+    if (currentVariantId && cart) {
+      const cartLine = cart.lines.find((line) => line.variant.id === currentVariantId);
+      if (cartLine && cartLine.quantity !== quantity) {
+        setQuantity(cartLine.quantity);
+      }
+    }
+  }, [cart, currentVariantId, quantity]);
 
   // Мемоизация проверки бесплатных вариантов
   const hasFreeVariant = useMemo(
@@ -73,16 +90,31 @@ export const VariantSelector = ({
 
   return (
     <>
-      <p className="py-4 text-center text-lg md:text-left">
-        <Price
-          price={chosenVariantAvailability?.price}
-          startPrice={startPrice}
-          hasFreeVariants={hasFreeVariant}
-          undiscountedPrice={chosenVariantAvailability?.priceUndiscounted}
-        />
-      </p>
+      <div className="border-border/30 dark:border-white/10 my-5 border-t pt-4">
+        <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end md:gap-6">
+          {/* Price section */}
+          <div className="text-left">
+            <Price
+              price={chosenVariantAvailability?.price}
+              startPrice={startPrice}
+              hasFreeVariants={hasFreeVariant}
+              undiscountedPrice={chosenVariantAvailability?.priceUndiscounted}
+            />
+          </div>
 
-      <div className="[&>div]:pb-4">
+          {/* Quantity selector */}
+          <div className="w-auto">
+            <QuantitySelector
+              value={quantity}
+              onChange={setQuantity}
+              min={1}
+              max={50}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
         {allSelectionAttributes.map(({ slug, name, values, type }, index) => {
           const isPreviousAttributeSelected =
             index === 0 ? true : !!chosenAttributes[index - 1]?.value;
@@ -96,8 +128,8 @@ export const VariantSelector = ({
           });
 
           return (
-            <div key={slug} className="flex flex-col gap-1.5">
-              <Label id={`label-${slug}`} className="text-foreground">
+            <div key={slug} className="flex flex-col gap-2">
+              <Label id={`label-${slug}`} className="text-foreground text-xs font-medium uppercase tracking-wider">
                 {name}
                 {type === "SWATCH" &&
                   !!chosenAttribute?.value &&
@@ -140,7 +172,10 @@ export const VariantSelector = ({
                         size="default"
                       >
                         <div
-                          className={cn("h-6 w-6 border border-stone-200")}
+                          className={cn(
+                            "h-6 w-6 border border-stone-200 transition-all duration-200 hover:scale-110 hover:shadow-md",
+                            isSelected && "scale-110 shadow-md",
+                          )}
                           style={{
                             backgroundColor: value,
                           }}
@@ -148,7 +183,7 @@ export const VariantSelector = ({
 
                         <div
                           className={cn(
-                            "bg-foreground invisible mt-1 h-[2px] w-6",
+                            "bg-foreground invisible mt-1 h-[2px] w-6 transition-all duration-200",
                             isSelected && "visible",
                           )}
                         ></div>
@@ -159,6 +194,7 @@ export const VariantSelector = ({
                         variant="outline"
                         key={valueSlug}
                         value={valueSlug}
+                        className="h-9 text-sm transition-all duration-200 hover:scale-105 hover:shadow-md data-[state=on]:scale-105 data-[state=on]:shadow-md"
                       >
                         {valueName}
                       </ToggleGroupItem>
@@ -182,6 +218,7 @@ export const VariantSelector = ({
 
       <AddToBag
         cart={cart}
+        quantity={quantity}
         variantId={
           matchingVariants?.length > 1
             ? discriminatedVariantId

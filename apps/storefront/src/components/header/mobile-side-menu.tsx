@@ -2,7 +2,7 @@
 
 import { User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef,useState } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import type { User } from "@nimara/domain/objects/User";
@@ -133,15 +133,16 @@ export const MobileSideMenu = ({
   // Обработка overscroll эффекта
   useEffect(() => {
     const container = scrollContainerRef.current;
-    if (!container || !isOpen) return;
+
+    if (!container || !isOpen) {return;}
 
     let isScrolling = false;
     let scrollTimeout: NodeJS.Timeout;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
-      const isAtTop = scrollTop <= 5;
+      const _isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+      const _isAtTop = scrollTop <= 5;
 
       if (!isScrolling) {
         isScrolling = true;
@@ -162,6 +163,7 @@ export const MobileSideMenu = ({
       if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
         e.preventDefault();
         const offset = Math.min(Math.abs(e.deltaY) / 10, 15);
+
         setOverscrollOffset(e.deltaY > 0 ? offset : -offset);
 
         setTimeout(() => {
@@ -172,6 +174,7 @@ export const MobileSideMenu = ({
 
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches[0];
+
       container.dataset.touchStartY = String(touch.clientY);
     };
 
@@ -186,6 +189,7 @@ export const MobileSideMenu = ({
 
       if ((isAtBottom && deltaY < 0) || (isAtTop && deltaY > 0)) {
         const offset = Math.min(Math.abs(deltaY) / 10, 20);
+
         setOverscrollOffset(deltaY < 0 ? offset : -offset);
       }
     };

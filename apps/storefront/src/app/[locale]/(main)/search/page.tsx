@@ -27,8 +27,10 @@ import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 
 import { Breadcrumbs } from "../../../../components/breadcrumbs";
-import { ProductsList } from "../_components/products-list";
 import { SearchPagination } from "../_components/search-pagination";
+import { ProductsListWithMode } from "./_components/products-list-with-mode";
+import { ProductsSkeletonWrapper } from "./_components/products-skeleton-wrapper";
+import { ViewModeProvider, ViewToggleControl } from "./_components/search-header";
 import { FiltersContainer } from "./_filters/filters-container";
 import { NoResults } from "./_listing/no-results";
 import { SearchSortBy } from "./_listing/search-sort-by";
@@ -452,49 +454,54 @@ async function SearchContent({
   })();
 
   return (
-    <div className="w-full">
-      <div
-        className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
-        style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
-      >
-        <Breadcrumbs pageName={header} />
-        <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
-          <h2 className="text-foreground text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
-            {header}
-          </h2>
-          <div className="flex gap-4">
-            <div className="hidden md:block">
-              <SearchSortBy options={viewModel.sortOptions} searchParams={searchParams} />
+    <ViewModeProvider>
+      <div className="w-full">
+        <div
+          className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
+          style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
+        >
+          <Breadcrumbs pageName={header} />
+          <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
+            <h2 className="text-foreground text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+              {header}
+            </h2>
+            <div className="flex gap-3">
+              <ViewToggleControl />
+              <div className="flex gap-4">
+                <div className="hidden md:block">
+                  <SearchSortBy options={viewModel.sortOptions} searchParams={searchParams} />
+                </div>
+                <Suspense fallback={<FiltersSkeleton />}>
+                  <SearchFilters
+                    serializedArgs={serializedFacetsArgs}
+                    searchParams={normalizedSearchParams}
+                    sortByOptions={viewModel.sortOptions}
+                  />
+                </Suspense>
+              </div>
             </div>
-            <Suspense fallback={<FiltersSkeleton />}>
-              <SearchFilters
-                serializedArgs={serializedFacetsArgs}
-                searchParams={normalizedSearchParams}
-                sortByOptions={viewModel.sortOptions}
-              />
-            </Suspense>
           </div>
         </div>
+
+        <section className="mx-auto mt-8 grid gap-8">
+          {viewModel.products.length ? (
+            <ProductsListWithMode products={viewModel.products} />
+          ) : (
+            <NoResults />
+          )}
+
+          {viewModel.pageInfo && (
+            <SearchPagination
+              pageInfo={viewModel.pageInfo}
+              searchParams={searchParams}
+              baseUrl={paths.search.asPath()}
+            />
+          )}
+        </section>
+
+        <JsonLd jsonLd={mappedSearchProductsToJsonLd(viewModel.products)} />
       </div>
-
-      <section className="mx-auto mt-8 grid gap-8">
-        {viewModel.products.length ? (
-          <ProductsList products={viewModel.products} />
-        ) : (
-          <NoResults />
-        )}
-
-        {viewModel.pageInfo && (
-          <SearchPagination
-            pageInfo={viewModel.pageInfo}
-            searchParams={searchParams}
-            baseUrl={paths.search.asPath()}
-          />
-        )}
-      </section>
-
-      <JsonLd jsonLd={mappedSearchProductsToJsonLd(viewModel.products)} />
-    </div>
+    </ViewModeProvider>
   );
 }
 
@@ -509,30 +516,35 @@ function SearchPageSkeleton({
 
   return (
     <div className="w-full">
-      <div className="mb-6 h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
-      <section className="mx-auto my-8 grid gap-8">
-        <div className="bg-background/95 sticky top-[120px] z-40 flex items-center justify-between backdrop-blur supports-[backdrop-filter]:bg-background/60 md:top-[96px]">
-          <h2 className="h-8 w-64 animate-pulse rounded bg-neutral-200 dark:bg-white/10">
+      <div
+        className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
+        style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
+      >
+        {/* Breadcrumbs skeleton */}
+        <div className="mb-4 h-4 w-32 animate-pulse rounded bg-muted/50" />
+
+        <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
+          {/* Title skeleton */}
+          <div className="h-8 w-64 animate-pulse rounded bg-muted/50">
             <span className="sr-only">{placeholderTitle}</span>
-          </h2>
-          <div className="flex gap-4">
-            <div className="hidden h-10 w-32 animate-pulse rounded-lg bg-neutral-200 md:block dark:bg-white/10" />
-            <FiltersSkeleton />
+          </div>
+
+          <div className="flex gap-3">
+            {/* ViewToggle skeleton */}
+            <div className="h-10 w-28 animate-pulse rounded-lg bg-muted/50" />
+
+            <div className="flex gap-4">
+              {/* Sort skeleton */}
+              <div className="hidden h-10 w-32 animate-pulse rounded-lg bg-muted/50 md:block" />
+              {/* Filter skeleton */}
+              <div className="h-10 w-10 animate-pulse rounded-xl bg-muted/50 sm:w-28" />
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className="flex flex-col gap-3 rounded-2xl border border-neutral-200 p-4 dark:border-white/10"
-            >
-              <div className="aspect-[3/4] w-full animate-pulse rounded-xl bg-neutral-200 dark:bg-white/10" />
-              <div className="h-4 w-3/4 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
-              <div className="h-4 w-1/2 animate-pulse rounded bg-neutral-200 dark:bg-white/10" />
-            </div>
-          ))}
-        </div>
+      <section className="mx-auto mt-8 grid gap-8">
+        <ProductsSkeletonWrapper />
       </section>
     </div>
   );

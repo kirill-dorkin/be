@@ -1,4 +1,4 @@
-import { ArrowLeft, Home, Search } from "lucide-react";
+import { Home, Search } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { Button } from "@nimara/ui/components/button";

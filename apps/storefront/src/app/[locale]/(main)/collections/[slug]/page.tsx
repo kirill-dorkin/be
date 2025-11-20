@@ -13,8 +13,9 @@ import { getCurrentRegion } from "@/regions/server";
 import { type SupportedLocale } from "@/regions/types";
 import { getCollectionService } from "@/services/collection";
 
-import { ProductsList } from "../../_components/products-list";
 import { SearchPagination } from "../../_components/search-pagination";
+import { ProductsListWithMode } from "../../search/_components/products-list-with-mode";
+import { ViewModeProvider, ViewToggleControl } from "../../search/_components/search-header";
 
 type PageProps = {
   params: Promise<{
@@ -121,41 +122,54 @@ export default async function Page(props: PageProps) {
   const pageInfo = getCollectionResult.data.pageInfo;
 
   return (
-    <div className="mb-8 grid w-full gap-8">
-      <Breadcrumbs pageName={collection.name} />
-      <div className="grid basis-full items-center justify-center gap-4 md:flex">
-        <h1 className="text-slate-700 dark:text-primary text-center text-2xl">
-          {collection?.name}
-        </h1>
-      </div>
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-2xl rounded-2xl border border-border/60 bg-muted/30 p-6 dark:border-white/10 dark:bg-muted/20">
-        {collection?.thumbnail ? (
-          <Image
-            src={collection.thumbnail.url}
-            alt={collection.thumbnail.alt || collection.name}
-            fill
-            quality={IMAGE_QUALITY.high}
-            sizes="(max-width: 960px) 100vw, 50vw"
-            className="object-contain"
-          />
-        ) : null}
-      </div>
-      <div>
-        <RichText contentData={collection?.description} />
-      </div>
+    <ViewModeProvider>
+      <div className="mb-8 w-full">
+        <Breadcrumbs pageName={collection.name} />
 
-      <hr />
+        <div className="mt-8 grid basis-full items-center justify-center gap-4 md:flex">
+          <h1 className="text-slate-700 dark:text-primary text-center text-2xl">
+            {collection?.name}
+          </h1>
+        </div>
 
-      <h2 className="text-2xl">{t("associated-products")}</h2>
+        <div className="relative mx-auto mt-8 aspect-[4/3] w-full max-w-2xl rounded-2xl border border-border/60 bg-muted/30 p-6 dark:border-white/10 dark:bg-muted/20">
+          {collection?.thumbnail ? (
+            <Image
+              src={collection.thumbnail.url}
+              alt={collection.thumbnail.alt || collection.name}
+              fill
+              quality={IMAGE_QUALITY.high}
+              sizes="(max-width: 960px) 100vw, 50vw"
+              className="object-contain"
+            />
+          ) : null}
+        </div>
 
-      <ProductsList products={collection.products} />
-      {pageInfo && (
-        <SearchPagination
-          pageInfo={pageInfo}
-          searchParams={searchParams}
-          baseUrl={paths.collections.asPath({ slug })}
-        />
-      )}
-    </div>
+        <div className="mt-8">
+          <RichText contentData={collection?.description} />
+        </div>
+
+        <hr className="my-8" />
+
+        <div className="flex items-center justify-between border-b border-border/40 pb-4">
+          <h2 className="text-foreground text-2xl font-semibold leading-tight tracking-tight">
+            {t("associated-products")}
+          </h2>
+          <ViewToggleControl />
+        </div>
+
+        <section className="mx-auto mt-8 grid gap-8">
+          <ProductsListWithMode products={collection.products} />
+
+          {pageInfo && (
+            <SearchPagination
+              pageInfo={pageInfo}
+              searchParams={searchParams}
+              baseUrl={paths.collections.asPath({ slug })}
+            />
+          )}
+        </section>
+      </div>
+    </ViewModeProvider>
   );
 }
