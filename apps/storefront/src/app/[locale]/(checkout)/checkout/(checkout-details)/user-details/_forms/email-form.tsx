@@ -37,36 +37,43 @@ const UserEmailFormComponent = ({
 
   // Мемоизация обработчика submit
   const handleSubmit = useCallback(async ({ email }: EmailFormSchema) => {
-    const checkResult = await checkIfUserHasAnAccount(email);
+    try {
+      const checkResult = await checkIfUserHasAnAccount(email);
 
-    if (checkResult.ok && checkResult.data.user) {
-      setUserAccountEmail(checkResult.data.user.email);
+      if (checkResult.ok && checkResult.data.user) {
+        setUserAccountEmail(checkResult.data.user.email);
 
-      return;
-    }
-
-    const result = await updateUserDetails({
-      checkout,
-      email,
-    });
-
-    if (result.ok) {
-      push(result.data.redirectUrl);
-
-      return;
-    }
-
-    result.errors.map((error) => {
-      if (error.field) {
-        form.setError(error.field as keyof EmailFormSchema, {
-          message: t(`errors.${error.code}`),
-        });
-      } else {
-        form.setError("root", {
-          message: t(`errors.${error.code}`),
-        });
+        return;
       }
-    });
+
+      const result = await updateUserDetails({
+        checkout,
+        email,
+      });
+
+      if (result.ok) {
+        push(result.data.redirectUrl);
+
+        return;
+      }
+
+      result.errors.map((error) => {
+        if (error.field) {
+          form.setError(error.field as keyof EmailFormSchema, {
+            message: t(`errors.${error.code}`),
+          });
+        } else {
+          form.setError("root", {
+            message: t(`errors.${error.code}`),
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Email form submission error:", error);
+      form.setError("root", {
+        message: t("errors.UNKNOWN_ERROR"),
+      });
+    }
   }, [checkout, setUserAccountEmail, push, form, t]);
 
   // Мемоизация кода ошибки сервера

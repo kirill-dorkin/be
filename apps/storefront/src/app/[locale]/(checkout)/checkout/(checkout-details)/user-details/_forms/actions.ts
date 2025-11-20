@@ -27,19 +27,26 @@ export const updateUserDetails = async ({
   checkout: Checkout;
   email: EmailFormSchema["email"];
 }): AsyncResult<{ redirectUrl: string }> => {
-  const checkoutService = await getCheckoutService();
-  const result = await checkoutService.checkoutEmailUpdate({
-    checkout,
-    email: email,
-  });
-
-  if (result.ok) {
-    return ok({
-      redirectUrl: checkout.isShippingRequired
-        ? paths.checkout.shippingAddress.asPath()
-        : paths.checkout.payment.asPath(),
+  try {
+    const checkoutService = await getCheckoutService();
+    const result = await checkoutService.checkoutEmailUpdate({
+      checkout,
+      email: email,
     });
-  }
 
-  return result;
+    if (result.ok) {
+      return ok({
+        redirectUrl: checkout.isShippingRequired
+          ? paths.checkout.shippingAddress.asPath()
+          : paths.checkout.payment.asPath(),
+      });
+    }
+
+    console.error("Checkout email update failed:", result);
+
+    return result;
+  } catch (error) {
+    console.error("Error in updateUserDetails:", error);
+    throw error;
+  }
 };
