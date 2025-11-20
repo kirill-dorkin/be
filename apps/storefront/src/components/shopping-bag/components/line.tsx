@@ -137,201 +137,154 @@ const LineComponent = ({
   }, [width]);
 
   return (
-    <div className="grid grid-cols-12 grid-rows-2 items-start gap-3 rounded-lg border border-border/40 bg-card p-3 transition-all duration-200 hover:border-border/60 hover:shadow-sm md:grid-rows-1 md:items-center md:gap-4 md:p-4 [&>*]:transition-colors">
-      <div className="col-span-2 row-span-2 h-full md:row-span-1">
-        <LocalizedLink title={name} href={href} className="block">
+    <div className="group relative flex flex-col gap-3 rounded-xl border border-border/50 bg-card p-4 transition-all duration-200 hover:border-border/80 hover:shadow-md md:flex-row md:items-center md:gap-4 md:p-5">
+      <div className="flex gap-3 md:gap-4">
+        <LocalizedLink title={name} href={href} className="block shrink-0">
           {thumbnail ? (
             <Image
               src={thumbnail.url}
               alt={thumbnail.alt ?? name}
-              sizes="80px"
+              sizes="96px"
               width={IMAGE_SIZES.thumbnail}
               height={IMAGE_SIZES.thumbnail}
               quality={IMAGE_QUALITY.low}
               className={cn(
-                "h-16 w-16 object-cover rounded border border-border/40 bg-muted/30 p-0 transition-opacity duration-200 hover:opacity-80 sm:h-20 sm:w-20",
-                isOutOfStock && "grayscale opacity-60",
+                "h-20 w-20 object-cover rounded-lg border border-border/40 bg-muted/30 transition-all duration-200 hover:scale-105 sm:h-24 sm:w-24",
+                isOutOfStock && "grayscale opacity-50",
               )}
             />
           ) : (
             <ProductImagePlaceholder
-              height={80}
-              width={80}
-              className={cn("rounded", isOutOfStock && "grayscale opacity-60")}
+              height={96}
+              width={96}
+              className={cn("rounded-lg", isOutOfStock && "grayscale opacity-50")}
             />
           )}
         </LocalizedLink>
-      </div>
 
-      <div
-        className={cn("col-span-9 md:col-span-5", {
-          "md:col-span-6": !isLineEditable,
-        })}
-      >
-        <LocalizedLink title={name} href={href} className="grow">
-          <p
-            className={cn("text-foreground text-sm font-medium break-words transition-colors hover:text-primary sm:text-base", {
-              "text-muted-foreground opacity-60": isOutOfStock,
-            })}
-          >
-            {formatProductName(name)}
-          </p>
-        </LocalizedLink>
-      </div>
-
-      <div className="col-span-5 row-span-2 flex hidden items-center gap-1 md:col-span-2 md:row-span-1 md:flex">
-        {isLineEditable ? (
-          <>
-            <Label
-              className={cn(
-                isOutOfStock
-                  ? "text-stone-500"
-                  : "text-muted-foreground",
-                "text-xs",
-              )}
-              htmlFor={`${id}:qty`}
+        <div className="flex flex-1 flex-col gap-2">
+          <LocalizedLink title={name} href={href} className="group/title">
+            <h3
+              className={cn("text-sm font-semibold leading-tight transition-colors group-hover/title:text-primary sm:text-base", {
+                "text-muted-foreground opacity-60": isOutOfStock,
+              })}
             >
-              {t("common.qty")}
-            </Label>
-            <Input
-              name={`${id}:qty`}
-              className={cn(
-                isOutOfStock
-                  ? "text-stone-400"
-                  : "text-stone-700 dark:text-stone-300",
-                "w-16 px-2 py-1.5 text-center text-sm",
-              )}
-              type="number appearance-none"
-              disabled={isDisabled}
-              value={value}
-              onChange={(evt) => setValue(evt.target.value)}
-              inputMode="numeric"
-              data-testid="cart-product-line-qty"
-              id={`${id}:qty`}
-            />
-          </>
-        ) : (
-          <p
-            className="text-sm text-stone-700 dark:text-stone-300"
-            data-testid="product-qty"
-          >
-            {t("common.qty")}: {value}
-          </p>
-        )}
-      </div>
+              {formatProductName(name)}
+            </h3>
+          </LocalizedLink>
 
-      <div className="col-span-5 row-span-2 flex items-center gap-1 md:col-span-2 md:row-span-1 md:hidden">
-        {isLineEditable && (
-          <>
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetContent
-                side="bottom"
-                className="max-h-[60vh] overflow-y-auto"
-              >
-                <SheetHeader className="sr-only">
-                  <SheetTitle>{t("common.qty")}</SheetTitle>
-                </SheetHeader>
-                <ul>
-                  {Array.from(
-                    { length: variant.maxQuantity },
-                    (_, i) => i + 1,
-                  ).map((qty) => (
-                    <li
-                      key={`${id}-${qty}`}
-                      className="flex cursor-pointer"
-                      onClick={() => {
-                        handleQuantityChange(qty);
-                        setIsOpen(false);
-                      }}
-                    >
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start p-1.5"
-                      >
-                        <CheckIcon
-                          className={cn("invisible mr-2 h-auto w-[20px]", {
-                            visible: qty === quantity,
-                          })}
-                        />
-                        {qty}
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              </SheetContent>
-            </Sheet>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            {isLineEditable ? (
+              <div className="flex items-center gap-1.5">
+                <Label
+                  className={cn(
+                    isOutOfStock ? "text-stone-500" : "text-muted-foreground",
+                    "text-xs",
+                  )}
+                  htmlFor={`${id}:qty`}
+                >
+                  {t("common.qty")}
+                </Label>
+                <div className="hidden sm:block">
+                  <Input
+                    name={`${id}:qty`}
+                    className={cn(
+                      isOutOfStock ? "text-stone-400" : "text-stone-700 dark:text-stone-300",
+                      "h-8 w-16 px-2 text-center text-sm",
+                    )}
+                    type="number appearance-none"
+                    disabled={isDisabled}
+                    value={value}
+                    onChange={(evt) => setValue(evt.target.value)}
+                    inputMode="numeric"
+                    data-testid="cart-product-line-qty"
+                    id={`${id}:qty`}
+                  />
+                </div>
+                <div className="block sm:hidden">
+                  <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                    <SheetContent side="bottom" className="max-h-[60vh] overflow-y-auto">
+                      <SheetHeader className="sr-only">
+                        <SheetTitle>{t("common.qty")}</SheetTitle>
+                      </SheetHeader>
+                      <ul>
+                        {Array.from({ length: variant.maxQuantity }, (_, i) => i + 1).map((qty) => (
+                          <li
+                            key={`${id}-${qty}`}
+                            className="flex cursor-pointer"
+                            onClick={() => {
+                              handleQuantityChange(qty);
+                              setIsOpen(false);
+                            }}
+                          >
+                            <Button variant="ghost" className="w-full justify-start p-1.5">
+                              <CheckIcon
+                                className={cn("invisible mr-2 h-auto w-[20px]", {
+                                  visible: qty === quantity,
+                                })}
+                              />
+                              {qty}
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    </SheetContent>
+                  </Sheet>
+                  <Select
+                    disabled={isDisabled}
+                    open={isOpen}
+                    onValueChange={(qty) => handleQuantityChange(Number(qty))}
+                    onOpenChange={() => setIsOpen(true)}
+                    value={value}
+                    aria-expanded={isOpen}
+                    aria-controls="qty-select-options"
+                  >
+                    <SelectTrigger className="h-8 w-auto min-w-[64px] gap-1 px-2 text-sm" aria-labelledby={`${id}:qty`}>
+                      <SelectValue placeholder={t("common.qty")} />
+                    </SelectTrigger>
+                    <SelectContent className="overflow-y-auto">
+                      {Array.from({ length: variant.maxQuantity }, (_, i) => i + 1).map((qty) => (
+                        <SelectItem key={qty} value={qty.toString()}>
+                          {qty}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-xs" data-testid="product-qty">
+                {t("common.qty")}: {value}
+              </p>
+            )}
 
-            <Label
-              className={cn(
-                isOutOfStock ? "text-stone-500" : "text-muted-foreground",
-                "text-xs",
-              )}
-              htmlFor={`${id}:qty`}
+            <div
+              className={cn("flex items-center", {
+                "text-muted-foreground opacity-60": isOutOfStock,
+              })}
+              data-testid="shopping-bag-product-line-price"
             >
-              {t("common.qty")}
-            </Label>
-            <Select
-              disabled={isDisabled}
-              open={isOpen}
-              onValueChange={(qty) => handleQuantityChange(Number(qty))}
-              onOpenChange={() => setIsOpen(true)}
-              value={value}
-              aria-expanded={isOpen}
-              aria-controls="qty-select-options"
-            >
-              <SelectTrigger
-                className="w-auto min-w-[64px] gap-1 px-2 py-1.5 text-sm"
-                aria-labelledby={`${id}:qty`}
-              >
-                <SelectValue placeholder={t("common.qty")} />
-              </SelectTrigger>
-              <SelectContent className="overflow-y-auto">
-                {Array.from(
-                  { length: variant.maxQuantity },
-                  (_, i) => i + 1,
-                ).map((qty) => (
-                  <SelectItem key={qty} value={qty.toString()}>
-                    {qty}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </>
-        )}
-      </div>
-
-      <div className="col-span-5 row-span-1 md:col-span-2">
-        <p
-          className={cn("flex justify-end", {
-            "text-muted-foreground opacity-60": isOutOfStock,
-          })}
-          data-testid="shopping-bag-product-line-price"
-        >
-          <Price
-            price={finalLineTotal}
-            undiscountedPrice={undiscountedLineTotal}
-            size="small"
-          />
-        </p>
+              <Price price={finalLineTotal} undiscountedPrice={undiscountedLineTotal} size="small" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {isLineEditable && (
-        <div className="col-start-12 col-end-12 row-start-1 row-end-1 flex items-center justify-center md:row-span-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled={isDisabled}
-            onClick={handleLineDelete}
-            aria-label={t("cart.remove-button")}
-            className="hover:bg-destructive/10 hover:text-destructive"
-          >
-            <X height={18} width={18} />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          disabled={isDisabled}
+          onClick={handleLineDelete}
+          aria-label={t("cart.remove-button")}
+          className="absolute right-2 top-2 hover:bg-destructive/10 hover:text-destructive md:relative md:right-0 md:top-0 md:ml-auto"
+        >
+          <X height={18} width={18} />
+        </Button>
       )}
       {showMaxQuantityWarning && (
-        <div className="col-span-12 mt-2 flex items-center gap-2 text-red-500">
-          <AlertCircle size={16} />
+        <div className="flex w-full items-center gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/30 dark:text-red-400">
+          <AlertCircle size={16} className="shrink-0" />
           <span>
             {t("cart.max-quantity", { maxQuantity: variant.maxQuantity })}
           </span>
