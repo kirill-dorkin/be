@@ -15,20 +15,22 @@ export const DeliveryMethodSection = async ({
   const tc = await getTranslations("common");
 
   return (
-    <section className="flex justify-between pt-8">
-      <div className="space-y-2">
-        <h3 className="scroll-m-20 text-2xl tracking-tight">{t("title")}</h3>
-        <p className="text-foreground text-sm font-normal leading-5">
-          {checkout.deliveryMethod?.name}
-        </p>
+    <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 space-y-2">
+          <h3 className="text-lg font-semibold text-foreground sm:text-xl">{t("title")}</h3>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {checkout.deliveryMethod?.name || t("select-delivery-method")}
+          </p>
+        </div>
+        {checkout.deliveryMethod && (
+          <Button variant="outline" size="sm" asChild className="shrink-0">
+            <LocalizedLink href={paths.checkout.deliveryMethod.asPath()}>
+              {tc("edit")}
+            </LocalizedLink>
+          </Button>
+        )}
       </div>
-      {checkout.deliveryMethod && (
-        <Button variant="outline" asChild>
-          <LocalizedLink href={paths.checkout.deliveryMethod.asPath()}>
-            {tc("edit")}
-          </LocalizedLink>
-        </Button>
-      )}
     </section>
   );
 };

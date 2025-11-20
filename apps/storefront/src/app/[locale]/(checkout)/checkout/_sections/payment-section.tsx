@@ -5,9 +5,15 @@ export function PaymentSection({ children }: { children?: ReactNode }) {
   const t = useTranslations("payment");
 
   return (
-    <section className="py-8">
-      <h2 className="scroll-m-20 pb-8 text-2xl tracking-tight">{t("title")}</h2>
-      {children}
+    <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-foreground sm:text-xl">{t("title")}</h3>
+        {children ? (
+          children
+        ) : (
+          <p className="text-sm text-muted-foreground">{t("select-payment-method")}</p>
+        )}
+      </div>
     </section>
   );
 }

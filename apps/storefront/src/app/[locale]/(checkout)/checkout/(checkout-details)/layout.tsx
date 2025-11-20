@@ -26,11 +26,11 @@ export default function Layout({
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
       <div className="flex justify-center xl:mr-48 xl:justify-end">
-        <main className="w-full max-w-md space-y-4 p-4">
-          <div className="flex w-full">
+        <main className="w-full max-w-md space-y-6 p-4 sm:p-6">
+          <div className="flex w-full pb-4">
             <Logo />
           </div>
-          <div className="flex flex-col gap-8 divide-y pt-8">{children}</div>
+          <div className="flex flex-col gap-6">{children}</div>
         </main>
       </div>
       <aside className="hidden bg-gray-100 md:block dark:bg-stone-900">
