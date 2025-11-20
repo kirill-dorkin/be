@@ -50,7 +50,7 @@ export default async function HelpLayout({
 
   return (
     <div className="bg-background">
-      <div className="container py-6 sm:py-10 lg:py-14 xl:py-16">
+      <div className="container py-6 pb-20 sm:py-10 sm:pb-24 lg:py-14 lg:pb-16 xl:py-16">
         <div className="grid gap-6 sm:gap-8 lg:grid-cols-[18rem_minmax(0,1fr)]">
           <HelpNavigation
             heading={{
