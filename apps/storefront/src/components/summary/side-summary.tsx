@@ -55,7 +55,9 @@ export const SideSummary = async () => {
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost">{t("show-summary")}</Button>
+            <Button variant="outline" size="sm" className="text-sm font-medium">
+              {t("show-summary")}
+            </Button>
           </SheetTrigger>
           <SheetContent side="right-full">
             <SheetHeader className="sr-only">
