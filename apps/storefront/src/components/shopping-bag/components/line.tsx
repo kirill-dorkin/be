@@ -149,7 +149,7 @@ const LineComponent = ({
               height={IMAGE_SIZES.thumbnail}
               quality={IMAGE_QUALITY.low}
               className={cn(
-                "h-16 w-16 object-contain rounded border border-border/40 bg-muted/30 p-1.5 transition-opacity duration-200 hover:opacity-80 sm:h-20 sm:w-20",
+                "h-16 w-16 object-cover rounded border border-border/40 bg-muted/30 p-0 transition-opacity duration-200 hover:opacity-80 sm:h-20 sm:w-20",
                 isOutOfStock && "grayscale opacity-60",
               )}
             />
@@ -198,7 +198,7 @@ const LineComponent = ({
                 isOutOfStock
                   ? "text-stone-400"
                   : "text-stone-700 dark:text-stone-300",
-                "w-14 py-2",
+                "w-20 px-3 py-2 text-center",
               )}
               type="number appearance-none"
               disabled={isDisabled}
@@ -278,7 +278,7 @@ const LineComponent = ({
               aria-controls="qty-select-options"
             >
               <SelectTrigger
-                className="w-auto gap-1 px-2 py-2"
+                className="w-auto min-w-[80px] gap-1 px-3 py-2"
                 aria-labelledby={`${id}:qty`}
               >
                 <SelectValue placeholder={t("common.qty")} />
@@ -300,7 +300,7 @@ const LineComponent = ({
 
       <div className="col-span-5 row-span-1 md:col-span-2">
         <p
-          className={cn("flex justify-end text-sm font-medium text-foreground sm:text-base", {
+          className={cn("flex justify-end text-xs font-medium text-foreground sm:text-sm", {
             "text-muted-foreground opacity-60": isOutOfStock,
           })}
           data-testid="shopping-bag-product-line-price"
