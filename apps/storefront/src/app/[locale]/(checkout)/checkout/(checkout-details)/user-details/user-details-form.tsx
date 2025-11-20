@@ -79,7 +79,6 @@ export const UserDetailsForm = ({ checkout }: { checkout: Checkout }) => {
         <UserEmailForm
           form={emailForm}
           checkout={checkout}
-          setUserAccountEmail={setUserAccountEmail}
         />
       )}
     </section>

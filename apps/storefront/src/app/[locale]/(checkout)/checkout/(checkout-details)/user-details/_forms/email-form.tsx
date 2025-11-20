@@ -14,17 +14,15 @@ import { useRouterWithState } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import type { TranslationMessage } from "@/types";
 
-import { checkIfUserHasAnAccount, updateUserDetails } from "./actions";
+import { updateUserDetails } from "./actions";
 import { type EmailFormSchema } from "./schema";
 
 const UserEmailFormComponent = ({
   checkout,
   form,
-  setUserAccountEmail,
 }: {
   checkout: Checkout;
   form: UseFormReturn<EmailFormSchema>;
-  setUserAccountEmail: (email: string) => void;
 }) => {
   const t = useTranslations();
   const { isRedirecting, push } = useRouterWithState();
@@ -40,18 +38,9 @@ const UserEmailFormComponent = ({
     console.log("🔵 Form submitted with email:", email);
 
     try {
-      console.log("🔵 Checking if user exists...");
-      const checkResult = await checkIfUserHasAnAccount(email);
-      console.log("🔵 Check result:", checkResult);
-
-      if (checkResult.ok && checkResult.data.user) {
-        console.log("🔵 User found, setting email:", checkResult.data.user.email);
-        setUserAccountEmail(checkResult.data.user.email);
-
-        return;
-      }
-
-      console.log("🔵 User not found, updating checkout email...");
+      // Сразу обновляем checkout с email, без проверки существования пользователя
+      // Проверка пользователя нужна только если хотим предложить вход
+      console.log("🔵 Updating checkout email...");
       const result = await updateUserDetails({
         checkout,
         email,
@@ -83,7 +72,7 @@ const UserEmailFormComponent = ({
         message: t("errors.UNKNOWN_ERROR"),
       });
     }
-  }, [checkout, setUserAccountEmail, push, form, t]);
+  }, [checkout, push, form, t]);
 
   // Мемоизация кода ошибки сервера
   const serverErrorCode = useMemo(
