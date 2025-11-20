@@ -198,7 +198,7 @@ const LineComponent = ({
                 isOutOfStock
                   ? "text-stone-400"
                   : "text-stone-700 dark:text-stone-300",
-                "w-14",
+                "w-14 py-2",
               )}
               type="number appearance-none"
               disabled={isDisabled}
@@ -278,7 +278,7 @@ const LineComponent = ({
               aria-controls="qty-select-options"
             >
               <SelectTrigger
-                className="w-auto gap-1 px-2"
+                className="w-auto gap-1 px-2 py-2"
                 aria-labelledby={`${id}:qty`}
               >
                 <SelectValue placeholder={t("common.qty")} />
@@ -300,8 +300,8 @@ const LineComponent = ({
 
       <div className="col-span-5 row-span-1 md:col-span-2">
         <p
-          className={cn("flex justify-end text-stone-700 dark:text-stone-300", {
-            "text-stone-400": isOutOfStock,
+          className={cn("flex justify-end text-sm font-medium text-foreground sm:text-base", {
+            "text-muted-foreground opacity-60": isOutOfStock,
           })}
           data-testid="shopping-bag-product-line-price"
         >
