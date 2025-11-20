@@ -57,6 +57,46 @@
     --header-height-desktop: 64px;
   }
 
+  /* Убираем стандартные браузерные выделения и outline */
+  *:focus-visible {
+    outline: none;
+  }
+
+  /* Убираем outline для всех браузеров на интерактивных элементах */
+  button:focus,
+  select:focus,
+  input:focus,
+  textarea:focus,
+  a:focus,
+  [role="button"]:focus,
+  [role="combobox"]:focus,
+  [role="listbox"]:focus,
+  [role="option"]:focus {
+    outline: none;
+  }
+
+  /* Убираем tap highlight на мобильных устройствах */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* Убираем blue outline в Firefox */
+  *::-moz-focus-inner {
+    border: 0;
+  }
+
+  /* Убираем стандартные стили select в разных браузерах */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
   .dark {
     --background: 12, 6%, 15%;
     --foreground: 20, 7.1%, 90.2%;
@@ -230,5 +270,105 @@
   a,
   [role="button"] {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Анимация выкатывания вниз с bounce (открытие) */
+  @keyframes select-slide-down {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0) scaleY(0.96);
+    }
+    70% {
+      opacity: 1;
+      transform: translate3d(0, 1px, 0) scaleY(1.01);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scaleY(1);
+    }
+  }
+
+  /* Анимация закрытия вверх с bounce (закрытие для bottom) */
+  @keyframes select-slide-down-close {
+    0% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scaleY(1);
+    }
+    30% {
+      opacity: 0.7;
+      transform: translate3d(0, 1px, 0) scaleY(1.01);
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0) scaleY(0.96);
+    }
+  }
+
+  /* Анимация выкатывания вверх с bounce (открытие) */
+  @keyframes select-slide-up {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 6px, 0) scaleY(0.96);
+    }
+    70% {
+      opacity: 1;
+      transform: translate3d(0, -1px, 0) scaleY(1.01);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scaleY(1);
+    }
+  }
+
+  /* Анимация закрытия вниз с bounce (закрытие для top) */
+  @keyframes select-slide-up-close {
+    0% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scaleY(1);
+    }
+    30% {
+      opacity: 0.7;
+      transform: translate3d(0, -1px, 0) scaleY(1.01);
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(0, 6px, 0) scaleY(0.96);
+    }
+  }
+
+  /* Плавное появление всех элементов вместе */
+  @keyframes select-item-fade {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -2px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  [role="option"] {
+    animation: select-item-fade 0.2s ease-out forwards;
+  }
+
+  /* Плавное вращение стрелочки вправо: от вниз (↓) до вправо (→) */
+  @keyframes arrow-bounce {
+    0% {
+      transform: rotate(0deg) translateZ(0);
+    }
+    100% {
+      transform: rotate(-90deg) translateZ(0);
+    }
+  }
+
+  /* Плавное вращение стрелочки обратно: от вправо (→) до вниз (↓) */
+  @keyframes arrow-bounce-reverse {
+    0% {
+      transform: rotate(-90deg) translateZ(0);
+    }
+    100% {
+      transform: rotate(0deg) translateZ(0);
+    }
   }
 }
