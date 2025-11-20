@@ -25,6 +25,9 @@ export async function ShippingAddressSection({
           <h3 className="text-lg font-semibold text-foreground sm:text-xl">
             {t("shipping-address.title")}
           </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t("shipping-address.add-address")}
+          </p>
         </div>
       </section>
     );

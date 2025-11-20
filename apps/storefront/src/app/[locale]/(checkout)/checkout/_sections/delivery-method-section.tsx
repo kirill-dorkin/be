@@ -19,11 +19,9 @@ export const DeliveryMethodSection = async ({
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
           <h3 className="text-lg font-semibold text-foreground sm:text-xl">{t("title")}</h3>
-          {checkout.deliveryMethod?.name && (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {checkout.deliveryMethod.name}
-            </p>
-          )}
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {checkout.deliveryMethod?.name || t("select-delivery-method")}
+          </p>
         </div>
         {checkout.deliveryMethod && (
           <Button variant="outline" size="sm" asChild className="shrink-0">

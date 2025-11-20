@@ -762,7 +762,8 @@
   },
   "shipping-address": {
     "title": "Адрес доставки",
-    "loading-fields": "Смена страны..."
+    "loading-fields": "Смена страны...",
+    "add-address": "Добавьте адрес доставки"
   },
   "user-details": {
     "title": "Email",
@@ -771,7 +772,8 @@
   },
   "delivery-method": {
     "title": "Доставка",
-    "delivery-method": "Способ доставки"
+    "delivery-method": "Способ доставки",
+    "select-delivery-method": "Выберите способ доставки"
   },
   "payment": {
     "credit-cards": "Банковские карты",
@@ -783,6 +785,7 @@
     "paypal-accounts": "Аккаунты PayPal",
     "exp-date": "Срок",
     "title": "Оплата",
+    "select-payment-method": "Выберите способ оплаты",
     "placeOrder": "Оформить заказ",
     "paymentProcessing": "Оплата обрабатывается",
     "payment-methods": "Способы оплаты",
