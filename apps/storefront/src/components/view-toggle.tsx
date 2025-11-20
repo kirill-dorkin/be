@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid, SquareStack, List } from "lucide-react";
+import { LayoutGrid, List, SquareStack } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 

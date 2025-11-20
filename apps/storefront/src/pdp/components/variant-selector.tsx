@@ -60,6 +60,7 @@ export const VariantSelector = ({
   useEffect(() => {
     if (currentVariantId && cart) {
       const cartLine = cart.lines.find((line) => line.variant.id === currentVariantId);
+
       if (cartLine && cartLine.quantity !== quantity) {
         setQuantity(cartLine.quantity);
       }

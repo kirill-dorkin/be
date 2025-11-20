@@ -30,6 +30,7 @@ const QuantitySelectorComponent = ({
   const handleSelectChange = useCallback(
     (newValue: string) => {
       const qty = parseInt(newValue, 10);
+
       if (!isNaN(qty)) {
         onChange(qty);
       }

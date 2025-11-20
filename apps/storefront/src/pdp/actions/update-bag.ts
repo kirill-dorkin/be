@@ -27,6 +27,7 @@ export const updateBagAction = async ({
 
   if (!cookieCartId) {
     storefrontLogger.error("No cart ID found in cookie");
+
     return {
       ok: false,
       errors: [{ field: "cartId", message: "No cart found" }],

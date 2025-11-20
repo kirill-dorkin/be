@@ -49,13 +49,18 @@ return cart.lines.some((line) => line.variant.id === variantId);
     if (!cart || !variantId) {
       return null;
     }
+
     const line = cart.lines.find((line) => line.variant.id === variantId);
+
     return line ? { quantity: line.quantity, lineId: line.id } : null;
   }, [cart, variantId]);
 
   // Check if quantity has changed from what's in cart
   const quantityChanged = useMemo(() => {
-    if (!cartLineInfo) return false;
+    if (!cartLineInfo) {
+      return false;
+    }
+
     return cartLineInfo.quantity !== quantity;
   }, [cartLineInfo, quantity]);
 
@@ -164,7 +169,9 @@ return actualIsInCart;
   }, [variantId, toast, t, router]);
 
   const handleProductUpdate = useCallback(() => {
-    if (!cartLineInfo) return;
+    if (!cartLineInfo) {
+      return;
+    }
 
     startTransition(async () => {
       // Set loading state immediately
@@ -214,15 +221,25 @@ return actualIsInCart;
 
   // Determine button variant with smooth transitions
   const buttonVariant = useMemo(() => {
-    if (processingState === "adding") {return "default";}
-    if (processingState === "removing") {return "destructive";}
-    if (processingState === "updating") {return "default";}
+    if (processingState === "adding") {
+      return "default";
+    }
 
-// If in cart and quantity changed, show update style (default)
+    if (processingState === "removing") {
+      return "destructive";
+    }
+
+    if (processingState === "updating") {
+      return "default";
+    }
+
+    // If in cart and quantity changed, show update style (default)
     // If in cart and quantity same, show remove style (destructive)
-    if (isInCart && quantityChanged) {return "default";}
+    if (isInCart && quantityChanged) {
+      return "default";
+    }
 
-return isInCart ? "destructive" : "default";
+    return isInCart ? "destructive" : "default";
   }, [processingState, isInCart, quantityChanged]);
 
   // Determine button content based on state
