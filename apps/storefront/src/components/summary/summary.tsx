@@ -1,3 +1,5 @@
+"use client";
+
 import { type Checkout } from "@nimara/domain/objects/Checkout";
 
 import { ShoppingBag } from "@/components/shopping-bag";
