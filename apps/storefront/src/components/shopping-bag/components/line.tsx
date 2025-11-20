@@ -173,7 +173,7 @@ const LineComponent = ({
             </h3>
           </LocalizedLink>
 
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             {isLineEditable ? (
               <div className="flex items-center gap-1.5">
                 <Label
