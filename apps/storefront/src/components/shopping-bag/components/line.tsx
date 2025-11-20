@@ -302,7 +302,7 @@ const LineComponent = ({
 
       <div className="col-span-5 row-span-1 md:col-span-2">
         <p
-          className={cn("flex justify-end text-xs font-medium text-foreground sm:text-sm", {
+          className={cn("flex justify-end", {
             "text-muted-foreground opacity-60": isOutOfStock,
           })}
           data-testid="shopping-bag-product-line-price"
@@ -310,6 +310,7 @@ const LineComponent = ({
           <Price
             price={finalLineTotal}
             undiscountedPrice={undiscountedLineTotal}
+            size="small"
           />
         </p>
       </div>

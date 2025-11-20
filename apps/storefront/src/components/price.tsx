@@ -10,6 +10,7 @@ type Props = {
   className?: string;
   hasFreeVariants?: boolean;
   price?: TaxedPrice;
+  size?: "default" | "small";
   startPrice?: TaxedPrice;
   undiscountedPrice?: TaxedPrice;
 };
@@ -42,6 +43,7 @@ const PriceComponent = ({
   className,
   hasFreeVariants,
   price,
+  size = "default",
   startPrice,
   undiscountedPrice,
 }: Props) => {
@@ -62,11 +64,24 @@ const PriceComponent = ({
     return formatter.price({ amount: priceToFormat.amount });
   };
 
+  // Size classes
+  const sizeClasses = size === "small"
+    ? {
+        free: "text-lg",
+        price: "text-base md:text-lg lg:text-xl",
+        oldPrice: "mr-2 text-xs md:mr-3 md:text-sm",
+      }
+    : {
+        free: "text-3xl",
+        price: "text-2xl md:text-3xl lg:text-4xl",
+        oldPrice: "mr-2 text-base md:mr-3 md:text-lg",
+      };
+
   // A specific variant is selected (price is defined).
   if (price) {
     if (price.amount === 0) {
       return (
-        <span className={`text-lg font-bold ${className}`}>
+        <span className={`${sizeClasses.free} font-bold ${className}`}>
           {t("common.free")}
         </span>
       );
@@ -77,11 +92,11 @@ const PriceComponent = ({
     return (
       <span className={className}>
         {hasDiscount && oldPrice && (
-          <span className="mr-2 text-xs text-gray-500 line-through md:mr-3 md:text-sm dark:text-gray-400">
+          <span className={`${sizeClasses.oldPrice} text-gray-500 line-through dark:text-gray-400`}>
             {renderPrice(oldPrice)}
           </span>
         )}
-        <span className="text-base font-bold md:text-lg lg:text-xl">{renderPrice(price)}</span>
+        <span className={`${sizeClasses.price} font-bold`}>{renderPrice(price)}</span>
       </span>
     );
   }
@@ -89,7 +104,7 @@ const PriceComponent = ({
   // No specific variant is selected.
   if (hasFreeVariants) {
     return (
-      <span className={`text-base font-bold md:text-lg lg:text-xl ${className}`}>
+      <span className={`${sizeClasses.price} font-bold ${className}`}>
         {t("common.free")}
       </span>
     );
@@ -98,7 +113,7 @@ const PriceComponent = ({
   //  No free variants.
   if (startPrice) {
     return (
-      <span className={`text-base font-bold md:text-lg lg:text-xl ${className}`}>
+      <span className={`${sizeClasses.price} font-bold ${className}`}>
         {startPrice.amount === 0
           ? t("common.free")
           : t("common.from-price", { price: renderPrice(startPrice) })}
@@ -116,6 +131,7 @@ export const Price = memo(PriceComponent, (prevProps, nextProps) => {
     prevProps.undiscountedPrice?.amount === nextProps.undiscountedPrice?.amount &&
     prevProps.startPrice?.amount === nextProps.startPrice?.amount &&
     prevProps.hasFreeVariants === nextProps.hasFreeVariants &&
+    prevProps.size === nextProps.size &&
     prevProps.className === nextProps.className
   );
 });
