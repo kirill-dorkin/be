@@ -66,7 +66,7 @@ const PriceComponent = ({
   if (price) {
     if (price.amount === 0) {
       return (
-        <span className={`text-3xl font-bold ${className}`}>
+        <span className={`text-lg font-bold ${className}`}>
           {t("common.free")}
         </span>
       );
@@ -77,11 +77,11 @@ const PriceComponent = ({
     return (
       <span className={className}>
         {hasDiscount && oldPrice && (
-          <span className="mr-2 text-base text-gray-500 line-through md:mr-3 md:text-lg dark:text-gray-400">
+          <span className="mr-2 text-xs text-gray-500 line-through md:mr-3 md:text-sm dark:text-gray-400">
             {renderPrice(oldPrice)}
           </span>
         )}
-        <span className="text-2xl font-bold md:text-3xl lg:text-4xl">{renderPrice(price)}</span>
+        <span className="text-base font-bold md:text-lg lg:text-xl">{renderPrice(price)}</span>
       </span>
     );
   }
@@ -89,7 +89,7 @@ const PriceComponent = ({
   // No specific variant is selected.
   if (hasFreeVariants) {
     return (
-      <span className={`text-2xl font-bold md:text-3xl lg:text-4xl ${className}`}>
+      <span className={`text-base font-bold md:text-lg lg:text-xl ${className}`}>
         {t("common.free")}
       </span>
     );
@@ -98,7 +98,7 @@ const PriceComponent = ({
   //  No free variants.
   if (startPrice) {
     return (
-      <span className={`text-2xl font-bold md:text-3xl lg:text-4xl ${className}`}>
+      <span className={`text-base font-bold md:text-lg lg:text-xl ${className}`}>
         {startPrice.amount === 0
           ? t("common.free")
           : t("common.from-price", { price: renderPrice(startPrice) })}
