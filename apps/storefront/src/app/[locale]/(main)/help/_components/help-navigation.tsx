@@ -44,7 +44,7 @@ const HelpNavigationComponent = ({
   return (
     <nav
       aria-label="Help navigation"
-      className="sticky top-20 space-y-4 self-start rounded-xl border border-border/60 bg-card p-4 shadow-sm sm:top-24 sm:rounded-2xl sm:p-5 lg:p-6"
+      className="space-y-4 rounded-xl border border-border/60 bg-card p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:sticky lg:top-24 lg:self-start lg:p-6"
     >
       <div className="space-y-1.5 sm:space-y-2">
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
