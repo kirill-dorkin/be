@@ -18,7 +18,7 @@ export const ViewToggle = ({ currentView, onViewChange }: ViewToggleProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const views: Array<{ icon: typeof SquareStack; label: string; mode: ViewMode }> = [
-    { icon: SquareStack, label: t("grid"), mode: "grid" },
+    // { icon: SquareStack, label: t("grid"), mode: "grid" },
     { icon: LayoutGrid, label: t("compact"), mode: "compact" },
     { icon: List, label: t("list"), mode: "list" },
   ];
