@@ -179,14 +179,15 @@ const LineComponent = ({
         </LocalizedLink>
       </div>
 
-      <div className="col-span-5 row-span-2 flex hidden items-center gap-2 md:col-span-2 md:row-span-1 md:flex">
+      <div className="col-span-5 row-span-2 flex hidden items-center gap-1 md:col-span-2 md:row-span-1 md:flex">
         {isLineEditable ? (
           <>
             <Label
               className={cn(
                 isOutOfStock
                   ? "text-stone-500"
-                  : "text-stone-700 dark:text-stone-300",
+                  : "text-muted-foreground",
+                "text-xs",
               )}
               htmlFor={`${id}:qty`}
             >
@@ -198,7 +199,7 @@ const LineComponent = ({
                 isOutOfStock
                   ? "text-stone-400"
                   : "text-stone-700 dark:text-stone-300",
-                "w-20 px-3 py-2 text-center",
+                "w-16 px-2 py-1.5 text-center text-sm",
               )}
               type="number appearance-none"
               disabled={isDisabled}
@@ -219,7 +220,7 @@ const LineComponent = ({
         )}
       </div>
 
-      <div className="col-span-5 row-span-2 flex items-center gap-2 md:col-span-2 md:row-span-1 md:hidden">
+      <div className="col-span-5 row-span-2 flex items-center gap-1 md:col-span-2 md:row-span-1 md:hidden">
         {isLineEditable && (
           <>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -262,7 +263,8 @@ const LineComponent = ({
 
             <Label
               className={cn(
-                isOutOfStock ? "text-stone-500" : "text-foreground",
+                isOutOfStock ? "text-stone-500" : "text-muted-foreground",
+                "text-xs",
               )}
               htmlFor={`${id}:qty`}
             >
@@ -278,7 +280,7 @@ const LineComponent = ({
               aria-controls="qty-select-options"
             >
               <SelectTrigger
-                className="w-auto min-w-[80px] gap-1 px-3 py-2"
+                className="w-auto min-w-[64px] gap-1 px-2 py-1.5 text-sm"
                 aria-labelledby={`${id}:qty`}
               >
                 <SelectValue placeholder={t("common.qty")} />
