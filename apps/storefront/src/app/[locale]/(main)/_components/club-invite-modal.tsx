@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, MessageCircle, Sparkles } from "lucide-react";
+import { Crown, MessageCircle, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -69,37 +69,36 @@ export function ClubInviteModal() {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[min(90vw,420px)] rounded-[32px] border-0 bg-white p-0 shadow-[0_40px_120px_rgba(15,23,42,0.35)] dark:bg-stone-900">
+      <DialogContent className="max-w-[min(92vw,420px)] rounded-[36px] border-0 bg-gradient-to-b from-white via-white to-slate-50 p-0 shadow-[0_40px_120px_rgba(15,23,42,0.35)] dark:from-stone-900 dark:via-stone-900 dark:to-stone-900">
         <div className="relative flex flex-col gap-6 px-6 pb-6 pt-5">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <DialogHeader className="text-left">
-                <DialogTitle className="text-[22px] font-semibold leading-tight">
-                  Клуб BestElectronics
-                </DialogTitle>
-                <DialogDescription className="text-sm text-muted-foreground">
-                  Несколько бонусов, которые вы получите за регистрацию.
-                </DialogDescription>
-              </DialogHeader>
-            </div>
-            <DialogClose asChild>
-              <button className="h-9 w-9 rounded-full bg-muted text-muted-foreground transition hover:bg-muted/80">
-                ×
-              </button>
-            </DialogClose>
+          <DialogClose asChild>
+            <button className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition hover:bg-muted/80">
+              <X className="h-4 w-4" />
+            </button>
+          </DialogClose>
+
+          <div className="space-y-1 pr-8">
+            <DialogHeader className="text-left">
+              <DialogTitle className="text-[23px] font-semibold leading-tight text-slate-900 dark:text-white">
+                Клуб BestElectronics
+              </DialogTitle>
+              <DialogDescription className="text-sm text-muted-foreground">
+                Несколько бонусов, которые вы получите за регистрацию.
+              </DialogDescription>
+            </DialogHeader>
           </div>
 
           <div className="space-y-2">
             {benefits.map((benefit) => (
               <div
                 key={benefit.title}
-                className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/40 px-3 py-2"
+                className="flex items-center gap-3 rounded-3xl border border-border/60 bg-white/70 px-4 py-3 shadow-inner shadow-gray-100 transition dark:bg-stone-900/40"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/5 text-slate-900 dark:bg-white/10 dark:text-white">
                   <benefit.icon className="h-4 w-4" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-foreground">{benefit.title}</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-white">{benefit.title}</span>
                   <span className="text-xs text-muted-foreground">{benefit.description}</span>
                 </div>
               </div>
@@ -119,7 +118,7 @@ export function ClubInviteModal() {
             <Button
               asChild
               variant="ghost"
-              className="h-11 rounded-2xl border border-transparent bg-muted/60 text-base font-semibold text-foreground transition hover:bg-muted"
+              className="h-11 rounded-2xl border border-transparent bg-muted/70 text-base font-semibold text-foreground transition hover:bg-muted"
             >
               <LocalizedLink href={paths.createAccount.asPath()} onClick={() => handleOpenChange(false)}>
                 Зарегистрироваться
