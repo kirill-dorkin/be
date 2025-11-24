@@ -59,9 +59,13 @@ export const useAddressAutocomplete = (
           throw new Error("Failed to fetch address suggestions");
         }
 
-        const data: NominatimResult[] = await response.json();
+        const raw = (await response.json()) as unknown;
 
-        const formatted = data.map((result) => ({
+        if (!Array.isArray(raw)) {
+          throw new Error("Unexpected address autocomplete response");
+        }
+
+        const formatted = (raw as NominatimResult[]).map((result) => ({
           displayName: result.display_name,
           country: result.address.country,
           state: result.address.state,
