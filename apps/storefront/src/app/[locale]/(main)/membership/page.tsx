@@ -207,13 +207,20 @@ export default async function MembershipPage() {
               </div>
 
               <ul className="space-y-3">
-                {["discounted-prices", "free-shipping", "priority-support", "early-access", "exclusive-deals", "special-events"].map((key) => (
+                {[
+                  "comparison.member.features.discounted-prices",
+                  "comparison.member.features.free-shipping",
+                  "comparison.member.features.priority-support",
+                  "comparison.member.features.early-access",
+                  "comparison.member.features.exclusive-deals",
+                  "comparison.member.features.special-events",
+                ].map((key) => (
                   <li key={key} className="flex items-start gap-3">
                     <div className="mt-0.5 rounded-full bg-amber-500 p-1">
                       <Check className="h-4 w-4 text-white" />
                     </div>
                     <span className="text-sm font-medium">
-                      {t(`comparison.member.features.${key}`)}
+                      {t(key)}
                     </span>
                   </li>
                 ))}
