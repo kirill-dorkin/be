@@ -1,32 +1,31 @@
 "use client";
 
-import { MapPin, Loader2 } from "lucide-react";
+import { useDebounce } from "@uidotdev/usehooks";
+import { Loader2, MapPin } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { Input } from "@nimara/ui/components/input";
 import { cn } from "@nimara/ui/lib/utils";
 
-import { useDebounce } from "@uidotdev/usehooks";
-
 import { type AddressSuggestion, useAddressAutocomplete } from "@/lib/hooks/use-address-autocomplete";
 
 type AddressAutocompleteInputProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
   countryCode?: string;
-  locale?: string;
-  onAddressSelect?: (suggestion: AddressSuggestion) => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
   error?: boolean;
+  label: string;
+  locale?: string;
+  name: string;
+  onAddressSelect?: (suggestion: AddressSuggestion) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
   value?: string;
 };
 
 export const AddressAutocompleteInput = ({
   name,
-  label,
+  label: _label,
   placeholder,
   countryCode,
   locale,
@@ -46,7 +45,7 @@ export const AddressAutocompleteInput = ({
     locale,
   );
 
-  const fieldValue = watch(name);
+  const fieldValue = watch<string | undefined>(name);
 
   useEffect(() => {
     if (fieldValue && fieldValue !== inputValue) {
@@ -55,8 +54,19 @@ export const AddressAutocompleteInput = ({
   }, [fieldValue]);
 
   useEffect(() => {
+    if (
+      typeof externalValue === "string" &&
+      externalValue.length > 0 &&
+      externalValue !== inputValue
+    ) {
+      setInputValue(externalValue);
+      setValue(name, externalValue);
+    }
+  }, [externalValue, inputValue, name, setValue]);
+
+  useEffect(() => {
     if (debouncedValue && debouncedValue.length >= 3) {
-      searchAddress(debouncedValue);
+      void searchAddress(debouncedValue);
       setShowSuggestions(true);
     } else {
       setShowSuggestions(false);

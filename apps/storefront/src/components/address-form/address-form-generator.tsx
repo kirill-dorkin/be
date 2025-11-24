@@ -1,6 +1,5 @@
-import { useTranslations } from "next-intl";
-import { useFormContext } from "react-hook-form";
 import { type CountryCode } from "libphonenumber-js";
+import { useTranslations } from "next-intl";
 
 import {
   type AddressFormField,
@@ -25,13 +24,13 @@ const renderInput = ({
   locale,
   onAddressSelect,
 }: {
+  countryCode?: string;
   field: AddressFormField;
   isDisabled?: boolean;
-  schemaPrefix?: string;
-  t: GetTranslations<"address">;
-  countryCode?: string;
   locale?: string;
   onAddressSelect?: (suggestion: AddressSuggestion) => void;
+  schemaPrefix?: string;
+  t: GetTranslations<"address">;
 }) => {
   const withSchemaPrefix = generateFieldPrefix(schemaPrefix);
 
@@ -79,6 +78,7 @@ const renderInput = ({
       // Добавляем placeholder только для текстовых полей
       const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
       const placeholder = t(placeholderKey);
+
       return <TextFormField {...localField} placeholder={placeholder} />;
     }
     default:
@@ -97,11 +97,11 @@ export const AddressFormGenerator = ({
   onAddressSelect,
 }: {
   addressFormRows: AddressFormRow[];
-  isDisabled?: boolean;
-  schemaPrefix?: string;
   countryCode?: string;
+  isDisabled?: boolean;
   locale?: string;
   onAddressSelect?: (suggestion: AddressSuggestion) => void;
+  schemaPrefix?: string;
 }) => {
   const t = useTranslations("address");
 

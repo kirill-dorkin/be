@@ -9,14 +9,14 @@ import { type AddressSuggestion } from "@/lib/hooks/use-address-autocomplete";
 import { AddressAutocompleteInput } from "../address-form/address-autocomplete-input";
 
 export type AddressAutocompleteFormFieldProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
-  isRequired?: boolean;
-  disabled?: boolean;
   countryCode?: string;
+  disabled?: boolean;
+  isRequired?: boolean;
+  label: string;
   locale?: string;
+  name: string;
   onAddressSelect?: (suggestion: AddressSuggestion) => void;
+  placeholder?: string;
 };
 
 export const AddressAutocompleteFormField = ({

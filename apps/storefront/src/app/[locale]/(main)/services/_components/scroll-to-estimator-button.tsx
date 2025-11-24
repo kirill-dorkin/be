@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Calculator } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { cn } from "@nimara/ui/lib/utils";
@@ -15,14 +15,17 @@ export function ScrollToEstimatorButton() {
   useEffect(() => {
     const handleScroll = () => {
       const estimatorSection = document.getElementById("service-request");
+
       if (!estimatorSection) {
         // Если секция не найдена, показываем кнопку после небольшой прокрутки
         const shouldShow = window.scrollY > 200;
+
         if (shouldShow && !hasAnimated) {
           setHasAnimated(true);
         }
         setIsVisible(shouldShow);
-        return;
+        
+return;
       }
 
       const rect = estimatorSection.getBoundingClientRect();
@@ -30,6 +33,7 @@ export function ScrollToEstimatorButton() {
 
       // Показываем кнопку когда прокрутили вниз и секция оценки не полностью видна
       const shouldShow = window.scrollY > 200 && !isInView;
+
       if (shouldShow && !hasAnimated) {
         setHasAnimated(true);
       }
@@ -44,6 +48,7 @@ export function ScrollToEstimatorButton() {
 
   const scrollToEstimator = () => {
     const estimatorSection = document.getElementById("service-request");
+
     if (estimatorSection) {
       const headerHeight = 80; // Высота header (можно получить динамически)
       const elementPosition = estimatorSection.getBoundingClientRect().top;

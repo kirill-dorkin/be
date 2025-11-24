@@ -1,6 +1,6 @@
+import { Check, Crown, Headset, Sparkles, Star,TrendingDown, Truck, Wrench } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { Crown, Check, Sparkles, TrendingDown, Truck, Wrench, Headset, Star } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Card } from "@nimara/ui/components/card";
@@ -270,7 +270,7 @@ export default async function MembershipPage() {
           </div>
 
           <div className="space-y-4">
-            {faqKeys.map((key, index) => (
+            {faqKeys.map((key) => (
               <Card key={key} className="p-6">
                 <h3 className="font-semibold mb-2">{t(`faq.questions.${key}.question`)}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">

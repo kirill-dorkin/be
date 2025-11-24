@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid, List, SquareStack } from "lucide-react";
+import { LayoutGrid, List,type LucideIcon  } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -17,7 +17,7 @@ export const ViewToggle = ({ currentView, onViewChange }: ViewToggleProps) => {
   const t = useTranslations("view-toggle");
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const views: Array<{ icon: typeof SquareStack; label: string; mode: ViewMode }> = [
+  const views: Array<{ icon: LucideIcon; label: string; mode: ViewMode }> = [
     // { icon: SquareStack, label: t("grid"), mode: "grid" },
     { icon: LayoutGrid, label: t("compact"), mode: "compact" },
     { icon: List, label: t("list"), mode: "list" },

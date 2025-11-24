@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest , NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -51,9 +51,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Address autocomplete error:", error);
+
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

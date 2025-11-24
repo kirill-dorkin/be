@@ -11,15 +11,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@nimara/ui/components/form";
-import { Input } from "@nimara/ui/components/input";
 import { cn } from "@nimara/ui/lib/utils";
 
 export interface PhoneInputFormFieldProps {
+  countryCode?: CountryCode;
   isRequired?: boolean;
   label: string;
   name?: string;
   placeholder?: string;
-  countryCode?: CountryCode;
 }
 
 const COUNTRY_CODES: Partial<Record<CountryCode, string>> = {
@@ -41,7 +40,9 @@ function PhoneInputFormFieldComponent({
 
   // Форматируем только номер БЕЗ кода страны
   const formatPhoneNumber = useCallback((value: string): string => {
-    if (!value) return "";
+    if (!value) {
+      return "";
+    }
 
     // Убираем все кроме цифр
     const cleaned = value.replace(/\D/g, "");
@@ -78,6 +79,7 @@ function PhoneInputFormFieldComponent({
 
           // Ограничиваем количество цифр (для KG - 9 цифр)
           const maxLength = countryCode === "KG" ? 9 : 15;
+
           if (value.length > maxLength) {
             value = value.slice(0, maxLength);
           }
@@ -97,10 +99,11 @@ function PhoneInputFormFieldComponent({
         };
 
         // Получаем отображаемое значение (без кода страны)
-        const displayValue = field.value
-          ? field.value.startsWith(prefix)
-            ? formatPhoneNumber(field.value.slice(prefix.length))
-            : formatPhoneNumber(field.value)
+        const rawValue = typeof field.value === "string" ? field.value : "";
+        const displayValue = rawValue
+          ? rawValue.startsWith(prefix)
+            ? formatPhoneNumber(rawValue.slice(prefix.length))
+            : formatPhoneNumber(rawValue)
           : "";
 
         return (

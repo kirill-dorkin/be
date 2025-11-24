@@ -1,7 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { Crown, TrendingDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@nimara/ui/components/badge";
 import { Button } from "@nimara/ui/components/button";
@@ -12,20 +12,20 @@ import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter"
 import { paths } from "@/lib/paths";
 
 interface PriceComparisonProps {
-  /** Обычная цена */
-  regularPrice: number;
-  /** Цена для членов */
-  memberPrice: number;
-  /** Является ли пользователь членом */
-  isMember?: boolean;
-  /** Размер компонента */
-  size?: "sm" | "md" | "lg";
-  /** Показывать ли призыв к действию */
-  showCTA?: boolean;
-  /** Вертикальное или горизонтальное расположение */
-  orientation?: "vertical" | "horizontal";
   /** Класс для кастомизации */
   className?: string;
+  /** Является ли пользователь членом */
+  isMember?: boolean;
+  /** Цена для членов */
+  memberPrice: number;
+  /** Вертикальное или горизонтальное расположение */
+  orientation?: "vertical" | "horizontal";
+  /** Обычная цена */
+  regularPrice: number;
+  /** Показывать ли призыв к действию */
+  showCTA?: boolean;
+  /** Размер компонента */
+  size?: "sm" | "md" | "lg";
 }
 
 export function PriceComparison({

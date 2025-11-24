@@ -45,6 +45,7 @@ const UserEmailFormComponent = ({
         checkout,
         email,
       });
+
       console.log("🔵 Update result:", result);
 
       if (result.ok) {
@@ -87,7 +88,7 @@ const UserEmailFormComponent = ({
       <form
         onSubmit={(e) => {
           console.log("🟢 Form onSubmit event triggered");
-          form.handleSubmit(handleSubmit)(e);
+          void form.handleSubmit(handleSubmit)(e);
         }}
         className="flex flex-col gap-y-2"
         id="user-details-email-form"

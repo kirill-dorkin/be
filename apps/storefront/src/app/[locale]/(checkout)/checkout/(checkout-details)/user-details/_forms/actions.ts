@@ -13,10 +13,12 @@ import type { EmailFormSchema } from "./schema";
 export const checkIfUserHasAnAccount = async (email: string) => {
   console.log("🔵 [Server Action] checkIfUserHasAnAccount called with:", email);
   const userService = await getUserService();
+
   const data = await userService.userFind({
     email,
     saleorAppToken: serverEnvs.SALEOR_APP_TOKEN,
   });
+
   console.log("🔵 [Server Action] userFind result:", data);
 
   return data;
@@ -33,6 +35,7 @@ export const updateUserDetails = async ({
 
   try {
     const checkoutService = await getCheckoutService();
+
     console.log("🔵 [Server Action] Calling checkoutEmailUpdate...");
 
     const result = await checkoutService.checkoutEmailUpdate({

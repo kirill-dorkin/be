@@ -1,4 +1,4 @@
-import { Crown, TrendingDown, Truck, Star } from "lucide-react";
+import { Crown, Star,TrendingDown, Truck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import type { User } from "@nimara/domain/objects/User";

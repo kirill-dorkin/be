@@ -3,13 +3,13 @@
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { type Cart } from "@nimara/domain/objects/Cart";
 import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
 import { type User } from "@nimara/domain/objects/User";
-import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { Label } from "@nimara/ui/components/label";
 import {
   ToggleGroup,

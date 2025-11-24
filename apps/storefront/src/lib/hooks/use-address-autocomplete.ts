@@ -3,29 +3,29 @@
 import { useCallback, useState } from "react";
 
 export type AddressSuggestion = {
-  displayName: string;
-  country?: string;
-  state?: string;
   city?: string;
-  street?: string;
+  country?: string;
+  displayName: string;
   houseNumber?: string;
-  postalCode?: string;
   lat?: string;
   lon?: string;
+  postalCode?: string;
+  state?: string;
+  street?: string;
 };
 
 type NominatimResult = {
-  display_name: string;
   address: {
-    country?: string;
-    state?: string;
     city?: string;
-    town?: string;
-    village?: string;
-    road?: string;
+    country?: string;
     house_number?: string;
     postcode?: string;
+    road?: string;
+    state?: string;
+    town?: string;
+    village?: string;
   };
+  display_name: string;
   lat: string;
   lon: string;
 };
@@ -41,6 +41,7 @@ export const useAddressAutocomplete = (
     async (query: string) => {
       if (!query || query.length < 3) {
         setSuggestions([]);
+
         return;
       }
 
@@ -59,13 +60,13 @@ export const useAddressAutocomplete = (
           throw new Error("Failed to fetch address suggestions");
         }
 
-        const raw = (await response.json()) as unknown;
+        const raw = await response.json();
 
-        if (!Array.isArray(raw)) {
+        if (!isNominatimResultArray(raw)) {
           throw new Error("Unexpected address autocomplete response");
         }
 
-        const formatted = (raw as NominatimResult[]).map((result) => ({
+        const formatted = raw.map((result) => ({
           displayName: result.display_name,
           country: result.address.country,
           state: result.address.state,
@@ -97,3 +98,7 @@ export const useAddressAutocomplete = (
     searchAddress,
   };
 };
+
+function isNominatimResultArray(value: unknown): value is NominatimResult[] {
+  return Array.isArray(value);
+}

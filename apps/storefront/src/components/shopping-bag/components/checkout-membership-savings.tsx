@@ -4,9 +4,9 @@ import { Crown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
+import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { type Checkout } from "@nimara/domain/objects/Checkout";
 import { type User } from "@nimara/domain/objects/User";
-import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { Button } from "@nimara/ui/components/button";
 
 import { LocalizedLink } from "@/i18n/routing";

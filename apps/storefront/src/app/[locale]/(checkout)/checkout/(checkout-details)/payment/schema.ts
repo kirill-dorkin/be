@@ -1,6 +1,6 @@
+import { type CountryCode } from "libphonenumber-js";
 import type { FieldPathValue } from "react-hook-form";
 import { z } from "zod";
-import { type CountryCode } from "libphonenumber-js";
 
 import { type AddressFormRow } from "@nimara/domain/objects/AddressForm";
 
@@ -9,12 +9,12 @@ import { type GetTranslations } from "@/types";
 
 export const schema = ({
   addressFormRows,
-  t,
   country,
+  t,
 }: {
   addressFormRows: readonly AddressFormRow[];
-  t: GetTranslations;
   country?: CountryCode;
+  t: GetTranslations;
 }) =>
   z.object({
     paymentMethod: z.string().optional(),

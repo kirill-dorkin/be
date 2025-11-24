@@ -14,8 +14,8 @@ import {
   type FieldType,
 } from "@nimara/domain/objects/AddressForm";
 
-import { type AddressSuggestion } from "@/lib/hooks/use-address-autocomplete";
 import { usePathname, useRouter } from "@/i18n/routing";
+import { type AddressSuggestion } from "@/lib/hooks/use-address-autocomplete";
 
 import { AddressFormGenerator } from "./address-form-generator";
 

@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 
 type AnimatedCounterProps = {
-  value: number;
-  suffix?: string;
-  duration?: number;
   className?: string;
+  duration?: number;
+  suffix?: string;
+  value: number;
 };
 
 export function AnimatedCounter({
@@ -37,13 +37,17 @@ export function AnimatedCounter({
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      return;
+    }
 
     let startTime: number | null = null;
     let animationFrame: number;
 
     const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
+      if (!startTime) {
+        startTime = currentTime;
+      }
       const progress = Math.min((currentTime - startTime) / duration, 1);
 
       // Более плавная easing функция (ease-out-expo)

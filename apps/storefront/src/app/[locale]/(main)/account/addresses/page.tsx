@@ -6,7 +6,6 @@ import { type Address } from "@nimara/domain/objects/Address";
 
 import { getAccessToken } from "@/auth";
 import { displayFormattedAddressLines } from "@/lib/address";
-import { getCurrentRegion } from "@/regions/server";
 import { type SupportedLocale } from "@/regions/types";
 import { getAddressService } from "@/services/address";
 import { getUserService } from "@/services/user";
@@ -27,9 +26,8 @@ export default async function Page(props: PageProps) {
     getUserService(),
     getAddressService(),
   ]);
-  const [t, region, resultUserAddresses] = await Promise.all([
+  const [t, resultUserAddresses] = await Promise.all([
     getTranslations(),
-    getCurrentRegion(),
     userService.addressesGet({ variables: { accessToken } }),
   ]);
 

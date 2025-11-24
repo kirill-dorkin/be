@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { type CountryCode } from "libphonenumber-js";
+import { z } from "zod";
 
 import { type AddressFormRow } from "@nimara/domain/objects/AddressForm";
 
@@ -8,8 +8,8 @@ import { type GetTranslations } from "@/types";
 
 type Params = {
   addressFormRows: readonly AddressFormRow[];
-  t: GetTranslations;
   country?: CountryCode;
+  t: GetTranslations;
 };
 
 const baseShippingAddressSchema = (params: Params) => addressSchema(params);

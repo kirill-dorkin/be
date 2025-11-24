@@ -1,5 +1,5 @@
-import * as z from "zod";
 import { type CountryCode } from "libphonenumber-js";
+import * as z from "zod";
 
 import { type AddressFormRow } from "@nimara/domain/objects/AddressForm";
 
@@ -12,8 +12,8 @@ export const formSchema = ({
   country,
 }: {
   addressFormRows: readonly AddressFormRow[];
-  t: GetTranslations;
   country?: CountryCode;
+  t: GetTranslations;
 }) =>
   addressSchema({ addressFormRows, t, country }).merge(
     z.object({
