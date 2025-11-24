@@ -91,7 +91,7 @@ export default async function Page() {
   return (
     <>
       {/* Modern Hero Section */}
-      <ModernHero />
+      <ModernHero user={user} />
 
       {/* Features Section */}
       <FeaturesSection />

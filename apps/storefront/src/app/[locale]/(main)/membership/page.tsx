@@ -96,10 +96,14 @@ export default async function MembershipPage() {
     <div className="bg-background overflow-x-hidden">
       {/* Hero секция */}
       <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 py-16 dark:from-amber-950/20 dark:via-yellow-950/20 dark:to-orange-950/20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.15),transparent_50%)]" />
+        {/* Fades smooth out the background transitions with surrounding sections */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background via-background/90 to-transparent dark:from-background dark:via-background/80" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-background via-background/90 to-transparent dark:from-background dark:via-background/80" />
 
-        <div className="container relative z-10 mx-auto max-w-6xl px-4">
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.15),transparent_50%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.15),transparent_50%)]" />
+
+        <div className="container relative z-20 mx-auto max-w-6xl px-4">
           <div className="text-center space-y-6">
             <div className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 px-6 py-2 text-white">
               <Crown className="mr-2 h-5 w-5" />
@@ -116,7 +120,7 @@ export default async function MembershipPage() {
 
             <div className="flex flex-col items-center gap-4 pt-4">
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-amber-600">199 ₸</span>
+                <span className="text-5xl font-bold text-amber-600">199 сом</span>
                 <span className="text-xl text-muted-foreground">/ {t("hero.per-month")}</span>
               </div>
 

@@ -1,6 +1,8 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import type { User } from "@nimara/domain/objects/User";
+
 import { Button } from "@nimara/ui/components/button";
 
 import { LocalizedLink } from "@/i18n/routing";
@@ -9,12 +11,16 @@ import { paths } from "@/lib/paths";
 import { AnimatedCounter } from "./animated-counter";
 import { ClubInviteModal } from "./club-invite-modal";
 
-export async function ModernHero() {
+type ModernHeroProps = {
+  user: User | null;
+};
+
+export async function ModernHero({ user }: ModernHeroProps) {
   const t = await getTranslations("home");
 
   return (
     <section className="relative w-full overflow-x-clip bg-background">
-      <ClubInviteModal />
+      <ClubInviteModal isAuthenticated={Boolean(user)} />
       {/* Background gradients layer */}
       <div className="pointer-events-none absolute inset-0 w-full">
         {/* Top fade - smooth transition from header */}
@@ -55,7 +61,7 @@ export async function ModernHero() {
             <Button
               asChild
               size="lg"
-              className="group min-w-[200px] bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 text-base font-semibold text-white shadow-lg shadow-amber-500/30 transition-all hover:scale-105 hover:from-amber-600 hover:via-yellow-600 hover:to-orange-600 hover:shadow-xl hover:shadow-amber-500/40"
+              className="group min-w-[200px] bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 text-base font-semibold text-white shadow-lg shadow-amber-500/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:from-amber-600 hover:via-yellow-600 hover:to-orange-600 hover:shadow-xl hover:shadow-amber-500/40"
             >
               <LocalizedLink href={paths.search.asPath()}>
                 {t("hero.cta.primary")}
