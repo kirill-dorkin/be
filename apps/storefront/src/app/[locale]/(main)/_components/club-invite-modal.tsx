@@ -18,7 +18,6 @@ import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 
 const STORAGE_KEY = "be-club-invite";
-const SHOW_AFTER_MS = 6500;
 
 type Benefit = {
   description: string;
@@ -27,24 +26,12 @@ type Benefit = {
 };
 
 export function ClubInviteModal() {
-  const [open, setOpen] = useState(false);
+  // TODO: вернуть отложенное появление по таймеру после финализации дизайна попапа
+  const [open, setOpen] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    if (window.sessionStorage.getItem(STORAGE_KEY)) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setOpen(true);
-    }, SHOW_AFTER_MS);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
+    window.sessionStorage.removeItem(STORAGE_KEY);
   }, []);
 
   const benefits = useMemo<Benefit[]>(
