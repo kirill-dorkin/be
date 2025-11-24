@@ -84,6 +84,14 @@ export default async function MembershipPage() {
     "comparison.member.features.special-events",
   ] as const;
 
+  const faqKeys = [
+    "how-to-join",
+    "payment-methods",
+    "cancel-anytime",
+    "benefits-when",
+    "discount-calculation",
+  ] as const;
+
   return (
     <div className="bg-background overflow-x-hidden">
       {/* Hero секция */}
@@ -262,7 +270,7 @@ export default async function MembershipPage() {
           </div>
 
           <div className="space-y-4">
-            {["how-to-join", "payment-methods", "cancel-anytime", "benefits-when", "discount-calculation"].map((key, index) => (
+            {faqKeys.map((key, index) => (
               <Card key={key} className="p-6">
                 <h3 className="font-semibold mb-2">{t(`faq.questions.${key}.question`)}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
