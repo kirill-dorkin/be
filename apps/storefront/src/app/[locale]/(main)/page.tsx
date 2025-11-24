@@ -14,7 +14,8 @@ import { type SupportedLocale } from "@/regions/types";
 import { cmsPageService } from "@/services/cms";
 import { getUserService } from "@/services/user";
 
-import { HeroBanner } from "./_components/hero-banner";
+import { FeaturesSection } from "./_components/features-section";
+import { ModernHero } from "./_components/modern-hero";
 import { ProductsGridSkeleton } from "./_components/products-grid";
 
 // Dynamic imports для оптимизации
@@ -23,8 +24,8 @@ const ProductsGrid = dynamic(
   { ssr: true, loading: () => <ProductsGridSkeleton /> }
 );
 
-const RepairDiscountBanner = dynamic(
-  () => import("./_components/repair-discount-banner").then((mod) => ({ default: mod.RepairDiscountBanner })),
+const MembershipBanner = dynamic(
+  () => import("./_components/membership-banner").then((mod) => ({ default: mod.MembershipBanner })),
   { ssr: true }
 );
 
@@ -88,20 +89,45 @@ export default async function Page() {
   const user = resultUserGet.ok ? resultUserGet.data : null;
 
   return (
-    <section className="grid w-full content-start pb-0">
-      <HeroBanner fields={resultPage?.data?.fields} />
-      <RepairDiscountBanner user={user} />
+    <>
+      {/* Modern Hero Section */}
+      <ModernHero />
 
-      <Suspense fallback={<ProductsGridSkeleton />}>
-        <ProductsGrid fields={resultPage?.data?.fields} />
-      </Suspense>
-      <div className="pb-0">
-        <AccountNotifications user={user} />
+      {/* Features Section */}
+      <FeaturesSection />
+
+      {/* Membership Banner */}
+      <div className="w-full bg-background py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <MembershipBanner user={user} />
+        </div>
       </div>
-      {/* <div className="mb-8">
-        <Newsletter />
-      </div> */}
+
+      {/* Products Section */}
+      <section className="relative w-full overflow-hidden bg-muted/20 py-24 sm:py-32">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <h2 className="mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Популярные товары
+            </h2>
+            <p className="text-base text-muted-foreground sm:text-lg">
+              Лучшие предложения для вашей техники
+            </p>
+          </div>
+          <Suspense fallback={<ProductsGridSkeleton />}>
+            <ProductsGrid fields={resultPage?.data?.fields} />
+          </Suspense>
+        </div>
+      </section>
+
+      {/* Account Notifications */}
+      <div className="w-full bg-background py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <AccountNotifications user={user} />
+        </div>
+      </div>
+
       <JsonLd jsonLd={websiteToJsonLd()} />
-    </section>
+    </>
   );
 }

@@ -6,20 +6,20 @@ import type { PageField } from "@nimara/domain/objects/CMSPage";
 import type { SearchProduct } from "@nimara/domain/objects/SearchProduct";
 import type { SearchContext } from "@nimara/infrastructure/use-cases/search/types";
 import { Button } from "@nimara/ui/components/button";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@nimara/ui/components/carousel";
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
-import { SearchProductCard } from "@/components/search-product-card";
+import { OptimizedImage } from "@/components/optimized-image";
 import { CACHE_TTL } from "@/config";
 import { LocalizedLink } from "@/i18n/routing";
 import { createFieldsMap, type FieldsMap } from "@/lib/cms";
+import { localizedFormatter } from "@/lib/formatters/util";
+import { formatProductName } from "@/lib/format-product-name";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
+import { type SupportedCurrency } from "@/regions/types";
 import { getSearchService } from "@/services/search";
+
+const HOMEPAGE_PRODUCT_LIMIT = 4;
 
 const getHomepageProducts = unstable_cache(
   async (
@@ -27,6 +27,7 @@ const getHomepageProducts = unstable_cache(
     currency: string,
     channel: string,
     languageCode: string,
+    limit: number,
   ): Promise<SearchProduct[]> => {
     const searchService = await getSearchService();
 
@@ -38,7 +39,7 @@ const getHomepageProducts = unstable_cache(
     const result = await searchService.search(
       {
         productIds,
-        limit: 7,
+        limit,
       },
       {
         currency,
@@ -65,6 +66,7 @@ export const ProductsGrid = async ({
     getCurrentRegion(),
     getTranslations(),
   ]);
+  const formatter = localizedFormatter({ region });
 
   const searchContext = {
     currency: region.market.currency,
@@ -72,20 +74,9 @@ export const ProductsGrid = async ({
     languageCode: region.language.code,
   } satisfies SearchContext;
 
-  if (!fields || fields.length === 0) {
-    return null;
-  }
+  const fieldsMap: FieldsMap = fields ? createFieldsMap(fields) : {};
 
-  const fieldsMap: FieldsMap = createFieldsMap(fields);
-
-  const header = fieldsMap["homepage-grid-item-header"]?.text;
-  const subheader = fieldsMap["homepage-grid-item-subheader"]?.text;
-  const image = fieldsMap["homepage-grid-item-image"]?.imageUrl;
   const buttonText = fieldsMap["homepage-button-text"]?.text;
-  const headerFontColor =
-    fieldsMap["homepage-grid-item-header-font-color"]?.text;
-  const subheaderFontColor =
-    fieldsMap["homepage-grid-item-subheader-font-color"]?.text;
   const gridProducts = fieldsMap["carousel-products"];
 
   const gridProductsIds = gridProducts?.reference;
@@ -95,85 +86,119 @@ export const ProductsGrid = async ({
       ? Array.from(gridProductsIds as Iterable<string>)
       : [];
 
-  const products = await getHomepageProducts(
-    productIdsArray.length ? productIdsArray.join(",") : "all",
+  const requestedLimit =
+    productIdsArray.length > 0
+      ? Math.min(productIdsArray.length, HOMEPAGE_PRODUCT_LIMIT)
+      : HOMEPAGE_PRODUCT_LIMIT;
+
+  const requestedKey = productIdsArray.length
+    ? productIdsArray.join(",")
+    : "all";
+
+  let products = await getHomepageProducts(
+    requestedKey,
     searchContext.currency,
     searchContext.channel,
     searchContext.languageCode,
+    requestedLimit,
   );
+
+  if (!products.length && requestedKey !== "all") {
+    products = await getHomepageProducts(
+      "all",
+      searchContext.currency,
+      searchContext.channel,
+      searchContext.languageCode,
+      HOMEPAGE_PRODUCT_LIMIT,
+    );
+  }
 
   if (!products.length) {
     return null;
   }
 
+  const formatPriceLabel = (
+    price?: SearchProduct["price"] | SearchProduct["undiscountedPrice"] | null,
+  ) => {
+    if (!price || price.amount === 0) {
+      return t("common.free");
+    }
+
+    return formatter.price({
+      amount: price.amount,
+      currency: price.currency as SupportedCurrency,
+    });
+  };
+
+  const visibleProducts = products.slice(0, HOMEPAGE_PRODUCT_LIMIT);
+
   return (
     <section className="w-full px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-          <div
-            className="relative min-h-44 overflow-hidden rounded-3xl border border-neutral-200 bg-cover bg-center p-6 text-neutral-900 shadow-[0_18px_48px_rgba(15,23,42,0.08)] dark:border-white/10 dark:text-white dark:shadow-[0_28px_60px_rgba(0,0,0,0.35)]"
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-          >
-            <h2
-              className="text-2xl font-semibold leading-tight tracking-tight hyphens-auto break-words opacity-100"
-              style={{
-                color: `${headerFontColor ?? "#1c1917"}`,
-              }}
-            >
-              {header}
-            </h2>
-            <h3
-              className="mt-2 text-sm font-medium hyphens-auto break-words"
-              style={{
-                color: `${subheaderFontColor ?? "#57534e"}`,
-              }}
-            >
-              {subheader}
-            </h3>
-            <Button
-              className="absolute bottom-4 right-4 h-11 w-11 rounded-full p-0"
-              variant="outline"
-              asChild
-              size="icon"
-            >
-              <LocalizedLink
-                href={paths.search.asPath()}
-                aria-label={t("search.all-products-link")}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </LocalizedLink>
-            </Button>
-          </div>
-          {products.map((product) => (
-            <div className="hidden sm:block" key={product.id}>
-              <SearchProductCard
-                product={product}
-                sizes="(max-width: 720px) 1vw, (max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {visibleProducts.map((product) => {
+            const href = paths.products.asPath({ slug: product.slug });
+            const hasDiscount =
+              product.undiscountedPrice &&
+              product.undiscountedPrice.amount > product.price.amount;
+            const displayPrice = formatPriceLabel(product.price);
+            const oldPrice = hasDiscount
+              ? formatPriceLabel(product.undiscountedPrice)
+              : null;
+            const initial =
+              product.name?.trim().charAt(0)?.toUpperCase() ?? product.slug[0];
 
-          <Carousel className="sm:hidden">
-            <CarouselContent>
-              {products.map((product) => (
-                <CarouselItem key={product.id} className="w-2/3 flex-none">
-                  <SearchProductCard
-                    product={product}
-                    sizes="(max-width: 360px) 195px, (max-width: 720px) 379px, 1vw"
-                    height={200}
-                    width={200}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+            return (
+              <div
+                key={product.id}
+                className="rounded-2xl border border-border/40 bg-card/60 p-4 transition-all hover:-translate-y-1 hover:border-border hover:bg-card shadow-sm hover:shadow-lg"
+              >
+                <LocalizedLink
+                  href={href}
+                  className="group flex h-full flex-col gap-3"
+                  aria-label={product.name}
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-xl border border-border/50 bg-muted/30 p-2">
+                    {product.thumbnail ? (
+                      <OptimizedImage
+                        src={product.thumbnail.url}
+                        alt={product.thumbnail.alt || product.name}
+                        fill
+                        sizes="(max-width: 640px) 45vw, (max-width: 1024px) 20vw, 200px"
+                        className="object-contain transition-transform duration-300 group-hover:scale-105"
+                        priority={false}
+                        disableGoogleLens
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center rounded-xl bg-gradient-to-tr from-muted via-muted/70 to-muted/40 text-2xl font-semibold text-muted-foreground">
+                        {initial}
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+                      {formatProductName(product.name)}
+                    </p>
+                    <div className="flex items-baseline gap-2 text-sm text-foreground">
+                      {oldPrice ? (
+                        <span className="text-xs text-muted-foreground line-through">
+                          {oldPrice}
+                        </span>
+                      ) : null}
+                      <span className="text-base font-semibold">
+                        {displayPrice}
+                      </span>
+                    </div>
+                  </div>
+                </LocalizedLink>
+              </div>
+            );
+          })}
         </div>
-        <div className="mb-0 flex justify-center pb-8">
+        <div className="mt-10 flex justify-center pb-4">
           <Button variant="outline" asChild>
             <LocalizedLink href={paths.search.asPath()}>
-              {buttonText}
+              {buttonText ?? t("search.all-products")}
               <ChevronRight className="h-4 w-5 pl-1" />
             </LocalizedLink>
           </Button>
@@ -187,31 +212,20 @@ export const ProductsGridSkeleton = () => {
   return (
     <section className="w-full px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-          <div className="relative min-h-44 overflow-hidden rounded-3xl border border-neutral-200 bg-stone-200/60 p-6 dark:border-white/10 dark:bg-white/10">
-            <Skeleton className="mb-2 h-6 w-1/2" />
-            <Skeleton className="mb-4 h-4 w-1/3" />
-            <Skeleton className="absolute bottom-4 right-4 h-11 w-11 rounded-full" />
-          </div>
-
-          {Array.from({ length: 7 }).map((_, index) => (
-            <div key={index} className="hidden sm:block">
-              <Skeleton className="aspect-[3/4] w-full rounded-md" />
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {Array.from({ length: HOMEPAGE_PRODUCT_LIMIT }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-2xl border border-border/40 bg-card/40 p-4"
+            >
+              <Skeleton className="mb-3 aspect-square w-full rounded-xl" />
+              <Skeleton className="mb-2 h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
             </div>
           ))}
-
-          <Carousel className="sm:hidden">
-            <CarouselContent>
-              {Array.from({ length: 4 }).map((_, index) => (
-                <CarouselItem key={index} className="w-2/3 flex-none">
-                  <Skeleton className="aspect-square w-full rounded-md" />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
         </div>
 
-        <div className="mb-14 flex justify-center">
+        <div className="mt-10 flex justify-center pb-4">
           <Skeleton className="h-10 w-36 rounded-md" />
         </div>
       </div>

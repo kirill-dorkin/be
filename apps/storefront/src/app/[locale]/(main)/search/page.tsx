@@ -455,7 +455,7 @@ async function SearchContent({
 
   return (
     <ViewModeProvider>
-      <div className="w-full">
+      <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <div
           className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
           style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
@@ -515,7 +515,7 @@ function SearchPageSkeleton({
     : "Загрузка товаров...";
 
   return (
-    <div className="w-full">
+    <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <div
         className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
         style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}

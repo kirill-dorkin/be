@@ -123,7 +123,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <ViewModeProvider>
-      <div className="mb-8 w-full">
+      <div className="mb-8 w-full max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
         <Breadcrumbs pageName={collection.name} />
 
         <div className="mt-8 grid basis-full items-center justify-center gap-4 md:flex">
