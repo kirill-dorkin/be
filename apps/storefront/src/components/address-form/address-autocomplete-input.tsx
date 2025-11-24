@@ -45,7 +45,7 @@ export const AddressAutocompleteInput = ({
     locale,
   );
 
-  const fieldValue = watch<string | undefined>(name);
+  const fieldValue = watch(name) as string | undefined;
 
   useEffect(() => {
     if (fieldValue && fieldValue !== inputValue) {
