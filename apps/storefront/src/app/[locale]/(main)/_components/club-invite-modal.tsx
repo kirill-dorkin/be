@@ -105,30 +105,33 @@ export function ClubInviteModal() {
             ))}
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Button
-              className="h-11 rounded-2xl bg-slate-900 text-base font-semibold text-white transition hover:bg-slate-800"
-              onClick={() => {
-                handleOpenChange(false);
-                router.push(paths.membership.asPath());
-              }}
-            >
-              Вступить в клуб
-            </Button>
-            <Button
-              asChild
-              variant="ghost"
-              className="h-11 rounded-2xl border border-transparent bg-muted/70 text-base font-semibold text-foreground transition hover:bg-muted"
-            >
-              <LocalizedLink href={paths.createAccount.asPath()} onClick={() => handleOpenChange(false)}>
-                Зарегистрироваться
-              </LocalizedLink>
-            </Button>
+          <div className="space-y-3 rounded-3xl bg-slate-900/5 p-4">
+            <div className="rounded-2xl bg-slate-900 text-white">
+              <Button
+                className="h-12 w-full rounded-2xl bg-transparent text-base font-semibold text-white hover:bg-white/10"
+                onClick={() => {
+                  handleOpenChange(false);
+                  router.push(paths.membership.asPath());
+                }}
+              >
+                Вступить в клуб
+              </Button>
+            </div>
+            <div className="rounded-2xl bg-white shadow-sm shadow-slate-200">
+              <Button
+                asChild
+                variant="ghost"
+                className="h-12 w-full rounded-2xl text-base font-semibold text-slate-900 transition hover:bg-slate-50"
+              >
+                <LocalizedLink href={paths.createAccount.asPath()} onClick={() => handleOpenChange(false)}>
+                  Зарегистрироваться
+                </LocalizedLink>
+              </Button>
+            </div>
+            <p className="text-center text-xs text-muted-foreground">
+              Уже есть аккаунт? Просто войдите — все преимущества сохранятся.
+            </p>
           </div>
-
-          <p className="text-center text-xs text-muted-foreground">
-            Уже есть аккаунт? Просто войдите — все клубные преимущества сохранятся.
-          </p>
         </div>
       </DialogContent>
     </Dialog>
