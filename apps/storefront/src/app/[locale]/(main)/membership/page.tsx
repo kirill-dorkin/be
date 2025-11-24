@@ -75,6 +75,15 @@ export default async function MembershipPage() {
     "comparison.guest.features.no-early-access",
   ] as const;
 
+  const memberFeatureKeys = [
+    "comparison.member.features.discounted-prices",
+    "comparison.member.features.free-shipping",
+    "comparison.member.features.priority-support",
+    "comparison.member.features.early-access",
+    "comparison.member.features.exclusive-deals",
+    "comparison.member.features.special-events",
+  ] as const;
+
   return (
     <div className="bg-background overflow-x-hidden">
       {/* Hero секция */}
@@ -207,14 +216,7 @@ export default async function MembershipPage() {
               </div>
 
               <ul className="space-y-3">
-                {[
-                  "comparison.member.features.discounted-prices",
-                  "comparison.member.features.free-shipping",
-                  "comparison.member.features.priority-support",
-                  "comparison.member.features.early-access",
-                  "comparison.member.features.exclusive-deals",
-                  "comparison.member.features.special-events",
-                ].map((key) => (
+                {memberFeatureKeys.map((key) => (
                   <li key={key} className="flex items-start gap-3">
                     <div className="mt-0.5 rounded-full bg-amber-500 p-1">
                       <Check className="h-4 w-4 text-white" />
