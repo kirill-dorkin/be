@@ -10,6 +10,7 @@ import { Button } from "@nimara/ui/components/button";
 import { useToast } from "@nimara/ui/hooks";
 
 import { ShoppingBag } from "@/components/shopping-bag";
+import { MembershipSavings } from "@/components/shopping-bag/components/membership-savings";
 import { CACHE_TTL } from "@/config";
 import { LocalizedLink, useRouter } from "@/i18n/routing";
 import { revalidateCart } from "@/lib/actions/cart";
@@ -115,7 +116,7 @@ export const CartDetails = ({
   return (
     <div className="space-y-8 sm:space-y-10 lg:space-y-12">
       <ShoppingBag>
-        <ShoppingBag.Header />
+        <ShoppingBag.Header header={t("cart.your-bag")} />
         <ShoppingBag.Lines
           onLineQuantityChange={handleLineQuantityChange}
           onLineDelete={handleLineDelete}
@@ -125,6 +126,7 @@ export const CartDetails = ({
         />
         <ShoppingBag.Pricing>
           <ShoppingBag.Subtotal price={cart.subtotal} />
+          <MembershipSavings cart={cart} user={user} />
         </ShoppingBag.Pricing>
       </ShoppingBag>
       <div className="sticky bottom-0 w-full bg-background py-4 text-center">

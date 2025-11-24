@@ -23,9 +23,9 @@ const SelectTrigger = ({
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        "border-input bg-background flex h-10 w-full items-center justify-center rounded-md border px-3 py-2 text-sm outline-none transition-all duration-200 hover:border-border/80 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        "border-input bg-background flex h-10 w-full items-center justify-center rounded-md border px-3 py-2 text-sm outline-none transition-all duration-500 ease-in-out hover:border-border/80 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
         error &&
-          "border-red-300 bg-red-50 has-[input:focus-visible]:ring-red-300 dark:border-red-600 dark:bg-red-900/30 dark:has-[input:focus-visible]:ring-red-500",
+          "border-red-500 bg-red-50 has-[input:focus-visible]:ring-red-300 dark:border-red-500 dark:bg-red-900/30 dark:has-[input:focus-visible]:ring-red-500",
         className,
       )}
       {...props}

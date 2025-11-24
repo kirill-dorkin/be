@@ -89,7 +89,8 @@ export default async function Page(props: PageProps) {
   }
 
   const countryCode = (() => {
-    const defaultCountryCode = region.market.countryCode;
+    // Кыргызстан как страна по умолчанию для всех регионов
+    const defaultCountryCode = "KG" as AllCountryCode;
     const paramsCountryCode = searchParams.country;
 
     if (!paramsCountryCode) {

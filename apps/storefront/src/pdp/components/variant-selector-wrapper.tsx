@@ -8,6 +8,7 @@ import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
+import { type User } from "@nimara/domain/objects/User";
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
 const VariantSelector = dynamic(() => import("@/pdp/components/variant-selector").then(mod => ({ default: mod.VariantSelector })), {
@@ -19,22 +20,25 @@ type VariantPickerProps = {
   availability: ProductAvailability;
   cart: Cart | null;
   product: Product;
+  user: User | null;
 };
 
 /**
  * A thin client wrapper for the VariantSelector component.
- * Receives cart data from the ProductProvider to avoid duplicate fetches during rendering.
+ * Receives cart and user data from the ProductProvider to avoid duplicate fetches during rendering.
  */
 const VariantSelectorWrapperComponent = ({
   availability,
   cart,
   product,
+  user,
 }: VariantPickerProps) => {
   return (
     <VariantSelector
       cart={cart}
       product={product}
       productAvailability={availability}
+      user={user}
     />
   );
 };
@@ -44,6 +48,7 @@ export const VariantSelectorWrapper = memo(VariantSelectorWrapperComponent, (pre
   return (
     prevProps.product.id === nextProps.product.id &&
     prevProps.cart?.id === nextProps.cart?.id &&
-    prevProps.availability === nextProps.availability
+    prevProps.availability === nextProps.availability &&
+    prevProps.user?.id === nextProps.user?.id
   );
 });

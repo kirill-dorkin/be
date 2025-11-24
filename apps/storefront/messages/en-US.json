@@ -5,6 +5,53 @@
     "description": "BestElectronics is a flexible headless storefront built on Saleor. Quick to deploy, easy to integrate, with an intuitive UI for management and customization.",
     "homepage-preview": "Homepage preview",
     "hero-banner-alt": "BestElectronics hero banner",
+    "hero": {
+      "badge": "Next Generation Electronics",
+      "title": {
+        "part1": "Technology of",
+        "highlight": "tomorrow",
+        "part2": "available today"
+      },
+      "subtitle": "Innovative solutions for your home and office. Quality electronics, professional repair service, and care for every customer.",
+      "cta": {
+        "primary": "Browse Catalog",
+        "secondary": "Service & Repair"
+      },
+      "stats": {
+        "customers": "Happy Customers",
+        "products": "Products in Catalog",
+        "satisfaction": "Satisfaction Rate",
+        "support": "Customer Support"
+      }
+    },
+    "features": {
+      "heading": "Everything You Need",
+      "subheading": "Complete range of services for your tech in one place",
+      "catalog": {
+        "title": "Large Catalog",
+        "description": "Thousands of products from leading brands. Computers, components, peripherals, and accessories."
+      },
+      "repair": {
+        "title": "Professional Repair",
+        "description": "Service center with experienced technicians. Diagnostics, repair, and maintenance of any equipment."
+      },
+      "membership": {
+        "title": "Loyalty Program",
+        "description": "Exclusive 10% discount on products and 20% on repairs. Free shipping for Community members."
+      },
+      "delivery": {
+        "title": "Fast Delivery",
+        "description": "Same-day delivery within the city. Free shipping for Community members."
+      },
+      "warranty": {
+        "title": "Official Warranty",
+        "description": "All products come with manufacturer's warranty. Support and service after purchase."
+      },
+      "quality": {
+        "title": "Proven Quality",
+        "description": "We work only with official suppliers. Every product passes quality control."
+      }
+    },
     "repairBanner": {
       "badge": "Service offer",
       "titleGuest": "Registered customers get 20% off repairs",
@@ -22,6 +69,26 @@
         "priority": "Priority diagnostics on the day of your request",
         "warranty": "Extended 90-day workmanship warranty",
         "tracking": "Track every repair stage from your account"
+      }
+    },
+    "membershipBanner": {
+      "badge": "Premium Membership",
+      "titleGuest": "Join BestElectronics Community for 199 som/month",
+      "titleMember": "Thank you for being a Community member!",
+      "descriptionGuest": "Get 10% off all products, 20% off repairs, free shipping, and priority support. Save on every purchase.",
+      "descriptionMember": "You're already enjoying all the benefits: discounts on products and repairs, free shipping, and priority support.",
+      "primaryCtaGuest": "Become a Member",
+      "primaryCtaMember": "Learn More",
+      "secondaryGuest": "Create account",
+      "secondaryMember": "My Profile",
+      "card": {
+        "title": "Community Membership",
+        "subtitle": "Maximum savings on every purchase"
+      },
+      "perks": {
+        "discount": "10% off products and 20% off repairs",
+        "shipping": "Free delivery on all orders",
+        "exclusive": "Early access to new releases and exclusives"
       }
     },
     "highlights": {
@@ -424,6 +491,12 @@
       "freeLabel": "Free",
       "discountApplied": "{percent}% discount for registered customers applied.",
       "discountSavings": "You save {amount}",
+      "membershipPromo": {
+        "title": "Save with community membership",
+        "subtitle": "You could save {amount} on this repair",
+        "savingsLabel": "Save {percent}%",
+        "cta": "Join Community"
+      },
       "errors": {
         "deviceType": "Select a device type",
         "serviceSlug": "Select a service",
@@ -684,6 +757,15 @@
     "items-in-cart": "Items in cart: {cartItems}",
     "remove-button": "Remove button",
     "max-quantity": "Sorry, the maximum quantity you can order is {maxQuantity}.",
+    "membership": {
+      "member-title": "Your Community discount is active",
+      "member-subtitle": "Savings applied automatically",
+      "discount": "discount",
+      "guest-title": "Save with Community membership",
+      "guest-subtitle": "You could save {amount} on this order",
+      "potential-savings": "Potential savings",
+      "join-cta": "Become a member for 199 som/month"
+    },
     "errors": {
       "INSUFFICIENT_STOCK": "One or more products in your bag are currently out of stock. Please reduce the quantity or remove them from your bag.",
       "VARIANT_NOT_AVAILABLE": "One or more products in your bag are not available anymore. Please remove them from your bag."
@@ -732,20 +814,31 @@
   "address": {
     "companyName": "Company name",
     "phone": "Phone",
+    "phone-placeholder": "Enter a working phone number for courier contact",
     "country": "Country",
     "firstName": "First Name",
+    "firstName-placeholder": "e.g., John",
     "lastName": "Last Name",
+    "lastName-placeholder": "e.g., Smith",
     "streetAddress1": "Street address",
+    "streetAddress1-placeholder": "Enter exact delivery address (street, building, apartment)",
     "streetAddress2": "Street address (continue)",
+    "streetAddress2-placeholder": "Entrance, floor, intercom (optional)",
     "City": "City",
+    "city-placeholder": "e.g., Bishkek",
+    "cityArea": "City district",
+    "cityArea-placeholder": "e.g., Pervomaisky",
     "District": "District",
     "Eircode": "Eircode",
     "Pin": "Pin",
     "Post town": "Post town",
     "Postal": "Postal",
+    "postalCode-placeholder": "e.g., 720000",
     "Prefecture": "Prefecture",
     "Province": "Province",
     "State": "State",
+    "countryArea": "Region/Oblast",
+    "countryArea-placeholder": "e.g., Chui Region",
     "Suburb": "Suburb",
     "Zip": "Zip",
     "sorry-you-dont-have-any-addresses": "Sorry, you don't have any addresses yet.",
@@ -776,7 +869,9 @@
   },
   "delivery-method": {
     "title": "Delivery",
-    "delivery-method": "Delivery method"
+    "delivery-method": "Delivery method",
+    "select-delivery-method": "Select delivery method",
+    "no-methods-available": "No delivery methods available. Please check your shipping address."
   },
   "payment": {
     "credit-cards": "Credit cards",
@@ -813,6 +908,7 @@
     "Invalid email": "Invalid email",
     "Invalid value": "Invalid value",
     "invalid-email": "Oops, wrong email address.",
+    "invalid-phone": "Invalid phone number",
     "email-required": "Email is required to create an account.",
     "min-length-password": "Password should contain at least {minimum} signs.",
     "passwords-dont-match": "The entered passwords don't match.",
@@ -1119,5 +1215,117 @@
     "grid": "Grid View",
     "compact": "Compact View",
     "list": "List View"
+  },
+  "membership": {
+    "meta": {
+      "title": "BestElectronics Community Membership",
+      "description": "Join the BestElectronics Community and get exclusive discounts on products and repairs, free shipping, priority support and more."
+    },
+    "hero": {
+      "badge": "Premium Membership",
+      "title": "Join BestElectronics Community",
+      "subtitle": "Get exclusive perks, discounts on products and repairs, plus priority access to everything we offer.",
+      "per-month": "month",
+      "join-cta": "Join Community",
+      "activate-cta": "Activate Membership",
+      "cancel-anytime": "Cancel anytime, no commitments"
+    },
+    "benefits": {
+      "title": "Membership Benefits",
+      "subtitle": "Everything you need to save on electronics and get the best service.",
+      "product-discount": {
+        "title": "10% off all products",
+        "description": "Save on every purchase — the discount applies automatically at checkout."
+      },
+      "repair-discount": {
+        "title": "20% off repairs",
+        "description": "Professional repair services with guaranteed quality at a better price."
+      },
+      "free-shipping": {
+        "title": "Free delivery",
+        "description": "Order from home with free courier delivery across the city.",
+        "badge": "Always"
+      },
+      "priority-support": {
+        "title": "Priority support",
+        "description": "Get help faster — our team responds to members first."
+      },
+      "early-access": {
+        "title": "Early access to new products",
+        "description": "Be the first to purchase new releases before they hit the general catalog.",
+        "badge": "Exclusive"
+      },
+      "exclusive-offers": {
+        "title": "Members-only deals",
+        "description": "Special promotions and discounts available only to Community members.",
+        "badge": "VIP"
+      }
+    },
+    "comparison": {
+      "title": "Compare Benefits",
+      "subtitle": "See how membership improves your shopping experience.",
+      "guest": {
+        "title": "Guest",
+        "subtitle": "Standard access",
+        "features": {
+          "standard-prices": "Regular prices",
+          "standard-shipping": "Standard shipping fees",
+          "regular-support": "Standard support",
+          "no-early-access": "No early access to new products"
+        }
+      },
+      "member": {
+        "badge": "Community",
+        "title": "Member",
+        "subtitle": "Premium access",
+        "features": {
+          "discounted-prices": "10% discount on all products",
+          "free-shipping": "Free delivery on all orders",
+          "priority-support": "Priority support 24/7",
+          "early-access": "Early access to new products",
+          "exclusive-deals": "Members-only promotions",
+          "special-events": "Invitations to special events"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to save more?",
+      "subtitle": "Join thousands of happy members who save on every purchase and enjoy premium service.",
+      "join": "Join Community",
+      "activate": "Activate Membership",
+      "trial-info": "7-day free trial • Cancel anytime"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "more-questions": "Have more questions?",
+      "contact-us": "Contact us",
+      "questions": {
+        "how-to-join": {
+          "question": "How do I join the Community?",
+          "answer": "Click the 'Join Community' button on this page, complete the payment, and your membership activates immediately. All discounts apply automatically to your account."
+        },
+        "payment-methods": {
+          "question": "What payment methods are available?",
+          "answer": "You can pay with Visa, Mastercard, or Elcart bank cards. The monthly fee of 199 som is charged automatically each month."
+        },
+        "cancel-anytime": {
+          "question": "Can I cancel my membership anytime?",
+          "answer": "Yes, you can cancel anytime from your account settings. Your membership benefits remain active until the end of your current billing period."
+        },
+        "benefits-when": {
+          "question": "When do my benefits start?",
+          "answer": "All benefits activate immediately after payment. The discount applies automatically to your next purchase, and free shipping is available on all orders."
+        },
+        "discount-calculation": {
+          "question": "How are discounts calculated?",
+          "answer": "Product discounts (10%) and repair discounts (20%) apply automatically during checkout. You'll see the member price and your savings on every product page."
+        }
+      }
+    },
+    "member-price": "Member price",
+    "regular-price": "Regular price",
+    "save": "Save {amount} ({percent}%)",
+    "join-now": "Join Now",
+    "price-per-month": "{price}/month"
   }
 }

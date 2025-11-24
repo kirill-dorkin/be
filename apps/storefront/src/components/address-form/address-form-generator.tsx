@@ -1,13 +1,18 @@
 import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
+import { type CountryCode } from "libphonenumber-js";
 
 import {
   type AddressFormField,
   type AddressFormRow,
 } from "@nimara/domain/objects/AddressForm";
 
+import { AddressAutocompleteFormField } from "@/components/form/address-autocomplete-form-field";
+import { PhoneInputFormField } from "@/components/form/phone-input-form-field";
 import { SelectFormField } from "@/components/form/select-form-field";
 import { TextFormField } from "@/components/form/text-form-field";
 import { generateFieldPrefix } from "@/lib/form/utils";
+import { type AddressSuggestion } from "@/lib/hooks/use-address-autocomplete";
 import { cn } from "@/lib/utils";
 import { type GetTranslations, type TranslationMessage } from "@/types";
 
@@ -16,11 +21,17 @@ const renderInput = ({
   t,
   schemaPrefix,
   isDisabled = false,
+  countryCode,
+  locale,
+  onAddressSelect,
 }: {
   field: AddressFormField;
   isDisabled?: boolean;
   schemaPrefix?: string;
   t: GetTranslations<"address">;
+  countryCode?: string;
+  locale?: string;
+  onAddressSelect?: (suggestion: AddressSuggestion) => void;
 }) => {
   const withSchemaPrefix = generateFieldPrefix(schemaPrefix);
 
@@ -31,11 +42,45 @@ const renderInput = ({
     label: t((field.label ?? field.name) as TranslationMessage<"address">),
   };
 
+  // Используем специальный компонент для телефона
+  if (field.name === "phone") {
+    const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
+    const placeholder = t(placeholderKey);
+
+    return (
+      <PhoneInputFormField
+        {...localField}
+        placeholder={placeholder}
+        countryCode={countryCode as CountryCode}
+      />
+    );
+  }
+
+  // Используем автокомплит для поля адреса
+  if (field.name === "streetAddress1") {
+    const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
+    const placeholder = t(placeholderKey);
+
+    return (
+      <AddressAutocompleteFormField
+        {...localField}
+        placeholder={placeholder}
+        countryCode={countryCode}
+        locale={locale}
+        onAddressSelect={onAddressSelect}
+      />
+    );
+  }
+
   switch (field.type) {
     case "select":
       return <SelectFormField {...localField} />;
-    case "text":
-      return <TextFormField {...localField} />;
+    case "text": {
+      // Добавляем placeholder только для текстовых полей
+      const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
+      const placeholder = t(placeholderKey);
+      return <TextFormField {...localField} placeholder={placeholder} />;
+    }
     default:
       // according to docs https://github.com/typescript-eslint/typescript-eslint/issues/3069
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -47,10 +92,16 @@ export const AddressFormGenerator = ({
   addressFormRows,
   schemaPrefix,
   isDisabled,
+  countryCode,
+  locale,
+  onAddressSelect,
 }: {
   addressFormRows: AddressFormRow[];
   isDisabled?: boolean;
   schemaPrefix?: string;
+  countryCode?: string;
+  locale?: string;
+  onAddressSelect?: (suggestion: AddressSuggestion) => void;
 }) => {
   const t = useTranslations("address");
 
@@ -65,7 +116,15 @@ export const AddressFormGenerator = ({
         <div key={formRow[0].name} className="flex gap-2">
           {formRow.map((field) => (
             <div className="w-full" key={field.name}>
-              {renderInput({ field, t, schemaPrefix, isDisabled })}
+              {renderInput({
+                field,
+                t,
+                schemaPrefix,
+                isDisabled,
+                countryCode,
+                locale,
+                onAddressSelect,
+              })}
             </div>
           ))}
         </div>

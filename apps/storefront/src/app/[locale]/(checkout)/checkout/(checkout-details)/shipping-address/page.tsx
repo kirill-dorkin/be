@@ -94,7 +94,8 @@ export default async function Page(props: PageProps) {
     )
     .sort((a, _) => (a.address.isDefaultShippingAddress ? -1 : 0));
 
-  const { countryCode: defaultCountryCode } = region.market;
+  // Кыргызстан как страна по умолчанию для всех регионов
+  const defaultCountryCode = "KG" as AllCountryCode;
   const countryCode = (() => {
     const paramsCountryCode = searchParams.country;
 

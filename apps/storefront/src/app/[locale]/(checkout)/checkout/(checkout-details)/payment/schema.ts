@@ -1,5 +1,6 @@
 import type { FieldPathValue } from "react-hook-form";
 import { z } from "zod";
+import { type CountryCode } from "libphonenumber-js";
 
 import { type AddressFormRow } from "@nimara/domain/objects/AddressForm";
 
@@ -9,16 +10,18 @@ import { type GetTranslations } from "@/types";
 export const schema = ({
   addressFormRows,
   t,
+  country,
 }: {
   addressFormRows: readonly AddressFormRow[];
   t: GetTranslations;
+  country?: CountryCode;
 }) =>
   z.object({
     paymentMethod: z.string().optional(),
     sameAsShippingAddress: z.boolean(),
     saveForFutureUse: z.boolean(),
     saveAddressForFutureUse: z.boolean(),
-    billingAddress: addressSchema({ addressFormRows, t })
+    billingAddress: addressSchema({ addressFormRows, t, country })
       .merge(
         z.object({
           id: z.string().optional(),

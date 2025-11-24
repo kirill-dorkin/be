@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { memo, useMemo } from "react";
 
 import { type Price } from "@nimara/domain/objects/common";
@@ -9,13 +8,12 @@ import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter"
 import { cn } from "@/lib/utils";
 
 const HeaderComponent = ({
-  header,
+  header = "Your Bag",
   totalPrice,
 }: {
   header?: string;
   totalPrice?: Price;
 }) => {
-  const t = useTranslations();
   const formatter = useLocalizedFormatter();
 
   const headerTextClass = "text-xl sm:text-2xl font-semibold text-foreground";
@@ -32,7 +30,7 @@ const HeaderComponent = ({
         "justify-start gap-2 md:justify-between": totalPrice,
       })}
     >
-      <h1 className={headerTextClass}>{header || t("cart.your-bag")}</h1>
+      <h1 className={headerTextClass}>{header}</h1>
       {totalPrice && (
         <p className={cn("text-muted-foreground", "block md:hidden")}>•</p>
       )}

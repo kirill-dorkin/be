@@ -154,6 +154,7 @@ export const paths = {
   },
   confirmNewEmail: url("/confirm-new-email"),
   deleteAccount: url("/delete-account"),
+  membership: url("/membership"),
   staticPages: {
     contact: url("/contact"),
     aboutUs: url("/about-us"),

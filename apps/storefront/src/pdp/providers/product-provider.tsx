@@ -5,16 +5,20 @@ import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
+import { type User } from "@nimara/domain/objects/User";
 
+import { getAccessToken } from "@/auth";
 import { CACHE_TTL } from "@/config";
 import { getCheckoutId } from "@/lib/actions/cart";
 import { JsonLd, productToJsonLd } from "@/lib/json-ld";
 import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
 import { getStoreService } from "@/services/store";
+import { getUserService } from "@/services/user";
 
 type ProductProviderContext = {
   cart: Cart | null;
+  user: User | null;
 };
 
 export const ProductProvider = async ({
@@ -28,11 +32,13 @@ export const ProductProvider = async ({
   ) => React.ReactNode;
   slug: string;
 }) => {
-  const [region, storeService, checkoutId, cartService] = await Promise.all([
+  const [region, storeService, checkoutId, cartService, accessToken, userService] = await Promise.all([
     getCurrentRegion(),
     getStoreService(),
     getCheckoutId(),
     getCartService(),
+    getAccessToken(),
+    getUserService(),
   ]);
 
   const productDetailsPromise = storeService.getProductDetails({
@@ -62,9 +68,14 @@ export const ProductProvider = async ({
       })
     : Promise.resolve(null);
 
-  const [{ data }, cartResult] = await Promise.all([
+  const userPromise = accessToken
+    ? userService.userGet(accessToken)
+    : Promise.resolve(null);
+
+  const [{ data }, cartResult, userResult] = await Promise.all([
     productDetailsPromise,
     cartPromise,
+    userPromise,
   ]);
 
   if (!data?.product) {
@@ -78,9 +89,14 @@ export const ProductProvider = async ({
         : null
       : null;
 
+  const user =
+    userResult && typeof userResult === "object" && "ok" in userResult
+      ? userResult.data
+      : null;
+
   return (
     <>
-      {render(data.product, data.availability, { cart })}
+      {render(data.product, data.availability, { cart, user })}
 
       <JsonLd jsonLd={productToJsonLd(data.product, data?.availability)} />
     </>

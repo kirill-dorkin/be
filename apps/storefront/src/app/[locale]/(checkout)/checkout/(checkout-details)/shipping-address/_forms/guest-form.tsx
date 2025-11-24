@@ -42,7 +42,7 @@ const ShippingAddressFormComponent = ({
   const { isRedirecting, push } = useRouterWithState();
 
   const form = useForm<AddressSchema>({
-    resolver: zodResolver(addressSchema({ addressFormRows, t })),
+    resolver: zodResolver(addressSchema({ addressFormRows, t, country: countryCode as any })),
     defaultValues: [...ADDRESS_CORE_FIELDS].reduce(
       (acc, fieldName) => ({
         ...acc,

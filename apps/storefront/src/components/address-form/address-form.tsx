@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -14,6 +14,7 @@ import {
   type FieldType,
 } from "@nimara/domain/objects/AddressForm";
 
+import { type AddressSuggestion } from "@/lib/hooks/use-address-autocomplete";
 import { usePathname, useRouter } from "@/i18n/routing";
 
 import { AddressFormGenerator } from "./address-form-generator";
@@ -44,7 +45,7 @@ const phoneCodeRow = [
   {
     name: "phone",
     type: "text" as FieldType,
-    isRequired: false,
+    isRequired: true,
     inputMode: "tel",
   },
 ];
@@ -74,10 +75,14 @@ const AddressFormComponent = ({
   onCountryChange,
 }: AddressFormProps) => {
   const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const form = useFormContext();
   const [isChangingCountry, setIsChangingCountry] = useState(false);
+
+  // Получаем текущую страну из формы
+  const currentCountry = form.watch("country");
 
   useEffect(() => {
     if (isChangingCountry && addressFormRows.length > 0) {
@@ -95,6 +100,20 @@ const AddressFormComponent = ({
     );
     router.push(`${pathname}?country=${countryCode}`, { scroll: false });
   }, [form, router, pathname, onCountryChange]);
+
+  // Обработчик выбора адреса из автокомплита
+  const handleAddressSelect = useCallback((suggestion: AddressSuggestion) => {
+    // Автозаполнение полей адреса
+    if (suggestion.city) {
+      form.setValue("city", suggestion.city, { shouldValidate: true });
+    }
+    if (suggestion.postalCode) {
+      form.setValue("postalCode", suggestion.postalCode, { shouldValidate: true });
+    }
+    if (suggestion.state) {
+      form.setValue("countryArea", suggestion.state, { shouldValidate: true });
+    }
+  }, [form]);
 
   // Мемоизация селектора стран
   const countrySelectorFormRow = useMemo(() => [
@@ -165,6 +184,9 @@ const AddressFormComponent = ({
           countrySelectorFormRow,
           phoneCodeRow,
         ]}
+        countryCode={currentCountry}
+        locale={locale}
+        onAddressSelect={handleAddressSelect}
       />
       {isChangingCountry ? (
         <p>{t("shipping-address.loading-fields")}</p>
@@ -173,6 +195,9 @@ const AddressFormComponent = ({
           isDisabled={isChangingCountry || isDisabled}
           schemaPrefix={schemaPrefix}
           addressFormRows={formattedAddressFormRows}
+          countryCode={currentCountry}
+          locale={locale}
+          onAddressSelect={handleAddressSelect}
         />
       )}
     </>

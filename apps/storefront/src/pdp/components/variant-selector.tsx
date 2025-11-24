@@ -8,12 +8,15 @@ import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
+import { type User } from "@nimara/domain/objects/User";
+import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { Label } from "@nimara/ui/components/label";
 import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@nimara/ui/components/toggle-group";
 
+import { PriceComparison } from "@/components/membership/price-comparison";
 import { Price } from "@/components/price";
 import { cn } from "@/lib/utils";
 
@@ -26,12 +29,14 @@ type VariantSelectorProps = {
   cart: Cart | null;
   product: Product;
   productAvailability: ProductAvailability;
+  user: User | null;
 };
 
 export const VariantSelector = ({
   product,
   productAvailability,
   cart,
+  user,
 }: VariantSelectorProps) => {
   const t = useTranslations();
   const [quantity, setQuantity] = useState(1);
@@ -50,6 +55,11 @@ export const VariantSelector = ({
     startPrice,
     variantsAvailability,
   } = useVariantSelection({ cart, product, productAvailability });
+
+  // Calculate member price with discount
+  const regularPrice = chosenVariantAvailability?.price?.amount || 0;
+  const memberPrice = regularPrice * (1 - MEMBERSHIP_CONFIG.PRODUCT_DISCOUNT_PERCENT / 100);
+  const isMember = !!user; // TODO: In future, check actual membership status
 
   // Sync quantity with cart when variant changes or cart updates
   const currentVariantId = matchingVariants?.length > 1
@@ -93,14 +103,25 @@ export const VariantSelector = ({
     <>
       <div className="border-border/30 dark:border-white/10 my-5 border-t pt-4">
         <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end md:gap-6">
-          {/* Price section */}
-          <div className="text-left">
-            <Price
-              price={chosenVariantAvailability?.price}
-              startPrice={startPrice}
-              hasFreeVariants={hasFreeVariant}
-              undiscountedPrice={chosenVariantAvailability?.priceUndiscounted}
-            />
+          {/* Price section with membership comparison */}
+          <div className="text-left flex-1">
+            {regularPrice > 0 ? (
+              <PriceComparison
+                regularPrice={regularPrice}
+                memberPrice={memberPrice}
+                isMember={isMember}
+                size="lg"
+                showCTA={!isMember}
+                orientation="horizontal"
+              />
+            ) : (
+              <Price
+                price={chosenVariantAvailability?.price}
+                startPrice={startPrice}
+                hasFreeVariants={hasFreeVariant}
+                undiscountedPrice={chosenVariantAvailability?.priceUndiscounted}
+              />
+            )}
           </div>
 
           {/* Quantity selector */}

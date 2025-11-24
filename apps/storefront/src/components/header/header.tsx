@@ -93,6 +93,26 @@ export const Header = async () => {
           <div className="flex items-center justify-end gap-2 md:gap-3">
             <MobileSearch />
 
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-label={
+                !user
+                  ? t("auth.sign-in")
+                  : t("account.profile-of", { user: user?.firstName })
+              }
+            >
+              <LocalizedLink
+                href={
+                  !user ? paths.signIn.asPath() : paths.account.profile.asPath()
+                }
+              >
+                <User className="h-5 w-5" />
+              </LocalizedLink>
+            </Button>
+
             <div className="hidden md:block">
               <LocaleSwitch />
             </div>

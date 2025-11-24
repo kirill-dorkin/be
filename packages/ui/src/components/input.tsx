@@ -19,7 +19,7 @@ const Input = ({ className, error, type = "text", ...props }: InputProps) => {
       {...props}
       type={type}
       className={cn(
-        "border-input bg-background placeholder:text-muted-foreground flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "border-input bg-background placeholder:text-muted-foreground flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-500 ease-in-out",
         error &&
           "border-red-500 bg-red-50 autofill:!bg-red-50 dark:border-red-500 dark:bg-red-900/30 dark:autofill:!bg-red-900/30",
         className,
@@ -38,7 +38,7 @@ const PasswordInput = ({ className, error, ...props }: InputProps) => {
   return (
     <div
       className={cn(
-        "border-input flex w-full rounded-md border",
+        "border-input flex w-full rounded-md border transition-all duration-500 ease-in-out",
         error &&
           "border-red-500 bg-red-50 dark:border-red-500 dark:bg-red-900/30",
       )}
@@ -47,7 +47,7 @@ const PasswordInput = ({ className, error, ...props }: InputProps) => {
         {...props}
         type={type}
         className={cn(
-          "bg-background placeholder:text-muted-foreground flex h-10 w-full rounded-md px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+          "bg-background placeholder:text-muted-foreground flex h-10 w-full rounded-md px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-500 ease-in-out",
           error &&
             "bg-red-50 autofill:!bg-red-50 dark:bg-red-900/30 dark:autofill:!bg-red-900/30",
           className,

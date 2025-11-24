@@ -15,6 +15,7 @@ import { getCurrentRegion } from "@/regions/server";
 import type { SupportedLocale } from "@/regions/types";
 import { getUserService } from "@/services/user";
 
+import { ScrollToEstimatorButton } from "./_components/scroll-to-estimator-button";
 import { ServicesEstimator } from "./_components/services-estimator";
 import { ServicesSections } from "./_components/services-sections";
 
@@ -125,6 +126,8 @@ export default async function ServicesPage() {
           />
         </section>
       </div>
+
+      <ScrollToEstimatorButton />
     </div>
   );
 }

@@ -17,6 +17,20 @@ export const addressToInput = ({
   country: country as AllCountryCode,
 });
 
+// Переопределение названий стран для разных локалей
+const COUNTRY_NAME_OVERRIDES: Record<
+  AllCountryCode,
+  Partial<Record<AllLocale, string>>
+> = {
+  KG: {
+    "ru-RU": "Кыргызстан",
+    "ky-KG": "Кыргызстан",
+  },
+  GB: {},
+  US: {},
+  RU: {},
+};
+
 /**
  * Translate and sort a list of country codes into CountryOption objects.
  * @param countryCodes - An array of country codes to translate and sort.
@@ -28,10 +42,18 @@ export const translateAndSortCountries = (
   locale: AllLocale = "en",
 ): CountryOption[] =>
   countryCodes
-    .map((code) => ({
-      value: code,
-      label: new Intl.DisplayNames([locale], { type: "region" }).of(
-        code,
-      ) as string,
-    }))
+    .map((code) => {
+      // Проверяем, есть ли переопределение для этой страны и локали
+      const override = COUNTRY_NAME_OVERRIDES[code]?.[locale];
+      const label =
+        override ||
+        (new Intl.DisplayNames([locale], { type: "region" }).of(
+          code,
+        ) as string);
+
+      return {
+        value: code,
+        label,
+      };
+    })
     .sort((a, b) => a.label.localeCompare(b.label));

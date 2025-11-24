@@ -66,7 +66,8 @@ export default async function Page(props: PageProps) {
     throw new Error("No countries found for this channel.");
   }
 
-  const { countryCode: defaultCountryCode } = region.market;
+  // Кыргызстан как страна по умолчанию для всех регионов
+  const defaultCountryCode = "KG" as AllCountryCode;
 
   const countryCode = (() => {
     const paramsCountryCode =

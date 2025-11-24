@@ -46,7 +46,7 @@ export default async function Layout({ children }: LayoutProps<"/[locale]">) {
           <NavigationWithData />
         </Suspense>
       </div>
-      <main className="container flex min-h-screen flex-1 items-stretch">
+      <main className="flex min-h-screen flex-1 flex-col">
         {children}
       </main>
       <Footer />

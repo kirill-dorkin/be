@@ -35,33 +35,35 @@ export const EmailSection = async ({
     : null;
 
   return (
-    <>
+    <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
       {!!user ? (
-        <section className="flex flex-wrap gap-2">
-          <h2 className="w-full scroll-m-20 text-2xl tracking-tight">
-            {t("user-details.signed-in-as")}
-          </h2>
-          <p className="text-foreground break-all text-sm">
-            {userFullName} {user.email}
-          </p>
-        </section>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 space-y-2">
+            <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+              {t("user-details.signed-in-as")}
+            </h3>
+            <p className="text-sm leading-relaxed text-muted-foreground break-all">
+              {userFullName} {user.email}
+            </p>
+          </div>
+        </div>
       ) : (
-        <section className="flex justify-between">
-          <div className="max-w-[70%] space-y-2">
-            <h2 className="scroll-m-20 text-2xl tracking-tight">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 space-y-2">
+            <h3 className="text-lg font-semibold text-foreground sm:text-xl">
               {t("user-details.title")}
-            </h2>
-            <p className="text-foreground break-all text-sm font-normal leading-5">
+            </h3>
+            <p className="text-sm leading-relaxed text-muted-foreground break-all">
               {checkout.email}
             </p>
           </div>
-          <Button variant="outline" asChild>
+          <Button variant="outline" size="sm" asChild className="shrink-0">
             <LocalizedLink href={paths.checkout.userDetails.asPath()}>
               {t("common.edit")}
             </LocalizedLink>
           </Button>
-        </section>
+        </div>
       )}
-    </>
+    </section>
   );
 };

@@ -37,13 +37,20 @@ const SelectFormFieldComponent = ({
   onChange,
   options,
 }: SelectFormFieldProps) => {
-  const { control } = useFormContext();
+  const { control, clearErrors } = useFormContext();
 
   // Мемоизация обработчика изменения
   const handleValueChange = useCallback((value: string, fieldOnChange: (...event: any[]) => void) => {
     fieldOnChange(value);
     onChange?.(value);
-  }, [onChange]);
+
+    // Плавно убираем ошибку через небольшую задержку для плавности анимации
+    if (value) {
+      setTimeout(() => {
+        clearErrors(name);
+      }, 100);
+    }
+  }, [onChange, clearErrors, name]);
 
   return (
     <FormField
@@ -54,7 +61,7 @@ const SelectFormFieldComponent = ({
         <FormItem className="flex-1">
           <FormLabel>
             {label}
-            {isRequired && "*"}
+            {isRequired && <span className="text-red-500">*</span>}
           </FormLabel>
           <Select
             key={field.value}

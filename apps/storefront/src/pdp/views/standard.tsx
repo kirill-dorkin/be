@@ -33,7 +33,7 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
   return (
     <ProductProvider
       slug={slug}
-      render={(product, availability, { cart }) => (
+      render={(product, availability, { cart, user }) => (
         <div className="relative grid w-full gap-6 overflow-hidden px-4 pt-8 md:gap-8 md:px-0 md:pt-0">
           <ProductBreadcrumbs
             category={product.category}
@@ -65,6 +65,7 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
                   availability={availability}
                   cart={cart}
                   product={product}
+                  user={user}
                 />
 
                 <ProductHighlights product={product} />

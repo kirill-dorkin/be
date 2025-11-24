@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { Badge } from "@nimara/ui/components/badge";
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -45,6 +46,7 @@ import {
   type DeviceSelection,
   DeviceServiceSelector,
 } from "./device-service-selector";
+import { RepairMembershipPromo } from "./repair-membership-promo";
 
 const URGENCY_MULTIPLIER = 1.25;
 const PICKUP_FEE = 500;
@@ -658,6 +660,29 @@ export const ServicesEstimator = ({
         })
       : null;
 
+  // Calculate potential membership savings for guests
+  const potentialMembershipSavings = useMemo(() => {
+    if (hasDiscount || !aggregatedTotals) {
+      return null;
+    }
+
+    const savingsAmount = currencyMath.toCurrency(
+      aggregatedTotals.base.min *
+        (MEMBERSHIP_CONFIG.REPAIR_DISCOUNT_PERCENT / 100),
+    );
+
+    const formattedAmount = formatAsPrice({
+      amount: savingsAmount,
+      currency,
+      locale: activeLocale,
+    });
+
+    return {
+      amount: savingsAmount,
+      formatted: formattedAmount,
+    };
+  }, [hasDiscount, aggregatedTotals, currency, activeLocale]);
+
   const serviceSummaries = useMemo(
     () =>
       selectedServiceEstimates.map(({ deviceType, service, estimate }) => {
@@ -1056,6 +1081,13 @@ export const ServicesEstimator = ({
               {t("calculator.estimateDisclaimer")}
             </p>
           </div>
+
+          {potentialMembershipSavings && (
+            <RepairMembershipPromo
+              estimatedCost={aggregatedTotals?.base.min ?? 0}
+              formattedSavings={potentialMembershipSavings.formatted}
+            />
+          )}
 
           {hasSubmitted && (
             <p className="text-muted-foreground text-xs">

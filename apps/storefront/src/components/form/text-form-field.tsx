@@ -27,14 +27,21 @@ function TextFormFieldComponent({
   type,
   ...props
 }: TextFormFieldProps) {
-  const { control } = useFormContext();
+  const { control, clearErrors } = useFormContext();
   const { error } = control.getFieldState(name);
 
   // Мемоизация обработчика изменения
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, fieldOnChange: (...event: any[]) => void) => {
     fieldOnChange(e);
     onChange?.(e.target.value);
-  }, [onChange]);
+
+    // Плавно убираем ошибку через небольшую задержку для плавности анимации
+    if (error && e.target.value) {
+      setTimeout(() => {
+        clearErrors(name);
+      }, 100);
+    }
+  }, [onChange, error, clearErrors, name]);
 
   return (
     <FormField
@@ -46,7 +53,7 @@ function TextFormFieldComponent({
           <FormItem className="flex-1">
             <FormLabel htmlFor={name}>
               {label}
-              {isRequired && "*"}
+              {isRequired && <span className="text-red-500">*</span>}
             </FormLabel>
             <FormControl>
               <div className="flex">

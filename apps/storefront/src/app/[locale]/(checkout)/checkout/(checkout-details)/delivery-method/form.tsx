@@ -29,7 +29,7 @@ const DeliveryMethodFormComponent = ({ checkout }: { checkout: Checkout }) => {
     resolver: zodResolver(formSchema({ t })),
     defaultValues: {
       deliveryMethodId:
-        checkout.deliveryMethod?.id ?? checkout.shippingMethods?.[0].id,
+        checkout.deliveryMethod?.id ?? checkout.shippingMethods?.[0]?.id ?? "",
     },
   });
 
@@ -88,6 +88,22 @@ const DeliveryMethodFormComponent = ({ checkout }: { checkout: Checkout }) => {
     () => form.formState.errors.root?.serverError?.message,
     [form.formState.errors.root?.serverError?.message]
   );
+
+  // Проверка: если нет методов доставки
+  if (!checkout.shippingMethods || checkout.shippingMethods.length === 0) {
+    return (
+      <section className="space-y-4 pt-4">
+        <h2 className="scroll-m-20 text-2xl tracking-tight">
+          {t("delivery-method.title")}
+        </h2>
+        <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+          <p className="text-sm text-yellow-800">
+            {t("delivery-method.no-methods-available")}
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-4 pt-4">

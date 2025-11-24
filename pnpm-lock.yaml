@@ -178,6 +178,9 @@ importers:
       jose:
         specifier: ^6.1.0
         version: 6.1.0
+      libphonenumber-js:
+        specifier: 1.12.15
+        version: 1.12.15
       lodash:
         specifier: 4.17.21
         version: 4.17.21
@@ -214,6 +217,9 @@ importers:
       react-hook-form:
         specifier: 7.62.0
         version: 7.62.0(react@19.1.1)
+      react-phone-number-input:
+        specifier: 3.4.14
+        version: 3.4.14(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       schema-dts:
         specifier: 1.1.5
         version: 1.1.5
@@ -4874,6 +4880,9 @@ packages:
   class-variance-authority@0.7.1:
     resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
 
+  classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
     engines: {node: '>=6'}
@@ -5119,6 +5128,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  country-flag-icons@1.6.3:
+    resolution: {integrity: sha512-frltrKmvnWgq8vacW70ldyOi+p6M78lWB9LDoGma7B/Ca6WE6O2wclVPtjtm4oey77ihxOb9PqoJcaz/PSNGmA==}
 
   cross-fetch@3.2.0:
     resolution: {integrity: sha512-Q+xVJLoGOeIMXZmbUK4HYk+69cQH6LudR0Vu/pRm2YlU/hDV9CiS0gKUMaWY5f2NeUH9C1nV3bsTlCo0FsTV1Q==}
@@ -6590,6 +6602,17 @@ packages:
   inline-style-parser@0.2.4:
     resolution: {integrity: sha512-0aO8FkhNZlj/ZIbNi7Lxxr12obT7cL1moPfE4tg1LkX7LlLfC6DeX4l2ZEud1ukP9jNQyNnfzQVqwbwmAATY4Q==}
 
+  input-format@0.3.14:
+    resolution: {integrity: sha512-gHMrgrbCgmT4uK5Um5eVDUohuV9lcs95ZUUN9Px2Y0VIfjTzT2wF8Q3Z4fwLFm7c5Z2OXCm53FHoovj6SlOKdg==}
+    peerDependencies:
+      react: '>=18.1.0'
+      react-dom: '>=18.1.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   inquirer@8.2.5:
     resolution: {integrity: sha512-QAgPDQMEgrDssk1XiwwHoOGYF9BAbUcc1+j+FhEvaOt8/cKRqyLn0U5qA6F74fGhTMGxf92pOvPBeh29jQJDTQ==}
     engines: {node: '>=12.0.0'}
@@ -6989,6 +7012,9 @@ packages:
 
   libphonenumber-js@1.12.15:
     resolution: {integrity: sha512-TMDCtIhWUDHh91wRC+wFuGlIzKdPzaTUHHVrIZ3vPUEoNaXFLrsIQ1ZpAeZeXApIF6rvDksMTvjrIQlLKaYxqQ==}
+
+  libphonenumber-js@1.12.28:
+    resolution: {integrity: sha512-sDB+nY8l1d2SHC0TnBat4uovsx1EjrkesK9U8Arl2/LQluXn3OQczwqr2M/1V2Lo0ajnaY/nZjvacg6vmbqWUQ==}
 
   lie@3.1.1:
     resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
@@ -8377,6 +8403,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  react-phone-number-input@3.4.14:
+    resolution: {integrity: sha512-T9MziNuvthzv6+JAhKD71ab/jVXW5U20nQZRBJd6+q+ujmkC+/ISOf2GYo8pIi4VGjdIYRIHDftMAYn3WKZT3w==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
 
   react-remove-scroll-bar@2.3.8:
     resolution: {integrity: sha512-9r+yi9+mgU33AKcj6IbT9oRCO78WriSj6t/cF8DWBZJ9aOGPOTEDvdUDz1FwKim7QXWwmHqtdHnRJfhAxEG46Q==}
@@ -14875,6 +14907,8 @@ snapshots:
     dependencies:
       clsx: 2.1.1
 
+  classnames@2.5.1: {}
+
   clean-stack@2.2.0: {}
 
   clean-stack@5.2.0:
@@ -15130,6 +15164,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.2
+
+  country-flag-icons@1.6.3: {}
 
   cross-fetch@3.2.0:
     dependencies:
@@ -16959,6 +16995,13 @@ snapshots:
 
   inline-style-parser@0.2.4: {}
 
+  input-format@0.3.14(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      prop-types: 15.8.1
+    optionalDependencies:
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+
   inquirer@8.2.5:
     dependencies:
       ansi-escapes: 4.3.2
@@ -17360,6 +17403,8 @@ snapshots:
       type-check: 0.4.0
 
   libphonenumber-js@1.12.15: {}
+
+  libphonenumber-js@1.12.28: {}
 
   lie@3.1.1:
     dependencies:
@@ -18975,6 +19020,16 @@ snapshots:
 
   react-medium-image-zoom@5.3.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+
+  react-phone-number-input@3.4.14(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      classnames: 2.5.1
+      country-flag-icons: 1.6.3
+      input-format: 0.3.14(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      libphonenumber-js: 1.12.28
+      prop-types: 15.8.1
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
