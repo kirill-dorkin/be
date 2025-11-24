@@ -18,9 +18,8 @@ export const addressToInput = ({
 });
 
 // Переопределение названий стран для разных локалей
-const COUNTRY_NAME_OVERRIDES: Record<
-  AllCountryCode,
-  Partial<Record<AllLocale, string>>
+const COUNTRY_NAME_OVERRIDES: Partial<
+  Record<AllCountryCode, Partial<Record<AllLocale, string>>>
 > = {
   KG: {
     "ru-RU": "Кыргызстан",
