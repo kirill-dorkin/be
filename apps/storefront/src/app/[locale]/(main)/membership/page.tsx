@@ -68,6 +68,13 @@ export default async function MembershipPage() {
     },
   ];
 
+  const guestFeatureKeys = [
+    "comparison.guest.features.standard-prices",
+    "comparison.guest.features.standard-shipping",
+    "comparison.guest.features.regular-support",
+    "comparison.guest.features.no-early-access",
+  ] as const;
+
   return (
     <div className="bg-background overflow-x-hidden">
       {/* Hero секция */}
@@ -171,13 +178,13 @@ export default async function MembershipPage() {
               </div>
 
               <ul className="space-y-3">
-                {["standard-prices", "standard-shipping", "regular-support", "no-early-access"].map((key) => (
+                {guestFeatureKeys.map((key) => (
                   <li key={key} className="flex items-start gap-3">
                     <div className="mt-0.5 rounded-full bg-muted p-1">
                       <Check className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <span className="text-sm text-muted-foreground">
-                      {t(`comparison.guest.features.${key}`)}
+                      {t(key)}
                     </span>
                   </li>
                 ))}
