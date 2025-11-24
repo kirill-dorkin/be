@@ -36,7 +36,7 @@ export function ClubInviteModal() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-[min(92vw,360px)] rounded-[32px] border-0 bg-white p-0 shadow-[0_40px_120px_rgba(15,23,42,0.35)] dark:bg-stone-900">
-        <div className="relative flex flex-col gap-4 px-5 pb-5 pt-5">
+        <div className="relative flex flex-col gap-5 px-5 pb-5 pt-9">
           <DialogClose asChild>
             <button className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground transition hover:bg-muted/80">
               <X className="h-4 w-4" />
