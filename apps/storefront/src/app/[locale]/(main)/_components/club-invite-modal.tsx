@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles, Star, UsersRound } from "lucide-react";
+import { Crown, MessageCircle, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -16,10 +16,9 @@ import {
 
 import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
-import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "be-club-invite";
-const SHOW_AFTER_MS = 7000;
+const SHOW_AFTER_MS = 6500;
 
 type Benefit = {
   description: string;
@@ -52,18 +51,18 @@ export function ClubInviteModal() {
     () => [
       {
         icon: Sparkles,
-        title: "Скидки и подарки",
-        description: "Экономьте до 20% на ремонте, доставке и аксессуарах.",
+        title: "Скидка до 20%",
+        description: "К каждому ремонту и доставке",
       },
       {
-        icon: UsersRound,
-        title: "Персональный сервис",
-        description: "Чат с мастером, напоминания о ТО и быстрая поддержка 24/7.",
+        icon: Crown,
+        title: "Приоритет 24/7",
+        description: "Личный специалист всегда на связи",
       },
       {
-        icon: Star,
-        title: "Ранний доступ",
-        description: "Закрытые распродажи, лимитированные поставки и клубные акции.",
+        icon: MessageCircle,
+        title: "Закрытые акции",
+        description: "Новинки и апгрейды только для клуба",
       },
     ],
     [],
@@ -83,94 +82,67 @@ export function ClubInviteModal() {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[min(94vw,640px)] border-0 bg-gradient-to-b from-background to-muted/60 p-0 shadow-2xl">
-        <div className="grid gap-0 overflow-hidden rounded-3xl bg-white dark:bg-stone-900 md:grid-cols-[1.1fr_0.9fr]">
-          <div className="space-y-5 p-6 sm:p-8">
-            <DialogHeader className="space-y-3 text-left">
-              <DialogTitle className="text-2xl font-bold leading-tight sm:text-3xl">
-                Вступайте в клуб BestElectronics
-              </DialogTitle>
-              <DialogDescription className="text-base leading-relaxed text-muted-foreground">
-                Получайте привилегии участника: персональные скидки, ранний доступ к новинкам и
-                поддержку сервисных инженеров тогда, когда это нужно.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-3">
-              {benefits.map((benefit) => (
-                <div
-                  key={benefit.title}
-                  className="flex items-start gap-3 rounded-2xl border border-border/60 px-3 py-2 shadow-[0_6px_22px_rgba(15,23,42,0.07)]"
-                >
-                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <benefit.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm sm:text-base">{benefit.title}</p>
-                    <p className="text-xs text-muted-foreground sm:text-sm">{benefit.description}</p>
-                  </div>
-                </div>
-              ))}
+      <DialogContent className="max-w-[min(90vw,420px)] rounded-[32px] border-0 bg-white p-0 shadow-[0_40px_120px_rgba(15,23,42,0.35)] dark:bg-stone-900">
+        <div className="relative flex flex-col gap-6 px-6 pb-6 pt-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <DialogHeader className="text-left">
+                <DialogTitle className="text-[22px] font-semibold leading-tight">
+                  Клуб BestElectronics
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">
+                  Несколько бонусов, которые вы получите за регистрацию.
+                </DialogDescription>
+              </DialogHeader>
             </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button
-                className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-base shadow-lg shadow-amber-500/25"
-                onClick={() => {
-                  handleOpenChange(false);
-                  router.push(paths.membership.asPath());
-                }}
-              >
-                Стать участником
-              </Button>
-              <Button asChild variant="outline" className="flex-1 border-amber-200 text-base">
-                <LocalizedLink href={paths.createAccount.asPath()} onClick={() => handleOpenChange(false)}>
-                  Создать аккаунт
-                </LocalizedLink>
-              </Button>
-            </div>
-          </div>
-
-          <div
-            className={cn(
-              "flex flex-col justify-between gap-6 p-6 sm:p-8",
-              "bg-gradient-to-br from-amber-500 via-orange-500 to-orange-700 text-white",
-            )}
-          >
-            <div className="space-y-4 text-sm sm:text-base">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/70 sm:text-sm">
-                для новых друзей
-              </p>
-              <p className="text-2xl font-semibold leading-tight sm:text-3xl">
-                До 3 месяцев членства бесплатно
-              </p>
-              <p className="text-white/80">
-                Получите приветственный бонус — бесплатное обслуживание техники, подбор аксессуаров и
-                подарочный апгрейд выбранного гаджета.
-              </p>
-            </div>
-
-            <ul className="space-y-2 text-sm text-white/90">
-              <li className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-white" />
-                Бесплатные консультации инженеров
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-white" />
-                Приоритетный ремонт и курьерская доставка
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-white" />
-                Эксклюзивные клубные мероприятия и демо
-              </li>
-            </ul>
-
             <DialogClose asChild>
-              <button className="text-sm font-medium text-white/80 underline-offset-4 hover:text-white hover:underline">
-                Уже позже
+              <button className="h-9 w-9 rounded-full bg-muted text-muted-foreground transition hover:bg-muted/80">
+                ×
               </button>
             </DialogClose>
           </div>
+
+          <div className="space-y-2">
+            {benefits.map((benefit) => (
+              <div
+                key={benefit.title}
+                className="flex items-center gap-3 rounded-2xl border border-border/70 bg-muted/40 px-3 py-2"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <benefit.icon className="h-4 w-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-foreground">{benefit.title}</span>
+                  <span className="text-xs text-muted-foreground">{benefit.description}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Button
+              className="h-11 rounded-2xl bg-slate-900 text-base font-semibold text-white transition hover:bg-slate-800"
+              onClick={() => {
+                handleOpenChange(false);
+                router.push(paths.membership.asPath());
+              }}
+            >
+              Вступить в клуб
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              className="h-11 rounded-2xl border border-transparent bg-muted/60 text-base font-semibold text-foreground transition hover:bg-muted"
+            >
+              <LocalizedLink href={paths.createAccount.asPath()} onClick={() => handleOpenChange(false)}>
+                Зарегистрироваться
+              </LocalizedLink>
+            </Button>
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground">
+            Уже есть аккаунт? Просто войдите — все клубные преимущества сохранятся.
+          </p>
         </div>
       </DialogContent>
     </Dialog>
