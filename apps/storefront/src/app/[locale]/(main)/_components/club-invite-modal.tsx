@@ -1,8 +1,8 @@
 "use client";
 
-import { Crown, MessageCircle, Sparkles, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -19,12 +19,6 @@ import { paths } from "@/lib/paths";
 
 const STORAGE_KEY = "be-club-invite";
 
-type Benefit = {
-  description: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  title: string;
-};
-
 export function ClubInviteModal() {
   // TODO: вернуть отложенное появление по таймеру после финализации дизайна попапа
   const [open, setOpen] = useState(true);
@@ -33,27 +27,6 @@ export function ClubInviteModal() {
   useEffect(() => {
     window.sessionStorage.removeItem(STORAGE_KEY);
   }, []);
-
-  const benefits = useMemo<Benefit[]>(
-    () => [
-      {
-        icon: Sparkles,
-        title: "Скидка до 20%",
-        description: "К каждому ремонту и доставке",
-      },
-      {
-        icon: Crown,
-        title: "Приоритет 24/7",
-        description: "Личный специалист всегда на связи",
-      },
-      {
-        icon: MessageCircle,
-        title: "Закрытые акции",
-        description: "Новинки и апгрейды только для клуба",
-      },
-    ],
-    [],
-  );
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -86,23 +59,6 @@ export function ClubInviteModal() {
                 Несколько бонусов, которые вы получите за регистрацию.
               </DialogDescription>
             </DialogHeader>
-          </div>
-
-          <div className="space-y-2">
-            {benefits.map((benefit) => (
-              <div
-                key={benefit.title}
-                className="flex items-center gap-3 rounded-3xl border border-border/60 bg-white/70 px-4 py-3 shadow-inner shadow-gray-100 transition dark:bg-stone-900/40"
-              >
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900/5 text-slate-900 dark:bg-white/10 dark:text-white">
-                  <benefit.icon className="h-4 w-4" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-slate-900 dark:text-white">{benefit.title}</span>
-                  <span className="text-xs text-muted-foreground">{benefit.description}</span>
-                </div>
-              </div>
-            ))}
           </div>
 
           <div className="space-y-3 rounded-3xl bg-slate-900/5 p-4">
