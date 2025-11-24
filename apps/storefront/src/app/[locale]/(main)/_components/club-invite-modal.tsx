@@ -44,6 +44,7 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
 
     if (timestamp === null) {
       window.sessionStorage.removeItem(STORAGE_KEY);
+
       return;
     }
 
@@ -61,10 +62,12 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
       if (delay <= 0) {
         setNextShowTimestamp(null);
         setOpen(true);
+
         return;
       }
 
       const nextShowAt = Date.now() + delay;
+
       setNextShowTimestamp(nextShowAt);
 
       timeoutRef.current = window.setTimeout(() => {
@@ -85,6 +88,7 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
       setOpen(false);
       clearScheduledShow();
       setNextShowTimestamp(null);
+
       return;
     }
 
@@ -115,6 +119,7 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
     if (next) {
       clearScheduledShow();
       setNextShowTimestamp(null);
+
       return;
     }
 

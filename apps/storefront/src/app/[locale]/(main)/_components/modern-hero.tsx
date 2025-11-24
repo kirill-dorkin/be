@@ -2,7 +2,6 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import type { User } from "@nimara/domain/objects/User";
-
 import { Button } from "@nimara/ui/components/button";
 
 import { LocalizedLink } from "@/i18n/routing";
