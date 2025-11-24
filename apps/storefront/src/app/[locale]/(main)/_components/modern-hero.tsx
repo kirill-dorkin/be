@@ -7,12 +7,14 @@ import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 
 import { AnimatedCounter } from "./animated-counter";
+import { ClubInviteModal } from "./club-invite-modal";
 
 export async function ModernHero() {
   const t = await getTranslations("home");
 
   return (
     <section className="relative w-full overflow-x-clip bg-background">
+      <ClubInviteModal />
       {/* Background gradients layer */}
       <div className="pointer-events-none absolute inset-0 w-full">
         {/* Top fade - smooth transition from header */}
