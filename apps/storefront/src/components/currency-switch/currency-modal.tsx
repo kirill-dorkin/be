@@ -6,6 +6,7 @@ import { useEffect, useRef, useTransition } from "react";
 import { createPortal } from "react-dom";
 
 import { Button } from "@nimara/ui/components/button";
+import { Label } from "@nimara/ui/components/label";
 
 import { getCurrencySymbol } from "@/lib/currency";
 import { cn } from "@/lib/utils";
@@ -76,70 +77,73 @@ return;
   }, [open, onExited]);
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 px-4 pb-8 pt-24 backdrop-blur-sm sm:items-center sm:pt-0">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center p-4 md:py-20">
       <div
         className={cn(
-          "relative z-[61] w-full max-w-[520px] rounded-[32px] bg-white px-6 pb-8 pt-6 text-slate-900 shadow-[0_40px_120px_rgba(15,23,42,0.35)] transition-all duration-300 ease-out dark:bg-stone-900",
-          open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+          "absolute inset-0 bg-stone-950/40 transition-opacity duration-300",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          "relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl bg-background px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
+          open
+            ? "translate-y-0 opacity-100"
+            : "translate-y-6 opacity-0",
         )}
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold leading-tight">{t("currency-settings")}</h2>
-            <p className="text-muted-foreground mt-1 text-sm">{t("available-currencies")}</p>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-full bg-muted/40 hover:bg-muted"
-            onClick={onClose}
-          >
-            <X className="h-4 w-4" />
+        <div className="flex items-center justify-between">
+          <Label className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
+            {t("currency-settings")}
+          </Label>
+          <Button variant="ghost" onClick={onClose} size="icon">
+            <X className="size-4" />
           </Button>
         </div>
 
-        <div className="mt-6 space-y-2">
+        <Label className="text-muted-foreground mb-2 block text-sm font-medium uppercase tracking-wider">
+          {t("available-currencies")}
+        </Label>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {currencyOptions.map((option) => {
             const isActive = option.currency === currentCurrency;
             const isSom = option.currency === "KGS";
             const symbol = isSom ? null : getCurrencySymbol(option.currency);
 
+            const symbolClassName = cn(
+              "flex h-10 w-10 items-center justify-center rounded-full border border-border text-base font-semibold leading-none text-foreground",
+              symbol === "с" && "text-[1.45rem] -translate-y-[1px]",
+            );
+
             return (
-              <button
-                type="button"
+              <Button
                 key={option.id}
+                variant="ghost"
                 className={cn(
-                  "w-full rounded-3xl border border-transparent bg-muted/50 p-4 text-left transition-all duration-200",
-                  "hover:bg-muted/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
-                  isActive &&
-                    "bg-primary/10 border-primary/40 shadow-[0_8px_32px_rgba(80,63,205,0.15)] dark:bg-primary/20",
+                  "text-muted-foreground flex h-auto w-full flex-col items-start gap-3 rounded-2xl p-4 text-left text-sm font-normal leading-5 transition-colors",
                 )}
                 disabled={isPending || isActive}
                 onClick={() => onCurrencyClick(option.currency)}
               >
                 <div className="flex items-center gap-3">
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border text-base font-semibold leading-none",
-                      isActive
-                        ? "border-primary bg-white text-primary dark:bg-primary-foreground"
-                        : "border-border text-muted-foreground",
-                    )}
-                  >
-                    {symbol ?? option.currency.charAt(0)}
+                  <span aria-hidden="true" className={symbolClassName}>
+                    {symbol}
                   </span>
-                  <div className="flex flex-col items-start gap-0.5">
-                    <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  <div className="flex flex-col items-start gap-1">
+                    <span className="text-xs uppercase tracking-wide text-muted-foreground">
                       {option.marketName}
                     </span>
-                    <span className="text-lg font-semibold text-slate-900 dark:text-white">
+                    <span className="text-base font-semibold text-foreground">
                       {option.currency}
                     </span>
-                    <span className="text-sm text-muted-foreground">{option.languageName}</span>
                   </div>
                 </div>
-              </button>
+                <span className="text-muted-foreground text-sm">
+                  {option.languageName}
+                </span>
+              </Button>
             );
           })}
         </div>
