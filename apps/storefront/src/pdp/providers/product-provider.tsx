@@ -91,7 +91,9 @@ export const ProductProvider = async ({
 
   const user =
     userResult && typeof userResult === "object" && "ok" in userResult
-      ? userResult.data
+      ? userResult.ok
+        ? userResult.data
+        : null
       : null;
 
   return (
