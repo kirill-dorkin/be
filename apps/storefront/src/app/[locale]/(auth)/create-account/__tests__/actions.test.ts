@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { login } from "@/lib/actions/login";
 import { getAccountConfirmationRedirectUrl } from "@/lib/account-confirmation";
-import { registerAccount } from "../actions";
+import { login } from "@/lib/actions/login";
 import { getAuthService } from "@/services/auth";
+
+import { registerAccount } from "../actions";
 
 vi.mock("@/regions/server", () => ({
   getCurrentRegion: vi.fn(async () => ({
@@ -100,6 +101,7 @@ describe("registerAccount", () => {
     expect(mockAccountRegister).toHaveBeenCalledTimes(2);
 
     const [, secondCallArgs] = mockAccountRegister.mock.calls;
+
     expect(secondCallArgs[0].redirectUrl).toBe("https://example.com/confirm");
   });
 

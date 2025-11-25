@@ -1,7 +1,7 @@
 "use server";
 
-import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
 import { getAccountConfirmationRedirectUrl } from "@/lib/account-confirmation";
+import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
 import {
   REPAIR_METADATA_KEYS,
   REPAIR_ROLE,
@@ -56,6 +56,7 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
 
   if (!result.ok && shouldRetryAccountRegisterWithRedirect(result.errors)) {
     const redirectUrl = await getAccountConfirmationRedirectUrl();
+
     result = await register(redirectUrl);
   }
 

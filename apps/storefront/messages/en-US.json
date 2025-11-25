@@ -990,8 +990,8 @@
     "UNEXPECTED_HTTP_ERROR": "Unexpected error occurred.",
     "UNIQUE_ERROR": "Email is used by other user.",
     "UNKNOWN_ERROR": "Unknown error occurred.",
-    "INVALID_PASSWORD": "Password does not meet requirements.",
-    "INVALID_CREDENTIALS": "Invalid email or password.",
+    "INVALID_PASSWORD_ERROR": "Password does not meet requirements.",
+    "INVALID_CREDENTIALS_ERROR": "Invalid email or password.",
     "LOGIN_AFTER_REGISTER_ERROR": "Registration successful, but automatic login failed. Please try logging in manually.",
     "VOUCHER_NOT_APPLICABLE_ERROR": "Promo code is not applicable to this checkout.",
     "auth": {

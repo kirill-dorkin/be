@@ -987,8 +987,8 @@
     "UNEXPECTED_HTTP_ERROR": "Произошла непредвиденная ошибка.",
     "UNIQUE_ERROR": "Email уже используется другим пользователем.",
     "UNKNOWN_ERROR": "Произошла неизвестная ошибка.",
-    "INVALID_PASSWORD": "Пароль не соответствует требованиям.",
-    "INVALID_CREDENTIALS": "Неверный email или пароль.",
+    "INVALID_PASSWORD_ERROR": "Пароль не соответствует требованиям.",
+    "INVALID_CREDENTIALS_ERROR": "Неверный email или пароль.",
     "LOGIN_AFTER_REGISTER_ERROR": "Регистрация прошла успешно, но автоматический вход не удался. Попробуйте войти вручную.",
     "VOUCHER_NOT_APPLICABLE_ERROR": "Промокод не подходит к этому заказу.",
     "auth": {

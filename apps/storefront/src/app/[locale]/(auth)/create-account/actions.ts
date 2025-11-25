@@ -1,11 +1,12 @@
 "use server";
 
-import { err } from "@nimara/domain/objects/Result";
 import { revalidatePath } from "next/cache";
 
-import { login } from "@/lib/actions/login";
-import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
+import { err } from "@nimara/domain/objects/Result";
+
 import { getAccountConfirmationRedirectUrl } from "@/lib/account-confirmation";
+import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
+import { login } from "@/lib/actions/login";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
 import { getAuthService } from "@/services/auth";

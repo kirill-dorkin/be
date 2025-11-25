@@ -1095,7 +1095,7 @@ export type AppExtensionFilterInput = {
    *
    * Added in Saleor 3.22.
    */
-  mountName?: InputMaybe<Scalars['String']['input']>;
+  mountName?: InputMaybe<Array<Scalars['String']['input']>>;
   /**
    * DEPRECATED: Use `targetName` instead.
    *
@@ -4352,6 +4352,15 @@ export type CheckoutAuthorizeStatusEnum =
   | 'NONE'
   | 'PARTIAL';
 
+export type CheckoutAutoCompleteInput = {
+  /** Specifies the earliest date on which fully paid checkouts can begin to be automatically completed. Fully paid checkouts dated before this cut-off will not be automatically completed. Must be less than the threshold of the oldest modified checkout eligible for automatic completion. Default is current date time. */
+  cutOffDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The time in minutes after which the fully paid checkout will be automatically completed. Default is 30. Set to 0 for immediate completion. Should be less than the threshold for the oldest modified checkout eligible for automatic completion. */
+  delay?: InputMaybe<Scalars['Minute']['input']>;
+  /** Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount. */
+  enabled: Scalars['Boolean']['input'];
+};
+
 /**
  * Updates billing address in the existing checkout.
  *
@@ -5026,6 +5035,18 @@ export type CheckoutRemovePromoCode = {
 /** Represents the channel-specific checkout settings. */
 export type CheckoutSettings = {
   /**
+   * The date time defines the earliest checkout creation date on which fully paid checkouts can begin to be automatically completed.
+   *
+   * Added in Saleor 3.22.
+   */
+  automaticCompletionCutOffDate: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * The time in minutes to wait after a checkout is fully paid before automatically completing it.
+   *
+   * Added in Saleor 3.22.
+   */
+  automaticCompletionDelay: Maybe<Scalars['Minute']['output']>;
+  /**
    * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
    *
    * Added in Saleor 3.20.
@@ -5041,9 +5062,17 @@ export type CheckoutSettings = {
 
 export type CheckoutSettingsInput = {
   /**
-   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+   * Settings for automatic completion of fully paid checkouts.
+   *
+   * Added in Saleor 3.22.
+   */
+  automaticCompletion?: InputMaybe<CheckoutAutoCompleteInput>;
+  /**
+   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `authorize_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
    *
    * Added in Saleor 3.20.
+   *
+   * DEPRECATED: this field will be removed. Use `automatic_completion` instead.
    */
   automaticallyCompleteFullyPaidCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
   /**

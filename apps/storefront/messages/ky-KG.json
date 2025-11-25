@@ -981,8 +981,8 @@
     "UNEXPECTED_HTTP_ERROR": "Күтүүсүз ката пайда болду.",
     "UNIQUE_ERROR": "Бул email башка колдонуучуга таандык.",
     "UNKNOWN_ERROR": "Белгисиз ката пайда болду.",
-    "INVALID_PASSWORD": "Сырсөз талаптарга жооп бербейт.",
-    "INVALID_CREDENTIALS": "Туура эмес email же сырсөз.",
+    "INVALID_PASSWORD_ERROR": "Сырсөз талаптарга жооп бербейт.",
+    "INVALID_CREDENTIALS_ERROR": "Туура эмес email же сырсөз.",
     "LOGIN_AFTER_REGISTER_ERROR": "Каттоо ийгиликтүү өттү, бирок автоматтык кирүү ийгиликсиз болду. Кол менен кирүүгө аракет кылыңыз.",
     "VOUCHER_NOT_APPLICABLE_ERROR": "Бул промокод бул заказга колдонулбайт.",
     "auth": {

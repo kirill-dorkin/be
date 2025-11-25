@@ -64,6 +64,7 @@ const SignUpFormComponent = () => {
 
       const redirectTarget =
         result.data?.redirectUrl ?? paths.account.profile.asPath();
+
       push(redirectTarget);
 
       return;

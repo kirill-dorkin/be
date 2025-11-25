@@ -64,12 +64,12 @@ export const config = {
 
           console.log("[NextAuth] Authorize - attempting login for:", email);
 
+          // @ts-expect-error - Saleor Auth SDK types may not match exactly
           const { data, errors } = await (
             await saleorAuthClient()
           ).signIn({ email, password });
 
           if (errors?.length) {
-            // Can't use logger here as it's not imported, using console
             console.error(
               "[NextAuth] Saleor GraphQL API errors:",
               JSON.stringify(errors, null, 2),
@@ -120,6 +120,12 @@ export const config = {
           }
 
           const user = resultUserGet.data;
+
+          if (!user) {
+            console.error("[NextAuth] User data is null after successful fetch");
+
+            return null;
+          }
 
           console.log(
             "[NextAuth] User successfully authenticated:",

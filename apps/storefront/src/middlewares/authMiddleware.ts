@@ -11,7 +11,6 @@ import { getAuthService } from "@/services/auth";
 import { type CustomMiddleware } from "./chain";
 
 const PROTECTED_ROUTES = ["/account"];
-const AUTH_COOKIE_PATH = AUTH_COOKIE_OPTIONS.path ?? "/";
 
 export function authMiddleware(middleware: CustomMiddleware) {
   return async (
@@ -47,9 +46,7 @@ export function authMiddleware(middleware: CustomMiddleware) {
 
     if (!refreshToken) {
       modifiedResponse = redirectToLogin;
-      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken, {
-        path: AUTH_COOKIE_PATH,
-      });
+      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken);
 
       return middleware(request, event, modifiedResponse);
     }
@@ -61,12 +58,8 @@ export function authMiddleware(middleware: CustomMiddleware) {
 
     if (!resultTokenRefresh.ok || !resultTokenRefresh.data.refreshToken) {
       modifiedResponse = redirectToLogin;
-      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken, {
-        path: AUTH_COOKIE_PATH,
-      });
-      modifiedResponse.cookies.delete(COOKIE_KEY.refreshToken, {
-        path: AUTH_COOKIE_PATH,
-      });
+      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken);
+      modifiedResponse.cookies.delete(COOKIE_KEY.refreshToken);
 
       return middleware(request, event, modifiedResponse);
     }

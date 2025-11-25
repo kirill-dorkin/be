@@ -12,11 +12,9 @@ export async function handleLogout() {
 
   const cookieStore = await cookies();
 
-  const deleteOptions = { path: AUTH_COOKIE_OPTIONS.path };
-
-  cookieStore.delete(COOKIE_KEY.accessToken, deleteOptions);
-  cookieStore.delete(COOKIE_KEY.refreshToken, deleteOptions);
-  cookieStore.delete(COOKIE_KEY.checkoutId, deleteOptions);
+  cookieStore.delete(COOKIE_KEY.accessToken);
+  cookieStore.delete(COOKIE_KEY.refreshToken);
+  cookieStore.delete(COOKIE_KEY.checkoutId);
 
   storefrontLogger.debug("Cleared auth and checkout cookies after logout.");
 }
