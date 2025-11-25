@@ -1,4 +1,4 @@
-import { Users,Wallet } from "lucide-react";
+import { Users, Wallet } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { getAccessToken } from "@/auth";
@@ -13,11 +13,16 @@ import { UpdateEmailModal } from "./_modals/update-email-modal";
 import { UpdateNameModal } from "./_modals/update-name-modal";
 import { UpdatePasswordModal } from "./_modals/update-password-modal";
 
-export default async function Page() {
-  const [accessToken, t, userService] = await Promise.all([
+type PageProps = {
+  searchParams: Promise<Record<string, string>>;
+};
+
+export default async function Page({ searchParams }: PageProps) {
+  const [accessToken, t, userService, resolvedSearchParams] = await Promise.all([
     getAccessToken(),
     getTranslations(),
     getUserService(),
+    searchParams,
   ]);
 
   const resultUserGet = await userService.userGet(accessToken);
@@ -32,6 +37,7 @@ export default async function Page() {
   const currentBalance = referralBalance
     ? calculateBalance(referralBalance.transactions)
     : 0;
+  const showReferralPromo = resolvedSearchParams?.referralPromo === "true";
   const defaultUsername = user?.firstName ?? t("staff.orderCard.customer");
   const fullName =
     [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
@@ -167,6 +173,9 @@ export default async function Page() {
         <ReferralWelcomeWrapper
           referralCode={referralStats.referralCode}
           isNewUser={(referralStats.referralCount ?? 0) === 0}
+          forceShow={showReferralPromo}
+          delayMs={showReferralPromo ? 20000 : undefined}
+          clearQueryParam={showReferralPromo ? "referralPromo" : undefined}
         />
       )}
     </div>

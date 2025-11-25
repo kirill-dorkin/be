@@ -6,6 +6,7 @@ import { err } from "@nimara/domain/objects/Result";
 
 import { getAccountConfirmationRedirectUrl } from "@/lib/account-confirmation";
 import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
+import { initializeReferralData } from "@/lib/actions/init-referral";
 import { login } from "@/lib/actions/login";
 import { paths } from "@/lib/paths";
 import { getCurrentRegion } from "@/regions/server";
@@ -16,7 +17,7 @@ import { type FormSchema } from "./schema";
 
 export async function registerAccount(values: FormSchema) {
   const region = await getCurrentRegion();
-  const { firstName, lastName, email, password } = values;
+  const { firstName, lastName, email, password, referralCode } = values;
   const authService = await getAuthService();
 
   storefrontLogger.info("[RegisterAccount] Starting registration", {
@@ -104,7 +105,9 @@ export async function registerAccount(values: FormSchema) {
   const loginResult = await login({
     email,
     password,
-    redirectUrl: paths.account.profile.asPath(),
+    redirectUrl: paths.account.profile.asPath({
+      query: { referralPromo: "true" },
+    }),
   });
 
   storefrontLogger.debug("[RegisterAccount] Login result", {
@@ -132,6 +135,13 @@ export async function registerAccount(values: FormSchema) {
       },
     ]);
   }
+
+  // Initialize referral data for new user
+  storefrontLogger.info("[RegisterAccount] Initializing referral data", {
+    hasReferralCode: !!referralCode,
+  });
+
+  await initializeReferralData(referralCode);
 
   return {
     ok: true as const,
