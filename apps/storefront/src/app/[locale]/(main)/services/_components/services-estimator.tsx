@@ -22,11 +22,11 @@ import { TextFormField } from "@/components/form/text-form-field";
 import { TextareaField } from "@/components/form/textarea-field";
 import { formatAsPrice } from "@/lib/formatters/util";
 import {
-  VIP_REPAIR_DISCOUNT_RATE,
   applyRepairDiscount,
   currencyMath,
   type RepairDiscount,
   toDiscountPercent,
+  VIP_REPAIR_DISCOUNT_RATE,
 } from "@/lib/repair/discount";
 import {
   type RepairDeviceType,

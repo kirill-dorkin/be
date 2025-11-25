@@ -7,8 +7,8 @@ import { Button } from "@nimara/ui/components/button";
 
 import { LocalizedLink, usePathname } from "@/i18n/routing";
 
-import { accountNavLinks } from "./side-links";
 import { logout } from "./actions";
+import { accountNavLinks } from "./side-links";
 
 export function AccountQuickLinks() {
   const t = useTranslations();

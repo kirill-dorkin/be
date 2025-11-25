@@ -1,8 +1,8 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { memo, useCallback, useMemo } from "react";
-import { ChevronRight } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { cn } from "@nimara/ui/lib/utils";
@@ -75,7 +75,7 @@ function SideLinksComponent() {
 // Мемоизация - используется на всех страницах аккаунта
 export const SideLinks = memo(SideLinksComponent);
 
-export const accountNavLinks: { title: TranslationMessage; href: string }[] = [
+export const accountNavLinks: { href: string, title: TranslationMessage; }[] = [
   { title: "account.order-history", href: paths.account.orders.asPath() },
   { title: "account.addresses", href: paths.account.addresses.asPath() },
   { title: "account.personal-data", href: paths.account.profile.asPath() },
