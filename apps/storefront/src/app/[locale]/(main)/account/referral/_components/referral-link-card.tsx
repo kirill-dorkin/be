@@ -2,7 +2,7 @@
 
 import { Copy, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@nimara/ui/components/card";
@@ -19,8 +19,13 @@ export function ReferralLinkCard({ referralLink, referralCode }: ReferralLinkCar
   const t = useTranslations();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  const canShare =
-    typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const [canShare, setCanShare] = useState(false);
+
+  useEffect(() => {
+    setCanShare(
+      typeof navigator !== "undefined" && typeof navigator.share === "function",
+    );
+  }, []);
 
   const handleCopy = async () => {
     try {
@@ -36,20 +41,18 @@ export function ReferralLinkCard({ referralLink, referralCode }: ReferralLinkCar
     }
   };
 
-  const handleShare = async () => {
-    if (!canShare) {
+  const handleShare = () => {
+    if (!canShare || typeof navigator === "undefined") {
       return;
     }
 
-    try {
-      await navigator.share({
+    void navigator
+      .share({
         title: t("referral.share-title"),
         text: t("referral.share-text"),
         url: referralLink,
-      });
-    } catch (error) {
-      console.log("Share cancelled", error);
-    }
+      })
+      .catch(() => undefined);
   };
 
   return (

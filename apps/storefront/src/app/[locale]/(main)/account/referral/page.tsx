@@ -1,4 +1,4 @@
-import { Gift, LinkIcon, TrendingUp, Users } from "lucide-react";
+import { Gift, LinkIcon, Sparkles, TrendingUp, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { type ReactNode } from "react";
@@ -50,6 +50,30 @@ export default async function ReferralPage() {
   const vipReferrals = referralData.vipReferralCount || 0;
   const lifetimeEarned = referralData.totalEarned || 0;
   const availableBalance = calculateBalance(balance.transactions);
+
+  const howItWorksSteps = [
+    {
+      icon: <Sparkles className="h-5 w-5 text-blue-600" />,
+      badgeClass: "bg-blue-100",
+      title: t("referral.step-1-title"),
+      description: t("referral.step-1-description"),
+    },
+    {
+      icon: <Users className="h-5 w-5 text-emerald-600" />,
+      badgeClass: "bg-emerald-100",
+      title: t("referral.step-2-title"),
+      description: t("referral.step-2-description"),
+    },
+    {
+      icon: <TrendingUp className="h-5 w-5 text-amber-600" />,
+      badgeClass: "bg-amber-100",
+      title: t("referral.step-3-title"),
+      description: t("referral.step-3-description", {
+        amount: REFERRAL_BONUS_AMOUNT,
+        currency: balance.currency,
+      }),
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-6 text-sm md:gap-8">
@@ -121,25 +145,17 @@ export default async function ReferralPage() {
         <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-primary">
           {t("referral.how-it-works")}
         </h2>
-        <ol className="space-y-4">
-          <Step
-            index={1}
-            title={t("referral.step-1-title")}
-            description={t("referral.step-1-description")}
-          />
-          <Step
-            index={2}
-            title={t("referral.step-2-title")}
-            description={t("referral.step-2-description")}
-          />
-          <Step
-            index={3}
-            title={t("referral.step-3-title")}
-            description={t("referral.step-3-description", {
-              amount: REFERRAL_BONUS_AMOUNT,
-              currency: balance.currency,
-            })}
-          />
+        <ol className="space-y-3">
+          {howItWorksSteps.map((step, index) => (
+            <Step
+              key={step.title}
+              description={step.description}
+              icon={step.icon}
+              index={index + 1}
+              badgeClass={step.badgeClass}
+              title={step.title}
+            />
+          ))}
         </ol>
       </section>
     </div>
@@ -171,21 +187,30 @@ function StatsCard({
 }
 
 function Step({
+  badgeClass,
+  description,
+  icon,
   index,
   title,
-  description,
 }: {
+  badgeClass: string;
   description: string;
+  icon: ReactNode;
   index: number;
   title: string;
 }) {
   return (
-    <li className="flex gap-3">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-        {index}
-      </span>
+    <li className="flex items-center gap-3 rounded-[28px] border border-slate-100/80 bg-white/80 p-4 shadow-inner dark:border-slate-800/70 dark:bg-slate-900/30">
+      <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${badgeClass}`}>
+        {icon}
+      </div>
       <div>
-        <p className="font-medium text-slate-900 dark:text-primary">{title}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-muted-foreground">
+          {index.toString().padStart(2, "0")}
+        </p>
+        <p className="text-base font-semibold text-slate-900 dark:text-primary">
+          {title}
+        </p>
         <p className="text-sm text-slate-500 dark:text-muted-foreground">
           {description}
         </p>

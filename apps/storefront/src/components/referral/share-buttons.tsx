@@ -2,6 +2,7 @@
 
 import { MessageCircle, Send, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 
@@ -14,8 +15,13 @@ interface ShareButtonsProps {
 
 export function ShareButtons({ referralLink, referralCode }: ShareButtonsProps) {
   const t = useTranslations();
-  const canShare =
-    typeof navigator !== "undefined" && typeof navigator.share === "function";
+  const [canShare, setCanShare] = useState(false);
+
+  useEffect(() => {
+    setCanShare(
+      typeof navigator !== "undefined" && typeof navigator.share === "function",
+    );
+  }, []);
 
   const shareMessage = t("referral.share-message", {
     code: referralCode,
@@ -25,26 +31,27 @@ export function ShareButtons({ referralLink, referralCode }: ShareButtonsProps) 
   const encodedMessage = encodeURIComponent(shareMessage);
   const encodedLink = encodeURIComponent(referralLink);
 
-  const shareLinks = {
-    whatsapp: `https://wa.me/?text=${encodedMessage}`,
-    telegram: `https://t.me/share/url?url=${encodedLink}&text=${encodeURIComponent(t("referral.share-text"))}`,
-    viber: `viber://forward?text=${encodedMessage}`,
-  };
+  const shareLinks = useMemo(
+    () => ({
+      whatsapp: `https://wa.me/?text=${encodedMessage}`,
+      telegram: `https://t.me/share/url?url=${encodedLink}&text=${encodeURIComponent(t("referral.share-text"))}`,
+      viber: `viber://forward?text=${encodedMessage}`,
+    }),
+    [encodedLink, encodedMessage, t],
+  );
 
-  const handleShare = async () => {
-    if (!canShare) {
+  const handleShare = () => {
+    if (!canShare || typeof navigator === "undefined") {
       return;
     }
 
-    try {
-      await navigator.share({
+    void navigator
+      .share({
         title: t("referral.share-title"),
         text: t("referral.share-text"),
         url: referralLink,
-      });
-    } catch (error) {
-      console.log("Share cancelled", error);
-    }
+      })
+      .catch(() => undefined);
   };
 
   return (
