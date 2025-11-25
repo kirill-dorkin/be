@@ -28,6 +28,7 @@ export const formSchema = ({ t }: { t: GetTranslations }) =>
         })
         .trim(),
       confirm: z.string().trim(),
+      referralCode: z.string().optional(),
     })
     .refine((data) => data.password === data.confirm, {
       message: t("form-validation.passwords-dont-match"),

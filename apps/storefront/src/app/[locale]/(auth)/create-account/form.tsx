@@ -1,8 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -21,6 +22,8 @@ import { type FormSchema, formSchema } from "./schema";
 const SignUpFormComponent = () => {
   const t = useTranslations();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const referralCode = searchParams.get("ref") || "";
 
   const { isRedirecting, push } = useRouterWithState();
 
@@ -32,8 +35,16 @@ const SignUpFormComponent = () => {
       email: "",
       password: "",
       confirm: "",
+      referralCode: referralCode,
     },
   });
+
+  // Update referral code if URL changes
+  useEffect(() => {
+    if (referralCode) {
+      form.setValue("referralCode", referralCode);
+    }
+  }, [referralCode, form]);
 
   // Мемоизация isDisabled
   const isDisabled = useMemo(
