@@ -2,7 +2,6 @@
 
 import { Download, QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type QRCodeStyling from "qr-code-styling";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
@@ -15,13 +14,19 @@ import {
   DialogTrigger,
 } from "@nimara/ui/components/dialog";
 
+type QRCodeInstance = {
+  append: (element: HTMLElement) => void;
+  download: (options?: { extension?: string; name?: string }) => void;
+  update: (options: { data?: string }) => void;
+};
+
 interface QRCodeGeneratorProps {
   referralLink: string;
 }
 
 export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
   const t = useTranslations();
-  const [qrCode, setQrCode] = useState<QRCodeStyling | null>(null);
+  const [qrCode, setQrCode] = useState<QRCodeInstance | null>(null);
 
   const qrRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +72,7 @@ export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
         },
       });
 
-      setQrCode(instance);
+      setQrCode(instance as QRCodeInstance);
     };
 
     if (!qrCode && typeof window !== "undefined") {
