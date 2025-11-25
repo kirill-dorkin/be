@@ -79,6 +79,8 @@ export const accountNavLinks: { href: string, title: TranslationMessage; }[] = [
   { title: "account.order-history", href: paths.account.orders.asPath() },
   { title: "account.addresses", href: paths.account.addresses.asPath() },
   { title: "account.personal-data", href: paths.account.profile.asPath() },
+  { title: "referral.title", href: paths.account.referral.asPath() },
+  { title: "balance.title", href: paths.account.balance.asPath() },
   { title: "account.privacy-settings", href: paths.account.privacySettings.asPath() },
   { title: "payment.payment-methods", href: paths.account.paymentMethods.asPath() },
 ];

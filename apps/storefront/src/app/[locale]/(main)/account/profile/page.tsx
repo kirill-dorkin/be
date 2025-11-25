@@ -1,6 +1,12 @@
+import { Users,Wallet } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { getAccessToken } from "@/auth";
+import { ReferralWelcomeWrapper } from "@/components/referral/welcome-wrapper";
+import { LocalizedLink } from "@/i18n/routing";
+import { getReferralData } from "@/lib/actions/referral";
+import { paths } from "@/lib/paths";
+import { calculateBalance } from "@/lib/referral/utils";
 import { getUserService } from "@/services/user";
 
 import { UpdateEmailModal } from "./_modals/update-email-modal";
@@ -17,6 +23,15 @@ export default async function Page() {
   const resultUserGet = await userService.userGet(accessToken);
 
   const user = resultUserGet.ok ? resultUserGet.data : null;
+
+  // Get referral and balance data
+  const referralResult = await getReferralData();
+  const referralPayload = referralResult.ok ? referralResult.data : null;
+  const referralStats = referralPayload?.referralData;
+  const referralBalance = referralPayload?.balance;
+  const currentBalance = referralBalance
+    ? calculateBalance(referralBalance.transactions)
+    : 0;
   const defaultUsername = user?.firstName ?? t("staff.orderCard.customer");
   const fullName =
     [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
@@ -104,6 +119,56 @@ export default async function Page() {
           ))}
         </div>
       </section>
+
+      <section className="grid gap-4 sm:grid-cols-2">
+        <LocalizedLink
+          href={paths.account.balance.asPath()}
+          className="block rounded-3xl border border-slate-100/80 bg-gradient-to-br from-emerald-50 to-white p-6 shadow-sm ring-1 ring-black/5 transition-all hover:shadow-md dark:border-slate-800 dark:from-slate-900/40 dark:to-slate-800/40 dark:ring-white/5"
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30">
+                <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-muted-foreground">
+                {t("balance.title")}
+              </p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-primary">
+                {currentBalance} {t("common.currency")}
+              </p>
+            </div>
+          </div>
+        </LocalizedLink>
+
+        <LocalizedLink
+          href={paths.account.referral.asPath()}
+          className="block rounded-3xl border border-slate-100/80 bg-gradient-to-br from-violet-50 to-white p-6 shadow-sm ring-1 ring-black/5 transition-all hover:shadow-md dark:border-slate-800 dark:from-slate-900/40 dark:to-slate-800/40 dark:ring-white/5"
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900/30">
+                <Users className="h-6 w-6 text-violet-600 dark:text-violet-400" />
+              </div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-muted-foreground">
+                {t("referral.title")}
+              </p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-primary">
+                {referralStats?.vipReferralCount ?? 0}
+              </p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-muted-foreground">
+                {t("referral.vip-referrals")}
+              </p>
+            </div>
+          </div>
+        </LocalizedLink>
+      </section>
+
+      {referralStats?.referralCode && (
+        <ReferralWelcomeWrapper
+          referralCode={referralStats.referralCode}
+          isNewUser={(referralStats.referralCount ?? 0) === 0}
+        />
+      )}
     </div>
   );
 }
