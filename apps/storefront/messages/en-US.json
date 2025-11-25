@@ -440,8 +440,10 @@
       "action": "View details",
       "disclaimer": "Final pricing is confirmed after diagnostics. Parts are quoted separately.",
       "discountBadge": "-{percent}%",
-      "discountCaption": "{percent}% off for registered customers",
-      "discountSavings": "You save {amount}"
+      "discountCaptionRegistered": "{percent}% off for registered customers",
+      "discountCaptionVip": "{percent}% off for VIP customers",
+      "discountSavings": "You save {amount}",
+      "vipBadgeLabel": "VIP"
     },
     "calculator": {
       "title": "Calculate the repair and send a request",
@@ -489,13 +491,18 @@
       "submitSuccess": "Thanks! Your request was sent to the service team.",
       "submitError": "We couldn’t send the request. Please try again or contact us by phone.",
       "freeLabel": "Free",
-      "discountApplied": "{percent}% discount for registered customers applied.",
+      "discountAppliedRegistered": "{percent}% discount for registered customers applied.",
+      "discountAppliedVip": "{percent}% discount for VIP customers applied.",
+      "vipBadgeLabel": "VIP",
       "discountSavings": "You save {amount}",
       "membershipPromo": {
         "title": "Save with community membership",
         "subtitle": "You could save {amount} on this repair",
         "savingsLabel": "Save {percent}%",
-        "cta": "Join Community"
+        "cta": "Join Community",
+        "vipTitle": "Save even more with VIP access",
+        "vipSubtitle": "VIP status saves you {amount} on this repair",
+        "vipExtraLabel": "That’s {amount} more than your current discount"
       },
       "errors": {
         "deviceType": "Select a device type",

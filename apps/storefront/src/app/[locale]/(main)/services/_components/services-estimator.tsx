@@ -7,7 +7,6 @@ import { useMemo, useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { Badge } from "@nimara/ui/components/badge";
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -23,6 +22,7 @@ import { TextFormField } from "@/components/form/text-form-field";
 import { TextareaField } from "@/components/form/textarea-field";
 import { formatAsPrice } from "@/lib/formatters/util";
 import {
+  VIP_REPAIR_DISCOUNT_RATE,
   applyRepairDiscount,
   currencyMath,
   type RepairDiscount,
@@ -78,6 +78,18 @@ type SelectedServiceEstimate = {
   modifiers: Record<string, number>;
   service: RepairService;
 };
+
+type MembershipPromoData =
+  | {
+      formattedAdditionalSavings: null;
+      formattedSavings: string;
+      variant: "guest";
+    }
+  | {
+      formattedAdditionalSavings: string;
+      formattedSavings: string;
+      variant: "vip-upgrade";
+    };
 
 type Translator = ReturnType<typeof useTranslations>;
 
@@ -350,6 +362,13 @@ export const ServicesEstimator = ({
   const discountRate = repairDiscount?.percentage ?? 0;
   const discountPercent = toDiscountPercent(discountRate);
   const hasDiscount = discountRate > 0;
+  const isVipDiscount = repairDiscount?.reason === "vip-customer";
+  const discountAppliedKey = isVipDiscount
+    ? "calculator.discountAppliedVip"
+    : "calculator.discountAppliedRegistered";
+  const discountTierLabel = isVipDiscount
+    ? t("calculator.vipBadgeLabel")
+    : null;
 
   const schema = useMemo(() => buildSchema(t), [t]);
 
@@ -660,28 +679,62 @@ export const ServicesEstimator = ({
         })
       : null;
 
-  // Calculate potential membership savings for guests
-  const potentialMembershipSavings = useMemo(() => {
-    if (hasDiscount || !aggregatedTotals) {
+  // Calculate potential membership savings for guests and registered users
+  const membershipPromoData = useMemo<MembershipPromoData | null>(() => {
+    if (!aggregatedTotals || aggregatedTotals.base.min <= 0) {
       return null;
     }
 
-    const savingsAmount = currencyMath.toCurrency(
-      aggregatedTotals.base.min *
-        (MEMBERSHIP_CONFIG.REPAIR_DISCOUNT_PERCENT / 100),
-    );
+    if (repairDiscount?.reason === "vip-customer") {
+      return null;
+    }
 
-    const formattedAmount = formatAsPrice({
-      amount: savingsAmount,
+    const baseAmount = aggregatedTotals.base.min;
+    const vipSavingsAmount = currencyMath.toCurrency(
+      baseAmount * VIP_REPAIR_DISCOUNT_RATE,
+    );
+    const formattedVipSavings = formatAsPrice({
+      amount: vipSavingsAmount,
+      currency,
+      locale: activeLocale,
+    });
+
+    if (!hasDiscount) {
+      return {
+        variant: "guest" as const,
+        formattedSavings: formattedVipSavings,
+        formattedAdditionalSavings: null,
+      };
+    }
+
+    const additionalRate = VIP_REPAIR_DISCOUNT_RATE - discountRate;
+
+    if (additionalRate <= 0) {
+      return null;
+    }
+
+    const additionalAmount = currencyMath.toCurrency(
+      baseAmount * additionalRate,
+    );
+    const formattedAdditional = formatAsPrice({
+      amount: additionalAmount,
       currency,
       locale: activeLocale,
     });
 
     return {
-      amount: savingsAmount,
-      formatted: formattedAmount,
+      variant: "vip-upgrade" as const,
+      formattedSavings: formattedVipSavings,
+      formattedAdditionalSavings: formattedAdditional,
     };
-  }, [hasDiscount, aggregatedTotals, currency, activeLocale]);
+  }, [
+    aggregatedTotals,
+    currency,
+    activeLocale,
+    hasDiscount,
+    repairDiscount?.reason,
+    discountRate,
+  ]);
 
   const serviceSummaries = useMemo(
     () =>
@@ -995,10 +1048,15 @@ export const ServicesEstimator = ({
               <div className="flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-emerald-700">
                 <Sparkles className="h-4 w-4" />
                 <span className="text-xs font-semibold uppercase tracking-[0.12em]">
-                  {t("calculator.discountApplied", {
+                  {t(discountAppliedKey, {
                     percent: discountPercent,
                   })}
                 </span>
+                {discountTierLabel && (
+                  <Badge className="border-amber-500/30 bg-amber-50 text-amber-700 dark:border-amber-400/20 dark:bg-amber-900/30 dark:text-amber-100">
+                    {discountTierLabel}
+                  </Badge>
+                )}
               </div>
             )}
             {selectedServiceEstimates.length === 0 ? (
@@ -1082,10 +1140,14 @@ export const ServicesEstimator = ({
             </p>
           </div>
 
-          {potentialMembershipSavings && (
+          {membershipPromoData && (
             <RepairMembershipPromo
               estimatedCost={aggregatedTotals?.base.min ?? 0}
-              formattedSavings={potentialMembershipSavings.formatted}
+              formattedSavings={membershipPromoData.formattedSavings}
+              formattedAdditionalSavings={
+                membershipPromoData.formattedAdditionalSavings
+              }
+              variant={membershipPromoData.variant}
             />
           )}
 

@@ -238,10 +238,16 @@ export default async function ServiceDetails({ params }: PageProps) {
     ? toDiscountPercent(repairDiscount.percentage)
     : null;
 
+  const isVipDiscount = repairDiscount?.reason === "vip-customer";
   const discountStrings = repairDiscount
     ? {
         badge: t("catalog.discountBadge", { percent: discountPercent }),
-        caption: t("catalog.discountCaption", { percent: discountPercent }),
+        caption: isVipDiscount
+          ? t("catalog.discountCaptionVip", { percent: discountPercent })
+          : t("catalog.discountCaptionRegistered", {
+              percent: discountPercent,
+            }),
+        tierLabel: isVipDiscount ? t("catalog.vipBadgeLabel") : undefined,
       }
     : null;
 
@@ -319,9 +325,16 @@ export default async function ServiceDetails({ params }: PageProps) {
                       <span className="text-emerald-600 text-3xl font-semibold">
                         {formattedPrice.discountedLabel}
                       </span>
-                      <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
-                        {discountStrings.badge}
-                      </Badge>
+                      <div className="flex items-center gap-1">
+                        <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
+                          {discountStrings.badge}
+                        </Badge>
+                        {discountStrings.tierLabel && (
+                          <Badge className="border-amber-500/30 bg-amber-50 text-amber-700 dark:border-amber-400/20 dark:bg-amber-900/30 dark:text-amber-100">
+                            {discountStrings.tierLabel}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     {savingsLabel && (
                       <span className="text-emerald-700 text-sm font-medium">

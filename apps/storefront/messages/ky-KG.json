@@ -440,8 +440,10 @@
       "action": "Кененирээк",
       "disclaimer": "Акыркы баа диагностикадан кийин такталат. Запастык бөлүктөр өзүнчө эсептелет.",
       "discountBadge": "-{percent}%",
-      "discountCaption": "Катталган кардарлар үчүн {percent}% арзандатуу",
-      "discountSavings": "Үнөмдөө {amount}"
+      "discountCaptionRegistered": "Катталган кардарлар үчүн {percent}% арзандатуу",
+      "discountCaptionVip": "VIP кардарлар үчүн {percent}% арзандатуу",
+      "discountSavings": "Үнөмдөө {amount}",
+      "vipBadgeLabel": "VIP"
     },
     "calculator": {
       "title": "Бааны эсептеп, өтүнүч жибериңиз",
@@ -490,13 +492,18 @@
       "submitSuccess": "Рахмат! Өтүнүч сервис бөлүмүнө жөнөтүлдү.",
       "submitError": "Өтүнүчтү жөнөтүү мүмкүн болгон жок. Кайра аракет кылыңыз же бизге телефон аркылуу кайрылыңыз.",
       "freeLabel": "Бесплатно",
-      "discountApplied": "Катталган кардарлар үчүн {percent}% арзандатуу колдонулду.",
+      "discountAppliedRegistered": "Катталган кардарлар үчүн {percent}% арзандатуу колдонулду.",
+      "discountAppliedVip": "VIP кардарлар үчүн {percent}% арзандатуу колдонулду.",
+      "vipBadgeLabel": "VIP",
       "discountSavings": "Үнөмдөө {amount}",
       "membershipPromo": {
         "title": "Коомдук мүчөлүк менен үнөмдөңүз",
         "subtitle": "Сиз бул оңдоодо {amount} үнөмдөй алмаксыз",
         "savingsLabel": "Үнөмдөө {percent}%",
-        "cta": "Коомго кошулуңуз"
+        "cta": "Коомго кошулуңуз",
+        "vipTitle": "VIP макам менен дагы көбүрөөк үнөмдөңүз",
+        "vipSubtitle": "VIP болгондо бул оңдоодо {amount} үнөмдөйсүз",
+        "vipExtraLabel": "Бул учурдагы арзандатуудан {amount} көбүрөөк"
       },
       "errors": {
         "deviceType": "Аппараттын түрүн тандаңыз",

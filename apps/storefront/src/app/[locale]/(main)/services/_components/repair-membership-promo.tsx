@@ -11,18 +11,38 @@ import { paths } from "@/lib/paths";
 
 type RepairMembershipPromoProps = {
   estimatedCost: number;
+  formattedAdditionalSavings?: string | null;
   formattedSavings: string;
+  variant?: "guest" | "vip-upgrade";
 };
 
 export const RepairMembershipPromo = ({
   estimatedCost,
   formattedSavings,
+  variant = "guest",
+  formattedAdditionalSavings,
 }: RepairMembershipPromoProps) => {
   const t = useTranslations("services");
 
   if (estimatedCost === 0) {
     return null;
   }
+
+  const titleKey =
+    variant === "vip-upgrade"
+      ? "calculator.membershipPromo.vipTitle"
+      : "calculator.membershipPromo.title";
+  const subtitleKey =
+    variant === "vip-upgrade"
+      ? "calculator.membershipPromo.vipSubtitle"
+      : "calculator.membershipPromo.subtitle";
+  const subtitleValues = { amount: formattedSavings };
+  const extraLabel =
+    variant === "vip-upgrade" && formattedAdditionalSavings
+      ? t("calculator.membershipPromo.vipExtraLabel", {
+          amount: formattedAdditionalSavings,
+        })
+      : null;
 
   return (
     <div className="space-y-3 rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 p-4 dark:border-amber-800/30 dark:from-amber-950/20 dark:to-yellow-950/20">
@@ -33,13 +53,16 @@ export const RepairMembershipPromo = ({
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">
-              {t("calculator.membershipPromo.title")}
+              {t(titleKey)}
             </p>
             <p className="text-xs text-amber-700 dark:text-amber-200">
-              {t("calculator.membershipPromo.subtitle", {
-                amount: formattedSavings,
-              })}
+              {t(subtitleKey, subtitleValues)}
             </p>
+            {extraLabel && (
+              <p className="text-xs font-medium text-amber-800 dark:text-amber-200">
+                {extraLabel}
+              </p>
+            )}
           </div>
         </div>
         <div className="text-right">

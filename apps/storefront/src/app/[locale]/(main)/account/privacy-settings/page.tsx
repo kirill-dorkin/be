@@ -11,8 +11,8 @@ export default async function Page() {
         {t("account.privacy-settings")}
       </h2>
       <hr />
-      <div className="grid grid-cols-12 gap-x-4 gap-y-6">
-        <div className="col-span-12 space-y-1 sm:col-span-9 md:col-span-8 lg:col-span-9">
+      <div className="flex flex-col gap-6 rounded-2xl border border-slate-100/80 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1 sm:max-w-xl">
           <h3 className="text-slate-700 dark:text-primary font-medium">
             {t("account.delete-account-and-all-your-data-permanently")}
           </h3>
@@ -20,7 +20,7 @@ export default async function Page() {
             {t("account.delete-account-description")}
           </p>
         </div>
-        <div className="col-span-12 flex items-center sm:col-span-3 sm:justify-end md:col-span-4 lg:col-span-3">
+        <div className="flex justify-start sm:justify-end">
           <DeleteAccountModal />
         </div>
       </div>

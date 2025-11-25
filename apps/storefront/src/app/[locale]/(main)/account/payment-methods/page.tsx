@@ -102,17 +102,19 @@ export default async function Page(props: PageProps) {
 
   return (
     <div className="flex flex-col gap-8 text-sm">
-      <div className="flex justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-slate-700 dark:text-primary text-2xl">
           {t("payment.payment-methods")}
         </h2>
 
         {hasPaymentMethods && (
-          <AddNewPaymentTrigger
-            storeUrl={storeUrl}
-            customerId={customerId}
-            variant="outline"
-          />
+          <div className="w-full sm:w-auto">
+            <AddNewPaymentTrigger
+              storeUrl={storeUrl}
+              customerId={customerId}
+              variant="outline"
+            />
+          </div>
         )}
       </div>
 

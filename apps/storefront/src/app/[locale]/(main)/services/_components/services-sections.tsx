@@ -168,6 +168,7 @@ type DiscountStrings = {
   badge: string;
   caption: string;
   savings: string;
+  tierLabel?: string;
 } | null;
 
 export const ServicesSections = ({
@@ -268,9 +269,16 @@ export const ServicesSections = ({
                           </Badge>
                         )}
                         {priceInfo.isDiscounted && discountStrings && (
-                          <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
-                            {discountStrings.badge}
-                          </Badge>
+                          <div className="flex items-center gap-1">
+                            <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
+                              {discountStrings.badge}
+                            </Badge>
+                            {discountStrings.tierLabel && (
+                              <Badge className="border-amber-500/30 bg-amber-50 text-amber-700 dark:border-amber-400/20 dark:bg-amber-900/30 dark:text-amber-100">
+                                {discountStrings.tierLabel}
+                              </Badge>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>

@@ -435,8 +435,10 @@
       "action": "Подробнее",
       "disclaimer": "Окончательная стоимость согласовывается после диагностики. Цена запчастей рассчитывается отдельно.",
       "discountBadge": "-{percent}%",
-      "discountCaption": "Скидка {percent}% для зарегистрированных клиентов",
-      "discountSavings": "Экономия {amount}"
+      "discountCaptionRegistered": "Скидка {percent}% для зарегистрированных клиентов",
+      "discountCaptionVip": "Скидка {percent}% для VIP клиентов",
+      "discountSavings": "Экономия {amount}",
+      "vipBadgeLabel": "VIP"
     },
     "calculator": {
       "title": "Оцените ремонт и отправьте заявку",
@@ -484,13 +486,18 @@
       "submitSuccess": "Спасибо! Заявка передана инженерам.",
       "submitError": "Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.",
       "freeLabel": "Бесплатно",
-      "discountApplied": "Скидка {percent}% для зарегистрированных клиентов применена.",
+      "discountAppliedRegistered": "Скидка {percent}% для зарегистрированных клиентов применена.",
+      "discountAppliedVip": "Скидка {percent}% для VIP клиентов применена.",
+      "vipBadgeLabel": "VIP",
       "discountSavings": "Экономия {amount}",
       "membershipPromo": {
         "title": "Экономьте с участием в сообществе",
         "subtitle": "Вы могли бы сэкономить {amount} на этом ремонте",
         "savingsLabel": "Экономия {percent}%",
-        "cta": "Присоединиться к сообществу"
+        "cta": "Присоединиться к сообществу",
+        "vipTitle": "Экономьте ещё больше с VIP статусом",
+        "vipSubtitle": "С VIP статусом вы экономите {amount} на этом ремонте",
+        "vipExtraLabel": "Это на {amount} больше текущей скидки"
       },
       "errors": {
         "deviceType": "Выберите тип устройства",

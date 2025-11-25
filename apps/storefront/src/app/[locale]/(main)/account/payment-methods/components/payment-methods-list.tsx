@@ -36,46 +36,47 @@ export const PaymentMethodsList = ({
 
   const handleDeleteModalClose = () => setSelectedMethod(null);
 
-  const defaultMethodMessage = (
-    <p className="text-slate-700 dark:text-primary whitespace-nowrap text-sm font-[650] leading-5">
+  const defaultMethodBadge = (
+    <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-200">
       {t("payment.default-method")}
-    </p>
+    </span>
   );
 
   return (
     <div className="grid gap-8">
       {Object.entries(groupedMethods).map(([type, methods]) => (
-        <div key={type} className="w-full">
+        <div key={type} className="w-full space-y-3">
           <p className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
             {t(`payment.${type}` as TranslationMessage)}
           </p>
-          {methods.map((method) => (
-            <div key={method.id} className="py-4">
-              <div className="text-slate-700 dark:text-primary flex items-center gap-4">
-                <p
-                  className="basis-full whitespace-pre-wrap"
+          <div className="grid gap-4">
+            {methods.map((method) => (
+              <div
+                key={method.id}
+                className="flex flex-col gap-3 rounded-2xl border border-slate-100/80 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/40 sm:flex-row sm:items-center sm:gap-4"
+              >
+                <div
+                  className="flex-1 text-sm text-slate-700 dark:text-primary"
                   dangerouslySetInnerHTML={{
                     __html: formatPaymentMethod({ t, method }),
                   }}
                 />
-
-                {method.isDefault && (
-                  <div className="max-md:hidden">{defaultMethodMessage}</div>
-                )}
-
-                <Button
-                  variant="outline"
-                  onClick={() => setSelectedMethod(method)}
-                >
-                  <X className="mr-1.5 size-4" />
-                  {t("common.delete")}
-                </Button>
+                <div className="flex flex-col gap-2 sm:items-end">
+                  {method.isDefault && (
+                    <div className="flex justify-end">{defaultMethodBadge}</div>
+                  )}
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedMethod(method)}
+                    className="w-full sm:w-auto"
+                  >
+                    <X className="mr-1.5 size-4" />
+                    {t("common.delete")}
+                  </Button>
+                </div>
               </div>
-              {method.isDefault && (
-                <div className="md:hidden">{defaultMethodMessage}</div>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ))}
 

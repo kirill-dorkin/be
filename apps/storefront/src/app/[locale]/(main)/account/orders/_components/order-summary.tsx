@@ -19,10 +19,10 @@ export const OrderSummary = async ({
 
   return (
     <div
-      className={cn("grid grid-cols-4 gap-y-4 sm:gap-y-0", {
-        "sm:grid-cols-8": withStatus,
-        "sm:grid-cols-6": !withStatus,
-      })}
+      className={cn(
+        "grid grid-cols-2 gap-x-6 gap-y-4 sm:gap-y-0",
+        withStatus ? "sm:grid-cols-8" : "sm:grid-cols-6",
+      )}
     >
       <div className="col-span-2">
         <p className="dark:text-muted-foreground text-stone-500">

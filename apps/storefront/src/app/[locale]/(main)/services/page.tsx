@@ -50,6 +50,19 @@ export default async function ServicesPage() {
   const discountPercent = repairDiscount
     ? toDiscountPercent(repairDiscount.percentage)
     : null;
+  const isVipDiscount = repairDiscount?.reason === "vip-customer";
+  const catalogDiscountStrings = repairDiscount
+    ? {
+        badge: t("catalog.discountBadge", { percent: discountPercent }),
+        caption: isVipDiscount
+          ? t("catalog.discountCaptionVip", { percent: discountPercent })
+          : t("catalog.discountCaptionRegistered", {
+              percent: discountPercent,
+            }),
+        savings: t.raw("catalog.discountSavings"),
+        tierLabel: isVipDiscount ? t("catalog.vipBadgeLabel") : undefined,
+      }
+    : null;
 
   return (
     <div className="bg-background overflow-x-hidden">
@@ -102,17 +115,7 @@ export default async function ServicesPage() {
               freeLabel: t("catalog.freeLabel"),
               cta: t("catalog.action"),
               disclaimer: t("catalog.disclaimer"),
-              discount: repairDiscount
-                ? {
-                    badge: t("catalog.discountBadge", {
-                      percent: discountPercent,
-                    }),
-                    caption: t("catalog.discountCaption", {
-                      percent: discountPercent,
-                    }),
-                    savings: t.raw("catalog.discountSavings"),
-                  }
-                : null,
+              discount: catalogDiscountStrings,
             }}
           />
         </section>

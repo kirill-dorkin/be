@@ -115,29 +115,31 @@ export default async function Page(props: PageProps) {
 
   return (
     <div className="flex flex-col gap-8 text-sm">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-slate-700 dark:text-primary text-2xl">
           {t("account.addresses")}
         </h2>
         {!noAddresses && (
-          <AddNewAddressModal
-            addressFormRows={resultAddressRows.data}
-            countries={resultCountries.data}
-            countryCode={countryCode}
-            buttonContent={
-              <>
-                <PlusIcon className="h-4 w-4" />
-                <span className="hidden sm:block">
-                  {t("address.add-new-address")}
-                </span>
-              </>
-            }
-            buttonProps={{
-              variant: "outline",
-              className:
-                "text-slate-700 dark:text-primary flex items-center gap-1 rounded px-[11px] sm:rounded-md sm:px-4",
-            }}
-          />
+          <div className="w-full sm:w-auto">
+            <AddNewAddressModal
+              addressFormRows={resultAddressRows.data}
+              countries={resultCountries.data}
+              countryCode={countryCode}
+              buttonContent={
+                <>
+                  <PlusIcon className="h-4 w-4" />
+                  <span className="hidden sm:block">
+                    {t("address.add-new-address")}
+                  </span>
+                </>
+              }
+              buttonProps={{
+                variant: "outline",
+                className:
+                  "text-slate-700 dark:text-primary flex w-full items-center gap-1 rounded px-[11px] sm:w-auto sm:rounded-md sm:px-4",
+              }}
+            />
+          </div>
         )}
       </div>
       {noAddresses && (
@@ -164,18 +166,18 @@ export default async function Page(props: PageProps) {
       )}
       {sortedAddresses.map(
         ({ isDefaultBillingAddress, isDefaultShippingAddress, ...address }) => (
-          <div key={address.id} className="text-slate-700 dark:text-primary space-y-8">
+          <div key={address.id} className="text-slate-700 dark:text-primary space-y-6">
             <hr />
-            <div className="grid grid-cols-12 gap-2">
-              <div className="col-span-5 md:col-span-7 lg:col-span-5">
+            <div className="grid grid-cols-1 gap-4 rounded-2xl border border-slate-100/80 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-900/40 sm:grid-cols-12 sm:gap-2 sm:border-0 sm:bg-transparent sm:p-0">
+              <div className="sm:col-span-7 lg:col-span-6">
                 {displayFormattedAddressLines({
                   addressId: address.id,
                   formattedAddress: address.formattedAddress,
                 })}
               </div>
-              <div className="col-span-7 flex h-max items-center justify-end gap-6 md:col-span-5 lg:col-span-7">
+              <div className="flex flex-col gap-2 sm:col-span-5 sm:flex-row sm:items-center sm:justify-end lg:col-span-6">
                 {(isDefaultBillingAddress || isDefaultShippingAddress) && (
-                  <p className="hidden text-end font-semibold sm:block">
+                  <p className="text-sm font-semibold sm:order-2 sm:text-right">
                     {t(
                       getDefaultAddressLabel({
                         isDefaultBillingAddress,
@@ -184,20 +186,22 @@ export default async function Page(props: PageProps) {
                     )}
                   </p>
                 )}
-                <EditAddressModal
-                  address={{
-                    isDefaultBillingAddress,
-                    isDefaultShippingAddress,
-                    ...address,
-                  }}
-                  addressFormRows={resultAddressRows.data}
-                  countries={resultCountries.data}
-                />
+                <div className="sm:order-1">
+                  <EditAddressModal
+                    address={{
+                      isDefaultBillingAddress,
+                      isDefaultShippingAddress,
+                      ...address,
+                    }}
+                    addressFormRows={resultAddressRows.data}
+                    countries={resultCountries.data}
+                  />
+                </div>
               </div>
 
               {(isDefaultBillingAddress || isDefaultShippingAddress) && (
-                <div className="col-span-12 pt-2 sm:hidden">
-                  <p className="font-semibold">
+                <div className="sm:hidden">
+                  <p className="text-sm font-semibold">
                     {t(
                       getDefaultAddressLabel({
                         isDefaultBillingAddress,

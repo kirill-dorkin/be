@@ -25,7 +25,11 @@ const UpdateNameModalComponent = ({ user }: { user: User | null }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-slate-700 dark:text-primary">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full rounded-2xl border-slate-200 text-center text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:text-primary dark:hover:border-slate-600 md:w-auto"
+        >
           {t("common.edit")}
         </Button>
       </DialogTrigger>

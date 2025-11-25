@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { memo, useCallback, useMemo } from "react";
+import { ChevronRight } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { cn } from "@nimara/ui/lib/utils";
@@ -17,22 +18,7 @@ function SideLinksComponent() {
   const pathname = usePathname();
 
   // Мемоизация навигационных ссылок
-  const navLinks = useMemo<{
-    href: string;
-    title: TranslationMessage;
-  }[]>(() => [
-    { title: "account.order-history", href: paths.account.orders.asPath() },
-    { title: "account.addresses", href: paths.account.addresses.asPath() },
-    { title: "account.personal-data", href: paths.account.profile.asPath() },
-    {
-      title: "account.privacy-settings",
-      href: paths.account.privacySettings.asPath(),
-    },
-    {
-      title: "payment.payment-methods",
-      href: paths.account.paymentMethods.asPath(),
-    },
-  ], []);
+  const navLinks = useMemo(() => accountNavLinks, []);
 
   // Мемоизация обработчика logout
   const handleLogout = useCallback(async () => {
@@ -40,25 +26,43 @@ function SideLinksComponent() {
   }, []);
 
   return (
-    <ul className="no-scrollbar flex gap-x-1 overflow-auto whitespace-nowrap py-3 md:flex-col md:gap-x-0 md:gap-y-0.5 md:whitespace-normal md:py-0">
-      {navLinks.map((link) => (
-        <li key={link.title}>
-          <Button
-            asChild
-            variant="ghost"
-            className={cn(
-              pathname === link.href && "bg-accent rounded-md",
-              "text-slate-700 dark:text-primary w-full justify-start px-4 py-2 text-sm font-medium md:px-2 md:py-1.5 md:font-normal",
-            )}
-          >
-            <LocalizedLink href={link.href}>{t(link.title)}</LocalizedLink>
-          </Button>
-        </li>
-      ))}
-      <li>
+    <ul className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto whitespace-nowrap pb-1 pt-1 [scrollbar-width:none] sm:[scrollbar-width:auto] md:flex-col md:gap-1 md:whitespace-normal md:p-0 md:snap-none">
+      {navLinks.map((link) => {
+        const isActive = pathname === link.href;
+
+        return (
+          <li key={link.title} className="snap-start md:snap-none">
+            <Button
+              asChild
+              variant="ghost"
+              className={cn(
+                "w-full min-w-[180px] justify-start rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-200 sm:min-w-[220px] md:min-w-0 md:px-3",
+                isActive
+                  ? "bg-primary/10 text-primary shadow-sm ring-1 ring-primary/10 dark:bg-primary/20"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-muted-foreground dark:hover:bg-slate-800/60 dark:hover:text-primary",
+              )}
+            >
+              <LocalizedLink
+                href={link.href}
+                className="flex w-full items-center justify-between gap-3"
+              >
+                <span>{t(link.title)}</span>
+                <ChevronRight
+                  className={cn(
+                    "h-4 w-4 transition-all",
+                    isActive ? "translate-x-0 opacity-100" : "translate-x-1 opacity-60",
+                  )}
+                  aria-hidden="true"
+                />
+              </LocalizedLink>
+            </Button>
+          </li>
+        );
+      })}
+      <li className="pt-1 md:pt-3">
         <Button
           onClick={handleLogout}
-          className="text-slate-700 dark:text-primary w-full justify-start px-4 py-2 text-sm font-medium md:my-4 md:px-2 md:py-1.5 md:font-normal"
+          className="w-full justify-start rounded-2xl px-4 py-3 text-sm font-semibold text-rose-500 hover:bg-rose-50 hover:text-rose-600 dark:text-rose-400 dark:hover:bg-rose-500/10 md:px-3"
           variant="ghost"
         >
           {t("auth.log-out")}
@@ -70,3 +74,11 @@ function SideLinksComponent() {
 
 // Мемоизация - используется на всех страницах аккаунта
 export const SideLinks = memo(SideLinksComponent);
+
+export const accountNavLinks: { title: TranslationMessage; href: string }[] = [
+  { title: "account.order-history", href: paths.account.orders.asPath() },
+  { title: "account.addresses", href: paths.account.addresses.asPath() },
+  { title: "account.personal-data", href: paths.account.profile.asPath() },
+  { title: "account.privacy-settings", href: paths.account.privacySettings.asPath() },
+  { title: "payment.payment-methods", href: paths.account.paymentMethods.asPath() },
+];
