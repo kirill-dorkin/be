@@ -990,6 +990,9 @@
     "UNEXPECTED_HTTP_ERROR": "Unexpected error occurred.",
     "UNIQUE_ERROR": "Email is used by other user.",
     "UNKNOWN_ERROR": "Unknown error occurred.",
+    "INVALID_PASSWORD": "Password does not meet requirements.",
+    "INVALID_CREDENTIALS": "Invalid email or password.",
+    "LOGIN_AFTER_REGISTER_ERROR": "Registration successful, but automatic login failed. Please try logging in manually.",
     "VOUCHER_NOT_APPLICABLE_ERROR": "Promo code is not applicable to this checkout.",
     "auth": {
       "email": "Sorry, this email already exists.",
@@ -1027,6 +1030,8 @@
     "confirm-password": "Confirm password",
     "email-placeholder": "e.g. john.doe@mail.com",
     "create-account-success": "Great news, you're almost there!",
+    "create-account-success-confirm-email": "Account created! Please check your email to confirm your account before logging in.",
+    "create-account-error": "We couldn't create your account. Please try again.",
     "create-account-verify": "Your account needs to be verified first. Check your email and click activation link to activate your account.",
     "confirm-missing-token": "Invalid or missing token.",
     "confirm-missing-email": "Invalid or missing email.",

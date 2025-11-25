@@ -1,8 +1,12 @@
 "use server";
 
-import { paths } from "@/lib/paths";
-import { REPAIR_METADATA_KEYS, REPAIR_ROLE, REPAIR_STATUS } from "@/lib/repair/metadata";
-import { getStoreUrl, getStoreUrlWithPath } from "@/lib/server";
+import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
+import { getAccountConfirmationRedirectUrl } from "@/lib/account-confirmation";
+import {
+  REPAIR_METADATA_KEYS,
+  REPAIR_ROLE,
+  REPAIR_STATUS,
+} from "@/lib/repair/metadata";
 import { getCurrentRegion } from "@/regions/server";
 import { getAuthService } from "@/services/auth";
 
@@ -23,32 +27,37 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
   const region = await getCurrentRegion();
   const authService = await getAuthService();
 
-  const result = await authService.accountRegister({
-    firstName,
-    lastName,
-    email,
-    password,
-    channel: region.market.channel,
-    languageCode: region.language.code,
-    metadata: [
-      {
-        key: REPAIR_METADATA_KEYS.role,
-        value: REPAIR_ROLE.worker,
-      },
-      {
-        key: REPAIR_METADATA_KEYS.status,
-        value: REPAIR_STATUS.pending,
-      },
-      {
-        key: REPAIR_METADATA_KEYS.phone,
-        value: phone,
-      },
-    ],
-    redirectUrl: getStoreUrlWithPath(
-      await getStoreUrl(),
-      paths.confirmAccountRegistration.asPath(),
-    ),
-  });
+  const register = async (redirectUrl?: string) =>
+    authService.accountRegister({
+      firstName,
+      lastName,
+      email,
+      password,
+      channel: region.market.channel,
+      languageCode: region.language.code,
+      metadata: [
+        {
+          key: REPAIR_METADATA_KEYS.role,
+          value: REPAIR_ROLE.worker,
+        },
+        {
+          key: REPAIR_METADATA_KEYS.status,
+          value: REPAIR_STATUS.pending,
+        },
+        {
+          key: REPAIR_METADATA_KEYS.phone,
+          value: phone,
+        },
+      ],
+      ...(redirectUrl ? { redirectUrl } : {}),
+    });
+
+  let result = await register();
+
+  if (!result.ok && shouldRetryAccountRegisterWithRedirect(result.errors)) {
+    const redirectUrl = await getAccountConfirmationRedirectUrl();
+    result = await register(redirectUrl);
+  }
 
   if (!result.ok) {
     return {

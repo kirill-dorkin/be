@@ -34,7 +34,22 @@ export const saleorAccountRegisterInfra =
       });
 
       const normalizedErrors = accountErrors.map((error) => {
-        const normalizedCode = error.code === "UNIQUE" ? "UNIQUE_ERROR" : "ACCOUNT_REGISTER_ERROR";
+        // Map Saleor error codes to more specific codes
+        let normalizedCode: "UNIQUE_ERROR" | "INVALID_PASSWORD" | "INVALID_CREDENTIALS" | "ACCOUNT_REGISTER_ERROR";
+
+        switch (error.code) {
+          case "UNIQUE":
+            normalizedCode = "UNIQUE_ERROR";
+            break;
+          case "INVALID_PASSWORD":
+            normalizedCode = "INVALID_PASSWORD";
+            break;
+          case "INVALID_CREDENTIALS":
+            normalizedCode = "INVALID_CREDENTIALS";
+            break;
+          default:
+            normalizedCode = "ACCOUNT_REGISTER_ERROR";
+        }
 
         return {
           code: normalizedCode,
@@ -43,7 +58,7 @@ export const saleorAccountRegisterInfra =
           originalError: error,
         };
       }) as NonEmptyArray<{
-        code: "UNIQUE_ERROR" | "ACCOUNT_REGISTER_ERROR";
+        code: "UNIQUE_ERROR" | "INVALID_PASSWORD" | "INVALID_CREDENTIALS" | "ACCOUNT_REGISTER_ERROR";
         field: string | undefined;
         message: string | undefined;
         originalError: typeof accountErrors[number];

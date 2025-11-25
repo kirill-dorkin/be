@@ -9,6 +9,7 @@ const schema = z.object({
   SERVICE_WORKER_GROUP_NAME: z.string().default("Repair Workers"),
   SERVICE_COURIER_GROUP_NAME: z.string().default("Repair Couriers"),
   STRIPE_SECRET_KEY: z.string().optional(),
+  ACCOUNT_CONFIRMATION_REDIRECT_URL: z.string().url().optional(),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -20,6 +21,9 @@ export const serverEnvs = isSsr
       SERVICE_WORKER_GROUP_NAME: process.env.SERVICE_WORKER_GROUP_NAME,
       SERVICE_COURIER_GROUP_NAME: process.env.SERVICE_COURIER_GROUP_NAME,
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+      ACCOUNT_CONFIRMATION_REDIRECT_URL:
+        process.env.SALEOR_ACCOUNT_CONFIRMATION_REDIRECT_URL ??
+        process.env.ACCOUNT_CONFIRMATION_REDIRECT_URL,
     })
   : ({} as Schema);
 

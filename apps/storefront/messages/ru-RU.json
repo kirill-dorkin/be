@@ -987,6 +987,9 @@
     "UNEXPECTED_HTTP_ERROR": "Произошла непредвиденная ошибка.",
     "UNIQUE_ERROR": "Email уже используется другим пользователем.",
     "UNKNOWN_ERROR": "Произошла неизвестная ошибка.",
+    "INVALID_PASSWORD": "Пароль не соответствует требованиям.",
+    "INVALID_CREDENTIALS": "Неверный email или пароль.",
+    "LOGIN_AFTER_REGISTER_ERROR": "Регистрация прошла успешно, но автоматический вход не удался. Попробуйте войти вручную.",
     "VOUCHER_NOT_APPLICABLE_ERROR": "Промокод не подходит к этому заказу.",
     "auth": {
       "email": "Этот email уже зарегистрирован.",
@@ -1024,6 +1027,8 @@
     "confirm-password": "Повторите пароль",
     "email-placeholder": "например, ivan.ivanov@mail.com",
     "create-account-success": "Отличные новости, вы почти у цели!",
+    "create-account-success-confirm-email": "Аккаунт создан! Проверьте вашу почту, чтобы подтвердить аккаунт перед входом.",
+    "create-account-error": "Не удалось создать аккаунт. Попробуйте ещё раз.",
     "create-account-verify": "Сначала подтвердите аккаунт. Проверьте почту и перейдите по ссылке, чтобы активировать учётную запись.",
     "confirm-missing-token": "Некорректный или отсутствующий токен.",
     "confirm-missing-email": "Некорректный или отсутствующий email.",

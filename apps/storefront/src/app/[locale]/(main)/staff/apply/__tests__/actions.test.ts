@@ -13,17 +13,8 @@ vi.mock("@/services/auth", () => ({
   getAuthService: vi.fn(),
 }));
 
-vi.mock("@/lib/paths", () => ({
-  paths: {
-    confirmAccountRegistration: {
-      asPath: () => "/confirm-account-registration",
-    },
-  },
-}));
-
-vi.mock("@/lib/server", () => ({
-  getStoreUrl: vi.fn(async () => "http://localhost:3000"),
-  getStoreUrlWithPath: vi.fn(() => "http://localhost:3000/confirm-account-registration"),
+vi.mock("@/lib/account-confirmation", () => ({
+  getAccountConfirmationRedirectUrl: vi.fn(async () => "https://best.com/confirm-account-registration"),
 }));
 
 import { getAuthService } from "@/services/auth";

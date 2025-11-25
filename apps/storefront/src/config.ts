@@ -17,6 +17,7 @@ const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
 const isDevelopment = process.env.NODE_ENV === "development";
+const isProduction = process.env.NODE_ENV === "production";
 
 export const CACHE_TTL = {
   pdp: isDevelopment ? MINUTE * 2 : DAY, // 2 minutes in dev, 1 day in prod
@@ -41,6 +42,13 @@ export const COOKIE_MAX_AGE = {
   checkout: 30 * DAY,
   locale: 360 * DAY,
 } as const;
+
+export const AUTH_COOKIE_OPTIONS = {
+  path: "/",
+  httpOnly: true,
+  sameSite: "lax" as const,
+  secure: isProduction,
+};
 
 export const MIN_PASSWORD_LENGTH = 8;
 

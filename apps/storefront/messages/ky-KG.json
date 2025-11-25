@@ -981,6 +981,9 @@
     "UNEXPECTED_HTTP_ERROR": "Күтүүсүз ката пайда болду.",
     "UNIQUE_ERROR": "Бул email башка колдонуучуга таандык.",
     "UNKNOWN_ERROR": "Белгисиз ката пайда болду.",
+    "INVALID_PASSWORD": "Сырсөз талаптарга жооп бербейт.",
+    "INVALID_CREDENTIALS": "Туура эмес email же сырсөз.",
+    "LOGIN_AFTER_REGISTER_ERROR": "Каттоо ийгиликтүү өттү, бирок автоматтык кирүү ийгиликсиз болду. Кол менен кирүүгө аракет кылыңыз.",
     "VOUCHER_NOT_APPLICABLE_ERROR": "Бул промокод бул заказга колдонулбайт.",
     "auth": {
       "email": "Кечиресиз, мындай email буга чейин бар.",
@@ -1018,6 +1021,8 @@
     "confirm-password": "Сырсөздү тастыктоо",
     "email-placeholder": "мисалы: john.doe@mail.com",
     "create-account-success": "Супер! Аз калган!",
+    "create-account-success-confirm-email": "Аккаунт түзүлдү! Кирүүдөн мурун аккаунтуңузду ырастоо үчүн emailди текшериңиз.",
+    "create-account-error": "Аккаунт түзүү мүмкүн болгон жок. Кайра аракет кылыңыз.",
     "create-account-verify": "Адегенде аккаунтуңузду ырастоо керек. Emailди текшерип, активдештирүү шилтемесин басыңыз.",
     "confirm-missing-token": "Токен жок же жараксыз.",
     "confirm-missing-email": "Email жок же жараксыз.",

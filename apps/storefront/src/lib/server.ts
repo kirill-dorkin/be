@@ -1,22 +1,23 @@
 import { headers } from "next/headers";
 import { getLocale } from "next-intl/server";
 
+import { clientEnvs } from "@/envs/client";
 import { localePrefixes } from "@/i18n/routing";
 import { DEFAULT_LOCALE, type SupportedLocale } from "@/regions/types";
 
 const resolveBaseUrl = async () => {
+  const configuredBase = clientEnvs.NEXT_PUBLIC_STOREFRONT_URL?.trim();
+
+  if (configuredBase) {
+    return configuredBase.replace(/\/$/, "");
+  }
+
   const headerStore = await headers();
   const forwardedHost = headerStore.get("x-forwarded-host");
   const host = forwardedHost ?? headerStore.get("host");
   const forwardedProto = headerStore.get("x-forwarded-proto");
   const fallbackProto = host?.includes("localhost") ? "http" : "https";
   const proto = forwardedProto ?? fallbackProto;
-
-  const envUrl = process.env.NEXT_PUBLIC_STOREFRONT_URL?.trim();
-
-  if (envUrl) {
-    return envUrl.replace(/\/$/, "");
-  }
 
   if (host) {
     return `${proto}://${host}`.replace(/\/$/, "");

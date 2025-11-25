@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
 import { Form } from "@nimara/ui/components/form";
+import { useToast } from "@nimara/ui/hooks";
 
 import { TextFormField } from "@/components/form/text-form-field";
 import { MIN_PASSWORD_LENGTH } from "@/config";
@@ -19,6 +20,7 @@ import { type FormSchema, formSchema } from "./schema";
 
 const SignUpFormComponent = () => {
   const t = useTranslations();
+  const { toast } = useToast();
 
   const { isRedirecting, push } = useRouterWithState();
 
@@ -43,26 +45,76 @@ const SignUpFormComponent = () => {
   const handleSubmit = useCallback(async (values: FormSchema) => {
     const result = await registerAccount(values);
 
+    console.log("[CreateAccount Form] Full result:", JSON.stringify(result, null, 2));
+
     if (result.ok) {
-      push(paths.createAccount.asPath({ query: { success: "true" } }));
+      // Check if email confirmation is required
+      if (result.data?.requiresEmailConfirmation) {
+        toast({
+          description: t("auth.create-account-success-confirm-email"),
+          position: "center",
+          duration: 10000,
+        });
+      } else {
+        toast({
+          description: t("auth.create-account-success"),
+          position: "center",
+        });
+      }
+
+      const redirectTarget =
+        result.data?.redirectUrl ?? paths.account.profile.asPath();
+      push(redirectTarget);
 
       return;
     }
 
+    const getErrorMessage = (
+      error?: (typeof result.errors)[number],
+    ): string => {
+      if (!error) {
+        return t("auth.create-account-error");
+      }
+
+      if (error.message) {
+        return error.message;
+      }
+
+      if (error.code) {
+        try {
+          return t(`errors.${error.code}` as any);
+        } catch {
+          // no-op
+        }
+      }
+
+      return t("auth.create-account-error");
+    };
+
+    const firstErrorMessage = getErrorMessage(result.errors[0]);
+
+    toast({
+      description: firstErrorMessage,
+      position: "center",
+      variant: "destructive",
+    });
+
     result.errors.forEach((error) => {
+      const message = getErrorMessage(error);
+
       if (error.field) {
         form.setError(error.field as keyof FormSchema, {
-          message: t(`errors.${error.code}`),
+          message,
         });
       } else {
         form.setError("email", {
-          message: t(`errors.${error.code}`),
+          message,
         });
       }
     });
 
     return;
-  }, [push, form, t]);
+  }, [push, form, t, toast]);
 
   return (
     <Form {...form}>

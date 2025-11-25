@@ -1,17 +1,17 @@
 import { decodeJwt } from "jose";
-import { cookies } from "next/headers";
 import {
   type NextFetchEvent,
   type NextRequest,
   NextResponse,
 } from "next/server";
 
-import { COOKIE_KEY } from "@/config";
+import { AUTH_COOKIE_OPTIONS, COOKIE_KEY } from "@/config";
 import { getAuthService } from "@/services/auth";
 
 import { type CustomMiddleware } from "./chain";
 
 const PROTECTED_ROUTES = ["/account"];
+const AUTH_COOKIE_PATH = AUTH_COOKIE_OPTIONS.path ?? "/";
 
 export function authMiddleware(middleware: CustomMiddleware) {
   return async (
@@ -19,7 +19,7 @@ export function authMiddleware(middleware: CustomMiddleware) {
     event: NextFetchEvent,
     response: NextResponse,
   ) => {
-    const accessToken = (await cookies()).get(COOKIE_KEY.accessToken)?.value;
+    const accessToken = request.cookies.get(COOKIE_KEY.accessToken)?.value;
     const redirectToLogin = NextResponse.redirect(
       new URL("/sign-in", request.url),
     );
@@ -43,11 +43,13 @@ export function authMiddleware(middleware: CustomMiddleware) {
       return middleware(request, event, modifiedResponse);
     }
 
-    const refreshToken = (await cookies()).get(COOKIE_KEY.refreshToken)?.value;
+    const refreshToken = request.cookies.get(COOKIE_KEY.refreshToken)?.value;
 
     if (!refreshToken) {
       modifiedResponse = redirectToLogin;
-      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken);
+      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken, {
+        path: AUTH_COOKIE_PATH,
+      });
 
       return middleware(request, event, modifiedResponse);
     }
@@ -59,21 +61,23 @@ export function authMiddleware(middleware: CustomMiddleware) {
 
     if (!resultTokenRefresh.ok || !resultTokenRefresh.data.refreshToken) {
       modifiedResponse = redirectToLogin;
-      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken);
-      modifiedResponse.cookies.delete(COOKIE_KEY.refreshToken);
+      modifiedResponse.cookies.delete(COOKIE_KEY.accessToken, {
+        path: AUTH_COOKIE_PATH,
+      });
+      modifiedResponse.cookies.delete(COOKIE_KEY.refreshToken, {
+        path: AUTH_COOKIE_PATH,
+      });
 
       return middleware(request, event, modifiedResponse);
     }
 
+    // Set the new access token (the field is named refreshToken but contains the new access token)
     modifiedResponse.cookies.set(
       COOKIE_KEY.accessToken,
       resultTokenRefresh.data.refreshToken,
-      {
-        httpOnly: true,
-        sameSite: "strict",
-      },
+      AUTH_COOKIE_OPTIONS,
     );
 
-    return middleware(request, event, response);
+    return middleware(request, event, modifiedResponse);
   };
 }

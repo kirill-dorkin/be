@@ -16,6 +16,7 @@ import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
 import { getCheckoutService } from "@/services/checkout";
 import { errorService } from "@/services/error";
+import { storefrontLogger } from "@/services/logging";
 import { getUserService } from "@/services/user";
 
 export async function login({
@@ -30,12 +31,48 @@ export async function login({
   let isRepairStaff = false;
   let isPendingWorker = false;
 
+  storefrontLogger.info("[Login] Attempting login", { email, redirectUrl });
+
   try {
-    await signIn("credentials", {
+    storefrontLogger.info("[Login] Calling NextAuth signIn", { email });
+
+    const signInResult = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
+
+    storefrontLogger.debug("[Login] SignIn result received", {
+      hasResult: !!signInResult,
+      hasError: !!signInResult?.error,
+      error: signInResult?.error,
+      ok: signInResult?.ok,
+    });
+
+    if (!signInResult) {
+      storefrontLogger.error("[Login] SignIn returned null/undefined");
+      errorService.logError(
+        new Error(`Sign in returned null for ${email}`),
+      );
+
+      return { error: true };
+    }
+
+    if (signInResult.error) {
+      storefrontLogger.error("[Login] Sign in failed with error", {
+        error: signInResult.error,
+        email,
+      });
+      errorService.logError(
+        new Error(
+          `Sign in failed for ${email}: ${signInResult.error}`,
+        ),
+      );
+
+      return { error: true };
+    }
+
+    storefrontLogger.info("[Login] NextAuth sign in successful", { email });
 
     const [accessToken, checkoutId, userService, checkoutService] =
       await Promise.all([
@@ -44,6 +81,12 @@ export async function login({
         getUserService(),
         getCheckoutService(),
       ]);
+
+    storefrontLogger.debug("[Login] Retrieved tokens and services", {
+      hasAccessToken: !!accessToken,
+      accessTokenLength: accessToken?.length || 0,
+      hasCheckoutId: !!checkoutId,
+    });
 
     const resultUserGet = await userService.userGet(accessToken);
     const user = resultUserGet.ok ? resultUserGet.data : null;
@@ -119,8 +162,15 @@ export async function login({
     }
   } catch (error) {
     if (error instanceof AuthError) {
+      storefrontLogger.error("[Login] AuthError occurred", {
+        type: error.type,
+        email,
+      });
+
       switch (error.type) {
         case "CredentialsSignin":
+          storefrontLogger.error("[Login] Invalid credentials", { email });
+
           return { error: true };
         default:
           errorService.logError(error);
@@ -128,6 +178,8 @@ export async function login({
           return { error: true };
       }
     }
+
+    storefrontLogger.error("[Login] Unexpected error", { error, email });
 
     return { error: true };
   }
@@ -141,6 +193,13 @@ export async function login({
     : isRepairStaff || isPendingWorker
       ? paths.staff.orders.asPath()
       : defaultRedirect;
+
+  storefrontLogger.info("[Login] Login successful", {
+    email,
+    redirectUrl: resolvedRedirect,
+    isRepairStaff,
+    isPendingWorker,
+  });
 
   revalidatePath(resolvedRedirect);
 

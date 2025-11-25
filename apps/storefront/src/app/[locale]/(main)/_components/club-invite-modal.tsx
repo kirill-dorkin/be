@@ -7,6 +7,7 @@ import { Button } from "@nimara/ui/components/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
 } from "@nimara/ui/components/dialog";
 
@@ -139,6 +140,9 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
         className="max-w-[min(92vw,360px)] rounded-[32px] border-0 bg-white p-0 shadow-[0_40px_120px_rgba(15,23,42,0.35)] dark:bg-stone-900"
       >
         <DialogTitle className="sr-only">Вступить в клуб</DialogTitle>
+        <DialogDescription className="sr-only">
+          Получайте доступ к клубным акциям и персональным предложениям
+        </DialogDescription>
         <div className="relative flex flex-col gap-6 px-5 pb-6 pt-10">
           <div className="space-y-4 rounded-3xl bg-muted/30 p-4">
             <div className="rounded-2xl bg-slate-900 text-white">

@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 import { saleorAuthClient } from "@nimara/infrastructure/auth/client";
 
-import { COOKIE_KEY } from "@/config";
+import { AUTH_COOKIE_OPTIONS, COOKIE_KEY } from "@/config";
 import { storefrontLogger } from "@/services/logging";
 
 export async function handleLogout() {
@@ -12,21 +12,19 @@ export async function handleLogout() {
 
   const cookieStore = await cookies();
 
-  cookieStore.delete(COOKIE_KEY.accessToken);
-  cookieStore.delete(COOKIE_KEY.refreshToken);
-  cookieStore.delete(COOKIE_KEY.checkoutId);
+  const deleteOptions = { path: AUTH_COOKIE_OPTIONS.path };
+
+  cookieStore.delete(COOKIE_KEY.accessToken, deleteOptions);
+  cookieStore.delete(COOKIE_KEY.refreshToken, deleteOptions);
+  cookieStore.delete(COOKIE_KEY.checkoutId, deleteOptions);
 
   storefrontLogger.debug("Cleared auth and checkout cookies after logout.");
 }
 
 export async function setAccessToken(value: string) {
-  (await cookies()).set(COOKIE_KEY.accessToken, value, {
-    httpOnly: true,
-  });
+  (await cookies()).set(COOKIE_KEY.accessToken, value, AUTH_COOKIE_OPTIONS);
 }
 
 export async function setRefreshToken(value: string) {
-  (await cookies()).set(COOKIE_KEY.refreshToken, value, {
-    httpOnly: true,
-  });
+  (await cookies()).set(COOKIE_KEY.refreshToken, value, AUTH_COOKIE_OPTIONS);
 }
