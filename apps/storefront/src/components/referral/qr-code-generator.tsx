@@ -2,7 +2,7 @@
 
 import { Download, QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
-import QRCodeStyling from "qr-code-styling";
+import type QRCodeStyling from "qr-code-styling";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
@@ -21,9 +21,21 @@ interface QRCodeGeneratorProps {
 
 export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
   const t = useTranslations();
-  const [qrCode] = useState(
-    () =>
-      new QRCodeStyling({
+  const [qrCode, setQrCode] = useState<QRCodeStyling | null>(null);
+
+  const qrRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const load = async () => {
+      const { default: QRCodeStyling } = await import("qr-code-styling");
+
+      if (isCancelled) {
+        return;
+      }
+
+      const instance = new QRCodeStyling({
         width: 300,
         height: 300,
         data: referralLink,
@@ -53,18 +65,32 @@ export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
           type: "dot",
           color: "#7c3aed",
         },
-      }),
-  );
+      });
 
-  const qrRef = useRef<HTMLDivElement>(null);
+      setQrCode(instance);
+    };
+
+    if (!qrCode && typeof window !== "undefined") {
+      void load();
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [qrCode, referralLink]);
 
   useEffect(() => {
-    if (qrRef.current) {
+    if (qrRef.current && qrCode) {
+      qrCode.update({ data: referralLink });
       qrCode.append(qrRef.current);
     }
-  }, [qrCode]);
+  }, [qrCode, referralLink]);
 
   const handleDownload = () => {
+    if (!qrCode) {
+      return;
+    }
+
     void qrCode.download({
       name: "referral-qr-code",
       extension: "png",
