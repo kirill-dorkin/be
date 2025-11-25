@@ -168,9 +168,9 @@ export async function requestWithdrawal(amount: number, method: string) {
   const updatedTransactions = [...balanceData.transactions, transaction];
 
   // Update user metadata
-  const updateResult = await userService.userUpdate({
+  const updateResult = await userService.accountUpdate({
     accessToken,
-    input: {
+    accountInput: {
       metadata: [
         {
           key: "balanceTransactions",
@@ -232,9 +232,9 @@ export async function applyBalanceToOrder(
   const updatedTransactions = [...balanceData.transactions, transaction];
 
   // Update user metadata
-  const updateResult = await userService.userUpdate({
+  const updateResult = await userService.accountUpdate({
     accessToken,
-    input: {
+    accountInput: {
       metadata: [
         {
           key: "balanceTransactions",
@@ -255,14 +255,14 @@ export async function applyBalanceToOrder(
  * Award referral bonus (to be called when referred user becomes VIP)
  */
 export async function awardReferralBonus(
-  _referrerEmail: string,
-  _referredUserEmail: string,
+  referrerEmail: string,
+  referredUserEmail: string,
 ) {
   // This would typically be called from an admin function or webhook
   // when a user upgrades to VIP
 
   // For now, just a placeholder
   return ok({
-    message: `Referral bonus of ${REFERRAL_BONUS_AMOUNT} awarded to ${referrerEmail}`,
+    message: `Referral bonus of ${REFERRAL_BONUS_AMOUNT} awarded to ${referrerEmail} for referring ${referredUserEmail}`,
   });
 }

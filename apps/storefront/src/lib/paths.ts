@@ -151,6 +151,8 @@ export const paths = {
     privacySettings: url("/account/privacy-settings"),
     addresses: url("/account/addresses"),
     paymentMethods: url("/account/payment-methods"),
+    referral: url("/account/referral"),
+    balance: url("/account/balance"),
   },
   confirmNewEmail: url("/confirm-new-email"),
   deleteAccount: url("/delete-account"),

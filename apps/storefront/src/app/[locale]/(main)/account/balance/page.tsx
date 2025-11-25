@@ -12,12 +12,17 @@ import { getAccessToken } from "@/auth";
 import { LocalizedLink } from "@/i18n/routing";
 import { getUserBalance } from "@/lib/actions/referral";
 import { paths } from "@/lib/paths";
-import { type BalanceTransactionStatus, type BalanceTransactionType,MIN_WITHDRAWAL_AMOUNT } from "@/lib/referral/types";
+import {
+  type BalanceTransactionStatus,
+  type BalanceTransactionType,
+  MIN_WITHDRAWAL_AMOUNT,
+} from "@/lib/referral/types";
 import { calculateBalance } from "@/lib/referral/utils";
+import { type TranslationMessage } from "@/types";
 
 import { WithdrawalForm } from "./withdrawal-form";
 
-const typeTranslationMap: Record<BalanceTransactionType, string> = {
+const typeTranslationMap: Record<BalanceTransactionType, TranslationMessage> = {
   ADMIN_ADJUSTMENT: "balance.transaction-type-admin",
   PURCHASE_PAYMENT: "balance.transaction-type-purchase",
   REFERRAL_BONUS: "balance.transaction-type-referral",
@@ -25,7 +30,10 @@ const typeTranslationMap: Record<BalanceTransactionType, string> = {
   WITHDRAWAL: "balance.transaction-type-withdrawal",
 };
 
-const statusTranslationMap: Record<BalanceTransactionStatus, string> = {
+const statusTranslationMap: Record<
+  BalanceTransactionStatus,
+  TranslationMessage
+> = {
   PENDING: "balance.transaction-status-pending",
   COMPLETED: "balance.transaction-status-completed",
   CANCELLED: "balance.transaction-status-cancelled",

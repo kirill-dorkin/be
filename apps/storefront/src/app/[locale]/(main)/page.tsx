@@ -34,6 +34,11 @@ const AccountNotifications = dynamic(
   { ssr: true }
 );
 
+const ReferralPromoBanner = dynamic(
+  () => import("./_components/referral-promo-banner").then((mod) => ({ default: mod.ReferralPromoBanner })),
+  { ssr: true }
+);
+
 type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
   searchParams: Promise<Record<string, string>>;
@@ -119,6 +124,17 @@ export default async function Page() {
           </Suspense>
         </div>
       </section>
+
+      {/* Referral Promo Banner */}
+      {user && (
+        <div className="w-full bg-background py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={null}>
+              <ReferralPromoBanner user={user} />
+            </Suspense>
+          </div>
+        </div>
+      )}
 
       {/* Account Notifications */}
       <div className="w-full bg-background py-16">

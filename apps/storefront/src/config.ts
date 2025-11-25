@@ -43,10 +43,15 @@ export const COOKIE_MAX_AGE = {
   locale: 360 * DAY,
 } as const;
 
-export const AUTH_COOKIE_OPTIONS = {
+export const AUTH_COOKIE_OPTIONS: {
+  httpOnly: boolean;
+  path: string;
+  sameSite: "lax";
+  secure: boolean;
+} = {
   path: "/",
   httpOnly: true,
-  sameSite: "lax" as const,
+  sameSite: "lax",
   secure: isProduction,
 };
 

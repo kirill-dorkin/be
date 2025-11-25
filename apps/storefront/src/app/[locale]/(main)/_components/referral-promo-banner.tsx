@@ -14,7 +14,10 @@ interface ReferralPromoBannerProps {
 }
 
 export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
-  const t = await getTranslations();
+  const [referralT, commonT] = await Promise.all([
+    getTranslations("referral"),
+    getTranslations("common"),
+  ]);
 
   // Don't show if user is not logged in
   if (!user) {
@@ -44,25 +47,25 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
         <div className="space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-violet-700 dark:bg-slate-900/60 dark:text-violet-400">
             <Gift className="h-4 w-4" />
-            {t("referral.title")}
+            {referralT("title")}
           </div>
 
           <div>
             <h2 className="mb-3 text-3xl font-bold text-slate-900 dark:text-primary sm:text-4xl">
               {hasReferrals
-                ? t("referral.promo-title-active")
-                : t("referral.promo-title")}
+                ? referralT("promo-title-active")
+                : referralT("promo-title")}
             </h2>
             <p className="text-lg text-slate-600 dark:text-muted-foreground">
               {hasReferrals
-                ? t("referral.promo-description-active", {
+                ? referralT("promo-description-active", {
                     count: referralData.vipReferralCount || 0,
                     amount: REFERRAL_BONUS_AMOUNT,
-                    currency: t("common.currency"),
+                    currency: commonT("currency"),
                   })
-                : t("referral.promo-description", {
+                : referralT("promo-description", {
                     amount: REFERRAL_BONUS_AMOUNT,
-                    currency: t("common.currency"),
+                    currency: commonT("currency"),
                   })}
             </p>
           </div>
@@ -71,15 +74,15 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
             <Button asChild size="lg" className="gap-2">
               <LocalizedLink href={paths.account.referral.asPath()}>
                 {hasReferrals
-                  ? t("referral.view-my-stats")
-                  : t("referral.get-started")}
+                  ? referralT("view-my-stats")
+                  : referralT("get-started")}
                 <ArrowRight className="h-4 w-4" />
               </LocalizedLink>
             </Button>
             {!hasReferrals && (
               <Button asChild variant="outline" size="lg" className="gap-2">
                 <LocalizedLink href={paths.account.referral.asPath()}>
-                  {t("referral.how-it-works")}
+                  {referralT("how-it-works")}
                 </LocalizedLink>
               </Button>
             )}
@@ -96,7 +99,7 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
               {referralData.vipReferralCount || 0}
             </div>
             <div className="text-sm text-slate-600 dark:text-muted-foreground">
-              {t("referral.vip-referrals")}
+              {referralT("vip-referrals")}
             </div>
           </div>
 
@@ -105,10 +108,10 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
               <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div className="text-3xl font-bold text-slate-900 dark:text-primary">
-              {referralData.totalEarned || 0} {t("common.currency")}
+              {referralData.totalEarned || 0} {commonT("currency")}
             </div>
             <div className="text-sm text-slate-600 dark:text-muted-foreground">
-              {t("referral.total-earned")}
+              {referralT("total-earned")}
             </div>
           </div>
         </div>

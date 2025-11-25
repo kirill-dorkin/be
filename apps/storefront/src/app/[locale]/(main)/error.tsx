@@ -15,7 +15,11 @@ const ErrorComponent = ({
   const [traceId, setTraceId] = useState<string | null>(null);
 
   useEffect(() => {
-    storefrontLogger.error("Unexpected error", { error });
+    storefrontLogger.error("Unexpected error", {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+    });
 
     setTraceId(errorService.logError(error));
   }, [error]);

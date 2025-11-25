@@ -72,7 +72,11 @@ export function parseBalanceData(
   let transactions: BalanceTransaction[] = [];
 
   try {
-    transactions = JSON.parse(transactionsJson);
+    const parsedTransactions = JSON.parse(transactionsJson);
+
+    if (Array.isArray(parsedTransactions)) {
+      transactions = parsedTransactions.filter(isBalanceTransaction);
+    }
   } catch {
     transactions = [];
   }
@@ -126,4 +130,21 @@ export function calculateBalance(transactions: BalanceTransaction[]): number {
  */
 export function isValidReferralCode(code: string): boolean {
   return /^[A-F0-9]{8}$/.test(code);
+}
+
+function isBalanceTransaction(value: unknown): value is BalanceTransaction {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const record = value as Record<string, unknown>;
+
+  return (
+    typeof record.amount === "number" &&
+    typeof record.createdAt === "string" &&
+    typeof record.description === "string" &&
+    typeof record.id === "string" &&
+    typeof record.status === "string" &&
+    typeof record.type === "string"
+  );
 }
