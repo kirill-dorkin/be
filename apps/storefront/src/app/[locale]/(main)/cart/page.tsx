@@ -16,7 +16,7 @@ export async function generateMetadata() {
 export default async function Page() {
   return (
     <div className="mx-auto flex justify-center">
-      <div className="max-w-[616px] flex-1 basis-full py-6 sm:py-8 lg:py-10">
+      <div className="max-w-[616px] flex-1 basis-full px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         <Suspense fallback={<ShoppingBagSkeleton hasHeader />}>
           <Cart />
         </Suspense>
