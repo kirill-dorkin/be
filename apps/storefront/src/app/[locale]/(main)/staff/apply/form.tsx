@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Bike, Wrench } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -17,6 +17,9 @@ import { REPAIR_ROLE } from "@/lib/repair/metadata";
 import { submitWorkerApplication } from "./actions";
 import { applyFormSchema, type ApplyFormValues } from "./schema";
 
+const SUBMISSION_LOCK_KEY = "worker-apply-last-submitted";
+const LOCK_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
 export const WorkerApplyForm = () => {
   const t = useTranslations("staff-apply");
   const tc = useTranslations("common");
@@ -24,10 +27,8 @@ export const WorkerApplyForm = () => {
   const te = useTranslations("errors");
 
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [renderSuccess, setRenderSuccess] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const unmountTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
 
   const form = useForm<ApplyFormValues>({
     resolver: zodResolver(applyFormSchema),
@@ -44,41 +45,42 @@ export const WorkerApplyForm = () => {
   const isProcessing = form.formState.isSubmitting;
   const selectedRole = form.watch("role");
 
-  const clearSuccessTimers = () => {
-    if (hideTimerRef.current) {
-      clearTimeout(hideTimerRef.current);
-      hideTimerRef.current = null;
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
     }
-    if (unmountTimerRef.current) {
-      clearTimeout(unmountTimerRef.current);
-      unmountTimerRef.current = null;
+
+    const rawTimestamp = window.localStorage.getItem(SUBMISSION_LOCK_KEY);
+    const lastSubmitted = Number(rawTimestamp);
+
+    if (
+      Number.isFinite(lastSubmitted) &&
+      Date.now() - lastSubmitted < LOCK_DURATION_MS
+    ) {
+      setShowSuccess(true);
+      setIsLocked(true);
     }
-  };
-
-  const showSuccessMessage = () => {
-    clearSuccessTimers();
-    setRenderSuccess(true);
-    setShowSuccess(true);
-
-    hideTimerRef.current = setTimeout(() => {
-      setShowSuccess(false);
-      unmountTimerRef.current = setTimeout(() => {
-        setRenderSuccess(false);
-      }, 350);
-    }, 10000);
-  };
-
-  useEffect(() => () => clearSuccessTimers(), []);
+  }, []);
 
   const handleSubmit = async (values: ApplyFormValues) => {
-    clearSuccessTimers();
-    setRenderSuccess(false);
+    if (isLocked) {
+      return;
+    }
+
     setShowSuccess(false);
     setStatusMessage(null);
     const result = await submitWorkerApplication(values);
 
     if (result.ok) {
-      showSuccessMessage();
+      setShowSuccess(true);
+      setIsLocked(true);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          SUBMISSION_LOCK_KEY,
+          String(Date.now()),
+        );
+      }
+
       const currentRole = form.getValues("role");
 
       form.reset({
@@ -197,13 +199,11 @@ export const WorkerApplyForm = () => {
           </div>
         </div>
 
-        {renderSuccess && (
+        {showSuccess && (
           <div
             className={cn(
               "flex flex-col items-start gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800 shadow-sm transition-all duration-500 ease-out",
-              showSuccess
-                ? "translate-y-0 opacity-100"
-                : "-translate-y-2 opacity-0",
+              "translate-y-0 opacity-100",
             )}
             role="status"
             aria-live="polite"
@@ -222,44 +222,54 @@ export const WorkerApplyForm = () => {
             {statusMessage}
           </div>
         )}
-        <div className="flex flex-col gap-3 md:flex-row">
+        <fieldset
+          className="flex flex-col gap-4"
+          disabled={isLocked}
+          aria-disabled={isLocked}
+        >
+          <div className="flex flex-col gap-3 md:flex-row">
+            <TextFormField
+              name="firstName"
+              label={tc("first-name")}
+              autoComplete="given-name"
+              className="md:w-1/2"
+            />
+            <TextFormField
+              name="lastName"
+              label={tc("last-name")}
+              autoComplete="family-name"
+              className="md:w-1/2"
+            />
+          </div>
           <TextFormField
-            name="firstName"
-            label={tc("first-name")}
-            autoComplete="given-name"
-            className="md:w-1/2"
+            name="email"
+            label={tc("email")}
+            type="email"
+            autoComplete="email"
           />
           <TextFormField
-            name="lastName"
-            label={tc("last-name")}
-            autoComplete="family-name"
-            className="md:w-1/2"
+            name="phone"
+            label={tc("phone")}
+            autoComplete="tel"
           />
-        </div>
-        <TextFormField
-          name="email"
-          label={tc("email")}
-          type="email"
-          autoComplete="email"
-        />
-        <TextFormField
-          name="phone"
-          label={tc("phone")}
-          autoComplete="tel"
-        />
-        <TextFormField
-          name="password"
-          label={tc("password")}
-          type="password"
-          placeholder={ta("password-placeholder", {
-            minPasswordLength: MIN_PASSWORD_LENGTH,
-          })}
-          autoComplete="new-password"
-        />
+          <TextFormField
+            name="password"
+            label={tc("password")}
+            type="password"
+            placeholder={ta("password-placeholder", {
+              minPasswordLength: MIN_PASSWORD_LENGTH,
+            })}
+            autoComplete="new-password"
+          />
 
-        <Button type="submit" disabled={isProcessing} loading={isProcessing}>
-          {isProcessing ? t("submit-loading") : t("submit")}
-        </Button>
+          <Button
+            type="submit"
+            disabled={isProcessing || isLocked}
+            loading={isProcessing}
+          >
+            {isProcessing ? t("submit-loading") : t("submit")}
+          </Button>
+        </fieldset>
       </form>
     </Form>
   );
