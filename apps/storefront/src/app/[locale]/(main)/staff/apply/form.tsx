@@ -24,7 +24,6 @@ export const WorkerApplyForm = () => {
   const t = useTranslations("staff-apply");
   const tc = useTranslations("common");
   const ta = useTranslations("auth");
-  const te = useTranslations("errors");
 
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -119,8 +118,8 @@ export const WorkerApplyForm = () => {
 
     if (Array.isArray(result.error)) {
       result.error.forEach((error, index) => {
-        const fallbackMessage = error.message || te(error.code);
-        const targetField = (error.field as keyof ApplyFormValues | undefined) ?? "email";
+        const fallbackMessage = error.message ?? t("submit-error-general");
+        const targetField: keyof ApplyFormValues = "email";
 
         form.setError(targetField, {
           message: fallbackMessage,

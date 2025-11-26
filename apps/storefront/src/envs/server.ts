@@ -10,6 +10,9 @@ const schema = z.object({
   SERVICE_COURIER_GROUP_NAME: z.string().default("Repair Couriers"),
   STRIPE_SECRET_KEY: z.string().optional(),
   ACCOUNT_CONFIRMATION_REDIRECT_URL: z.string().url().optional(),
+  TELEGRAM_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_CHAT_ID: z.string().optional(),
+  TELEGRAM_THREAD_ID: z.string().optional(),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -24,6 +27,9 @@ export const serverEnvs = isSsr
       ACCOUNT_CONFIRMATION_REDIRECT_URL:
         process.env.SALEOR_ACCOUNT_CONFIRMATION_REDIRECT_URL ??
         process.env.ACCOUNT_CONFIRMATION_REDIRECT_URL,
+      TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+      TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
+      TELEGRAM_THREAD_ID: process.env.TELEGRAM_THREAD_ID,
     })
   : ({} as Schema);
 
