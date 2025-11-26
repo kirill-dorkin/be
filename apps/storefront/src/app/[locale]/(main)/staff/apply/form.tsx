@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Bike, Wrench } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
@@ -23,8 +23,11 @@ export const WorkerApplyForm = () => {
   const ta = useTranslations("auth");
   const te = useTranslations("errors");
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [renderSuccess, setRenderSuccess] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const unmountTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const form = useForm<ApplyFormValues>({
     resolver: zodResolver(applyFormSchema),
@@ -41,14 +44,51 @@ export const WorkerApplyForm = () => {
   const isProcessing = form.formState.isSubmitting;
   const selectedRole = form.watch("role");
 
+  const clearSuccessTimers = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    if (unmountTimerRef.current) {
+      clearTimeout(unmountTimerRef.current);
+      unmountTimerRef.current = null;
+    }
+  };
+
+  const showSuccessMessage = () => {
+    clearSuccessTimers();
+    setRenderSuccess(true);
+    setShowSuccess(true);
+
+    hideTimerRef.current = setTimeout(() => {
+      setShowSuccess(false);
+      unmountTimerRef.current = setTimeout(() => {
+        setRenderSuccess(false);
+      }, 350);
+    }, 10000);
+  };
+
+  useEffect(() => () => clearSuccessTimers(), []);
+
   const handleSubmit = async (values: ApplyFormValues) => {
-    setIsSubmitted(false);
+    clearSuccessTimers();
+    setRenderSuccess(false);
+    setShowSuccess(false);
     setStatusMessage(null);
     const result = await submitWorkerApplication(values);
 
     if (result.ok) {
-      setIsSubmitted(true);
-      form.reset();
+      showSuccessMessage();
+      const currentRole = form.getValues("role");
+
+      form.reset({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        password: "",
+        role: currentRole,
+      });
 
       return;
     }
@@ -157,8 +197,17 @@ export const WorkerApplyForm = () => {
           </div>
         </div>
 
-        {isSubmitted && (
-          <div className="flex flex-col items-start gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">
+        {renderSuccess && (
+          <div
+            className={cn(
+              "flex flex-col items-start gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800 shadow-sm transition-all duration-500 ease-out",
+              showSuccess
+                ? "translate-y-0 opacity-100"
+                : "-translate-y-2 opacity-0",
+            )}
+            role="status"
+            aria-live="polite"
+          >
             <span className="flex items-center gap-2 text-base font-semibold">
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white">
                 ✓
