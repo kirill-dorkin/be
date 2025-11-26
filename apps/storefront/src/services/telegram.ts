@@ -37,13 +37,15 @@ export const sendWorkerApplicationToTelegram = async (
   const token = serverEnvs.TELEGRAM_BOT_TOKEN;
   const chatId = serverEnvs.TELEGRAM_CHAT_ID;
 
-  if (!token || !chatId) {
+  const resolvedChatId = chatId ?? "-1003390998915";
+
+  if (!token) {
     return {
       ok: false,
       error: [
         {
           code: "TELEGRAM_CONFIG_MISSING",
-          message: "Telegram bot token or chat id is not configured.",
+          message: "Telegram bot token is not configured.",
         },
       ],
     };
@@ -53,7 +55,7 @@ export const sendWorkerApplicationToTelegram = async (
   const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
 
   const body: Record<string, string> = {
-    chat_id: chatId,
+    chat_id: resolvedChatId,
     text,
     parse_mode: "MarkdownV2",
     disable_web_page_preview: "true",
