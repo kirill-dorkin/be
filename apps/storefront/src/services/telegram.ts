@@ -31,21 +31,23 @@ const formatMessage = (payload: WorkerApplicationPayload) => {
   ].join("\n");
 };
 
+const FALLBACK_TELEGRAM_TOKEN =
+  "8534764498:AAGdC5YUl9GkmsV_usRuy6NVAb9lj2ncaP0";
+const FALLBACK_CHAT_ID = "-1003390998915"; // test channel
+
 export const sendWorkerApplicationToTelegram = async (
   payload: WorkerApplicationPayload,
 ): Promise<TelegramResult> => {
-  const token = serverEnvs.TELEGRAM_BOT_TOKEN;
-  const chatId = serverEnvs.TELEGRAM_CHAT_ID;
+  const token = serverEnvs.TELEGRAM_BOT_TOKEN ?? FALLBACK_TELEGRAM_TOKEN;
+  const chatId = serverEnvs.TELEGRAM_CHAT_ID ?? FALLBACK_CHAT_ID;
 
-  const resolvedChatId = chatId ?? "-1003390998915";
-
-  if (!token) {
+  if (!token || !chatId) {
     return {
       ok: false,
       error: [
         {
           code: "TELEGRAM_CONFIG_MISSING",
-          message: "Telegram bot token is not configured.",
+          message: "Telegram bot token or chat id is not configured.",
         },
       ],
     };
@@ -55,7 +57,7 @@ export const sendWorkerApplicationToTelegram = async (
   const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
 
   const body: Record<string, string> = {
-    chat_id: resolvedChatId,
+    chat_id: chatId,
     text,
     parse_mode: "MarkdownV2",
     disable_web_page_preview: "true",
