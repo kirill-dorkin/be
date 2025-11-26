@@ -68,72 +68,88 @@ export const WorkerApplyForm = () => {
 
     setShowSuccess(false);
     setStatusMessage(null);
-    const result = await submitWorkerApplication(values);
 
-    if (result.ok) {
-      setShowSuccess(true);
-      setIsLocked(true);
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(
-          SUBMISSION_LOCK_KEY,
-          String(Date.now()),
-        );
-      }
+    try {
+      const result = await submitWorkerApplication(values);
 
-      const currentRole = form.getValues("role");
-
-      form.reset({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        password: "",
-        role: currentRole,
-      });
-
-      return;
-    }
-
-    if (result.error && typeof result.error === "object" && "fieldErrors" in result.error) {
-      const { fieldErrors = {}, formErrors = [] } = result.error as {
-        fieldErrors?: Record<string, string[]>;
-        formErrors?: string[];
-      };
-
-      Object.entries(fieldErrors).forEach(([field, messages]) => {
-        if (messages?.length) {
-          form.setError(field as keyof ApplyFormValues, {
-            message: messages[0],
-          });
+      if (result.ok) {
+        setShowSuccess(true);
+        setIsLocked(true);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(
+            SUBMISSION_LOCK_KEY,
+            String(Date.now()),
+          );
         }
-      });
 
-      if (formErrors.length) {
-        form.setError("email", { message: formErrors[0] });
-        setStatusMessage(formErrors[0]);
-      }
+        const currentRole = form.getValues("role");
 
-      return;
-    }
-
-    if (Array.isArray(result.error)) {
-      result.error.forEach((error, index) => {
-        const fallbackMessage = error.message ?? t("submit-error-general");
-        const targetField: keyof ApplyFormValues = "email";
-
-        form.setError(targetField, {
-          message: fallbackMessage,
+        form.reset({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          password: "",
+          role: currentRole,
         });
 
-        if (index === 0) {
-          setStatusMessage(fallbackMessage);
+        return;
+      }
+
+      if (result.error && typeof result.error === "object" && "fieldErrors" in result.error) {
+        const { fieldErrors = {}, formErrors = [] } = result.error as {
+          fieldErrors?: Record<string, string[]>;
+          formErrors?: string[];
+        };
+
+        Object.entries(fieldErrors).forEach(([field, messages]) => {
+          if (messages?.length) {
+            form.setError(field as keyof ApplyFormValues, {
+              message: messages[0],
+            });
+          }
+        });
+
+        if (formErrors.length) {
+          form.setError("email", { message: formErrors[0] });
+          setStatusMessage(formErrors[0]);
         }
-      });
+
+        console.error("[WorkerApply] Validation errors", result.error);
+
+        return;
+      }
+
+      if (Array.isArray(result.error)) {
+        result.error.forEach((error, index) => {
+          const fallbackMessage = error.message ?? t("submit-error-general");
+          const targetField: keyof ApplyFormValues = "email";
+
+          form.setError(targetField, {
+            message: fallbackMessage,
+          });
+
+          if (index === 0) {
+            setStatusMessage(fallbackMessage);
+          }
+        });
+
+        console.error("[WorkerApply] Submit errors", result.error);
+
+        return;
+      }
+
+      setStatusMessage(t("submit-error-general"));
+      console.error("[WorkerApply] Unknown error", result.error);
 
       return;
-    }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : t("submit-error-general");
 
-    setStatusMessage(t("submit-error-general"));
+      setStatusMessage(message);
+      console.error("[WorkerApply] Unexpected failure", error);
+    }
   };
 
   return (
