@@ -121,8 +121,13 @@ export const WorkerApplyForm = () => {
       }
 
       if (Array.isArray(result.error)) {
+        const messages: string[] = [];
+
         result.error.forEach((error, index) => {
-          const fallbackMessage = error.message ?? t("submit-error-general");
+          const fallbackMessage =
+            error.message && error.message.trim().length > 0
+              ? error.message
+              : t("submit-error-general");
           const targetField: keyof ApplyFormValues = "email";
 
           form.setError(targetField, {
@@ -132,9 +137,11 @@ export const WorkerApplyForm = () => {
           if (index === 0) {
             setStatusMessage(fallbackMessage);
           }
+
+          messages.push(fallbackMessage);
         });
 
-        console.error("[WorkerApply] Submit errors", result.error);
+        console.error("[WorkerApply] Submit errors", messages);
 
         return;
       }

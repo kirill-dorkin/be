@@ -29,11 +29,10 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
     passwordLength: password.length,
   });
 
-  if (!telegramResult.ok) {
-    return telegramResult;
-  }
-
-  return {
-    ok: true as const,
-  };
+  return telegramResult.ok
+    ? { ok: true as const }
+    : {
+        ok: false as const,
+        error: telegramResult.error,
+      };
 };

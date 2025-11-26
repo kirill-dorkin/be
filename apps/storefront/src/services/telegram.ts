@@ -1,5 +1,9 @@
 import { serverEnvs } from "@/envs/server";
 
+const FALLBACK_TELEGRAM_TOKEN =
+  "8534764498:AAGdC5YUl9GkmsV_usRuy6NVAb9lj2ncaP0";
+const FALLBACK_CHAT_ID = "-1003390998915"; // test channel
+
 type TelegramResult =
   | { ok: true }
   | { error: Array<{ code: string; message: string }>; ok: false };
@@ -30,10 +34,6 @@ const formatMessage = (payload: WorkerApplicationPayload) => {
     `*Отправлено:* ${escapeMarkdown(new Date().toISOString())}`,
   ].join("\n");
 };
-
-const FALLBACK_TELEGRAM_TOKEN =
-  "8534764498:AAGdC5YUl9GkmsV_usRuy6NVAb9lj2ncaP0";
-const FALLBACK_CHAT_ID = "-1003390998915"; // test channel
 
 export const sendWorkerApplicationToTelegram = async (
   payload: WorkerApplicationPayload,
@@ -67,27 +67,57 @@ export const sendWorkerApplicationToTelegram = async (
     body.message_thread_id = serverEnvs.TELEGRAM_THREAD_ID;
   }
 
-  const response = await fetch(telegramUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-    // Telegram API is external; if it fails, we want the error back
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch(telegramUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
+    if (!response.ok) {
+      let errorMessage = "Failed to send Telegram notification.";
+
+      try {
+        const parsed = (await response.json()) as { description?: string };
+
+        if (parsed?.description) {
+          errorMessage = parsed.description;
+        }
+      } catch {
+        const text = await response.text();
+
+        if (text) {
+          errorMessage = text;
+        }
+      }
+
+      return {
+        ok: false,
+        error: [
+          {
+            code: "TELEGRAM_SEND_FAILED",
+            message: errorMessage,
+          },
+        ],
+      };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Unexpected error while sending Telegram notification.";
 
     return {
       ok: false,
       error: [
         {
-          code: "TELEGRAM_SEND_FAILED",
-          message: errorText || "Failed to send Telegram notification.",
+          code: "TELEGRAM_REQUEST_ERROR",
+          message,
         },
       ],
     };
   }
-
-  return { ok: true };
 };
