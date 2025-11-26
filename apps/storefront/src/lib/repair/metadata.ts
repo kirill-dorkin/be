@@ -6,6 +6,7 @@ export const REPAIR_METADATA_KEYS = {
 
 export const REPAIR_ROLE = {
   worker: "WORKER",
+  courier: "COURIER",
 } as const;
 
 export const REPAIR_STATUS = {

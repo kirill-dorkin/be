@@ -1,15 +1,18 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Bike, Wrench } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@nimara/ui/components/button";
 import { Form } from "@nimara/ui/components/form";
+import { cn } from "@nimara/ui/lib/utils";
 
 import { TextFormField } from "@/components/form/text-form-field";
 import { MIN_PASSWORD_LENGTH } from "@/config";
+import { REPAIR_ROLE } from "@/lib/repair/metadata";
 
 import { submitWorkerApplication } from "./actions";
 import { applyFormSchema, type ApplyFormValues } from "./schema";
@@ -31,10 +34,12 @@ export const WorkerApplyForm = () => {
       email: "",
       phone: "",
       password: "",
+      role: REPAIR_ROLE.worker,
     },
   });
 
   const isProcessing = form.formState.isSubmitting;
+  const selectedRole = form.watch("role");
 
   const handleSubmit = async (values: ApplyFormValues) => {
     setIsSubmitted(false);
@@ -97,6 +102,61 @@ export const WorkerApplyForm = () => {
         className="flex flex-col gap-y-4"
         noValidate
       >
+        <div className="space-y-2">
+          <p className="text-sm font-semibold text-foreground">
+            {t("role.label")}
+          </p>
+          <p className="text-muted-foreground text-sm">
+            {t("role.hint")}
+          </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              {
+                value: REPAIR_ROLE.worker,
+                title: t("role.repair.title"),
+                description: t("role.repair.description"),
+                icon: <Wrench className="h-5 w-5" aria-hidden="true" />,
+              },
+              {
+                value: REPAIR_ROLE.courier,
+                title: t("role.courier.title"),
+                description: t("role.courier.description"),
+                icon: <Bike className="h-5 w-5" aria-hidden="true" />,
+              },
+            ].map((option) => {
+              const isActive = selectedRole === option.value;
+
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => form.setValue("role", option.value, { shouldDirty: true })}
+                  className={cn(
+                    "flex h-full flex-col gap-2 rounded-2xl border p-4 text-left transition hover:border-primary/50 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    isActive
+                      ? "border-primary bg-primary/5 shadow-sm"
+                      : "border-border/70 bg-background",
+                  )}
+                  aria-pressed={isActive}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "inline-flex h-9 w-9 items-center justify-center rounded-full",
+                        isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {option.icon}
+                    </span>
+                    <span className="font-semibold text-foreground">{option.title}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{option.description}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {isSubmitted && (
           <div className="flex flex-col items-start gap-3 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">
             <span className="flex items-center gap-2 text-base font-semibold">

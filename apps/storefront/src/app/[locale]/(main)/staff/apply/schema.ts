@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { REPAIR_ROLE } from "@/lib/repair/metadata";
+
 export const applyFormSchema = z.object({
   firstName: z
     .string()
@@ -18,6 +20,7 @@ export const applyFormSchema = z.object({
     .string()
     .min(6, "errors.password.min")
     .max(120, "errors.password.max"),
+  role: z.enum([REPAIR_ROLE.worker, REPAIR_ROLE.courier]),
 });
 
 export type ApplyFormValues = z.output<typeof applyFormSchema>;

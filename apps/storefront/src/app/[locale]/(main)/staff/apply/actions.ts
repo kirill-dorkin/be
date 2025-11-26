@@ -4,7 +4,6 @@ import { getAccountConfirmationRedirectUrl } from "@/lib/account-confirmation";
 import { shouldRetryAccountRegisterWithRedirect } from "@/lib/account-register";
 import {
   REPAIR_METADATA_KEYS,
-  REPAIR_ROLE,
   REPAIR_STATUS,
 } from "@/lib/repair/metadata";
 import { getCurrentRegion } from "@/regions/server";
@@ -22,7 +21,7 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
     };
   }
 
-  const { firstName, lastName, email, password, phone } = parsed.data;
+  const { firstName, lastName, email, password, phone, role } = parsed.data;
 
   const region = await getCurrentRegion();
   const authService = await getAuthService();
@@ -38,7 +37,7 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
       metadata: [
         {
           key: REPAIR_METADATA_KEYS.role,
-          value: REPAIR_ROLE.worker,
+          value: role,
         },
         {
           key: REPAIR_METADATA_KEYS.status,

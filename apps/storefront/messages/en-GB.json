@@ -520,9 +520,21 @@
     "pending-message": "Your application is under review. We will notify you once it is approved."
   },
   "staff-apply": {
-    "badge": "Technician portal",
-    "title": "Join the repair team",
-    "subtitle": "Fill in the form below – the administrator will review your application and provide workspace access.",
+    "badge": "Partner application",
+    "title": "Apply to join the team",
+    "subtitle": "Choose your role — delivery driver or repair technician. An administrator will review your details and activate access.",
+    "role": {
+      "label": "Choose your role",
+      "hint": "We’ll tailor your dashboard for the role you pick.",
+      "repair": {
+        "title": "Repair technician",
+        "description": "Diagnostics, device repairs, and handling service tickets."
+      },
+      "courier": {
+        "title": "Delivery driver",
+        "description": "Deliver customer orders and manage your routes."
+      }
+    },
     "success-message": "Thank you! Your application has been sent to the administrator. You will receive access after approval.",
     "success-title": "Application submitted",
     "success-description": "We’ve forwarded your details to the administrator. Once approved, you’ll receive an email with the next steps.",
