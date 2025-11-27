@@ -66,6 +66,11 @@ export const sendWorkerApplicationToTelegram = async (
   const chatId = serverEnvs.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
+    storefrontLogger.error("[Telegram] Missing bot token or chat id", {
+      email: payload.email,
+      phone: payload.phone,
+    });
+
     return {
       ok: false,
       error: [

@@ -10,8 +10,8 @@ const schema = z.object({
   SERVICE_COURIER_GROUP_NAME: z.string().default("Repair Couriers"),
   STRIPE_SECRET_KEY: z.string().optional(),
   ACCOUNT_CONFIRMATION_REDIRECT_URL: z.string().url().optional(),
-  TELEGRAM_BOT_TOKEN: z.string(),
-  TELEGRAM_CHAT_ID: z.string(),
+  TELEGRAM_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_CHAT_ID: z.string().optional(),
   TELEGRAM_THREAD_ID: z.string().optional(),
 });
 
