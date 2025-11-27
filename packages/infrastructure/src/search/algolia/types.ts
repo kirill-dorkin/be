@@ -51,12 +51,12 @@ export type IndicesSettings = Array<
      */
     availableFacets: AvailableFacets;
     /**
-     * A main index name.
-     *
-     * @example
-     * "DEV.channel-us.USD.products"
-     */
-    indexName: string;
+   * A main index name.
+   *
+   * @example
+   * "DEV.channel-uk.GBP.products"
+   */
+   indexName: string;
     /**
      * An array of virtual replicas used for sorting. {@link VirtualReplica}.
      */
@@ -71,7 +71,7 @@ export type IndicesSettings = Array<
  * @example
  * ```ts
  * {
- *   indexName: "DEV.channel-us.USD.products.name_asc",
+ *   indexName: "DEV.channel-uk.GBP.products.name_asc",
  *   messageKey: "search.name-asc",
  *   queryParamValue: "alpha-asc",
  * }

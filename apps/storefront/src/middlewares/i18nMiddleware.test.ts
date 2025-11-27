@@ -74,7 +74,7 @@ describe("i18nMiddleware", () => {
     );
     const initialResponse = new NextResponse();
 
-    initialRequest.cookies.set(COOKIE_KEY.locale, "en-US");
+    initialRequest.cookies.set(COOKIE_KEY.locale, "ky-KG");
     initialRequest.cookies.set(COOKIE_KEY.checkoutId, "321");
 
     const resp = await i18nMiddleware(mockNextMiddleware)(

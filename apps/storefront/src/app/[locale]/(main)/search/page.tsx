@@ -774,7 +774,7 @@ const CATEGORY_PRODUCTS_FALLBACK_QUERY = {
   `,
 };
 
-const FALLBACK_CURRENCY: AllCurrency = "USD";
+const FALLBACK_CURRENCY: AllCurrency = "GBP";
 
 const isAllowedCurrency = (
   currency: string | null | undefined,

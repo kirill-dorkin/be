@@ -6,9 +6,7 @@ import type {
   StripeServiceState,
 } from "../../types";
 
-const mapToStripeLocale: Record<string, StripeElementLocale> = {
-  "en-US": "en",
-};
+const mapToStripeLocale: Record<string, StripeElementLocale> = {};
 
 export const paymentElementCreateInfra =
   (state: StripeServiceState): PaymentElementCreateInfra =>

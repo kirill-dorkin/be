@@ -13,7 +13,6 @@ const CATALOG = JSON.parse(
 );
 
 const LOCALE_TO_ENUM = {
-  "en-US": "EN_US",
   "en-GB": "EN_GB",
   "ru-RU": "RU",
   "ky-KG": "KY",

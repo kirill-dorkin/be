@@ -38,7 +38,11 @@ function ensureUniqueSlug(base) {
 
 function updateCategoryNode(node, parentName) {
   const oldSlug = node.slug;
-  const englishName = node.translations?.["en-US"]?.name || node.name || "";
+  const englishName =
+    node.translations?.["en-GB"]?.name ||
+    node.translations?.["en"]?.name ||
+    node.name ||
+    "";
   let baseSlug = slugify(englishName);
 
   if (!baseSlug && parentName) {

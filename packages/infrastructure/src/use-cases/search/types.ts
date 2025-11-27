@@ -22,7 +22,7 @@ export type SearchContext = {
    * A Saleor channel slug of the channel from which this index contains objects.
    *
    * @example
-   * "channel-us"
+   * "channel-uk"
    */
   channel: string;
   currency?: string;

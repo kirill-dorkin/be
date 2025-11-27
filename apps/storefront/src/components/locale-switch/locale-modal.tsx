@@ -58,9 +58,6 @@ export function LocaleSwitchModal({
         (market) => market.continent === "Asia Pacific",
       ),
       europe: markets.filter((market) => market.continent === "Europe"),
-      north_america: markets.filter(
-        (market) => market.continent === "North America",
-      ),
     }),
     [markets],
   );
@@ -173,16 +170,6 @@ return;
             pendingLocale={pendingLocale}
           />
         )}
-        {!!marketsByContinent.north_america.length && (
-          <ContinentRow
-            currentLocale={currentLocale}
-            markets={marketsByContinent.north_america}
-            name={t("locale.continents.north-america")}
-            onLocaleSelect={handleLocaleSelect}
-            pendingLocale={pendingLocale}
-          />
-        )}
-
         {pendingLocale && (
           <div className="absolute inset-0 flex items-center justify-center rounded-3xl bg-background/85">
             <div className="flex w-full max-w-sm flex-col items-center gap-3 px-6 text-center">
@@ -204,7 +191,6 @@ return;
 
 LocaleSwitchModal.displayName = "LocaleSwitchModal";
 const SWITCH_MESSAGES: Record<SupportedLocale, string> = {
-  "en-US": "Switching language to {language}",
   "en-GB": "Switching language to {language}",
   "ru-RU": "Переключаем язык на {language}",
   "ky-KG": "Тилди {language} кылып өзгөртүп жатабыз",

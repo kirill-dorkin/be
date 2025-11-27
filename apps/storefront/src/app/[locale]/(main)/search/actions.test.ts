@@ -14,7 +14,7 @@ describe("PLP - Filters", () => {
   });
 
   it("should clear values on clear submit", async () => {
-    const currentLocale = "en-US";
+    const currentLocale = "en-GB";
 
     vi.mocked(getLocale).mockResolvedValue(currentLocale);
 
@@ -35,7 +35,7 @@ describe("PLP - Filters", () => {
   });
 
   it("should update the URL on submit", async () => {
-    const currentLocale = "en-US";
+    const currentLocale = "en-GB";
 
     vi.mocked(getLocale).mockResolvedValue(currentLocale);
 

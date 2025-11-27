@@ -36,18 +36,12 @@ export const parseRegion = (
   const baseMarket = MARKETS[marketId.toUpperCase() as Uppercase<MarketId>];
   const language = LANGUAGES[languageId.toUpperCase() as Uppercase<LanguageId>];
 
-  // For US market, override channel to "default-channel" if env says so (for fresh Saleor setups).
-  const channel: ChannelId =
-    marketId === "us" && CHANNEL === "default-channel"
-      ? "default-channel"
-      : baseMarket.channel;
-
   const market = {
     ...baseMarket,
     currency: isSupportedCurrency(currencyOverride)
       ? currencyOverride
       : baseMarket.currency,
-    channel,
+    channel: baseMarket.channel as ChannelId,
   };
 
   return Object.freeze({

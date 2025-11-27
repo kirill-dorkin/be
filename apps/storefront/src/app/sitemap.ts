@@ -10,9 +10,9 @@ type Item = MetadataRoute.Sitemap[number];
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // TODO: Make this contextual
   const searchContext = {
-    currency: "USD",
-    channel: "channel-us",
-    languageCode: "EN_US",
+    currency: "RUB",
+    channel: "channel-ru",
+    languageCode: "RU_RU",
   } satisfies SearchContext;
 
   const searchService = await getSearchService();

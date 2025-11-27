@@ -2,7 +2,7 @@ import { Steps } from "nextra/components";
 
 # Adding a new channel, language and market in Nimara
 
-Nimara storefront currently supports two sales channels: **gb** (Great Britain) and **us** (United States). This guide will walk you through adding a new channel, language, and market (for example, Spanish/Spain) to your Nimara storefront.
+Nimara storefront currently supports three sales channels: **gb** (Great Britain), **ru** (Russia), and **kg** (Kyrgyzstan). This guide will walk you through adding a new channel, language, and market (for example, Spanish/Spain) to your Nimara storefront.
 
 <Steps>
 ### Add a new sales channel in Saleor
@@ -23,7 +23,7 @@ Edit `types.ts`:
  * Defines available languages in the App.
  */
 
-export const SUPPORTED_LANGUAGES = ["us", "gb", "es"] as const;
+export const SUPPORTED_LANGUAGES = ["gb", "ru", "kg", "es"] as const;
 export type LanguageId = (typeof SUPPORTED_LANGUAGES)[number];
 ```
 
@@ -32,11 +32,12 @@ export type LanguageId = (typeof SUPPORTED_LANGUAGES)[number];
 ```ts filename="apps/storefront/src/regions/types.ts"
 export const SUPPORTED_LOCALES = [
   "en-GB",
-  "en-US",
+  "ru-RU",
+  "ky-KG",
   "es-ES",
 ] as const satisfies AllLocale[];
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
-export const DEFAULT_LOCALE = "en-US" as const satisfies AllLocale;
+export const DEFAULT_LOCALE = "ru-RU" as const satisfies AllLocale;
 ```
 
 - if you want to add a brand new sales channel (not just a new language for an existing channel), also extend `SUPPORTED_MARKETS`:
@@ -46,7 +47,7 @@ export const DEFAULT_LOCALE = "en-US" as const satisfies AllLocale;
  * Defines available markets in the App.
  */
 
-export const SUPPORTED_MARKETS = ["gb", "us", "es"] as const;
+export const SUPPORTED_MARKETS = ["gb", "ru", "kg", "es"] as const;
 export type MarketId = (typeof SUPPORTED_MARKETS)[number];
 ```
 
@@ -58,8 +59,9 @@ export type MarketId = (typeof SUPPORTED_MARKETS)[number];
  */
 
 export const SUPPORTED_CURRENCIES = [
-  "USD",
   "GBP",
+  "RUB",
+  "KGS",
   "EUR",
 ] as const satisfies AllCurrency[];
 export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
@@ -74,6 +76,8 @@ Edit `routing.ts`:
 ```ts filename="apps/storefront/src/i18n/routing.ts"
 export const localePrefixes = {
   "en-GB": "/gb",
+  "ru-RU": "/ru",
+  "ky-KG": "/kg",
   "es-ES": "/es",
 } as const satisfies Record<
   Exclude<SupportedLocale, typeof DEFAULT_LOCALE>,
@@ -90,11 +94,12 @@ Edit `consts.ts`:
 ```ts filename="packages/domain/src/consts.ts":
 export const ALL_LOCALES = [
   "en",
-  "en-US",
   "en-GB",
   "ja-JP",
+  "ky-KG",
   "pl-PL",
   "es-ES",
+  "ru-RU",
 ] as const;
 ```
 
@@ -110,7 +115,8 @@ export const LOCALE_CHANNEL_MAP: Record<
   (typeof SUPPORTED_MARKETS)[number]
 > = {
   "en-GB": "gb",
-  "en-US": "us",
+  "ru-RU": "ru",
+  "ky-KG": "kg",
   "es-ES": "es",
 };
 ```
@@ -125,11 +131,17 @@ export const LANGUAGES = {
     code: "EN_GB",
     locale: "en-GB",
   },
-  US: {
-    id: "us",
-    name: "English (United States)",
-    code: "EN_US",
-    locale: "en-US",
+  RU: {
+    id: "ru",
+    name: "Русский (Россия)",
+    code: "RU_RU",
+    locale: "ru-RU",
+  },
+  KG: {
+    id: "kg",
+    name: "Кыргызча (Кыргызстан)",
+    code: "KY",
+    locale: "ky-KG",
   },
 
   ES: {
@@ -155,15 +167,25 @@ export const MARKETS = {
     defaultLanguage: LANGUAGES.GB,
     supportedLanguages: [LANGUAGES.GB],
   },
-  US: {
-    id: "us",
-    name: "United States of America",
-    channel: "channel-us",
-    currency: "USD",
-    continent: "North America",
-    countryCode: "US",
-    defaultLanguage: LANGUAGES.US,
-    supportedLanguages: [LANGUAGES.US],
+  RU: {
+    id: "ru",
+    name: "Russia",
+    channel: "channel-ru",
+    currency: "RUB",
+    continent: "Europe",
+    countryCode: "RU",
+    defaultLanguage: LANGUAGES.RU,
+    supportedLanguages: [LANGUAGES.RU],
+  },
+  KG: {
+    id: "kg",
+    name: "Kyrgyzstan",
+    channel: "channel-kg",
+    currency: "KGS",
+    continent: "Asia Pacific",
+    countryCode: "KG",
+    defaultLanguage: LANGUAGES.KG,
+    supportedLanguages: [LANGUAGES.KG],
   },
 
   ES: {

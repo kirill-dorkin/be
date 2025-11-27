@@ -41,7 +41,6 @@ export async function generateMetadata(
 const ServicesEstimator = dynamic(
   () => import("./_components/services-estimator").then((mod) => mod.ServicesEstimator),
   {
-    ssr: false,
     loading: () => (
       <div
         className="rounded-2xl border border-border/50 bg-muted/30 p-6"

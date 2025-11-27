@@ -123,28 +123,6 @@ export const ALGOLIA_SEARCH_SERVICE_CONFIG = (logger: Logger) =>
             },
           ],
         },
-        {
-          availableFacets: commonFacets,
-          channel: "channel-us",
-          indexName: "channel-us.USD.products",
-          virtualReplicas: [
-            {
-              indexName: "channel-us.USD.products.name_asc",
-              messageKey: "search.name-asc",
-              queryParamValue: "alpha-asc",
-            },
-            {
-              indexName: "channel-us.USD.products.grossPrice_asc",
-              messageKey: "search.price-asc",
-              queryParamValue: "price-asc",
-            },
-            {
-              indexName: "channel-us.USD.products.grossPrice_desc",
-              messageKey: "search.price-desc",
-              queryParamValue: "price-desc",
-            },
-          ],
-        },
       ],
     },
   }) as const satisfies AlgoliaSearchServiceConfig;

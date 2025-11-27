@@ -24,8 +24,8 @@ vi.mock("../_components/services-estimator", () => ({
 // Mock region and user services
 vi.mock("@/regions/server", () => ({
   getCurrentRegion: async () => ({
-    language: { locale: "en-US" },
-    market: { currency: "USD" },
+    language: { locale: "en-GB" },
+    market: { currency: "GBP" },
   }),
 }));
 

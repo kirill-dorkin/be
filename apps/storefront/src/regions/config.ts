@@ -15,7 +15,6 @@ export const LOCALE_CHANNEL_MAP: Record<
   (typeof SUPPORTED_MARKETS)[number]
 > = {
   "en-GB": "gb",
-  "en-US": "us",
   "ru-RU": "ru",
   "ky-KG": "kg",
 };
@@ -26,12 +25,6 @@ export const LANGUAGES = {
     name: "English (United Kingdom)",
     code: "EN_GB",
     locale: "en-GB",
-  },
-  US: {
-    id: "us",
-    name: "English (United States)",
-    code: "EN_US",
-    locale: "en-US",
   },
   RU: {
     id: "ru",
@@ -57,16 +50,6 @@ export const MARKETS = {
     countryCode: "GB",
     defaultLanguage: LANGUAGES.GB,
     supportedLanguages: [LANGUAGES.GB],
-  },
-  US: {
-    id: "us",
-    name: "United States of America",
-    channel: CHANNEL,
-    currency: "USD",
-    continent: "North America",
-    countryCode: "US",
-    defaultLanguage: LANGUAGES.US,
-    supportedLanguages: [LANGUAGES.US],
   },
   RU: {
     id: "ru",

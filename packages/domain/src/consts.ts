@@ -231,7 +231,6 @@ export const ALLOWED_COUNTRY_CODES = [
   "UA",
   "UG",
   "UM",
-  "US",
   "UY",
   "UZ",
   "VA",
@@ -258,7 +257,6 @@ export type AllCountryCode = (typeof ALLOWED_COUNTRY_CODES)[number];
 
 export const ALL_LOCALES = [
   "en",
-  "en-US",
   "en-GB",
   "ja-JP",
   "ky-KG",

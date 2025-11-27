@@ -48,9 +48,9 @@ export const butterCMSPageGetInfra =
         },
       });
 
-      // Fallback to 'EN_US' if the initial request fails
+      // Fallback to 'EN_GB' if the initial request fails
       page = await Butter(token).page.retrieve(resolvedPageType, slug, {
-        locale: "enus",
+        locale: "en",
       } as PageRetrieveParams);
     }
 

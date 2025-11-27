@@ -1231,7 +1231,124 @@
     "about-us": "About us",
     "faq": "FAQ",
     "privacy-policy": "Privacy Policy",
-    "terms-of-use": "Terms of Use"
+    "terms-of-use": "Terms of Use",
+    "privacy": {
+      "description": "How we collect, use, and protect your data.",
+      "title": "Privacy Policy",
+      "subtitle": "We handle your data responsibly. Below is a quick overview of what we collect, why, and how we protect it.",
+      "sections": [
+        {
+          "title": "What we collect",
+          "items": [
+            "Contact data: name, email, phone.",
+            "Account data: order history, delivery and payment addresses.",
+            "Technical data: cookies, IP address, device info for analytics and security."
+          ]
+        },
+        {
+          "title": "Why we collect it",
+          "items": [
+            "To process orders and provide repair services.",
+            "To support customers and notify about order/service status.",
+            "To improve the service through analytics and prevent fraud."
+          ]
+        },
+        {
+          "title": "How we protect data",
+          "items": [
+            "Encrypted connections (HTTPS) and role-based access.",
+            "Only necessary data is stored; access is audited regularly.",
+            "Data is deleted or anonymized on request and after retention periods."
+          ]
+        },
+        {
+          "title": "Your rights",
+          "items": [
+            "Get a copy of your data and understand how it is used.",
+            "Change or delete data, limit processing, and withdraw consent.",
+            "Adjust notifications and cookies in your profile settings."
+          ]
+        },
+        {
+          "title": "Who we share data with",
+          "items": [
+            "Payment providers and delivery services — only what’s needed to fulfill orders.",
+            "Service/repair partners — to handle your requests.",
+            "When required by law or to protect our rights and user safety."
+          ]
+        },
+        {
+          "title": "Privacy contacts",
+          "items": [
+            "Email: privacy@bestelectronics.com",
+            "Support in the “Help” section — for access/change/delete requests."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "description": "Rules for using BestElectronics services.",
+      "title": "Terms of Use",
+      "subtitle": "Please review how we handle accounts, orders, payments, delivery, returns, and responsibility.",
+      "sections": [
+        {
+          "title": "1. General",
+          "items": [
+            "By using the site you accept these terms.",
+            "The service is provided “as is”; we may update functionality or content without notice."
+          ]
+        },
+        {
+          "title": "2. Account and security",
+          "items": [
+            "You are responsible for keeping login details confidential and for actions under your account.",
+            "If you suspect compromise, contact support and change your password."
+          ]
+        },
+        {
+          "title": "3. Orders and payments",
+          "items": [
+            "Prices and availability may change until the order is confirmed.",
+            "Payments go through trusted providers; card details are not stored in our system."
+          ]
+        },
+        {
+          "title": "4. Delivery and service",
+          "items": [
+            "Delivery times and costs depend on the chosen method and address.",
+            "Repair services are performed according to an agreed estimate; request status is available in your account."
+          ]
+        },
+        {
+          "title": "5. Returns and warranty",
+          "items": [
+            "You can request a return or warranty service according to the law and store policies.",
+            "Use the orders section in your account or contact support to register a return."
+          ]
+        },
+        {
+          "title": "6. Limitation of liability",
+          "items": [
+            "We are not liable for indirect losses from using the service, unless required by law.",
+            "Content may contain technical inaccuracies; we fix them when discovered."
+          ]
+        },
+        {
+          "title": "7. Privacy and data",
+          "items": [
+            "Data processing is governed by the Privacy Policy.",
+            "You can request copies, corrections, or deletion of data as allowed by law."
+          ]
+        },
+        {
+          "title": "8. Contacts",
+          "items": [
+            "Support: support@bestelectronics.com",
+            "Legal: legal@bestelectronics.com"
+          ]
+        }
+      ]
+    }
   },
   "colors": {
     "yellow": "Yellow",

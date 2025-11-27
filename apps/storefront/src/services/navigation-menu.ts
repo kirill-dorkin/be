@@ -111,7 +111,6 @@ const mapCategoryToMenuItem = (category: CategoryNode): MenuItem => {
 };
 
 const SERVICE_LINK_LABELS: Partial<Record<string, string>> = {
-  EN_US: "Service centre",
   EN_GB: "Service centre",
   RU_RU: "Сервисный центр",
   KY_KG: "Сервис борбору",

@@ -10,7 +10,7 @@ import {
 /**
  * Defines available languages in the App.
  */
-export const SUPPORTED_LANGUAGES = ["us", "gb", "ru", "kg"] as const;
+export const SUPPORTED_LANGUAGES = ["gb", "ru", "kg"] as const;
 export type LanguageId = (typeof SUPPORTED_LANGUAGES)[number];
 
 /**
@@ -18,7 +18,6 @@ export type LanguageId = (typeof SUPPORTED_LANGUAGES)[number];
  */
 export const SUPPORTED_LOCALES = [
   "en-GB",
-  "en-US",
   "ru-RU",
   "ky-KG",
 ] as const satisfies AllLocale[];
@@ -28,14 +27,13 @@ export const DEFAULT_LOCALE = "ru-RU" as const satisfies AllLocale;
 /**
  * Defines available markets in the App.
  */
-export const SUPPORTED_MARKETS = ["gb", "us", "ru", "kg"] as const;
+export const SUPPORTED_MARKETS = ["gb", "ru", "kg"] as const;
 export type MarketId = (typeof SUPPORTED_MARKETS)[number];
 
 /**
  * Defines supported currencies in the App.
  */
 export const SUPPORTED_CURRENCIES = [
-  "USD",
   "GBP",
   "RUB",
   "KGS",
@@ -53,7 +51,6 @@ export const isSupportedCurrency = (
  */
 export const SUPPORTED_CHANNELS = [
   "default-channel",
-  "channel-us",
   "channel-uk",
   "channel-ru",
   "channel-kg",
@@ -83,4 +80,4 @@ export type Region = {
   market: Market;
 };
 
-export type Continent = "Asia Pacific" | "Europe" | "North America";
+export type Continent = "Asia Pacific" | "Europe";
