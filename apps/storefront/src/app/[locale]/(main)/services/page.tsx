@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import dynamic from "next/dynamic";
 
 import { Button } from "@nimara/ui/components/button";
 
@@ -16,7 +17,6 @@ import type { SupportedLocale } from "@/regions/types";
 import { getUserService } from "@/services/user";
 
 import { ScrollToEstimatorButton } from "./_components/scroll-to-estimator-button";
-import { ServicesEstimator } from "./_components/services-estimator";
 import { ServicesSections } from "./_components/services-sections";
 
 type PageProps = {
@@ -34,6 +34,11 @@ export async function generateMetadata(
   };
 }
 
+const ServicesEstimator = dynamic(
+  () => import("./_components/services-estimator").then((mod) => mod.ServicesEstimator),
+  { ssr: false, loading: () => null },
+);
+
 export default async function ServicesPage() {
   const [accessToken, region, userService, t] = await Promise.all([
     getAccessToken(),
@@ -42,8 +47,15 @@ export default async function ServicesPage() {
     getTranslations("services"),
   ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
-  const user = resultUserGet.ok ? resultUserGet.data : null;
+  const user = await (async () => {
+    try {
+      const resultUserGet = await userService.userGet(accessToken);
+      return resultUserGet.ok ? resultUserGet.data : null;
+    } catch (error) {
+      console.error("[ServicesPage] Failed to fetch user", error);
+      return null;
+    }
+  })();
 
   const catalog = repairServiceCatalog;
   const repairDiscount = getRepairDiscountForUser(user);
