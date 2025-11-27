@@ -206,7 +206,6 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Alert": Bell,
   "Alerting": Bell,
   "Alarm": Bell,
-  "Alarm": Bell,
 
   // Mobility subcategories (English)
   "Accessories": Watch,
