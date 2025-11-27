@@ -152,23 +152,8 @@ export const Footer = async () => {
           </div>
         </div>
 
-        <div className="border-border/60 text-muted-foreground flex flex-col gap-3 border-t py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-border/60 text-muted-foreground flex flex-col gap-3 border-t py-6 text-center text-xs sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <span>&#xa9; BestElectronics {new Date().getFullYear()}</span>
-          <span className="text-center sm:text-left">
-            {t.rich("footer.made-with", {
-              link: (chunks) => (
-                <LocalizedLink
-                  href="https://www.bestelectronics.com"
-                  className="hover:text-primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  prefetch={false}
-                >
-                  {chunks}
-                </LocalizedLink>
-              ),
-            })}
-          </span>
           <span className="text-center sm:text-right">
             {t.rich("footer.open-source", {
               link: (chunks) => (
