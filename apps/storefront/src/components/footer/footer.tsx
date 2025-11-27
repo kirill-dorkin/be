@@ -72,91 +72,94 @@ export const Footer = async () => {
   const productMenuItems = resultCategories.data?.menu?.items ?? [];
 
   return (
-    <footer className="bg-muted text-slate-700 dark:text-primary text-sm dark:bg-stone-900 mt-8 md:mt-12">
+    <footer className="mt-10 bg-gradient-to-b from-background to-muted/50 text-sm text-slate-700 dark:text-slate-200">
       <div className="container">
-        <div className="flex flex-wrap justify-between gap-8 py-8">
-          <div className="grid w-full grid-cols-2 grid-rows-[max-content,max-content] place-items-start justify-start gap-6 md:grid-cols-3">
-            <div className="col-span-2 row-span-2 grid grid-cols-subgrid grid-rows-subgrid md:col-span-1">
-              <div className="col-span-2 flex justify-center md:col-span-1 md:justify-start">
+        <div className="grid gap-8 border-t border-border/60 py-10 lg:grid-cols-[1.2fr_1fr_1fr]">
+          <div className="space-y-4">
+            <LocalizedLink
+              href={paths.home.asPath()}
+              title={t("common.go-to-homepage")}
+              className="inline-flex items-center text-xl font-semibold tracking-tight text-slate-800 transition-colors hover:text-primary dark:text-white dark:hover:text-primary"
+            >
+              BestElectronics
+            </LocalizedLink>
+            <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
+              {t.rich("footer.demo-version", {
+                link: (chunks) => (
+                  <LocalizedLink
+                    href="https://www.bestelectronics.com"
+                    className="hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    prefetch={false}
+                  >
+                    {chunks}
+                  </LocalizedLink>
+                ),
+              })}
+            </p>
+            <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+              <LocalizedLink
+                href={paths.staticPages.privacyPolicy.asPath()}
+                className="hover:text-primary"
+              >
+                {t("common.privacy-policy")}
+              </LocalizedLink>
+              <span aria-hidden="true">•</span>
+              <LocalizedLink
+                href={paths.staticPages.termsOfUse.asPath()}
+                className="hover:text-primary"
+              >
+                {t("common.terms-of-use")}
+              </LocalizedLink>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-foreground text-sm font-semibold uppercase tracking-[0.15em]">
+              {t("footer.our-products")}
+            </p>
+            <div className="grid grid-cols-1 gap-2 text-sm">
+              {productMenuItems.map((item) => (
                 <LocalizedLink
-                  href={paths.home.asPath()}
-                  title={t("common.go-to-homepage")}
-                  className="inline-flex items-center text-xl font-semibold text-slate-700 transition-colors hover:text-slate-500 dark:text-white dark:hover:text-white/80 sm:text-2xl"
+                  key={item.id}
+                  href={item.url}
+                  className="text-muted-foreground hover:text-primary"
+                  prefetch={false}
                 >
-                  <span aria-hidden="true" className="leading-none tracking-tight">
-                    BestElectronics
-                  </span>
+                  {item.label}
                 </LocalizedLink>
-              </div>
-              <p className="col-span-2 flex justify-center md:col-span-1 md:justify-start">
-                {t.rich("footer.demo-version", {
-                  link: (chunks) => (
-                    <LocalizedLink
-                      href="https://www.bestelectronics.com"
-                      className="hover:underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      prefetch={false}
-                    >
-                      {chunks}
-                    </LocalizedLink>
-                  ),
-                })}
-              </p>
+              ))}
             </div>
+          </div>
 
-            <div className="row-span-2 grid grid-cols-subgrid grid-rows-subgrid md:col-span-1">
-              <span className="text-slate-700 dark:text-primary flex items-center">
-                {t("footer.our-products")}
-              </span>
-              <div className="flex flex-col gap-4">
-                {productMenuItems.map((item) => (
-                  <span key={item.id} className="inline">
-                    <LocalizedLink
-                      href={item.url}
-                      className="hover:underline"
-                      prefetch={false}
-                    >
-                      {item.label}
-                    </LocalizedLink>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="row-span-2 grid grid-cols-subgrid grid-rows-subgrid md:col-span-1">
-              <span className="text-slate-700 dark:text-primary flex items-center">
-                {t("footer.help")}
-              </span>
-              <div className="flex flex-col gap-4">
-                {helpLinks.map((item) => (
-                  <span key={item.id} className="inline">
-                    <LocalizedLink
-                      href={item.url}
-                      className="inline hover:underline"
-                      prefetch={false}
-                    >
-                      {item.label}
-                    </LocalizedLink>
-                  </span>
-                ))}
-              </div>
+          <div className="space-y-3">
+            <p className="text-foreground text-sm font-semibold uppercase tracking-[0.15em]">
+              {t("footer.help")}
+            </p>
+            <div className="grid grid-cols-1 gap-2 text-sm">
+              {helpLinks.map((item) => (
+                <LocalizedLink
+                  key={item.id}
+                  href={item.url}
+                  className="text-muted-foreground hover:text-primary"
+                  prefetch={false}
+                >
+                  {item.label}
+                </LocalizedLink>
+              ))}
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="container">
-        <div className="border-muted-foreground/50 text-muted-foreground flex flex-wrap justify-between gap-4 border-t py-8">
-          <span className="flex-grow basis-full text-center sm:basis-1 sm:text-left">
-            &#xa9; BestElectronics {new Date().getFullYear()}
-          </span>
-          <span className="flex-grow basis-full text-center sm:basis-1">
+        <div className="border-border/60 text-muted-foreground flex flex-col gap-3 border-t py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+          <span>&#xa9; BestElectronics {new Date().getFullYear()}</span>
+          <span className="text-center sm:text-left">
             {t.rich("footer.made-with", {
               link: (chunks) => (
                 <LocalizedLink
                   href="https://www.bestelectronics.com"
-                  className="hover:underline"
+                  className="hover:text-primary"
                   target="_blank"
                   rel="noopener noreferrer"
                   prefetch={false}
@@ -166,12 +169,12 @@ export const Footer = async () => {
               ),
             })}
           </span>
-          <span className="flex-grow basis-full text-center sm:basis-1 sm:text-right">
+          <span className="text-center sm:text-right">
             {t.rich("footer.open-source", {
               link: (chunks) => (
                 <LocalizedLink
                   href="https://www.bestelectronics.com/platform"
-                  className="hover:underline"
+                  className="hover:text-primary"
                   target="_blank"
                   rel="noopener noreferrer"
                   prefetch={false}
