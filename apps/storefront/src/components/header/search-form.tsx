@@ -275,41 +275,42 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
           }}
         />
 
-        <ComboboxGroup
-          ariaLabel={ts("search-results")}
-          expanded={showOptions}
-          className="max-h-80 overflow-auto"
-        >
-          {options.map((suggestion, index) => (
-            <ComboboxItem
-              key={suggestion.id}
-              isSelected={index === highlightedOptionIndex}
-            >
+        <div className="max-h-80 overflow-auto">
+          <ComboboxGroup
+            ariaLabel={ts("search-results")}
+            expanded={showOptions}
+          >
+            {options.map((suggestion, index) => (
+              <ComboboxItem
+                key={suggestion.id}
+                isSelected={index === highlightedOptionIndex}
+              >
+                <LocalizedLink
+                  className="flex gap-1 px-1.5 py-2 hover:cursor-pointer"
+                  href={
+                    suggestion.slug
+                      ? paths.products.asPath({ slug: suggestion.slug })
+                      : "#"
+                  }
+                  onClick={() => resetSearchState()}
+                >
+                  <Search className="self-center" height={16} />
+                  {suggestion.label}
+                </LocalizedLink>
+              </ComboboxItem>
+            ))}
+
+            <ComboboxItem isSelected={isLastOptionHighlighted}>
               <LocalizedLink
-                className="flex gap-1 px-1.5 py-2 hover:cursor-pointer"
-                href={
-                  suggestion.slug
-                    ? paths.products.asPath({ slug: suggestion.slug })
-                    : "#"
-                }
+                className="flex gap-1 px-1.5 py-2 pl-8 hover:cursor-pointer"
+                href={paths.search.asPath({ query: { q: inputValue } })}
                 onClick={() => resetSearchState()}
               >
-                <Search className="self-center" height={16} />
-                {suggestion.label}
+                {ts("search-for", { query: inputValue })}
               </LocalizedLink>
             </ComboboxItem>
-          ))}
-
-          <ComboboxItem isSelected={isLastOptionHighlighted}>
-            <LocalizedLink
-              className="flex gap-1 px-1.5 py-2 pl-8 hover:cursor-pointer"
-              href={paths.search.asPath({ query: { q: inputValue } })}
-              onClick={() => resetSearchState()}
-            >
-              {ts("search-for", { query: inputValue })}
-            </LocalizedLink>
-          </ComboboxItem>
-        </ComboboxGroup>
+          </ComboboxGroup>
+        </div>
 
         {isLoading && <ComboboxEmpty>{ts("loading-text")}</ComboboxEmpty>}
 
