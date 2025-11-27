@@ -92,7 +92,6 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Компоненттер": Cpu,
   "Мобилдүүлүк": Smartphone,
   "Үй": Home,
-  "Сервис": ShieldCheck,
   "Уценка": BadgePercent,
 
   // Subcategories - Components (Russian)
