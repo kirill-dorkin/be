@@ -90,7 +90,6 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
 
   // Main categories (Kyrgyz)
   "Компоненттер": Cpu,
-  "Периферия": Plug,
   "Мобилдүүлүк": Smartphone,
   "Үй": Home,
   "Сервис": ShieldCheck,
