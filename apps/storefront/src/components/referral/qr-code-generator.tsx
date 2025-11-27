@@ -3,7 +3,7 @@
 import { Download, QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
-import QRCode from "react-qr-code";
+import dynamic from "next/dynamic";
 
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -18,6 +18,18 @@ import {
 interface QRCodeGeneratorProps {
   referralLink: string;
 }
+
+const DynamicQRCode = dynamic(() => import("react-qr-code"), {
+  ssr: false,
+  loading: () => (
+    <div
+      className="flex h-[220px] w-[220px] items-center justify-center rounded-2xl border-4 border-slate-200 bg-white text-xs text-slate-500 dark:border-slate-800"
+      aria-busy="true"
+    >
+      Loading QR...
+    </div>
+  ),
+});
 
 export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
   const t = useTranslations();
@@ -66,7 +78,7 @@ export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
             ref={qrWrapperRef}
             className="rounded-2xl border-4 border-slate-200 bg-white p-4 dark:border-slate-800"
           >
-            <QRCode
+            <DynamicQRCode
               value={referralLink}
               size={220}
               level="Q"
