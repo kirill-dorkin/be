@@ -13,6 +13,7 @@ import {
   toDiscountPercent,
 } from "@/lib/repair/discount";
 import { repairServiceCatalog } from "@/lib/repair-services/data";
+import { safeUserGet } from "@/lib/user/safe-user";
 import { getCurrentRegion } from "@/regions/server";
 import type { SupportedLocale } from "@/regions/types";
 import { getUserService } from "@/services/user";
@@ -65,15 +66,7 @@ export default async function ServicesPage() {
     getTranslations("services"),
   ]);
 
-  const user = await (async () => {
-    try {
-      const resultUserGet = await userService.userGet(accessToken);
-      return resultUserGet.ok ? resultUserGet.data : null;
-    } catch (error) {
-      console.error("[ServicesPage] Failed to fetch user", error);
-      return null;
-    }
-  })();
+  const user = await safeUserGet(accessToken, userService);
 
   const catalog = repairServiceCatalog;
   const repairDiscount = getRepairDiscountForUser(user);

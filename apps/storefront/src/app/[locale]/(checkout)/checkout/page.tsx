@@ -1,5 +1,6 @@
 import { getAccessToken } from "@/auth";
 import { getCheckoutOrRedirect } from "@/lib/checkout";
+import { safeUserGet } from "@/lib/user/safe-user";
 import { type SupportedLocale } from "@/regions/types";
 import { getUserService } from "@/services/user";
 
@@ -17,9 +18,7 @@ export default async function Page(props: PageProps) {
     getUserService(),
   ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
-
-  const user = resultUserGet.ok ? resultUserGet.data : null;
+  const user = await safeUserGet(accessToken, userService);
 
   await validateCheckoutStepAction({
     user,

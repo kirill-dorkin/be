@@ -2,6 +2,7 @@ import { getAccessToken } from "@/auth";
 import { CACHE_TTL } from "@/config";
 import { getCheckoutId } from "@/lib/actions/cart";
 import { getCurrentRegion } from "@/regions/server";
+import { safeUserGet } from "@/lib/user/safe-user";
 import { getCartService } from "@/services/cart";
 import { storefrontLogger } from "@/services/logging";
 import { getUserService } from "@/services/user";
@@ -45,8 +46,7 @@ export const Cart = async () => {
       getAccessToken(),
       getUserService(),
     ]);
-    const resultUserGet = await userService.userGet(accessToken);
-    const user = resultUserGet.ok ? resultUserGet.data : null;
+    const user = await safeUserGet(accessToken, userService);
 
     return (
       <CartDetails region={region} cart={resultCartGet.data} user={user} />

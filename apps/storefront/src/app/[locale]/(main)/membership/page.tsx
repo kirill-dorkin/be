@@ -8,6 +8,7 @@ import { Card } from "@nimara/ui/components/card";
 import { getAccessToken } from "@/auth";
 import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
+import { safeUserGet } from "@/lib/user/safe-user";
 import { getUserService } from "@/services/user";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,8 +27,7 @@ export default async function MembershipPage() {
     getTranslations("membership"),
   ]);
 
-  const resultUserGet = await userService.userGet(accessToken);
-  const user = resultUserGet.ok ? resultUserGet.data : null;
+  const user = await safeUserGet(accessToken, userService);
 
   const benefits = [
     {
