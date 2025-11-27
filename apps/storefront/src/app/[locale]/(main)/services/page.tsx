@@ -21,7 +21,7 @@ import { getUserService } from "@/services/user";
 import { ScrollToEstimatorButton } from "./_components/scroll-to-estimator-button";
 import { ServicesSections } from "./_components/services-sections";
 
-export const revalidate = 60 * 60; // 1 hour cache for services catalog
+export const revalidate = 3600; // 1 hour cache for services catalog
 
 type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
