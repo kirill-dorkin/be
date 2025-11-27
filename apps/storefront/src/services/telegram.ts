@@ -1,4 +1,5 @@
 import { serverEnvs } from "@/envs/server";
+import { storefrontLogger } from "@/services/logging";
 
 type TelegramResult =
   | { ok: true }
@@ -60,6 +61,7 @@ const fetchWithTimeout = async (
 export const sendWorkerApplicationToTelegram = async (
   payload: WorkerApplicationPayload,
 ): Promise<TelegramResult> => {
+  // TODO: Persist applications locally (DB/file/queue) to avoid loss during Telegram downtime.
   const token = serverEnvs.TELEGRAM_BOT_TOKEN;
   const chatId = serverEnvs.TELEGRAM_CHAT_ID;
 
@@ -97,6 +99,10 @@ export const sendWorkerApplicationToTelegram = async (
       const response = await fetchWithTimeout(telegramUrl, body, 8000);
 
       if (response.ok) {
+        storefrontLogger.info("[Telegram] Application sent", {
+          email: payload.email,
+          phone: payload.phone,
+        });
         return { ok: true };
       }
 
@@ -131,6 +137,12 @@ export const sendWorkerApplicationToTelegram = async (
       }
 
       lastError = errorMessage;
+      storefrontLogger.error("[Telegram] Send failed", {
+        attempt,
+        email: payload.email,
+        phone: payload.phone,
+        error: errorMessage,
+      });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") {
         lastError = "Telegram request timed out.";
@@ -140,6 +152,13 @@ export const sendWorkerApplicationToTelegram = async (
             ? error.message
             : "Unexpected error while sending Telegram notification.";
       }
+
+      storefrontLogger.error("[Telegram] Request error", {
+        attempt,
+        email: payload.email,
+        phone: payload.phone,
+        error: lastError,
+      });
     }
   }
 

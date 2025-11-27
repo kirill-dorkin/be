@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import dynamic from "next/dynamic";
@@ -19,6 +20,8 @@ import { getUserService } from "@/services/user";
 import { ScrollToEstimatorButton } from "./_components/scroll-to-estimator-button";
 import { ServicesSections } from "./_components/services-sections";
 
+export const revalidate = 60 * 60; // 1 hour cache for services catalog
+
 type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
@@ -36,7 +39,22 @@ export async function generateMetadata(
 
 const ServicesEstimator = dynamic(
   () => import("./_components/services-estimator").then((mod) => mod.ServicesEstimator),
-  { ssr: false, loading: () => null },
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="rounded-2xl border border-border/50 bg-muted/30 p-6"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="h-4 w-32 rounded bg-muted-foreground/20" />
+        <div className="mt-4 space-y-2">
+          <div className="h-3 w-full rounded bg-muted-foreground/15" />
+          <div className="h-3 w-3/4 rounded bg-muted-foreground/15" />
+        </div>
+      </div>
+    ),
+  },
 );
 
 export default async function ServicesPage() {
