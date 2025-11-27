@@ -12,8 +12,7 @@ import { LocalizedLink } from "@/i18n/routing";
 import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter";
 import {
   PRODUCT_VIP_DISCOUNT_PERCENT,
-  getProductSavingsAmount,
-  isVipUser,
+  getVipSavingsSummary,
 } from "@/lib/membership/status";
 import { paths } from "@/lib/paths";
 
@@ -26,18 +25,11 @@ export const MembershipSavings = ({ cart, user }: MembershipSavingsProps) => {
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
 
-  const isMember = isVipUser(user);
-
   // Calculate total membership savings
-  const { actualSavings, potentialSavings } = useMemo(() => {
+  const { actualSavings, potentialSavings, isVip } = useMemo(() => {
     const productTotal = cart.subtotal.amount;
-    const potential = getProductSavingsAmount(productTotal, user);
-
-    return {
-      actualSavings: isMember ? potential : 0,
-      potentialSavings: potential,
-    };
-  }, [cart.subtotal.amount, isMember, user]);
+    return getVipSavingsSummary(productTotal, user);
+  }, [cart.subtotal.amount, user]);
 
   if (actualSavings === 0 && (!potentialSavings || potentialSavings === 0)) {
     return null;
@@ -48,7 +40,7 @@ export const MembershipSavings = ({ cart, user }: MembershipSavingsProps) => {
     amount: potentialSavings,
   });
 
-  if (isMember) {
+  if (isVip) {
     return (
       <div className="rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 p-4 dark:border-amber-800/30 dark:from-amber-950/20 dark:to-yellow-950/20">
         <div className="flex items-center justify-between">

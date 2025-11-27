@@ -26,3 +26,17 @@ export const getProductSavingsAmount = (
 
   return (amount * PRODUCT_VIP_DISCOUNT_PERCENT) / 100;
 };
+
+export const getVipSavingsSummary = (
+  amount: number,
+  user: User | null | undefined,
+) => {
+  const potential = getProductSavingsAmount(amount, user);
+  const isVip = isVipUser(user);
+
+  return {
+    actualSavings: isVip ? potential : 0,
+    potentialSavings: potential,
+    isVip,
+  };
+};
