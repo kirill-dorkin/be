@@ -68,9 +68,10 @@ const HelpNavigationComponent = ({
                 className={[
                   "block rounded-lg border px-3 py-2.5 transition-all duration-200 sm:rounded-xl sm:px-4 sm:py-3",
                   isActive
-                    ? "border-primary bg-primary/10 text-primary shadow-sm"
-                    : "border-transparent hover:border-border hover:bg-muted active:scale-[0.98]",
+                    ? "border-primary text-primary shadow-sm focus:outline-none"
+                    : "border-border/40 bg-card hover:border-primary/40 hover:bg-muted focus:outline-none focus-visible:border-primary/60 focus-visible:shadow-sm",
                 ].join(" ")}
+                aria-current={isActive ? "page" : undefined}
               >
                 <span className="block text-sm font-semibold leading-tight">
                   {link.label}
