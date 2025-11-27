@@ -105,7 +105,7 @@ export const VariantSelector = ({
       <div className="border-border/30 dark:border-white/10 my-5 border-t pt-4">
         <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end md:gap-6">
           {/* Price section with membership comparison */}
-          <div className="text-left flex-1">
+          <div className="text-left flex-1" aria-live="polite">
             {regularPrice > 0 ? (
               <PriceComparison
                 regularPrice={regularPrice}

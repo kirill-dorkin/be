@@ -256,7 +256,7 @@ export const ServicesSections = ({
                 <Card key={service.id}>
                   <CardHeader className="pb-2">
                     <div className="flex flex-wrap items-start justify-between gap-2">
-                      <CardTitle className="text-xl">
+                      <CardTitle className="text-xl break-words">
                         {getRepairServiceLabel(service.name, locale)}
                       </CardTitle>
                       <div className="flex items-center gap-2">

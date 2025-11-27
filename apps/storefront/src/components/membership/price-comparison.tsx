@@ -75,9 +75,13 @@ export function PriceComparison({
     <div
       className={cn(
         "flex gap-3 rounded-lg border border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-50 p-3 dark:border-amber-800 dark:from-amber-950/30 dark:to-yellow-950/30",
-        orientation === "vertical" ? "flex-col" : "flex-row items-center justify-between",
-        className
+        orientation === "vertical"
+          ? "flex-col"
+          : "flex-col sm:flex-row sm:items-center sm:justify-between",
+        className,
       )}
+      role="group"
+      aria-label={t("membership.member-price")}
     >
       <div className="flex-1 space-y-2">
         {/* Обычная цена */}
@@ -85,7 +89,12 @@ export function PriceComparison({
           <span className="text-sm text-muted-foreground">
             {t("membership.regular-price")}:
           </span>
-          <span className={cn("font-semibold text-foreground", sizeClasses[size])}>
+          <span
+            className={cn(
+              "font-semibold text-foreground break-words",
+              sizeClasses[size],
+            )}
+          >
             {formattedRegularPrice}
           </span>
         </div>
@@ -94,7 +103,12 @@ export function PriceComparison({
         <div className="flex items-center gap-2">
           <Crown className="h-4 w-4 text-amber-600" />
           <span className="text-sm font-medium">{t("membership.member-price")}:</span>
-          <span className={cn("font-bold text-amber-600", sizeClasses[size])}>
+          <span
+            className={cn(
+              "font-bold text-amber-600 break-words",
+              sizeClasses[size],
+            )}
+          >
             {formattedMemberPrice}
           </span>
         </div>
@@ -110,8 +124,12 @@ export function PriceComparison({
 
       {/* Призыв к действию */}
       {showCTA && (
-        <div className="flex flex-col gap-2">
-          <Button asChild size="sm" className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700">
+        <div className="flex w-full flex-col gap-2 sm:w-auto">
+          <Button
+            asChild
+            size="sm"
+            className="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700"
+          >
             <LocalizedLink href={paths.membership.asPath()}>
               <Crown className="mr-2 h-4 w-4" />
               {t("membership.join-now")}
