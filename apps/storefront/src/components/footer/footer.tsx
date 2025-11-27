@@ -100,14 +100,14 @@ export const Footer = async () => {
             </p>
             <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
               <LocalizedLink
-                href={paths.staticPages.privacyPolicy.asPath()}
+                href={paths.privacyPolicy.asPath()}
                 className="hover:text-primary"
               >
                 {t("common.privacy-policy")}
               </LocalizedLink>
               <span aria-hidden="true">•</span>
               <LocalizedLink
-                href={paths.staticPages.termsOfUse.asPath()}
+                href={paths.termsOfUse.asPath()}
                 className="hover:text-primary"
               >
                 {t("common.terms-of-use")}
