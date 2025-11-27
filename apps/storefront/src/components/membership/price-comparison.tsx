@@ -80,10 +80,12 @@ export function PriceComparison({
       )}
     >
       <div className="flex-1 space-y-2">
-        {/* Обычная цена (зачеркнутая) */}
+        {/* Обычная цена */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">{t("membership.regular-price")}:</span>
-          <span className={cn("line-through text-muted-foreground", sizeClasses[size])}>
+          <span className="text-sm text-muted-foreground">
+            {t("membership.regular-price")}:
+          </span>
+          <span className={cn("font-semibold text-foreground", sizeClasses[size])}>
             {formattedRegularPrice}
           </span>
         </div>

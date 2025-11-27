@@ -56,10 +56,11 @@ export const VariantSelector = ({
     variantsAvailability,
   } = useVariantSelection({ cart, product, productAvailability });
 
-  // Calculate member price with discount
+  // Calculate prices: regular shown as is; member price is illustrative only
   const regularPrice = chosenVariantAvailability?.price?.amount || 0;
-  const memberPrice = regularPrice * (1 - MEMBERSHIP_CONFIG.PRODUCT_DISCOUNT_PERCENT / 100);
-  const isMember = !!user; // TODO: In future, check actual membership status
+  const memberPrice =
+    regularPrice * (1 - MEMBERSHIP_CONFIG.PRODUCT_DISCOUNT_PERCENT / 100);
+  const isMember = false; // Show comparison for everyone; no auto-discount on products
 
   // Sync quantity with cart when variant changes or cart updates
   const currentVariantId = matchingVariants?.length > 1

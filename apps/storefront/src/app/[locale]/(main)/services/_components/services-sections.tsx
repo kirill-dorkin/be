@@ -270,11 +270,11 @@ export const ServicesSections = ({
                         )}
                         {priceInfo.isDiscounted && discountStrings && (
                           <div className="flex items-center gap-1">
-                            <Badge className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
+                            <Badge className="pointer-events-none select-none border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
                               {discountStrings.badge}
                             </Badge>
                             {discountStrings.tierLabel && (
-                              <Badge className="border-amber-500/30 bg-amber-50 text-amber-700 dark:border-amber-400/20 dark:bg-amber-900/30 dark:text-amber-100">
+                              <Badge className="pointer-events-none select-none border-amber-500/30 bg-amber-50 text-amber-700 dark:border-amber-400/20 dark:bg-amber-900/30 dark:text-amber-100">
                                 {discountStrings.tierLabel}
                               </Badge>
                             )}
