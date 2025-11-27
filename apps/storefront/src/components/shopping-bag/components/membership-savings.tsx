@@ -4,13 +4,16 @@ import { Crown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
-import { MEMBERSHIP_CONFIG } from "@nimara/domain/membership/constants";
 import { type Cart } from "@nimara/domain/objects/Cart";
 import { type User } from "@nimara/domain/objects/User";
 import { Button } from "@nimara/ui/components/button";
 
 import { LocalizedLink } from "@/i18n/routing";
 import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter";
+import {
+  PRODUCT_VIP_DISCOUNT_PERCENT,
+  isVipUser,
+} from "@/lib/membership/status";
 import { paths } from "@/lib/paths";
 
 type MembershipSavingsProps = {
@@ -22,21 +25,29 @@ export const MembershipSavings = ({ cart, user }: MembershipSavingsProps) => {
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
 
-  const isMember = !!user; // TODO: Check actual membership status
+  const isMember = isVipUser(user);
 
   // Calculate total membership savings
-  const savings = useMemo(() => {
+  const { actualSavings, potentialSavings } = useMemo(() => {
     const productTotal = cart.subtotal.amount;
-    const savingsAmount = productTotal * (MEMBERSHIP_CONFIG.PRODUCT_DISCOUNT_PERCENT / 100);
 
-    return savingsAmount;
-  }, [cart.subtotal.amount]);
+    const potential =
+      productTotal * (PRODUCT_VIP_DISCOUNT_PERCENT / 100);
 
-  if (savings === 0) {
+    return {
+      actualSavings: isMember ? potential : 0,
+      potentialSavings: potential,
+    };
+  }, [cart.subtotal.amount, isMember]);
+
+  if (actualSavings === 0 && (!potentialSavings || potentialSavings === 0)) {
     return null;
   }
 
-  const formattedSavings = formatter.price({ amount: savings });
+  const formattedActualSavings = formatter.price({ amount: actualSavings });
+  const formattedPotentialSavings = formatter.price({
+    amount: potentialSavings,
+  });
 
   if (isMember) {
     return (
@@ -57,10 +68,10 @@ export const MembershipSavings = ({ cart, user }: MembershipSavingsProps) => {
           </div>
           <div className="text-right">
             <p className="text-lg font-bold text-green-600 dark:text-green-400">
-              -{formattedSavings}
+              -{formattedActualSavings}
             </p>
             <p className="text-xs text-amber-700 dark:text-amber-200">
-              {MEMBERSHIP_CONFIG.PRODUCT_DISCOUNT_PERCENT}% {t("cart.membership.discount")}
+              {PRODUCT_VIP_DISCOUNT_PERCENT}% {t("cart.membership.discount")}
             </p>
           </div>
         </div>
@@ -82,13 +93,15 @@ export const MembershipSavings = ({ cart, user }: MembershipSavingsProps) => {
                 {t("cart.membership.guest-title")}
               </p>
               <p className="text-xs text-amber-700 dark:text-amber-200">
-                {t("cart.membership.guest-subtitle", { amount: formattedSavings })}
+                {t("cart.membership.guest-subtitle", {
+                  amount: formattedPotentialSavings,
+                })}
               </p>
             </div>
           </div>
           <div className="text-right">
             <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
-              {formattedSavings}
+              {formattedPotentialSavings}
             </p>
             <p className="text-xs text-amber-700 dark:text-amber-200">
               {t("cart.membership.potential-savings")}

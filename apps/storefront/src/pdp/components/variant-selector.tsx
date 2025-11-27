@@ -17,27 +17,13 @@ import {
 
 import { PriceComparison } from "@/components/membership/price-comparison";
 import { Price } from "@/components/price";
+import { PRODUCT_VIP_DISCOUNT_PERCENT, isVipUser } from "@/lib/membership/status";
 import { cn } from "@/lib/utils";
 
 import { useVariantSelection } from "../hooks/useVariantSelection";
 import { AddToBag } from "./add-to-bag";
 import { QuantitySelector } from "./quantity-selector";
 import { VariantDropdown } from "./variant-dropdown";
-
-const PRODUCT_DISCOUNT_PERCENT = 10;
-const VIP_METADATA_KEY = "customer:is_vip";
-
-const isVipUser = (user: User | null | undefined) => {
-  const flag = user?.metadata?.[VIP_METADATA_KEY];
-
-  if (!flag) {
-    return false;
-  }
-
-  const normalized = flag.toLowerCase();
-
-  return normalized === "true" || normalized === "1" || normalized === "yes";
-};
 
 type VariantSelectorProps = {
   cart: Cart | null;
@@ -73,7 +59,7 @@ export const VariantSelector = ({
   // Calculate prices: regular shown as is; member price is illustrative only
   const regularPrice = chosenVariantAvailability?.price?.amount || 0;
   const memberPrice =
-    regularPrice * (1 - PRODUCT_DISCOUNT_PERCENT / 100);
+    regularPrice * (1 - PRODUCT_VIP_DISCOUNT_PERCENT / 100);
   const isMember = isVipUser(user);
 
   // Sync quantity with cart when variant changes or cart updates
