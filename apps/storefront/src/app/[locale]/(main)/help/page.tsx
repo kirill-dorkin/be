@@ -86,7 +86,7 @@ export default async function HelpOverviewPage(props: PageProps) {
           <Button asChild size="lg" className="w-full sm:w-auto">
             <LocalizedLink href={paths.help.orders.asPath()}>
               {t("hero.primaryCta")}
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
             </LocalizedLink>
           </Button>
           <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
@@ -113,16 +113,17 @@ export default async function HelpOverviewPage(props: PageProps) {
             return (
               <Card
                 key={link.href}
-                className="group border border-border/60 bg-card shadow-sm transition-all duration-200 hover:border-primary/40 hover:shadow-md active:scale-[0.99]"
+                className="group border border-border/60 bg-card shadow-sm transition-colors duration-200 hover:border-primary/40 hover:shadow-md focus-within:border-primary/50 focus-within:shadow-md"
               >
                 <LocalizedLink
                   href={link.href}
-                  className="flex h-full flex-col p-5 text-left sm:p-6"
+                  className="flex h-full flex-col gap-2 p-5 text-left sm:p-6 focus:outline-none"
+                  aria-label={link.title}
                 >
                   <span className="bg-primary/10 text-primary inline-flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground sm:h-12 sm:w-12">
                     <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
                   </span>
-                  <CardHeader className="px-0 pb-2 pt-4 sm:pt-5">
+                  <CardHeader className="px-0 pb-1 pt-3 sm:pt-4">
                     <CardTitle className="text-lg font-semibold leading-tight sm:text-xl">
                       {link.title}
                     </CardTitle>
