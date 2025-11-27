@@ -276,7 +276,7 @@ export const WorkerApplyForm = () => {
           />
           <TextFormField
             name="password"
-            label={tc("password")}
+            label={t("password-label")}
             type="password"
             placeholder={ta("password-placeholder", {
               minPasswordLength: MIN_PASSWORD_LENGTH,
@@ -289,7 +289,11 @@ export const WorkerApplyForm = () => {
             disabled={isProcessing || isLocked}
             loading={isProcessing}
           >
-            {isProcessing ? t("submit-loading") : t("submit")}
+            {showSuccess || isLocked
+              ? t("submit-success")
+              : isProcessing
+                ? t("submit-loading")
+                : t("submit")}
           </Button>
         </fieldset>
       </form>

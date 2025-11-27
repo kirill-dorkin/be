@@ -17,21 +17,25 @@ type WorkerApplicationPayload = {
   role: string;
 };
 
-const escapeMarkdown = (value: string) =>
-  value.replace(/[_*[\]()`~>#+\-=|{}.!]/g, (match) => `\\${match}`);
+const escapeMarkdownV2 = (text: string): string => {
+  return text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&');
+};
 
 const formatMessage = (payload: WorkerApplicationPayload) => {
   const { firstName, lastName, email, phone, role, passwordLength } = payload;
 
+  const passwordDots = "•".repeat(Math.max(6, Math.min(passwordLength, 12)));
+  const timestamp = new Date().toISOString();
+
   return [
     "*Новая заявка на подключение*",
     "",
-    `*Роль:* ${escapeMarkdown(role)}`,
-    `*Имя:* ${escapeMarkdown(firstName)} ${escapeMarkdown(lastName)}`,
-    `*Email:* ${escapeMarkdown(email)}`,
-    `*Телефон:* ${escapeMarkdown(phone)}`,
-    `*Пароль:* ${"•".repeat(Math.max(6, Math.min(passwordLength, 12)))} (${passwordLength} символов)`,
-    `*Отправлено:* ${escapeMarkdown(new Date().toISOString())}`,
+    `*Роль:* ${escapeMarkdownV2(role)}`,
+    `*Имя:* ${escapeMarkdownV2(firstName)} ${escapeMarkdownV2(lastName)}`,
+    `*Email:* ${escapeMarkdownV2(email)}`,
+    `*Телефон:* ${escapeMarkdownV2(phone)}`,
+    `*Пароль:* ${passwordDots} ${escapeMarkdownV2(`(${passwordLength} символов)`)}`,
+    `*Отправлено:* ${escapeMarkdownV2(timestamp)}`,
   ].join("\n");
 };
 

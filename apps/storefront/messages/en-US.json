@@ -588,8 +588,10 @@
   },
   "staff-apply": {
     "badge": "Partner application",
-    "title": "Apply to join the team",
+    "title": "Application form",
     "subtitle": "Choose your role — delivery driver or repair technician. An admin will review your details and activate access.",
+    "password-label": "Create a password",
+    "submit-success": "Application sent",
     "role": {
       "label": "Choose your role",
       "hint": "We’ll tailor your dashboard for the role you pick.",
