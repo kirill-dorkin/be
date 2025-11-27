@@ -92,7 +92,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Компоненттер": Cpu,
   "Мобилдүүлүк": Smartphone,
   "Үй": Home,
-  "Уценка": BadgePercent,
+  // Уценка намеренно без иконки для уникальности и избегания дублей
 
   // Subcategories - Components (Russian)
   "Материнские платы": CircuitBoard,
