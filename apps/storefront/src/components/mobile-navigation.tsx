@@ -269,7 +269,6 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Ар кандай (уценка)": Package,
   "Ар кошумча": Package,
   // Mobility (Kyrgyz)
-  "Мобилдүүлүк": Smartphone,
   "Аксессуарлар": Watch,
   "Ноутбуктар": Laptop,
   "Мобилдик кубат": Battery,
