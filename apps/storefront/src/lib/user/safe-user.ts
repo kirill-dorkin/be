@@ -8,7 +8,7 @@ type UserGetResult =
 
 export const safeUserGet = async (
   accessToken: string | null | undefined,
-  userService: { userGet: (token?: string | null) => Promise<UserGetResult> },
+  userService: { userGet: (token?: string) => Promise<UserGetResult> },
   { timeoutMs = 8000 }: { timeoutMs?: number } = {},
 ): Promise<User | null> => {
   const timeout = new Promise<never>((_, reject) =>
@@ -17,7 +17,7 @@ export const safeUserGet = async (
 
   try {
     const result = await Promise.race([
-      userService.userGet(accessToken),
+      userService.userGet(accessToken ?? undefined),
       timeout,
     ]);
 
