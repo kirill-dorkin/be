@@ -12,6 +12,7 @@ import { LocalizedLink } from "@/i18n/routing";
 import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter";
 import {
   PRODUCT_VIP_DISCOUNT_PERCENT,
+  getProductSavingsAmount,
   isVipUser,
 } from "@/lib/membership/status";
 import { paths } from "@/lib/paths";
@@ -34,14 +35,13 @@ export const CheckoutMembershipSavings = ({
   const { actualSavings, potentialSavings } = useMemo(() => {
     const productTotal = checkout.subtotalPrice.gross.amount;
 
-    const potential =
-      productTotal * (PRODUCT_VIP_DISCOUNT_PERCENT / 100);
+    const potential = getProductSavingsAmount(productTotal, user);
 
     return {
       actualSavings: isMember ? potential : 0,
       potentialSavings: potential,
     };
-  }, [checkout.subtotalPrice.gross.amount, isMember]);
+  }, [checkout.subtotalPrice.gross.amount, isMember, user]);
 
   if (actualSavings === 0 && (!potentialSavings || potentialSavings === 0)) {
     return null;

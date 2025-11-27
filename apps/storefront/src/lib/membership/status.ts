@@ -15,3 +15,14 @@ export const isVipUser = (user: User | null | undefined) => {
 
   return normalized === "true" || normalized === "1" || normalized === "yes";
 };
+
+export const getProductSavingsAmount = (
+  amount: number,
+  user: User | null | undefined,
+) => {
+  if (!isVipUser(user) || amount <= 0) {
+    return 0;
+  }
+
+  return (amount * PRODUCT_VIP_DISCOUNT_PERCENT) / 100;
+};
