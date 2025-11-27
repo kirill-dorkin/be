@@ -128,11 +128,6 @@ export const WorkerApplyForm = () => {
             error.message && error.message.trim().length > 0
               ? error.message
               : t("submit-error-general");
-          const targetField: keyof ApplyFormValues = "email";
-
-          form.setError(targetField, {
-            message: fallbackMessage,
-          });
 
           if (index === 0) {
             setStatusMessage(fallbackMessage);

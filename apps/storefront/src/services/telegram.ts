@@ -1,9 +1,5 @@
 import { serverEnvs } from "@/envs/server";
 
-const FALLBACK_TELEGRAM_TOKEN =
-  "8534764498:AAGdC5YUl9GkmsV_usRuy6NVAb9lj2ncaP0";
-const FALLBACK_CHAT_ID = "-1003390998915"; // test channel
-
 type TelegramResult =
   | { ok: true }
   | { error: Array<{ code: string; message: string }>; ok: false };
@@ -17,9 +13,8 @@ type WorkerApplicationPayload = {
   role: string;
 };
 
-const escapeMarkdownV2 = (text: string): string => {
-  return text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&');
-};
+const escapeMarkdownV2 = (text: string): string =>
+  text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, "\\$&");
 
 const formatMessage = (payload: WorkerApplicationPayload) => {
   const { firstName, lastName, email, phone, role, passwordLength } = payload;
@@ -39,11 +34,34 @@ const formatMessage = (payload: WorkerApplicationPayload) => {
   ].join("\n");
 };
 
+const fetchWithTimeout = async (
+  url: string,
+  body: Record<string, string>,
+  timeoutMs: number,
+) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      cache: "no-store",
+      signal: controller.signal,
+    });
+
+    return response;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
 export const sendWorkerApplicationToTelegram = async (
   payload: WorkerApplicationPayload,
 ): Promise<TelegramResult> => {
-  const token = serverEnvs.TELEGRAM_BOT_TOKEN ?? FALLBACK_TELEGRAM_TOKEN;
-  const chatId = serverEnvs.TELEGRAM_CHAT_ID ?? FALLBACK_CHAT_ID;
+  const token = serverEnvs.TELEGRAM_BOT_TOKEN;
+  const chatId = serverEnvs.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
     return {
@@ -71,57 +89,54 @@ export const sendWorkerApplicationToTelegram = async (
     body.message_thread_id = serverEnvs.TELEGRAM_THREAD_ID;
   }
 
-  try {
-    const response = await fetch(telegramUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      cache: "no-store",
-    });
+  const maxAttempts = 2;
+  let lastError = "Failed to send Telegram notification.";
 
-    if (!response.ok) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const response = await fetchWithTimeout(telegramUrl, body, 8000);
+
+      if (response.ok) {
+        return { ok: true };
+      }
+
       let errorMessage = "Failed to send Telegram notification.";
+      const responseText = await response.clone().text();
 
-      try {
-        const parsed = (await response.json()) as { description?: string };
+      if (responseText) {
+        try {
+          const parsed = JSON.parse(responseText) as { description?: string };
 
-        if (parsed?.description) {
-          errorMessage = parsed.description;
-        }
-      } catch {
-        const text = await response.text();
-
-        if (text) {
-          errorMessage = text;
+          if (parsed?.description) {
+            errorMessage = parsed.description;
+          } else {
+            errorMessage = responseText;
+          }
+        } catch {
+          errorMessage = responseText;
         }
       }
 
-      return {
-        ok: false,
-        error: [
-          {
-            code: "TELEGRAM_SEND_FAILED",
-            message: errorMessage,
-          },
-        ],
-      };
+      lastError = errorMessage;
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        lastError = "Telegram request timed out.";
+      } else {
+        lastError =
+          error instanceof Error
+            ? error.message
+            : "Unexpected error while sending Telegram notification.";
+      }
     }
-
-    return { ok: true };
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unexpected error while sending Telegram notification.";
-
-    return {
-      ok: false,
-      error: [
-        {
-          code: "TELEGRAM_REQUEST_ERROR",
-          message,
-        },
-      ],
-    };
   }
+
+  return {
+    ok: false,
+    error: [
+      {
+        code: "TELEGRAM_REQUEST_ERROR",
+        message: lastError,
+      },
+    ],
+  };
 };

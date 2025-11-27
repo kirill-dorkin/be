@@ -1,17 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { REPAIR_ROLE } from "@/lib/repair/metadata";
-
 const validPayload = {
   firstName: "Ivan",
   lastName: "Petrov",
   email: "ivan@example.com",
   phone: "+996700000000",
-  password: "password123",
-  role: REPAIR_ROLE.worker,
+  role: "Мастер по ремонту",
+  passwordLength: 8,
 };
 
-describe("submitWorkerApplication", () => {
+const loadService = async () =>
+  import("../telegram").then((mod) => mod.sendWorkerApplicationToTelegram);
+
+describe("sendWorkerApplicationToTelegram", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
@@ -25,18 +26,19 @@ describe("submitWorkerApplication", () => {
     vi.restoreAllMocks();
   });
 
-  it("returns ok true when Telegram accepts the request", async () => {
+  it("returns ok when Telegram responds 200", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response("{}", { status: 200 }),
     );
 
-    const { submitWorkerApplication } = await import("../actions");
-    const result = await submitWorkerApplication(validPayload);
+    const send = await loadService();
+    const result = await send(validPayload);
 
     expect(result.ok).toBe(true);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
   });
 
-  it("propagates Telegram errors", async () => {
+  it("returns error message from Telegram API on non-200", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({ description: "Bad chat id" }),
@@ -44,10 +46,22 @@ describe("submitWorkerApplication", () => {
       ),
     );
 
-    const { submitWorkerApplication } = await import("../actions");
-    const result = await submitWorkerApplication(validPayload);
+    const send = await loadService();
+    const result = await send(validPayload);
 
     expect(result.ok).toBe(false);
     expect(result.error?.[0].message).toContain("Bad chat id");
+  });
+
+  it("returns timeout error on abort", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(
+      new DOMException("Aborted", "AbortError"),
+    );
+
+    const send = await loadService();
+    const result = await send(validPayload);
+
+    expect(result.ok).toBe(false);
+    expect(result.error?.[0].message).toContain("timed out");
   });
 });
