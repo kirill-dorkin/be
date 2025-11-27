@@ -16,6 +16,7 @@ import { paths } from "@/lib/paths";
 import {
   applyRepairDiscount,
   calculateRepairSavings,
+  currencyMath,
 } from "@/lib/repair/discount";
 import {
   type RepairService,
@@ -38,11 +39,16 @@ type PriceLabels = {
 };
 
 type PriceDisplay = {
+  originalMin: number;
+  originalMax: number | null;
+  discountedMin: number;
+  discountedMax: number | null;
   discountedLabel?: string;
   isDiscounted: boolean;
   isFree: boolean;
   label: string;
-  savingsAmount: number;
+  savingsMin: number;
+  savingsMax: number;
 };
 
 const formatPriceLabel = ({
@@ -87,21 +93,31 @@ const formatPriceLabel = ({
 
   if (isFree) {
     return {
+      originalMin: service.price.min,
+      originalMax: service.price.max,
+      discountedMin: 0,
+      discountedMax: 0,
       label: baseLabel,
       discountedLabel: undefined,
       isDiscounted: false,
       isFree: true,
-      savingsAmount: 0,
+      savingsMin: 0,
+      savingsMax: 0,
     };
   }
 
   if (!discountRate) {
     return {
+      originalMin: service.price.min,
+      originalMax: service.price.max,
+      discountedMin: service.price.min,
+      discountedMax: service.price.max,
       label: baseLabel,
       discountedLabel: undefined,
       isDiscounted: false,
       isFree: false,
-      savingsAmount: 0,
+      savingsMin: 0,
+      savingsMax: 0,
     };
   }
 
@@ -127,22 +143,32 @@ const formatPriceLabel = ({
 
   if (!hasDiscount) {
     return {
+      originalMin: service.price.min,
+      originalMax: service.price.max,
+      discountedMin: service.price.min,
+      discountedMax: service.price.max,
       label: baseLabel,
       discountedLabel: undefined,
       isDiscounted: false,
       isFree: false,
-      savingsAmount: 0,
+      savingsMin: 0,
+      savingsMax: 0,
     };
   }
 
   const discountedLabel = buildLabel(discountedMin, discountedMax);
 
   return {
+    originalMin: service.price.min,
+    originalMax: service.price.max,
+    discountedMin,
+    discountedMax,
     label: baseLabel,
     discountedLabel,
     isDiscounted: true,
     isFree: false,
-    savingsAmount: minSavings,
+    savingsMin: minSavings,
+    savingsMax: maxSavings,
   };
 };
 
@@ -241,15 +267,38 @@ export const ServicesSections = ({
               const savingsLabel =
                 priceInfo.isDiscounted &&
                 discountStrings &&
-                priceInfo.savingsAmount > 0
-                  ? discountStrings.savings.replace(
-                      "{amount}",
-                      formatAsPrice({
-                        amount: priceInfo.savingsAmount,
+                priceInfo.savingsMin > 0
+                  ? (() => {
+                      const formattedMin = formatAsPrice({
+                        amount: currencyMath.toCurrency(
+                          priceInfo.originalMin - priceInfo.discountedMin,
+                        ),
                         currency,
                         locale,
-                      }),
-                    )
+                      });
+                      const formattedMax =
+                        priceInfo.originalMax !== null &&
+                        priceInfo.discountedMax !== null
+                          ? formatAsPrice({
+                              amount: currencyMath.toCurrency(
+                                priceInfo.originalMax - priceInfo.discountedMax,
+                              ),
+                              currency,
+                              locale,
+                            })
+                          : null;
+
+                      const value =
+                        formattedMax &&
+                        priceInfo.originalMax !== null &&
+                        priceInfo.discountedMax !== null &&
+                        (priceInfo.originalMax - priceInfo.discountedMax) >
+                          (priceInfo.originalMin - priceInfo.discountedMin)
+                          ? `${formattedMin} – ${formattedMax}`
+                          : formattedMin;
+
+                      return discountStrings.savings.replace("{amount}", value);
+                    })()
                   : null;
 
               return (

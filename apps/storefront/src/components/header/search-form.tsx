@@ -10,7 +10,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useClickAnyWhere } from "usehooks-ts";
 
 import { Button } from "@nimara/ui/components/button";
 import {
@@ -89,7 +88,14 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   );
 
   const resetSearchState = useCallback(
-    () => setSearchState(initialSearchState),
+    () =>
+      setSearchState((state) => ({
+        ...initialSearchState,
+        // Не прячем выпадашку автоматически
+        showOptions: false,
+        // сохраняем текущее значение, если было
+        inputValue: state.inputValue ?? "",
+      })),
     [],
   );
 
@@ -159,16 +165,16 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
     resetSearchState();
   }, [resetSearchState]);
 
-  useClickAnyWhere(() =>
-    setSearchState((prevState) => ({ ...prevState, showOptions: false })),
-  );
-
   useEffect(() => {
     const inputValueLength = debouncedInputValue.length;
 
     if (inputValueLength === 0) {
-      // Reset the search state when input is empty/cleared
-      resetSearchState();
+      setSearchState((state) => ({
+        ...state,
+        status: "IDLE",
+        options: [],
+        showOptions: false,
+      }));
 
       return;
     }
@@ -181,15 +187,27 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
           ...state,
           status: "IDLE",
           options: results,
-          showOptions: true,
+          showOptions: results.length > 0,
         }));
       });
+    } else {
+      setSearchState((state) => ({
+        ...state,
+        status: "IDLE",
+        options: [],
+        showOptions: false,
+      }));
     }
-  }, [debouncedInputValue]);
+  }, [debouncedInputValue, resetSearchState]);
 
   useEffect(() => {
-    resetSearchState();
-  }, [pathname, resetSearchState]);
+    // При монтировании/смене пути скрываем дропдаун, сбрасывая выделение
+    setSearchState((state) => ({
+      ...state,
+      showOptions: false,
+      highlightedOptionIndex: -1,
+    }));
+  }, []); // зависимости пустые, чтобы не менять сигнатуру
 
   const renderAdornmentContent = useCallback(() => {
     if (isLoading) {
@@ -216,8 +234,9 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
       role="search"
       onSubmit={handleSubmit}
     >
-      <Combobox className="z-50">
-        <ComboboxInput
+      <div>
+        <Combobox className="z-50">
+          <ComboboxInput
           endAdornment={
             <Button
               aria-label={adornmentAria}
@@ -242,6 +261,7 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
                 status:
                   event.target.value.length >= minLetters ? "LOADING" : "IDLE",
                 inputValue: event.target.value,
+                showOptions: event.target.value.length > 0 || state.showOptions,
               })),
             onKeyDown: handleKeyDown,
             placeholder: ts("search-placeholder"),
@@ -257,7 +277,8 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
 
         <ComboboxGroup
           ariaLabel={ts("search-results")}
-          expanded={isIdle && showOptions}
+          expanded={showOptions}
+          className="max-h-80 overflow-auto"
         >
           {options.map((suggestion, index) => (
             <ComboboxItem
@@ -296,6 +317,7 @@ export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
           <ComboboxEmpty>{ts("no-results")}</ComboboxEmpty>
         )}
       </Combobox>
+      </div>
     </form>
   );
 };

@@ -7,6 +7,7 @@ import { type SaleorSearchServiceConfig } from "@nimara/infrastructure/search/sa
 import { type SearchService } from "@nimara/infrastructure/use-cases/search/types";
 
 import { clientEnvs } from "@/envs/client";
+import { MARKETS } from "@/regions/config";
 
 import { getStorefrontLogger } from "./lazy-logging";
 
@@ -92,6 +93,47 @@ const commonFacets = {
   },
 } satisfies AvailableFacets;
 
+const buildIndex = ({
+  channel,
+  currency,
+}: {
+  channel: string;
+  currency: string;
+}) => ({
+  availableFacets: commonFacets,
+  channel,
+  indexName: `${channel}.${currency}.products`,
+  virtualReplicas: [
+    {
+      indexName: `${channel}.${currency}.products.name_asc`,
+      messageKey: "search.name-asc",
+      queryParamValue: "alpha-asc",
+    },
+    {
+      indexName: `${channel}.${currency}.products.grossPrice_asc`,
+      messageKey: "search.price-asc",
+      queryParamValue: "price-asc",
+    },
+    {
+      indexName: `${channel}.${currency}.products.grossPrice_desc`,
+      messageKey: "search.price-desc",
+      queryParamValue: "price-desc",
+    },
+  ],
+});
+
+const marketIndices = Array.from(
+  new Set(
+    Object.values(MARKETS).map(
+      (market) => `${market.channel}::${market.currency}`,
+    ),
+  ),
+).map((key) => {
+  const [channel, currency] = key.split("::");
+
+  return buildIndex({ channel, currency });
+});
+
 export const ALGOLIA_SEARCH_SERVICE_CONFIG = (logger: Logger) =>
   ({
     credentials: {
@@ -100,30 +142,7 @@ export const ALGOLIA_SEARCH_SERVICE_CONFIG = (logger: Logger) =>
     },
     logger: logger,
     settings: {
-      indices: [
-        {
-          availableFacets: commonFacets,
-          channel: "channel-uk",
-          indexName: "channel-uk.GBP.products",
-          virtualReplicas: [
-            {
-              indexName: "channel-uk.GBP.products.name_asc",
-              messageKey: "search.name-asc",
-              queryParamValue: "alpha-asc",
-            },
-            {
-              indexName: "channel-uk.GBP.products.grossPrice_asc",
-              messageKey: "search.price-asc",
-              queryParamValue: "price-asc",
-            },
-            {
-              indexName: "channel-uk.GBP.products.grossPrice_desc",
-              messageKey: "search.price-desc",
-              queryParamValue: "price-desc",
-            },
-          ],
-        },
-      ],
+      indices: marketIndices,
     },
   }) as const satisfies AlgoliaSearchServiceConfig;
 
