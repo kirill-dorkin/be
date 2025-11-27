@@ -542,6 +542,7 @@
     "success-description": "We’ve forwarded your details to the administrator. Once approved, you’ll receive an email with the next steps.",
     "password-hint": "Password must contain letters and numbers.",
     "disclaimer": "By submitting the form you consent to the processing of your personal data for repair services.",
+    "cooldown-note": "You can submit again in one week. For urgent changes, contact the administrator.",
     "submit": "Submit application",
     "submit-loading": "Sending…",
     "submit-error-general": "We couldn’t send your application. Please try again or contact the administrator.",

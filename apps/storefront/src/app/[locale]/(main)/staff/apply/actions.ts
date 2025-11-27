@@ -17,7 +17,7 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
 
   const { firstName, lastName, email, password, phone, role } = parsed.data;
 
-  const telegramResult = await sendWorkerApplicationToTelegram({
+  const throttled = await sendWorkerApplicationToTelegram({
     firstName,
     lastName,
     email,
@@ -29,10 +29,31 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
     passwordLength: password.length,
   });
 
-  return telegramResult.ok
+  if (!throttled.ok && Array.isArray(throttled.error)) {
+    const hasThrottle = throttled.error.some(
+      (err) =>
+        err.code === "TELEGRAM_REQUEST_ERROR" &&
+        err.message.toLowerCase().includes("too many") ||
+        err.code === "RATE_LIMITED",
+    );
+
+    if (hasThrottle) {
+      return {
+        ok: false as const,
+        error: [
+          {
+            code: "RATE_LIMITED",
+            message: "Вы уже отправили заявку недавно. Попробуйте позже.",
+          },
+        ],
+      };
+    }
+  }
+
+  return throttled.ok
     ? { ok: true as const }
     : {
         ok: false as const,
-        error: telegramResult.error,
+        error: throttled.error,
       };
 };

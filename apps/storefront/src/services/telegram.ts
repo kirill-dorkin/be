@@ -100,6 +100,19 @@ export const sendWorkerApplicationToTelegram = async (
         return { ok: true };
       }
 
+      if (response.status === 429) {
+        return {
+          ok: false,
+          error: [
+            {
+              code: "RATE_LIMITED",
+              message:
+                "Telegram rate limit. Please wait before sending another request.",
+            },
+          ],
+        };
+      }
+
       let errorMessage = "Failed to send Telegram notification.";
       const responseText = await response.clone().text();
 

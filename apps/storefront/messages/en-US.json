@@ -609,6 +609,7 @@
     "success-description": "We’ve sent your details to the administrator. As soon as the request is approved you’ll receive an email with next steps.",
     "password-hint": "Password must include letters and numbers.",
     "disclaimer": "By submitting the form you agree to the processing of your personal data for the purpose of providing repair services.",
+    "cooldown-note": "You can submit again in one week. If you need urgent changes, contact the administrator.",
     "submit": "Submit application",
     "submit-loading": "Sending…",
     "submit-error-general": "We couldn’t send your application. Please try again or contact the administrator.",

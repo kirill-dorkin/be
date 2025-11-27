@@ -239,6 +239,11 @@ export const WorkerApplyForm = () => {
             {statusMessage}
           </div>
         )}
+        {!isLocked && (
+          <p className="text-xs text-muted-foreground">
+            {t("cooldown-note")}
+          </p>
+        )}
         <fieldset
           className="flex flex-col gap-4"
           disabled={isLocked}
