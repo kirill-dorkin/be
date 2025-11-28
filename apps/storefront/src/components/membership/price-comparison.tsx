@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, Tag, TrendingDown } from "lucide-react";
+import { Crown, Tag } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Badge } from "@nimara/ui/components/badge";
@@ -40,13 +40,8 @@ export function PriceComparison({
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
 
-  const savings = Math.max(regularPrice - memberPrice, 0);
-  const savingsPercent =
-    regularPrice > 0 ? Math.round((savings / regularPrice) * 100) : 0;
-
   const formattedRegularPrice = formatter.price({ amount: regularPrice });
   const formattedMemberPrice = formatter.price({ amount: memberPrice });
-  const formattedSavings = formatter.price({ amount: savings });
 
   const sizeClasses = {
     sm: "text-sm",
@@ -79,7 +74,7 @@ export function PriceComparison({
   return (
     <div
       className={cn(
-        "flex gap-4 rounded-2xl border border-foreground/10 bg-card p-4 shadow-sm",
+        "flex gap-4 rounded-xl border border-foreground/10 bg-card p-3 shadow-sm",
         orientation === "vertical"
           ? "flex-col"
           : "flex-col sm:flex-row sm:items-center sm:justify-between",
@@ -122,13 +117,6 @@ export function PriceComparison({
                 {formattedMemberPrice}
               </span>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-1.5 text-emerald-700 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.12)] dark:bg-emerald-900/20 dark:text-emerald-200">
-            <TrendingDown className="h-4 w-4" />
-            <span className="text-xs font-semibold">
-              {t("membership.save", { amount: formattedSavings, percent: savingsPercent })}
-            </span>
           </div>
         </div>
       </div>
