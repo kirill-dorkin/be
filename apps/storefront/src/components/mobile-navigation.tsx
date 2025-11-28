@@ -381,8 +381,6 @@ const MENU_ICON_SLUG_MAP: Record<string, LucideIcon> = {
   "graphics": Monitor,
   "gpu": Monitor,
   "cooling": Fan,
-  "ssd": HardDrive,
-  "hdd": Database,
   "energy": Battery,
   // Components subcategories
   // Networking subcategories
