@@ -3,8 +3,8 @@ import type { User } from "@nimara/domain/objects/User";
 import { storefrontLogger } from "@/services/logging";
 
 type UserGetResult =
-  | { data: User | null, ok: true; }
-  | { errors?: unknown, ok: false; };
+  | { data: User | null; ok: true }
+  | { errors?: unknown; ok: false };
 
 export const safeUserGet = async (
   accessToken: string | null | undefined,
