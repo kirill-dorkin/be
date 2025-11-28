@@ -26,7 +26,6 @@ const COUNTRY_NAME_OVERRIDES: Partial<
     "ky-KG": "Кыргызстан",
   },
   GB: {},
-  US: {},
   RU: {},
 };
 
