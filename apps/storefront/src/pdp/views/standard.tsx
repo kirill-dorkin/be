@@ -34,14 +34,14 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
     <ProductProvider
       slug={slug}
       render={(product, availability, { cart, user }) => (
-        <div className="relative grid w-full gap-6 overflow-hidden px-4 pt-8 md:gap-8 md:px-0 md:pt-0">
+        <div className="relative grid w-full max-w-6xl gap-6 overflow-hidden px-4 pt-8 md:gap-10 md:px-6 lg:gap-14 lg:px-10 xl:px-12 mx-auto">
           <ProductBreadcrumbs
             category={product.category}
             productName={product.name}
           />
 
-          <div className="grid gap-8 md:grid-cols-2 md:gap-16 lg:gap-24">
-            <div className="md:col-span-1">
+          <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
+            <div className="md:col-span-1 lg:max-w-2xl md:mx-auto">
               <ProductMediaWrapper
                 product={product}
                 availability={availability}
@@ -51,7 +51,7 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
             </div>
 
             <div className="md:col-span-1">
-              <section className="sticky top-28 space-y-4">
+              <section className="sticky top-24 space-y-4 lg:space-y-5">
                 <ProductTitle title={product.name} />
                 {/* Поиск фото в интернете - временно отключено */}
                 {/* <Suspense fallback={null}>

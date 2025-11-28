@@ -17,7 +17,6 @@ import {
 
 import { PriceComparison } from "@/components/membership/price-comparison";
 import { Price } from "@/components/price";
-import { isVipUser,PRODUCT_VIP_DISCOUNT_PERCENT } from "@/lib/membership/status";
 import { cn } from "@/lib/utils";
 
 import { useVariantSelection } from "../hooks/useVariantSelection";
@@ -58,9 +57,6 @@ export const VariantSelector = ({
 
   // Calculate prices: regular shown as is; member price is illustrative only
   const regularPrice = chosenVariantAvailability?.price?.amount || 0;
-  const memberPrice =
-    regularPrice * (1 - PRODUCT_VIP_DISCOUNT_PERCENT / 100);
-  const isMember = isVipUser(user);
 
   // Sync quantity with cart when variant changes or cart updates
   const currentVariantId = matchingVariants?.length > 1
@@ -104,17 +100,10 @@ export const VariantSelector = ({
     <>
       <div className="border-border/30 dark:border-white/10 my-5 border-t pt-4">
         <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end md:gap-6">
-          {/* Price section with membership comparison */}
+          {/* Price section */}
           <div className="text-left flex-1" aria-live="polite">
             {regularPrice > 0 ? (
-              <PriceComparison
-                regularPrice={regularPrice}
-                memberPrice={memberPrice}
-                isMember={isMember}
-                size="lg"
-                showCTA={!isMember}
-                orientation="horizontal"
-              />
+              <PriceComparison regularPrice={regularPrice} size="lg" />
             ) : (
               <Price
                 price={chosenVariantAvailability?.price}
@@ -239,28 +228,30 @@ export const VariantSelector = ({
         )}
       </div>
 
-      <AddToBag
-        cart={cart}
-        quantity={quantity}
-        variantId={
-          matchingVariants?.length > 1
-            ? discriminatedVariantId
-            : chosenVariant
-              ? chosenVariant?.id
-              : areAllRequiredSelectionAttributesChosen
-                ? "NOTIFY_ME"
-                : ""
-        }
-        isVariantAvailable={
-          matchingVariants?.length > 1
-            ? true
-            : chosenVariant
-              ? isChosenVariantAvailable
-              : areAllRequiredSelectionAttributesChosen
-                ? false
-                : true
-        }
-      />
+      <div className="w-full max-w-xl">
+        <AddToBag
+          cart={cart}
+          quantity={quantity}
+          variantId={
+            matchingVariants?.length > 1
+              ? discriminatedVariantId
+              : chosenVariant
+                ? chosenVariant?.id
+                : areAllRequiredSelectionAttributesChosen
+                  ? "NOTIFY_ME"
+                  : ""
+          }
+          isVariantAvailable={
+            matchingVariants?.length > 1
+              ? true
+              : chosenVariant
+                ? isChosenVariantAvailable
+                : areAllRequiredSelectionAttributesChosen
+                  ? false
+                  : true
+          }
+        />
+      </div>
     </>
   );
 };
