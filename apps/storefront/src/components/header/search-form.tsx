@@ -23,7 +23,7 @@ import {
 import { Spinner } from "@nimara/ui/components/spinner";
 
 import { DEFAULT_DEBOUNCE_TIME_IN_MS } from "@/config";
-import { LocalizedLink, usePathname, useRouter } from "@/i18n/routing";
+import { LocalizedLink, useRouter } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 import { getCurrentRegion } from "@/regions/server";
@@ -57,8 +57,6 @@ const initialSearchState: SearchState = {
 export const SearchForm = ({ onSubmit }: { onSubmit?: () => void }) => {
   const ts = useTranslations("search");
   const tc = useTranslations("common");
-
-  const pathname = usePathname();
 
   const router = useRouter();
   const [

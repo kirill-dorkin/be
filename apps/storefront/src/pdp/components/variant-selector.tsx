@@ -17,7 +17,7 @@ import {
 
 import { PriceComparison } from "@/components/membership/price-comparison";
 import { Price } from "@/components/price";
-import { PRODUCT_VIP_DISCOUNT_PERCENT, isVipUser } from "@/lib/membership/status";
+import { isVipUser,PRODUCT_VIP_DISCOUNT_PERCENT } from "@/lib/membership/status";
 import { cn } from "@/lib/utils";
 
 import { useVariantSelection } from "../hooks/useVariantSelection";

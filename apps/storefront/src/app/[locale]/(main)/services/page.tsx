@@ -1,7 +1,7 @@
-import React from "react";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import dynamic from "next/dynamic";
+import { getTranslations } from "next-intl/server";
+import React from "react";
 
 import { Button } from "@nimara/ui/components/button";
 

@@ -1,8 +1,8 @@
 import { getAccessToken } from "@/auth";
 import { CACHE_TTL } from "@/config";
 import { getCheckoutId } from "@/lib/actions/cart";
-import { getCurrentRegion } from "@/regions/server";
 import { safeUserGet } from "@/lib/user/safe-user";
+import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
 import { storefrontLogger } from "@/services/logging";
 import { getUserService } from "@/services/user";

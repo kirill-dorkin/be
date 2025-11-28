@@ -23,8 +23,8 @@ export default async function TermsOfUsePage(props: PageProps) {
   const { locale } = await props.params;
   const t = await getTranslations({ locale });
   const sections = t.raw("static-pages.terms.sections") as Array<{
-    title: string;
     items: string[];
+    title: string;
   }>;
 
   return (

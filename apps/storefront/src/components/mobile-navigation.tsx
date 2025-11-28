@@ -432,16 +432,18 @@ const KEYWORD_ICON_RULES: Array<{
 ];
 
 const extractSlug = (url?: string | null): string | null => {
-  if (!url) return null;
+  if (!url) {return null;}
 
   try {
     const parsed = new URL(url, "http://example.com");
     const category = parsed.searchParams.get("category");
+
     if (category) {
       return category.toLowerCase();
     }
 
     const pathSegments = parsed.pathname.split("/").filter(Boolean);
+
     if (pathSegments.length > 0) {
       return pathSegments[pathSegments.length - 1].toLowerCase();
     }
@@ -458,6 +460,7 @@ const getIconForItem = (
   parentIcon?: LucideIcon | null,
 ): LucideIcon | null => {
   const slugKey = extractSlug(url);
+
   if (slugKey && MENU_ICON_SLUG_MAP[slugKey]) {
     return MENU_ICON_SLUG_MAP[slugKey];
   }
@@ -466,6 +469,7 @@ const getIconForItem = (
   const normalizedLower = normalizedLabel.toLowerCase();
 
   const exactMatch = MENU_ICON_MAP[normalizedLabel] || MENU_ICON_MAP[label];
+
   if (exactMatch) {
     return exactMatch;
   }
@@ -482,10 +486,12 @@ const getIconForItem = (
 
   // Heuristic keyword matching for other locales/translations
   const keywordSource = [normalizedBase, slugKey].filter(Boolean).join(" ");
+
   if (keywordSource) {
     const rule = KEYWORD_ICON_RULES.find(({ patterns }) =>
       patterns.some((regex) => regex.test(keywordSource)),
     );
+
     if (rule) {
       return rule.icon;
     }

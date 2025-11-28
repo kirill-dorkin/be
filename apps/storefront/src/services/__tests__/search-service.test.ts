@@ -5,7 +5,8 @@ const mockAlgoliaSearchService = vi.fn();
 vi.mock("@nimara/infrastructure/search/algolia/provider", () => ({
   algoliaSearchService: (config: unknown) => {
     mockAlgoliaSearchService(config);
-    return {
+    
+return {
       getFacets: vi.fn(),
       getSortByOptions: vi.fn(),
       search: vi.fn(),
@@ -42,6 +43,7 @@ describe("getSearchService (ALGOLIA)", () => {
 
   it("creates algolia service with indices for all supported channels", async () => {
     const { getSearchService } = await import("../search");
+
     await getSearchService();
 
     expect(mockAlgoliaSearchService).toHaveBeenCalledTimes(1);
@@ -50,6 +52,7 @@ describe("getSearchService (ALGOLIA)", () => {
     };
 
     const channels = config.settings.indices.map((i) => i.channel);
+
     expect(new Set(channels).size).toBeGreaterThanOrEqual(1);
   });
 });

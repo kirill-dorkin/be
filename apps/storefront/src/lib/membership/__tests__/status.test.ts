@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { type User } from "@nimara/domain/objects/User";
 
 import {
-  PRODUCT_VIP_DISCOUNT_PERCENT,
   getProductSavingsAmount,
   isVipUser,
+  PRODUCT_VIP_DISCOUNT_PERCENT,
 } from "../status";
 
 const vipUser = {
@@ -34,6 +34,7 @@ describe("membership status helpers", () => {
 
   it("returns percent savings for VIP", () => {
     const savings = getProductSavingsAmount(1000, vipUser);
+
     expect(savings).toBeCloseTo((PRODUCT_VIP_DISCOUNT_PERCENT / 100) * 1000);
   });
 

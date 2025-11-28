@@ -23,8 +23,8 @@ export default async function PrivacyPolicyPage(props: PageProps) {
   const { locale } = await props.params;
   const t = await getTranslations({ locale });
   const sections = t.raw("static-pages.privacy.sections") as Array<{
-    title: string;
     items: string[];
+    title: string;
   }>;
 
   return (

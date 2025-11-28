@@ -108,7 +108,8 @@ export const sendWorkerApplicationToTelegram = async (
           email: payload.email,
           phone: payload.phone,
         });
-        return { ok: true };
+        
+return { ok: true };
       }
 
       if (response.status === 429) {

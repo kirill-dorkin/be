@@ -1,4 +1,4 @@
-import { CHANNEL, LANGUAGES, LOCALE_CHANNEL_MAP, MARKETS } from "./config";
+import { LANGUAGES, LOCALE_CHANNEL_MAP, MARKETS } from "./config";
 import {
   type ChannelId,
   isSupportedCurrency,

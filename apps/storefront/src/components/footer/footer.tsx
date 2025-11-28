@@ -158,7 +158,7 @@ export const Footer = async () => {
             {t.rich("footer.open-source", {
               link: (chunks) => (
                 <LocalizedLink
-                  href="https://www.bestelectronics.com/platform"
+                  href="#"
                   className="hover:text-primary"
                   target="_blank"
                   rel="noopener noreferrer"

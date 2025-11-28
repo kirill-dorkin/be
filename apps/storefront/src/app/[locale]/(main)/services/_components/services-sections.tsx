@@ -39,16 +39,16 @@ type PriceLabels = {
 };
 
 type PriceDisplay = {
-  originalMin: number;
-  originalMax: number | null;
-  discountedMin: number;
-  discountedMax: number | null;
   discountedLabel?: string;
+  discountedMax: number | null;
+  discountedMin: number;
   isDiscounted: boolean;
   isFree: boolean;
   label: string;
-  savingsMin: number;
+  originalMax: number | null;
+  originalMin: number;
   savingsMax: number;
+  savingsMin: number;
 };
 
 const formatPriceLabel = ({

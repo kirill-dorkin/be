@@ -1,9 +1,9 @@
 "use client";
 
 import { Download, QrCode } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
-import dynamic from "next/dynamic";
 
 import { Button } from "@nimara/ui/components/button";
 import {

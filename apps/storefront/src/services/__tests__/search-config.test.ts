@@ -27,6 +27,7 @@ describe("ALGOLIA_SEARCH_SERVICE_CONFIG", () => {
 
     config.settings.indices.forEach((index) => {
       const replicaParams = index.virtualReplicas.map((r) => r.queryParamValue);
+
       expect(replicaParams).toEqual(
         expect.arrayContaining(["alpha-asc", "price-asc", "price-desc"]),
       );

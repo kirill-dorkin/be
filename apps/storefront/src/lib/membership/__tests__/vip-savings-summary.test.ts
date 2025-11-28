@@ -19,6 +19,7 @@ const regularUser = {
 describe("getVipSavingsSummary", () => {
   it("returns zero savings for non-VIP", () => {
     const result = getVipSavingsSummary(1000, regularUser);
+
     expect(result.isVip).toBe(false);
     expect(result.actualSavings).toBe(0);
     expect(result.potentialSavings).toBe(0);
@@ -26,6 +27,7 @@ describe("getVipSavingsSummary", () => {
 
   it("returns discounted savings for VIP", () => {
     const result = getVipSavingsSummary(1000, vipUser);
+
     expect(result.isVip).toBe(true);
     expect(result.actualSavings).toBeGreaterThan(0);
     expect(result.potentialSavings).toEqual(result.actualSavings);

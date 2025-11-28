@@ -11,8 +11,8 @@ import { Button } from "@nimara/ui/components/button";
 import { LocalizedLink } from "@/i18n/routing";
 import { useLocalizedFormatter } from "@/lib/formatters/use-localized-formatter";
 import {
-  PRODUCT_VIP_DISCOUNT_PERCENT,
   getVipSavingsSummary,
+  PRODUCT_VIP_DISCOUNT_PERCENT,
 } from "@/lib/membership/status";
 import { paths } from "@/lib/paths";
 
@@ -28,7 +28,9 @@ export const MembershipSavings = ({ cart, user }: MembershipSavingsProps) => {
   // Calculate total membership savings
   const { actualSavings, potentialSavings, isVip } = useMemo(() => {
     const productTotal = cart.subtotal.amount;
-    return getVipSavingsSummary(productTotal, user);
+
+    
+return getVipSavingsSummary(productTotal, user);
   }, [cart.subtotal.amount, user]);
 
   if (actualSavings === 0 && (!potentialSavings || potentialSavings === 0)) {
