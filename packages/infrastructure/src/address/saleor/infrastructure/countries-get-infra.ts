@@ -8,7 +8,7 @@ import type {
 } from "#root/address/types";
 
 // Поддерживаемые страны для всех регионов (KG первая - страна по умолчанию)
-const SUPPORTED_COUNTRIES: AllCountryCode[] = ["KG", "RU", "GB", "US"];
+const SUPPORTED_COUNTRIES: AllCountryCode[] = ["KG", "RU", "GB"];
 
 export const saleorCountriesGetInfra =
   ({ logger }: SaleorAddressServiceConfig): CountriesGetInfra =>
