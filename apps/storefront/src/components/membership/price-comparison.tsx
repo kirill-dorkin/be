@@ -74,7 +74,7 @@ export function PriceComparison({
   return (
     <div
       className={cn(
-        "flex gap-4 rounded-xl border border-foreground/10 bg-card p-3 shadow-sm",
+        "flex flex-col gap-2",
         orientation === "vertical"
           ? "flex-col"
           : "flex-col sm:flex-row sm:items-center sm:justify-between",
@@ -87,36 +87,26 @@ export function PriceComparison({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Tag className="h-4 w-4" />
-            <div className="flex flex-col leading-tight">
-              <span className="text-[11px] uppercase tracking-wide">
-                {t("membership.regular-price")}
-              </span>
-              <span
-                className={cn(
-                  "font-semibold text-foreground break-words",
-                  sizeClasses[size],
-                )}
-              >
-                {formattedRegularPrice}
-              </span>
-            </div>
+            <span className="text-[11px] uppercase tracking-wide">
+              {t("membership.regular-price")}
+            </span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Crown className="h-4 w-4 text-primary" />
-            <div className="flex flex-col leading-tight">
-              <span className="text-[11px] uppercase tracking-wide text-primary">
-                {t("membership.member-price")}
-              </span>
-              <span
-                className={cn(
-                  "font-bold text-primary break-words",
-                  sizeClasses[size],
-                )}
-              >
-                {formattedMemberPrice}
-              </span>
-            </div>
+          <div className={cn("text-foreground font-semibold text-2xl leading-tight", sizeClasses[size])}>
+            {formattedRegularPrice}
+          </div>
+          <div className="flex items-center gap-2 text-primary">
+            <Crown className="h-4 w-4" />
+            <span className="text-[11px] uppercase tracking-wide">
+              {t("membership.member-price")}
+            </span>
+          </div>
+          <div
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full bg-primary/5 px-3 py-2 text-primary font-semibold",
+              sizeClasses[size],
+            )}
+          >
+            {formattedMemberPrice}
           </div>
         </div>
       </div>
@@ -126,7 +116,8 @@ export function PriceComparison({
           <Button
             asChild
             size="sm"
-            className="w-full rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+            variant="outline"
+            className="w-full rounded-full border-border text-foreground hover:bg-muted"
           >
             <LocalizedLink href={paths.membership.asPath()}>
               <Crown className="mr-2 h-4 w-4" />
