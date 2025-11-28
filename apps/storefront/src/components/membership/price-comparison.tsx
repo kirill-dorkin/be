@@ -35,21 +35,21 @@ export function PriceComparison({
   return (
     <div
       className={cn(
-        "flex flex-col gap-1 rounded-lg bg-card/40",
+        "flex flex-col gap-1 rounded-lg bg-card/40 sm:flex-row sm:items-center sm:gap-3",
         className,
       )}
       role="group"
       aria-label={t("membership.regular-price")}
     >
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Tag className="h-4 w-4" />
-        <span className="text-[11px] uppercase tracking-wide">
+      <div className="flex items-center gap-2 text-muted-foreground sm:min-w-[140px]">
+        <Tag className="h-4 w-4 flex-shrink-0" />
+        <span className="text-[11px] uppercase tracking-wide leading-tight">
           {t("membership.regular-price")}
         </span>
       </div>
       <div
         className={cn(
-          "text-foreground font-semibold text-2xl leading-tight",
+          "text-foreground font-semibold text-2xl leading-tight sm:text-3xl",
           sizeClasses[size],
         )}
       >
