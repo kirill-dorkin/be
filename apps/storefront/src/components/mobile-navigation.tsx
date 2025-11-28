@@ -280,7 +280,6 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   // Components (Kyrgyz)
   "Материндик платалар": CircuitBoard,
   "Муздатуу": Fan,
-  "Графика": Monitor,
   "Сервер жабдыктары": Server,
   "Процессорлор": Cpu,
   "Энергия": Battery,
