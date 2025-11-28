@@ -40,8 +40,9 @@ export function PriceComparison({
   const t = useTranslations();
   const formatter = useLocalizedFormatter();
 
-  const savings = regularPrice - memberPrice;
-  const savingsPercent = Math.round((savings / regularPrice) * 100);
+  const savings = Math.max(regularPrice - memberPrice, 0);
+  const savingsPercent =
+    regularPrice > 0 ? Math.round((savings / regularPrice) * 100) : 0;
 
   const formattedRegularPrice = formatter.price({ amount: regularPrice });
   const formattedMemberPrice = formatter.price({ amount: memberPrice });
@@ -54,30 +55,31 @@ export function PriceComparison({
   };
 
   if (isMember) {
-    // Для членов показываем только их цену с бейджем
     return (
       <div
         className={cn(
-          "flex items-center gap-3 rounded-2xl border border-amber-200/70 bg-amber-50/60 px-4 py-3 shadow-sm dark:border-amber-800/60 dark:bg-amber-900/20",
+          "flex items-center justify-between gap-3 rounded-2xl border border-foreground/10 bg-muted/40 px-4 py-3 shadow-sm",
           className,
         )}
       >
-        <Badge className="bg-amber-500/90 text-white shadow-sm">
-          <Crown className="mr-1 h-3 w-3" />
-          {t("membership.member-price")}
-        </Badge>
-        <span className={cn("font-bold text-foreground", sizeClasses[size])}>
-          {formattedMemberPrice}
-        </span>
+        <div className="flex items-center gap-2">
+          <Badge className="bg-primary text-primary-foreground shadow-sm">
+            <Crown className="mr-1 h-3 w-3" />
+            {t("membership.member-price")}
+          </Badge>
+          <span className={cn("font-semibold text-foreground", sizeClasses[size])}>
+            {formattedMemberPrice}
+          </span>
+        </div>
+        <span className="text-xs text-muted-foreground">{t("membership.member-active")}</span>
       </div>
     );
   }
 
-  // Для гостей показываем сравнение
   return (
     <div
       className={cn(
-        "flex gap-4 rounded-2xl border border-amber-200/70 bg-gradient-to-br from-amber-50 via-white to-yellow-50 p-4 shadow-sm dark:border-amber-800/60 dark:from-amber-950/20 dark:via-slate-900 dark:to-yellow-950/10",
+        "flex gap-4 rounded-2xl border border-foreground/10 bg-card p-4 shadow-sm",
         orientation === "vertical"
           ? "flex-col"
           : "flex-col sm:flex-row sm:items-center sm:justify-between",
@@ -87,58 +89,56 @@ export function PriceComparison({
       aria-label={t("membership.member-price")}
     >
       <div className="flex-1 space-y-2">
-        {/* Обычная цена */}
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Tag className="h-4 w-4" />
-          <div className="flex flex-col leading-tight">
-            <span className="text-xs uppercase tracking-wide">
-              {t("membership.regular-price")}
-            </span>
-            <span
-              className={cn(
-                "font-semibold text-foreground break-words",
-                sizeClasses[size],
-              )}
-            >
-              {formattedRegularPrice}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Tag className="h-4 w-4" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-[11px] uppercase tracking-wide">
+                {t("membership.regular-price")}
+              </span>
+              <span
+                className={cn(
+                  "font-semibold text-foreground break-words",
+                  sizeClasses[size],
+                )}
+              >
+                {formattedRegularPrice}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Crown className="h-4 w-4 text-primary" />
+            <div className="flex flex-col leading-tight">
+              <span className="text-[11px] uppercase tracking-wide text-primary">
+                {t("membership.member-price")}
+              </span>
+              <span
+                className={cn(
+                  "font-bold text-primary break-words",
+                  sizeClasses[size],
+                )}
+              >
+                {formattedMemberPrice}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 rounded-md bg-emerald-50 px-3 py-1.5 text-emerald-700 shadow-[inset_0_0_0_1px_rgba(16,185,129,0.12)] dark:bg-emerald-900/20 dark:text-emerald-200">
+            <TrendingDown className="h-4 w-4" />
+            <span className="text-xs font-semibold">
+              {t("membership.save", { amount: formattedSavings, percent: savingsPercent })}
             </span>
           </div>
-        </div>
-
-        {/* Цена для членов */}
-        <div className="flex items-center gap-2">
-          <Crown className="h-4 w-4 text-amber-600" />
-          <div className="flex flex-col leading-tight">
-            <span className="text-xs uppercase tracking-wide text-amber-700">
-              {t("membership.member-price")}
-            </span>
-            <span
-              className={cn(
-                "font-bold text-amber-700 break-words",
-                sizeClasses[size],
-              )}
-            >
-              {formattedMemberPrice}
-            </span>
-          </div>
-        </div>
-
-        {/* Экономия */}
-        <div className="flex items-center gap-2 rounded-md bg-green-50 px-3 py-1.5 shadow-[inset_0_0_0_1px_rgba(34,197,94,0.12)] dark:bg-green-900/20">
-          <TrendingDown className="h-4 w-4 text-green-600" />
-          <span className="text-xs font-semibold text-green-700 dark:text-green-400">
-            {t("membership.save", { amount: formattedSavings, percent: savingsPercent })}
-          </span>
         </div>
       </div>
 
-      {/* Призыв к действию */}
       {showCTA && (
         <div className="flex w-full flex-col gap-2 sm:w-auto">
           <Button
             asChild
             size="sm"
-            className="w-full rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 shadow-sm hover:from-amber-600 hover:to-yellow-700"
+            className="w-full rounded-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
           >
             <LocalizedLink href={paths.membership.asPath()}>
               <Crown className="mr-2 h-4 w-4" />
