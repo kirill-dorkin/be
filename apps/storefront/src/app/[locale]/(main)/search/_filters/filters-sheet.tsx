@@ -110,7 +110,7 @@ const FiltersSheetComponent = ({ facets, searchParams, sortByOptions }: Props) =
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full"
+          className="h-11 w-11 rounded-xl"
           aria-label={t("filters.filters")}
         >
           <Filter className="h-5 w-5" />
