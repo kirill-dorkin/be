@@ -274,9 +274,6 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Мобилдик кубат": Battery,
   "Аппараттар": Smartphone,
   // Home (Kyrgyz)
-  "Ремонт": Wrench,
-  "Көңүл ачуу": Home,
-  "Кам көрүү": Home,
   "Ашкана": Utensils,
   "Көңүл ачуу": Clapperboard,
   "Кам көрүү": Sparkles,
