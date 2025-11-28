@@ -30,7 +30,6 @@ import { FilterBoolean } from "./filter-boolean";
 import { FilterDropdown } from "./filter-dropdown";
 import { FilterMultiSelect } from "./filter-multi-select";
 import { FilterText } from "./filter-text";
-import { FiltersCounter } from "./filters-counter";
 
 type Props = {
   facets: Facet[];
@@ -110,12 +109,12 @@ const FiltersSheetComponent = ({ facets, searchParams, sortByOptions }: Props) =
       <SheetTrigger asChild suppressHydrationWarning>
         <Button
           variant="outline"
-          className="flex gap-2"
+          size="icon"
+          className="rounded-full"
           aria-label={t("filters.filters")}
         >
-          <Filter className="h-4 w-4" />
-          <span className="hidden md:block">{t("filters.filters")}</span>
-          <FiltersCounter searchParams={searchParams} facets={facets} />
+          <Filter className="h-5 w-5" />
+          <span className="sr-only">{t("filters.filters")}</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right-full">
