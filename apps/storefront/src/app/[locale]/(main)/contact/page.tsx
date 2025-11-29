@@ -143,8 +143,8 @@ export default async function ContactPage() {
               <div className="rounded-2xl border border-dashed border-border/70 bg-muted/40 p-6 text-center">
                 <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
                   <iframe
-                    src="https://widgets.2gis.com/widget?type=firmsonmap&xf=70000001058839512&org=70000001058839512&map=74.595204%2C42.848524%2C17"
-                    title="BestElectronics на карте 2ГИС"
+                    src="https://www.google.com/maps?q=%D0%9A%D1%83%D0%BB%D0%B0%D1%82%D0%BE%D0%B2%D0%B0%208/1%20%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA&output=embed"
+                    title="BestElectronics на карте"
                     className="h-72 w-full border-0"
                     loading="lazy"
                     allowFullScreen
