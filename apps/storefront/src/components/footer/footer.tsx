@@ -112,20 +112,6 @@ export const Footer = async () => {
               >
                 {t("common.terms-of-use")}
               </LocalizedLink>
-              <span aria-hidden="true">•</span>
-              <LocalizedLink
-                href="/sell"
-                className="hover:text-primary"
-              >
-                Выставить товар
-              </LocalizedLink>
-              <span aria-hidden="true">•</span>
-              <LocalizedLink
-                href="/market"
-                className="hover:text-primary"
-              >
-                Маркетплейс
-              </LocalizedLink>
             </div>
           </div>
 
