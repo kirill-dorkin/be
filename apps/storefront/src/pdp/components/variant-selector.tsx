@@ -20,6 +20,7 @@ import { Price } from "@/components/price";
 import { cn } from "@/lib/utils";
 
 import { useVariantSelection } from "../hooks/useVariantSelection";
+import { SellerBadge } from "./seller-badge";
 import { AddToBag } from "./add-to-bag";
 import { QuantitySelector } from "./quantity-selector";
 import { VariantDropdown } from "./variant-dropdown";
@@ -124,6 +125,8 @@ export const VariantSelector = ({
             />
           </div>
         </div>
+
+        <SellerBadge className="mt-2" />
       </div>
 
       <div className="space-y-4">
