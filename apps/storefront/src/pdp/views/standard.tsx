@@ -19,6 +19,8 @@ import { ProductMediaWrapper } from "../components/product-media-wrapper";
 import { ProductTitle } from "../components/product-title";
 import { VariantSelectorWrapper } from "../components/variant-selector-wrapper";
 import { ProductProvider } from "../providers/product-provider";
+import { ProductReviewsPanel } from "../components/reviews/product-reviews-panel";
+import { fetchProductReviews } from "../lib/reviews";
 
 /**
  * Standard view for the product details page.
@@ -33,52 +35,66 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
   return (
     <ProductProvider
       slug={slug}
-      render={(product, availability, { cart, user }) => (
-        <div className="relative grid w-full max-w-6xl gap-6 overflow-hidden px-4 pt-8 md:gap-10 md:px-6 lg:gap-14 lg:px-10 xl:px-12 mx-auto">
-          <ProductBreadcrumbs
-            category={product.category}
-            productName={product.name}
-          />
+      render={async (product, availability, { cart, user }) => {
+        const reviews = await fetchProductReviews(product.id);
 
-          <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
-            <div className="md:col-span-1 lg:max-w-2xl md:mx-auto">
-              <ProductMediaWrapper
-                product={product}
-                availability={availability}
-                cart={cart}
-                showAs="vertical"
-              />
-            </div>
+        return (
+          <div className="relative grid w-full max-w-6xl gap-6 overflow-hidden px-4 pt-8 md:gap-10 md:px-6 lg:gap-14 lg:px-10 xl:px-12 mx-auto">
+            <ProductBreadcrumbs
+              category={product.category}
+              productName={product.name}
+            />
 
-            <div className="md:col-span-1">
-              <section className="sticky top-24 space-y-4 lg:space-y-5">
-                <ProductTitle title={product.name} />
-                {/* Поиск фото в интернете - временно отключено */}
-                {/* <Suspense fallback={null}>
+            <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
+              <div className="md:col-span-1 lg:max-w-2xl md:mx-auto">
+                <ProductMediaWrapper
+                  product={product}
+                  availability={availability}
+                  cart={cart}
+                  showAs="vertical"
+                />
+              </div>
+
+              <div className="md:col-span-1">
+                <section className="sticky top-24 space-y-4 lg:space-y-5">
+                  <ProductTitle title={product.name} />
+                  {/* Поиск фото в интернете - временно отключено */}
+                  {/* <Suspense fallback={null}>
                   <ProductExternalSearch
                     productName={product.name}
                     hasImages={!!product.images && product.images.length > 0}
                   />
                 </Suspense> */}
 
-                <VariantSelectorWrapper
-                  availability={availability}
-                  cart={cart}
-                  product={product}
-                  user={user}
-                />
+                  <VariantSelectorWrapper
+                    availability={availability}
+                    cart={cart}
+                    product={product}
+                    user={user}
+                  />
 
-                <ProductHighlights product={product} />
-                <AttributesDropdown product={product} />
-              </section>
+                  <ProductHighlights product={product} />
+                  <AttributesDropdown product={product} />
+
+                  <Suspense fallback={null}>
+                    {/* Отзывы на сервере не блокируют рендер */}
+                    <ProductReviewsPanel
+                      productId={product.id}
+                      productSlug={slug}
+                      initialReviews={reviews}
+                      isAuthenticated={Boolean(user)}
+                    />
+                  </Suspense>
+                </section>
+              </div>
             </div>
-          </div>
 
-          <Suspense fallback={<RelatedProductsSkeleton />}>
-            <RelatedProductsContainer slug={slug} />
-          </Suspense>
-        </div>
-      )}
+            <Suspense fallback={<RelatedProductsSkeleton />}>
+              <RelatedProductsContainer slug={slug} />
+            </Suspense>
+          </div>
+        );
+      }}
     />
   );
 };
