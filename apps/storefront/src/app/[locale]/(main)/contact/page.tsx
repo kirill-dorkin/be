@@ -15,7 +15,7 @@ import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import type { SupportedLocale } from "@/regions/types";
 
-import { ContactMapContainer } from "./contact-map-container";
+import { ContactMap } from "./contact-map";
 
 type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
@@ -113,52 +113,6 @@ export default async function ContactPage() {
                 {t("hero.secondaryCta", { phone: phoneNumber })}
               </a>
             </Button>
-          </div>
-        </section>
-
-        <section aria-labelledby="contact-channels" className="space-y-4">
-          <div className="mx-auto max-w-2xl space-y-2 text-center">
-            <h2
-              id="contact-channels"
-              className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl"
-            >
-              {t("channels.title")}
-            </h2>
-            <p className="text-muted-foreground text-base">{t("channels.subtitle")}</p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {channels.map((channel) => {
-              const Icon = channel.icon;
-
-              return (
-                <Card
-                  key={channel.title}
-                  className="h-full border-border/70 bg-card/80 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-                >
-                  <CardHeader className="space-y-3">
-                    <span className="bg-primary/10 text-primary inline-flex h-11 w-11 items-center justify-center rounded-2xl">
-                      <Icon aria-hidden className="h-5 w-5" />
-                    </span>
-                    <div className="space-y-1.5">
-                      <CardTitle className="text-lg font-semibold">{channel.title}</CardTitle>
-                      <p className="text-muted-foreground text-sm">{channel.description}</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <p className="text-foreground text-base font-semibold">{channel.value}</p>
-                    <Button asChild variant="outline">
-                      {channel.action.localized ? (
-                        <LocalizedLink href={channel.action.href}>
-                          {channel.action.label}
-                        </LocalizedLink>
-                      ) : (
-                        <a href={channel.action.href}>{channel.action.label}</a>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
           </div>
         </section>
 
