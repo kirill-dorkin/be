@@ -13,6 +13,7 @@ export function ContactMap() {
         loading="lazy"
         allowFullScreen
       />
+      <div className="pointer-events-none absolute inset-0 rounded-xl border border-transparent bg-gradient-to-b from-transparent to-transparent" />
     </div>
   );
 }
