@@ -8,7 +8,6 @@ import { auth } from "@/auth";
 import { saveMarketplaceListing } from "@/lib/marketplace-storage";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
-import { sendSellerListingToTelegram } from "@/services/telegram";
 
 const listingSchema = z.object({
   title: z.string().min(3, "Название слишком короткое"),
@@ -99,22 +98,6 @@ export const submitListingAction = async (formData: FormData) => {
     revalidateTag("search:results");
   } catch {
     // ignore cache warm errors
-  }
-
-  const result = await sendSellerListingToTelegram({
-    title: payload.title,
-    price: payload.price,
-    category: payload.category,
-    description: payload.description,
-    photoUrl: payload.photoUrl,
-    contact: payload.contact,
-  });
-
-  if (!result.ok) {
-    return {
-      ok: false as const,
-      error: result.error?.[0]?.message ?? "Не удалось отправить заявку. Попробуйте позже.",
-    };
   }
 
   return { ok: true as const };

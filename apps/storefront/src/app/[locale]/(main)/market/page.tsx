@@ -62,6 +62,15 @@ const fetchMarketplaceProducts = async () => {
 
 const MarketplacePage = async () => {
   const products = await fetchMarketplaceProducts();
+  const adminBadge = (
+    <div className="rounded-2xl border border-border/50 bg-card/70 px-4 py-3 text-sm text-foreground shadow-sm">
+      <div className="flex items-center gap-2">
+        <Store className="h-5 w-5 text-primary" />
+        <span className="font-semibold">Продавец недели</span>
+      </div>
+      <p className="text-muted-foreground mt-1 text-sm">BestElectronics — текущая витрина принадлежит компании.</p>
+    </div>
+  );
 
   return (
     <div className="container max-w-6xl pb-16 pt-10">
@@ -89,13 +98,7 @@ const MarketplacePage = async () => {
               </Button>
             </div>
           </div>
-          <div className="rounded-2xl border border-border/50 bg-card/70 px-4 py-3 text-sm text-foreground shadow-sm">
-            <div className="flex items-center gap-2">
-              <Store className="h-5 w-5 text-primary" />
-              <span className="font-semibold">Продавец недели</span>
-            </div>
-            <p className="text-muted-foreground mt-1 text-sm">BestElectronics — текущая витрина принадлежит компании.</p>
-          </div>
+          {adminBadge}
         </div>
       </div>
 

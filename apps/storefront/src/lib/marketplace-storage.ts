@@ -51,3 +51,14 @@ export const saveMarketplaceListing = async (listing: MarketplaceListing) => {
 
   return next;
 };
+
+export const saveMarketplaceListings = async (listings: MarketplaceListing[]) => {
+  await ensureStorage();
+  await fs.writeFile(
+    STORAGE_FILE,
+    JSON.stringify(listings.slice(0, 200), null, 2),
+    "utf-8",
+  );
+
+  return listings.slice(0, 200);
+};
