@@ -18,6 +18,8 @@ import { FeaturesSection } from "./_components/features-section";
 import { ModernHero } from "./_components/modern-hero";
 import { ProductsGridSkeleton } from "./_components/products-grid";
 import { RepairFocus } from "./_components/repair-focus";
+import { RepairProcess } from "./_components/repair-process";
+import { ServiceCta } from "./_components/service-cta";
 
 // Dynamic imports для оптимизации
 const ProductsGrid = dynamic(
@@ -104,6 +106,12 @@ export default async function Page() {
 
       {/* Features Section */}
       <FeaturesSection />
+
+      {/* Repair process */}
+      <RepairProcess />
+
+      {/* CTA */}
+      <ServiceCta />
 
       {/* Membership Banner */}
       <div className="w-full bg-background py-16 sm:py-20">
