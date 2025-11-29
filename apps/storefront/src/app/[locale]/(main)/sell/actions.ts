@@ -45,6 +45,19 @@ export const submitListingAction = async (formData: FormData) => {
   }
 
   const payload = parsed.data;
+  const photoFile = formData.get("photoFile") as File | null;
+  let photoUrlToStore = payload.photoUrl || "";
+
+  if (photoFile && photoFile.size > 0) {
+    // Для MVP сохраняем data URL прямо в payload; в будущем — загрузка в Saleor/file storage.
+    try {
+      const arrayBuffer = await photoFile.arrayBuffer();
+      const base64 = Buffer.from(arrayBuffer).toString("base64");
+      photoUrlToStore = `data:${photoFile.type};base64,${base64}`;
+    } catch {
+      // ignore file read errors
+    }
+  }
 
   // Persist listing locally (filesystem) to simulate marketplace feed
   try {
@@ -54,7 +67,7 @@ export const submitListingAction = async (formData: FormData) => {
       price: payload.price,
       category: payload.category,
       description: payload.description,
-      photoUrl: payload.photoUrl,
+      photoUrl: photoUrlToStore,
       contact: payload.contact,
       userId: (session.user as { id?: string })?.id,
       userName: session.user?.name ?? session.user?.email ?? "Пользователь",

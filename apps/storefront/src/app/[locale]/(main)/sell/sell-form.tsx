@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { Check, Image as ImageIcon, Send, Tag } from "lucide-react";
+import { Check, Image as ImageIcon, Send, Tag, UploadCloud } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Input } from "@nimara/ui/components/input";
@@ -74,6 +74,14 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
   };
 
   const handleSubmit = (formData: FormData) => {
+    const photoFile = (formData.get("photoFile") as File | null) ?? null;
+    const photoUrlInput = (formData.get("photoUrl") as string) || "";
+
+    // If file is provided, drop the URL so we store only one of them
+    if (photoFile && photoFile.size > 0) {
+      formData.set("photoUrl", "");
+    }
+
     setError(null);
     const draft = getDraftFromForm();
 
@@ -194,18 +202,44 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
           />
         </div>
 
-        <div className="grid gap-2">
-          <Label htmlFor="photoUrl">Ссылка на фото (опционально)</Label>
-          <div className="relative">
-            <ImageIcon className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-            <Input
-              id="photoUrl"
-              name="photoUrl"
-              type="url"
-              placeholder="https://"
-              className="pl-9"
-              disabled={isPending || success}
-            />
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-2">
+            <Label htmlFor="photoUrl">Ссылка на фото</Label>
+            <div className="relative">
+              <ImageIcon className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+              <Input
+                id="photoUrl"
+                name="photoUrl"
+                type="url"
+                placeholder="https://"
+                className="pl-9"
+                disabled={isPending || success}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Можно вставить ссылку или загрузить файл. При загрузке файла ссылка не отправится.
+            </p>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="photoFile">Загрузить файл</Label>
+            <label
+              className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border/60 bg-card/70 px-3 py-3 text-sm shadow-sm transition hover:border-primary/60 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <UploadCloud className="h-4 w-4 text-muted-foreground" />
+              <span className="flex-1 text-muted-foreground">Прикрепить изображение</span>
+              <input
+                id="photoFile"
+                name="photoFile"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={isPending || success}
+              />
+            </label>
+            <p className="text-xs text-muted-foreground">
+              JPEG/PNG, до 5 МБ. В текущей версии файл сохраняется как часть заявки (требует доработки для Saleor).
+            </p>
           </div>
         </div>
 
