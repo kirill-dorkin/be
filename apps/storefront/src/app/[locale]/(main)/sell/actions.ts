@@ -3,6 +3,9 @@
 import { z } from "zod";
 
 import { sendSellerListingToTelegram } from "@/services/telegram";
+import { getCurrentRegion } from "@/regions/server";
+import { getSearchService } from "@/services/search";
+import { revalidateTag } from "next/cache";
 
 const listingSchema = z.object({
   title: z.string().min(3, "Название слишком короткое"),
@@ -33,6 +36,29 @@ export const submitListingAction = async (formData: FormData) => {
   }
 
   const payload = parsed.data;
+
+  // Try to refresh marketplace cache after submission
+  try {
+    const region = await getCurrentRegion();
+    const searchService = await getSearchService();
+    // light-weight query to warm cache (no errors if fails)
+    await searchService.search(
+      {
+        query: "",
+        limit: 1,
+        sortBy: "name-asc",
+        filters: {},
+      },
+      {
+        currency: region.market.currency,
+        channel: region.market.channel,
+        languageCode: region.language.code,
+      },
+    );
+    revalidateTag("search:results");
+  } catch {
+    // ignore cache warm errors
+  }
 
   const result = await sendSellerListingToTelegram({
     title: payload.title,
