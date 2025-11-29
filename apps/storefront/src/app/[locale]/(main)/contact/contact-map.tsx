@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 const MAP_CENTER: [number, number] = [42.848524, 74.595204];
-const TILE_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+// 2ГИС тайлы. Используем один сервер без поддоменов.
+const TILE_URL = "https://tile0.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.3";
+const ATTRIBUTION = '© 2ГИС';
 
 const LEAFLET_STYLE_ID = "leaflet-css";
 const LEAFLET_SCRIPT_ID = "leaflet-js";
