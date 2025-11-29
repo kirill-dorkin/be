@@ -1,30 +1,14 @@
 import Link from "next/link";
 
-import { ArrowRight, Award, CheckCircle2, ShieldCheck, Store } from "lucide-react";
+import { ArrowRight, Award, CheckCircle2, ShieldCheck, Store, User } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@nimara/ui/components/card";
 
-const sampleProducts = [
-  {
-    title: "Беспроводные наушники",
-    price: "3 490 с",
-    seller: "Кирилл Доркин",
-    category: "Аудио",
-  },
-  {
-    title: "Видеокарта RTX 3060",
-    price: "21 500 с",
-    seller: "Кирилл Доркин",
-    category: "Комплектующие",
-  },
-  {
-    title: "Смарт-часы",
-    price: "5 990 с",
-    seller: "Кирилл Доркин",
-    category: "Гаджеты",
-  },
-];
+import { DEFAULT_RESULTS_PER_PAGE } from "@/config";
+import { SearchProductCard } from "@/components/search-product-card";
+import { getCurrentRegion } from "@/regions/server";
+import { getSearchService } from "@/services/search";
 
 const benefits = [
   {
@@ -50,7 +34,34 @@ const steps = [
   "После подтверждения товар попадает на витрину.",
 ];
 
-const MarketplacePage = () => {
+const fetchMarketplaceProducts = async () => {
+  const region = await getCurrentRegion();
+  const searchService = await getSearchService();
+
+  const searchResult = await searchService.search(
+    {
+      query: "",
+      limit: 6,
+      sortBy: "name-asc",
+      filters: {},
+    },
+    {
+      currency: region.market.currency,
+      channel: region.market.channel,
+      languageCode: region.language.code,
+    },
+  );
+
+  if (!searchResult.ok) {
+    return [];
+  }
+
+  return searchResult.data.results;
+};
+
+const MarketplacePage = async () => {
+  const products = await fetchMarketplaceProducts();
+
   return (
     <div className="container max-w-6xl pb-16 pt-10">
       <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-background via-muted/60 to-background px-6 py-8 shadow-sm md:px-10 md:py-12">
@@ -105,24 +116,28 @@ const MarketplacePage = () => {
         <div className="flex flex-col gap-2 pb-4">
           <h2 className="text-xl font-semibold text-foreground">Витрина маркетплейса</h2>
           <p className="text-muted-foreground text-sm">
-            Пример карточек в общем стиле. После подключения данных будут отображаться реальные товары.
+            Реальные товары из витрины. Все карточки закреплены за продавцом <strong>Кирилл Доркин</strong>.
           </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
-          {sampleProducts.map((product) => (
-            <div
-              key={product.title}
-              className="rounded-xl border border-border/60 bg-muted/40 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="mb-3 inline-flex rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
-                {product.category}
+        {products.length ? (
+          <div className="grid gap-6 md:grid-cols-3">
+            {products.map((product) => (
+              <div key={product.id} className="group space-y-2 rounded-2xl border border-border/60 bg-muted/30 p-3">
+                <SearchProductCard product={product} />
+                <div className="flex items-center gap-2 rounded-xl bg-card/70 px-3 py-2 text-sm text-muted-foreground ring-1 ring-border/60">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <User className="h-4 w-4" />
+                  </span>
+                  Кирилл Доркин
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-foreground">{product.title}</h3>
-              <p className="text-muted-foreground text-sm">Продавец: {product.seller}</p>
-              <p className="mt-3 text-xl font-semibold text-foreground">{product.price}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-dashed border-border/70 bg-muted/40 p-4 text-sm text-muted-foreground">
+            Не удалось загрузить товары. Попробуйте позже.
+          </div>
+        )}
       </div>
 
       <div className="mt-10 grid gap-4 rounded-2xl border border-border/60 bg-muted/30 p-6 shadow-sm md:grid-cols-[1.1fr_0.9fr]">
