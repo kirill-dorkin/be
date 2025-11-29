@@ -1,12 +1,13 @@
 import Link from "next/link";
 
-import { ArrowRight, Award, CheckCircle2, ShieldCheck, Store, User } from "lucide-react";
+import { ArrowRight, Award, CheckCircle2, ShieldCheck, Store } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@nimara/ui/components/card";
 
 import { DEFAULT_RESULTS_PER_PAGE } from "@/config";
 import { SearchProductCard } from "@/components/search-product-card";
+import { SellerChip } from "@/components/seller-chip";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 
@@ -124,12 +125,7 @@ const MarketplacePage = async () => {
             {products.map((product) => (
               <div key={product.id} className="group space-y-2 rounded-2xl border border-border/60 bg-muted/30 p-3">
                 <SearchProductCard product={product} />
-                <div className="flex items-center gap-2 rounded-xl bg-card/70 px-3 py-2 text-sm text-muted-foreground ring-1 ring-border/60">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <User className="h-4 w-4" />
-                  </span>
-                  Кирилл Доркин
-                </div>
+                <SellerChip name="Кирилл Доркин" />
               </div>
             ))}
           </div>

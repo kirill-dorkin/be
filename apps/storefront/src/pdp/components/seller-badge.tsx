@@ -7,13 +7,15 @@ import { cn } from "@/lib/utils";
 type SellerBadgeProps = {
   className?: string;
   name?: string;
+  href?: string;
 };
 
 export const SellerBadge = ({
   className,
   name = "Кирилл Доркин",
+  href,
 }: SellerBadgeProps) => {
-  return (
+  const content = (
     <div
       className={cn(
         "inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-3 py-2 text-sm font-medium text-foreground shadow-sm",
@@ -31,4 +33,14 @@ export const SellerBadge = ({
       </div>
     </div>
   );
+
+  if (href) {
+    return (
+      <a href={href} className="inline-flex" aria-label={`Продавец: ${name}`}>
+        {content}
+      </a>
+    );
+  }
+
+  return content;
 };
