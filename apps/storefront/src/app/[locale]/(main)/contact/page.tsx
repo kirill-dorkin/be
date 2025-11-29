@@ -141,11 +141,19 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div className="rounded-2xl border border-dashed border-border/70 bg-muted/40 p-6 text-center">
-                <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
+                <div className="relative overflow-hidden rounded-xl border border-border/60 bg-card">
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-cover bg-center opacity-70"
+                    style={{
+                      backgroundImage:
+                        "url('https://static-maps.yandex.ru/1.x/?lang=ru_RU&ll=74.595204,42.848524&z=17&l=map&size=650,400&pt=74.595204,42.848524,pm2rdm')",
+                    }}
+                  />
                   <iframe
-                    src="https://widgets.2gis.com/widget?type=map&lat=42.848524&lon=74.595204&zoom=17&pt=74.595204,42.848524,pm2rdl"
+                    src="https://widgets.2gis.com/widget?type=firmsonmap&org=70000001058839512&lat=42.848524&lon=74.595204&zoom=17"
                     title="BestElectronics на карте 2ГИС"
-                    className="h-72 w-full border-0"
+                    className="relative z-10 h-72 w-full border-0"
                     loading="lazy"
                     allowFullScreen
                     referrerPolicy="no-referrer-when-downgrade"
