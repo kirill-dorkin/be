@@ -5,7 +5,6 @@ import { AlertCircle, Star } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Label } from "@nimara/ui/components/label";
-import { Textarea } from "@nimara/ui/components/textarea";
 
 import { addProductReviewAction } from "@/pdp/actions/add-review";
 import { type ProductReview } from "@/pdp/lib/reviews";
@@ -117,13 +116,14 @@ export const ProductReviewsPanel = ({
 
           <div className="space-y-1">
             <Label htmlFor="comment">Комментарий</Label>
-            <Textarea
+            <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Поделитесь опытом использования товара"
               disabled={!isAuthenticated || isPending}
               rows={3}
+              className="min-h-[110px] w-full rounded-lg border border-border/60 bg-card/70 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none disabled:opacity-50"
             />
           </div>
         </div>
