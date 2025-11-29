@@ -1,0 +1,54 @@
+"use server";
+
+import { z } from "zod";
+
+import { sendSellerListingToTelegram } from "@/services/telegram";
+
+const listingSchema = z.object({
+  title: z.string().min(3, "Название слишком короткое"),
+  price: z.coerce.number().min(0, "Цена не может быть отрицательной"),
+  category: z.string().min(2, "Укажите категорию"),
+  description: z.string().min(10, "Опишите товар"),
+  photoUrl: z.string().url("Некорректная ссылка на фото").optional().or(z.literal("")),
+  contact: z.string().min(5, "Укажите контакт для связи"),
+});
+
+export type SubmitListingInput = z.infer<typeof listingSchema>;
+
+export const submitListingAction = async (formData: FormData) => {
+  const parsed = listingSchema.safeParse({
+    title: formData.get("title"),
+    price: formData.get("price"),
+    category: formData.get("category"),
+    description: formData.get("description"),
+    photoUrl: formData.get("photoUrl"),
+    contact: formData.get("contact"),
+  });
+
+  if (!parsed.success) {
+    return {
+      ok: false as const,
+      error: parsed.error.issues.map((issue) => issue.message).join("\n"),
+    };
+  }
+
+  const payload = parsed.data;
+
+  const result = await sendSellerListingToTelegram({
+    title: payload.title,
+    price: payload.price,
+    category: payload.category,
+    description: payload.description,
+    photoUrl: payload.photoUrl,
+    contact: payload.contact,
+  });
+
+  if (!result.ok) {
+    return {
+      ok: false as const,
+      error: result.error?.[0]?.message ?? "Не удалось отправить заявку. Попробуйте позже.",
+    };
+  }
+
+  return { ok: true as const };
+};

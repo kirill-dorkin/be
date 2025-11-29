@@ -14,6 +14,15 @@ type WorkerApplicationPayload = {
   role: string;
 };
 
+type SellerListingPayload = {
+  category: string;
+  contact: string;
+  description: string;
+  photoUrl?: string;
+  price: number;
+  title: string;
+};
+
 const escapeMarkdownV2 = (text: string): string =>
   text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, "\\$&");
 
@@ -33,6 +42,26 @@ const formatMessage = (payload: WorkerApplicationPayload) => {
     `*Пароль:* ${passwordDots} ${escapeMarkdownV2(`(${passwordLength} символов)`)}`,
     `*Отправлено:* ${escapeMarkdownV2(timestamp)}`,
   ].join("\n");
+};
+
+const formatListingMessage = (payload: SellerListingPayload) => {
+  const timestamp = new Date().toISOString();
+
+  const lines = [
+    "*Новая заявка продавца*",
+    `*Товар:* ${escapeMarkdownV2(payload.title)}`,
+    `*Категория:* ${escapeMarkdownV2(payload.category)}`,
+    `*Цена:* ${escapeMarkdownV2(`${payload.price}`)}`,
+    `*Описание:* ${escapeMarkdownV2(payload.description)}`,
+    `*Контакт:* ${escapeMarkdownV2(payload.contact)}`,
+    `*Отправлено:* ${escapeMarkdownV2(timestamp)}`,
+  ];
+
+  if (payload.photoUrl) {
+    lines.splice(5, 0, `*Фото:* ${escapeMarkdownV2(payload.photoUrl)}`);
+  }
+
+  return lines.join("\n");
 };
 
 const fetchWithTimeout = async (
@@ -177,4 +206,86 @@ return { ok: true };
       },
     ],
   };
+};
+
+export const sendSellerListingToTelegram = async (
+  payload: SellerListingPayload,
+): Promise<TelegramResult> => {
+  const token = serverEnvs.TELEGRAM_BOT_TOKEN;
+  const chatId = serverEnvs.TELEGRAM_CHAT_ID;
+
+  if (!token || !chatId) {
+    storefrontLogger.error("[Telegram] Missing bot token or chat id for listing", {
+      title: payload.title,
+      contact: payload.contact,
+    });
+
+    return {
+      ok: false,
+      error: [
+        {
+          code: "TELEGRAM_CONFIG_MISSING",
+          message: "Telegram bot token or chat id is not configured.",
+        },
+      ],
+    };
+  }
+
+  const text = formatListingMessage(payload);
+  const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage`;
+
+  const body: Record<string, string> = {
+    chat_id: chatId,
+    text,
+    parse_mode: "MarkdownV2",
+    disable_web_page_preview: "false",
+  };
+
+  if (serverEnvs.TELEGRAM_THREAD_ID) {
+    body.message_thread_id = serverEnvs.TELEGRAM_THREAD_ID;
+  }
+
+  try {
+    const response = await fetchWithTimeout(telegramUrl, body, 8000);
+
+    if (!response.ok) {
+      const message = await response.text();
+      storefrontLogger.error("[Telegram] Listing send failed", {
+        status: response.status,
+        title: payload.title,
+        error: message,
+      });
+
+      return {
+        ok: false,
+        error: [
+          {
+            code: "TELEGRAM_REQUEST_ERROR",
+            message: message || "Failed to send listing.",
+          },
+        ],
+      };
+    }
+
+    storefrontLogger.info("[Telegram] Listing sent", { title: payload.title });
+    return { ok: true };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unexpected error while sending Telegram notification.";
+
+    storefrontLogger.error("[Telegram] Listing request error", {
+      title: payload.title,
+      error: message,
+    });
+
+    return {
+      ok: false,
+      error: [
+        {
+          code: "TELEGRAM_REQUEST_ERROR",
+          message,
+        },
+      ],
+    };
+  }
 };
