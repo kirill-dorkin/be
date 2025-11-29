@@ -44,7 +44,7 @@ const SellPage = async () => {
       <SellForm categories={categories} />
 
       <div className="mt-8 rounded-xl border border-border/60 bg-muted/30 p-4 text-sm text-muted-foreground">
-        После отправки заявка уходит модератору (Telegram). Профиль продавца: <strong>Кирилл Доркин</strong>.
+        После отправки заявка уходит модератору (Telegram). Текущая витрина принадлежит компании BestElectronics.
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const SellerDashboardPage = async () => {
         <div className="rounded-2xl border border-border/60 bg-card/70 p-5 shadow-sm backdrop-blur">
           <h2 className="text-lg font-semibold text-foreground">Статус продавца</h2>
           <p className="text-muted-foreground mt-2 text-sm">
-            Профиль продавца: <strong>Кирилл Доркин</strong>. Товары на витрине уже закреплены за этим профилем.
+            Профиль продавца: <strong>BestElectronics</strong>. Текущая витрина принадлежит компании.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-emerald-800 ring-1 ring-emerald-100">
             <span className="h-2 w-2 rounded-full bg-emerald-500" />

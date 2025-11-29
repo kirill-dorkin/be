@@ -12,7 +12,7 @@ type SellerBadgeProps = {
 
 export const SellerBadge = ({
   className,
-  name = "Кирилл Доркин",
+  name = "BestElectronics",
   href,
 }: SellerBadgeProps) => {
   const content = (

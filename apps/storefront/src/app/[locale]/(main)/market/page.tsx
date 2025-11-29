@@ -75,7 +75,7 @@ const MarketplacePage = async () => {
               Продавайте свои товары на BestElectronics
             </h1>
             <p className="text-muted-foreground text-base">
-              Оформление в стиле сайта, модерация и прозрачная подача. Все текущие товары закреплены за Кириллом Доркиным — ваш профиль может быть следующим.
+              Оформление в стиле сайта, модерация и прозрачная подача. Все текущие товары закреплены за компанией BestElectronics — ваш профиль может быть следующим.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button asChild size="lg">
@@ -94,7 +94,7 @@ const MarketplacePage = async () => {
               <Store className="h-5 w-5 text-primary" />
               <span className="font-semibold">Продавец недели</span>
             </div>
-            <p className="text-muted-foreground mt-1 text-sm">Кирилл Доркин — все витринные товары за ним.</p>
+            <p className="text-muted-foreground mt-1 text-sm">BestElectronics — текущая витрина принадлежит компании.</p>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ const MarketplacePage = async () => {
         <div className="flex flex-col gap-2 pb-4">
           <h2 className="text-xl font-semibold text-foreground">Витрина маркетплейса</h2>
           <p className="text-muted-foreground text-sm">
-            Реальные товары из витрины. Все карточки закреплены за продавцом <strong>Кирилл Доркин</strong>.
+            Реальные товары из витрины. Все карточки закреплены за продавцом <strong>BestElectronics</strong>.
           </p>
         </div>
         {products.length ? (
@@ -125,7 +125,7 @@ const MarketplacePage = async () => {
             {products.map((product) => (
               <div key={product.id} className="group space-y-2 rounded-2xl border border-border/60 bg-muted/30 p-3">
                 <SearchProductCard product={product} />
-                <SellerChip name="Кирилл Доркин" />
+                <SellerChip name="BestElectronics" href="/market/bestelectronics" />
               </div>
             ))}
           </div>
@@ -164,7 +164,7 @@ const MarketplacePage = async () => {
           <div>
             <h2 className="text-xl font-semibold text-foreground">Продавцы</h2>
             <p className="text-muted-foreground text-sm">
-              Сейчас витрина закреплена за продавцом Кирилл Доркин. Добавим больше профилей после подключения CRM.
+              Сейчас витрина закреплена за продавцом BestElectronics. Добавим больше профилей после подключения CRM.
             </p>
           </div>
           <Button asChild variant="outline">
@@ -175,13 +175,13 @@ const MarketplacePage = async () => {
         <div className="grid gap-3 md:grid-cols-3">
           <div className="rounded-2xl border border-border/60 bg-muted/30 p-4 shadow-sm">
             <SellerChip
-              name="Кирилл Доркин"
+              name="BestElectronics"
               className="w-full justify-center"
-              href="/market/kirill-dorkin"
+              href="/market/bestelectronics"
             />
             <div className="mt-3 space-y-1 text-sm text-muted-foreground">
               <p>Активный продавец маркетплейса.</p>
-              <p>Товары: вся текущая витрина.</p>
+              <p>Товары: вся текущая витрина компании.</p>
             </div>
           </div>
           <div className="rounded-2xl border border-dashed border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground">

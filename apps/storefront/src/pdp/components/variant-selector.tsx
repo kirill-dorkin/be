@@ -126,7 +126,7 @@ export const VariantSelector = ({
           </div>
         </div>
 
-        <SellerBadge className="mt-2" href="/market/kirill-dorkin" />
+        <SellerBadge className="mt-2" href="/market/bestelectronics" />
       </div>
 
       <div className="space-y-4">

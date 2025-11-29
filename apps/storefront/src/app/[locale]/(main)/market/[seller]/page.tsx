@@ -35,9 +35,14 @@ const fetchSellerProducts = async () => {
   return searchResult.data.results;
 };
 
-const SellerProfilePage = async () => {
+const SellerProfilePage = async ({
+  params,
+}: {
+  params: Promise<{ seller: string }>;
+}) => {
+  const { seller } = await params;
   const products = await fetchSellerProducts();
-  const sellerName = "Кирилл Доркин";
+  const sellerName = "BestElectronics";
 
   return (
     <div className="container max-w-6xl pb-16 pt-8">
@@ -59,8 +64,8 @@ const SellerProfilePage = async () => {
             </div>
             <h1 className="text-3xl font-bold leading-tight text-foreground md:text-4xl">{sellerName}</h1>
             <p className="text-muted-foreground text-base">
-              Активный продавец маркетплейса. Все текущие товары витрины закреплены за этим профилем. Добавим больше
-              продавцов после подключения CRM/модерации.
+              Активный продавец маркетплейса. Текущая витрина принадлежит компании. Добавим больше продавцов после
+              подключения CRM/модерации.
             </p>
             <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
               <span className="rounded-full bg-card/70 px-3 py-1 ring-1 ring-border/60">Рейтинг: —</span>
@@ -75,7 +80,7 @@ const SellerProfilePage = async () => {
         <div className="flex flex-col gap-2 pb-4">
           <h2 className="text-xl font-semibold text-foreground">Товары продавца</h2>
           <p className="text-muted-foreground text-sm">
-            Отображаются товары из витрины (сейчас все товары принадлежат Кириллу).
+            Отображаются товары из витрины (сейчас все товары принадлежат компании).
           </p>
         </div>
         {products.length ? (
