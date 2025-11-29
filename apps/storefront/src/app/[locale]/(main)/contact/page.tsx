@@ -1,4 +1,4 @@
-import { type LucideIcon, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -10,9 +10,6 @@ import {
   CardTitle,
 } from "@nimara/ui/components/card";
 
-import { clientEnvs } from "@/envs/client";
-import { LocalizedLink } from "@/i18n/routing";
-import { paths } from "@/lib/paths";
 import type { SupportedLocale } from "@/regions/types";
 
 import { ContactMap } from "./contact-map";
@@ -32,60 +29,14 @@ export async function generateMetadata(
   };
 }
 
-type ContactChannel = {
-  action: {
-    href: string;
-    label: string;
-    localized?: boolean;
-  };
-  description: string;
-  icon: LucideIcon;
-  title: string;
-  value: string;
-};
-
 export default async function ContactPage() {
   const t = await getTranslations("contact");
-  const email = clientEnvs.NEXT_PUBLIC_DEFAULT_EMAIL;
   const phoneNumber = "+996 501 313 114";
   const phoneHref = "+996501313114";
   const whatsappMessage = encodeURIComponent(
     "Здравствуйте! Хочу получить консультацию по ремонту.",
   );
   const whatsappLink = `https://wa.me/996501313114?text=${whatsappMessage}`;
-
-  const channels: ContactChannel[] = [
-    {
-      icon: Phone,
-      title: t("channels.phone.title"),
-      description: t("channels.phone.description"),
-      value: phoneNumber,
-      action: {
-        href: `tel:${phoneHref}`,
-        label: t("channels.phone.cta"),
-      },
-    },
-    {
-      icon: Mail,
-      title: t("channels.email.title"),
-      description: t("channels.email.description"),
-      value: email,
-      action: {
-        href: `mailto:${email}`,
-        label: t("channels.email.cta"),
-      },
-    },
-    {
-      icon: MessageCircle,
-      title: "WhatsApp",
-      description: "Быстро ответим в мессенджере",
-      value: phoneNumber,
-      action: {
-        href: whatsappLink,
-        label: "Открыть WhatsApp",
-      },
-    },
-  ];
 
   const addressLines = ["ул. Кулатова 8/1", "Бишкек, Кыргызстан"];
 
@@ -144,7 +95,7 @@ export default async function ContactPage() {
               </div>
               <Card className="border border-border/60 bg-card shadow-sm">
                 <CardContent className="space-y-4 p-5">
-                  <ContactMapContainer />
+                  <ContactMap />
                   <Button asChild variant="outline" className="w-full sm:w-auto">
                     <a href="https://go.2gis.com/eNlWq" rel="noreferrer" target="_blank">
                       Открыть в 2ГИС
