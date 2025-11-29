@@ -1,19 +1,17 @@
 "use client";
 
-const MAP_SRC =
-  "https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A42.848524%2C%22lon%22%3A74.595204%2C%22zoom%22%3A17%7D%2C%22opt%22%3A%7B%22city%22%3A%22bishkek%22%7D%2C%22org%22%3A%2270000001058839512%22%7D";
+const STATIC_MAP =
+  "https://static-maps.yandex.ru/1.x/?lang=ru_RU&ll=74.595204,42.848524&z=17&l=map&size=650,400&pt=74.595204,42.848524,pm2rdl";
 
 export function ContactMap() {
   return (
     <div className="relative h-72 overflow-hidden rounded-xl bg-card">
-      <iframe
-        src={MAP_SRC}
-        title="BestElectronics на карте 2ГИС"
-        className="h-full w-full border-0"
+      <img
+        src={STATIC_MAP}
+        alt="BestElectronics на карте"
+        className="h-full w-full object-cover"
         loading="lazy"
-        allowFullScreen
       />
-      <div className="pointer-events-none absolute inset-0 rounded-xl border border-transparent bg-gradient-to-b from-transparent to-transparent" />
     </div>
   );
 }
