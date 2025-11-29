@@ -143,7 +143,7 @@ export default async function ContactPage() {
                 </div>
               </div>
               <div className="rounded-2xl border border-dashed border-border/70 bg-muted/40 p-6 text-center">
-                <ContactMap />
+                <ContactMapContainer />
                 <Button asChild className="mt-4" variant="ghost">
                   <a href="https://go.2gis.com/eNlWq" rel="noreferrer" target="_blank">
                     Открыть в 2ГИС
