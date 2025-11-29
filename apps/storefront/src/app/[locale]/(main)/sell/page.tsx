@@ -18,12 +18,12 @@ const SellPage = async () => {
     languageCode: region.language.code,
   });
 
+  // Берём только подкатегории из навигации, чтобы выбор был точнее
   const categories = Array.from(
     new Set(
-      (menuResult.data?.menu?.items || []).flatMap((item) => [
-        item.label,
-        ...(item.children?.map((child) => child.label) ?? []),
-      ]),
+      (menuResult.data?.menu?.items || []).flatMap(
+        (item) => item.children?.map((child) => child.label) ?? [],
+      ),
     ),
   ).filter(Boolean);
 
