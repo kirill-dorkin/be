@@ -119,6 +119,13 @@ export const Footer = async () => {
               >
                 Выставить товар
               </LocalizedLink>
+              <span aria-hidden="true">•</span>
+              <LocalizedLink
+                href="/market"
+                className="hover:text-primary"
+              >
+                Маркетплейс
+              </LocalizedLink>
             </div>
           </div>
 
