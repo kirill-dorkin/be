@@ -5,7 +5,9 @@ import { useEffect, useRef, useState } from "react";
 const MAP_CENTER: [number, number] = [42.848524, 74.595204];
 // 2ГИС тайлы. Используем один сервер без поддоменов.
 const TILE_URL = "https://tile0.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.3";
-const ATTRIBUTION = '© 2ГИС';
+const ATTRIBUTION = "© 2ГИС";
+const MARKER_ICON =
+  "data:image/svg+xml,%3Csvg width='32' height='46' viewBox='0 0 32 46' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 0C7.164 0 0 7.163 0 16c0 11.492 16 30 16 30s16-18.508 16-30C32 7.163 24.836 0 16 0Z' fill='%230078ff'/%3E%3Cpath d='M16 23a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z' fill='%23fff'/%3E%3Cpath d='M16 21a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z' fill='%230078ff'/%3E%3C/svg%3E";
 
 const LEAFLET_STYLE_ID = "leaflet-css";
 const LEAFLET_SCRIPT_ID = "leaflet-js";
@@ -77,7 +79,13 @@ export function ContactMap() {
           maxZoom: 19,
         }).addTo(map);
 
-        L.marker(MAP_CENTER).addTo(map);
+        const icon = L.icon({
+          iconUrl: MARKER_ICON,
+          iconSize: [32, 46],
+          iconAnchor: [16, 46],
+        });
+
+        L.marker(MAP_CENTER, { icon }).addTo(map);
         mapInstance.current = map;
       })
       .catch(() => setFailed(true));
