@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Check, Image as ImageIcon, Send, Tag } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Input } from "@nimara/ui/components/input";
 import { Label } from "@nimara/ui/components/label";
-import { Textarea } from "@nimara/ui/components/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@nimara/ui/components/select";
 
 import { submitListingAction } from "./actions";
 
@@ -19,11 +25,18 @@ type ListingDraft = {
   title: string;
 };
 
-export const SellForm = () => {
+export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const normalizedCategories = useMemo(
+    () => categories.filter(Boolean),
+    [categories],
+  );
+  const [selectedCategory, setSelectedCategory] = useState(
+    normalizedCategories[0] ?? "",
+  );
 
   // keep success message visible until manual reload
   useEffect(() => {
@@ -135,19 +148,41 @@ export const SellForm = () => {
 
           <div className="grid gap-2">
             <Label htmlFor="category">Категория</Label>
-            <Input
-              id="category"
-              name="category"
-              required
-              placeholder="Например, Аудио"
-              disabled={isPending || success}
-            />
+            {normalizedCategories.length ? (
+              <>
+                <Select
+                  value={selectedCategory}
+                  onValueChange={(value) => setSelectedCategory(value)}
+                  disabled={isPending || success}
+                >
+                  <SelectTrigger className="h-11 rounded-lg border border-border/60 bg-card/70 shadow-sm">
+                    <SelectValue placeholder="Выберите категорию" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {normalizedCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <input type="hidden" name="category" value={selectedCategory} />
+              </>
+            ) : (
+              <Input
+                id="category"
+                name="category"
+                required
+                placeholder="Например, Аудио"
+                disabled={isPending || success}
+              />
+            )}
           </div>
         </div>
 
         <div className="grid gap-2">
           <Label htmlFor="description">Описание</Label>
-          <Textarea
+          <textarea
             id="description"
             name="description"
             required
@@ -155,6 +190,7 @@ export const SellForm = () => {
             rows={4}
             placeholder="Расскажите об особенностях, комплектации и состоянии"
             disabled={isPending || success}
+            className="min-h-[120px] rounded-lg border border-border/60 bg-card/70 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none disabled:opacity-50"
           />
         </div>
 

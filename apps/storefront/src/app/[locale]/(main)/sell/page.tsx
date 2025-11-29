@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { getCurrentRegion } from "@/regions/server";
+import { getNavigationMenu } from "@/services/navigation-menu";
 import { paths } from "@/lib/paths";
 
 import { SellForm } from "./sell-form";
@@ -9,7 +11,22 @@ export const metadata: Metadata = {
   description: "Разместите свой товар на BestElectronics",
 };
 
-const SellPage = () => {
+const SellPage = async () => {
+  const region = await getCurrentRegion();
+  const menuResult = await getNavigationMenu({
+    channel: region.market.channel,
+    languageCode: region.language.code,
+  });
+
+  const categories = Array.from(
+    new Set(
+      (menuResult.data?.menu?.items || []).flatMap((item) => [
+        item.label,
+        ...(item.children?.map((child) => child.label) ?? []),
+      ]),
+    ),
+  ).filter(Boolean);
+
   return (
     <div className="container max-w-4xl pb-16 pt-10">
       <div className="flex flex-col gap-2 pb-6">
@@ -24,7 +41,7 @@ const SellPage = () => {
         </p>
       </div>
 
-      <SellForm />
+      <SellForm categories={categories} />
 
       <div className="mt-8 rounded-xl border border-border/60 bg-muted/30 p-4 text-sm text-muted-foreground">
         После отправки заявка уходит модератору (Telegram). Профиль продавца: <strong>Кирилл Доркин</strong>.

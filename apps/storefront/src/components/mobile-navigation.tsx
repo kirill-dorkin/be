@@ -36,6 +36,7 @@ import {
   Settings,
   ShieldCheck,
   Smartphone,
+  Store,
   Sparkles,
   Speaker,
   Tablet,
@@ -60,6 +61,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   // Main categories (Russian)
   "Сервисный центр": Wrench,
   "Сервис борбору": Wrench,
+  "Маркетплейс": Store,
   "Комплектующие": Cpu,
   "Периферия": Plug,
   "Переферия": Plug,
@@ -75,6 +77,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
 
   // Main categories (English)
   "Service centre": Wrench,
+  "Marketplace": Store,
   "Components": Cpu,
   "Peripherals": Plug,
   "Laptops": Laptop,
@@ -290,6 +293,8 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
 
 // Mapping by slug/path to avoid missing icons on translated labels
 const MENU_ICON_SLUG_MAP: Record<string, LucideIcon> = {
+  "market": Store,
+  "marketplace": Store,
   "services": Wrench,
   "service": ShieldCheck,
   "service-centre": Wrench,
@@ -517,6 +522,37 @@ export const MobileNavigation = ({
     return null;
   }
 
+  const items = (() => {
+    const list = [...menu.items];
+    const alreadyHasMarket = list.some(
+      (item) =>
+        item.url?.includes("/market") ||
+        item.label.toLowerCase().includes("маркет") ||
+        item.label.toLowerCase().includes("market"),
+    );
+
+    const marketplaceItem = {
+      id: "marketplace-link",
+      label: "Маркетплейс",
+      url: "/market",
+      children: [],
+    };
+
+    if (!alreadyHasMarket) {
+      const serviceIndex = list.findIndex((item) =>
+        item.label.toLowerCase().includes("сервис"),
+      );
+
+      if (serviceIndex >= 0) {
+        list.splice(serviceIndex + 1, 0, marketplaceItem);
+      } else {
+        list.unshift(marketplaceItem);
+      }
+    }
+
+    return list;
+  })();
+
   const toggleCategory = (categoryId: string, hasChildren: boolean) => {
     if (!hasChildren) {return;}
     setOpenCategoryId(openCategoryId === categoryId ? null : categoryId);
@@ -524,7 +560,7 @@ export const MobileNavigation = ({
 
   return (
     <ul className="grid gap-1 py-4">
-      {menu.items.map((item, index) => {
+      {items.map((item, index) => {
         const Icon = getIconForItem(item.label, item.url);
         const hasChildren = !!item.children?.length;
         const isOpen = openCategoryId === item.id;
