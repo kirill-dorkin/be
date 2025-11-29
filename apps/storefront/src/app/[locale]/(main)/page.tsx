@@ -20,6 +20,8 @@ import { ProductsGridSkeleton } from "./_components/products-grid";
 import { RepairFocus } from "./_components/repair-focus";
 import { RepairProcess } from "./_components/repair-process";
 import { ServiceCta } from "./_components/service-cta";
+import { RepairStats } from "./_components/repair-stats";
+import { Testimonials } from "./_components/testimonials";
 
 // Dynamic imports для оптимизации
 const ProductsGrid = dynamic(
@@ -109,6 +111,12 @@ export default async function Page() {
 
       {/* Repair process */}
       <RepairProcess />
+
+      {/* Repair stats */}
+      <RepairStats />
+
+      {/* Testimonials */}
+      <Testimonials />
 
       {/* CTA */}
       <ServiceCta />
