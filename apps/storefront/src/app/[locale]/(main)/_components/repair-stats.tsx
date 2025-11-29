@@ -34,7 +34,7 @@ export const RepairStats = () => {
   return (
     <section className="w-full bg-background py-12 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8" ref={containerRef}>
-        <div className="grid gap-4 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+        <div className="grid gap-4 rounded-2xl border border-border/60 bg-card/70 p-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {stats.map((item) => (
             <div
               key={item.label}

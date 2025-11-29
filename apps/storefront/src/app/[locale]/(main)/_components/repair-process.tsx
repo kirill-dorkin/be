@@ -25,9 +25,9 @@ const steps = [
 
 export const RepairProcess = () => {
   return (
-    <section className="w-full bg-background py-16 sm:py-20">
+    <section className="w-full bg-muted/8 py-14 sm:py-18">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-3 pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-3 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-amber-600">
               Как мы работаем
