@@ -1,11 +1,4 @@
-import {
-  Clock,
-  type LucideIcon,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-} from "lucide-react";
+import { type LucideIcon, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -71,16 +64,6 @@ export default async function ContactPage() {
       },
     },
     {
-      icon: MessageCircle,
-      title: "WhatsApp",
-      description: "Быстро ответим в мессенджере",
-      value: phoneNumber,
-      action: {
-        href: whatsappLink,
-        label: "Открыть WhatsApp",
-      },
-    },
-    {
       icon: Mail,
       title: t("channels.email.title"),
       description: t("channels.email.description"),
@@ -92,35 +75,15 @@ export default async function ContactPage() {
     },
     {
       icon: MessageCircle,
-      title: t("channels.support.title"),
-      description: t("channels.support.description"),
-      value: t("channels.support.value"),
+      title: "WhatsApp",
+      description: "Быстро ответим в мессенджере",
+      value: phoneNumber,
       action: {
-        href: paths.help.faq.asPath(),
-        label: t("channels.support.cta"),
-        localized: true,
+        href: whatsappLink,
+        label: "Открыть WhatsApp",
       },
     },
   ];
-
-  const supportNote = t.rich("support.note", {
-    faqLink: (chunks) => (
-      <LocalizedLink
-        className="text-primary underline-offset-4 hover:underline"
-        href={paths.help.faq.asPath()}
-      >
-        {chunks}
-      </LocalizedLink>
-    ),
-    emailLink: (chunks) => (
-      <a
-        className="text-primary underline-offset-4 hover:underline"
-        href={`mailto:${email}`}
-      >
-        {chunks}
-      </a>
-    ),
-  });
 
   const addressLines = ["ул. Кулатова 8/1", "Бишкек, Кыргызстан"];
 
@@ -149,54 +112,6 @@ export default async function ContactPage() {
               </a>
             </Button>
           </div>
-        </section>
-
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Card className="border-border/60 bg-card/70 shadow-sm">
-            <CardContent className="flex items-center gap-3 p-5">
-              <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
-                <Phone className="h-5 w-5" aria-hidden />
-              </span>
-              <div className="space-y-0.5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t("channels.phone.title")}
-                </p>
-                <p className="text-foreground text-lg font-semibold">
-                  {phoneNumber}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-border/60 bg-card/70 shadow-sm">
-            <CardContent className="flex items-center gap-3 p-5">
-              <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
-                <MapPin className="h-5 w-5" aria-hidden />
-              </span>
-              <div className="space-y-0.5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t("visit.addressTitle")}
-                </p>
-                <p className="text-foreground text-sm">
-                  {addressLines.join(", ")}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-border/60 bg-card/70 shadow-sm sm:col-span-2 lg:col-span-1">
-            <CardContent className="flex items-center gap-3 p-5">
-              <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
-                <Clock className="h-5 w-5" aria-hidden />
-              </span>
-              <div className="space-y-0.5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t("support.hoursTitle")}
-                </p>
-                <p className="text-foreground text-sm">
-                  {t("support.hoursValue")}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </section>
 
         <section aria-labelledby="contact-channels" className="space-y-6">
@@ -253,47 +168,7 @@ export default async function ContactPage() {
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
-          <Card className="h-full border-border/70 bg-card/80 shadow-sm">
-            <CardHeader className="space-y-2">
-              <CardTitle className="text-2xl font-semibold">
-                {t("support.title")}
-              </CardTitle>
-              <p className="text-muted-foreground text-sm sm:text-base">
-                {t("support.subtitle")}
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="flex items-start gap-3">
-                <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
-                  <Clock aria-hidden className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="text-foreground font-medium">
-                    {t("support.hoursTitle")}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    {t("support.hoursValue")}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
-                  <MessageCircle aria-hidden className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="text-foreground font-medium">
-                    {t("support.responseTitle")}
-                  </p>
-                  <p className="text-muted-foreground text-sm">
-                    {t("support.responseValue")}
-                  </p>
-                </div>
-              </div>
-              <p className="text-muted-foreground text-sm">{supportNote}</p>
-            </CardContent>
-          </Card>
-
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)]">
           <Card className="h-full border-border/70 bg-card/80 shadow-sm">
             <CardHeader className="space-y-2">
               <CardTitle className="text-2xl font-semibold">
