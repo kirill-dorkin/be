@@ -1,4 +1,4 @@
-import { Crown, Star,TrendingDown, Truck } from "lucide-react";
+import { Crown, ShieldCheck, Star, TrendingDown, Truck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import type { User } from "@nimara/domain/objects/User";
@@ -17,9 +17,11 @@ export const MembershipBanner = async ({
   const t = await getTranslations("home.membershipBanner");
 
   const title = user ? t("titleMember") : t("titleGuest");
-  const description = user ? t("descriptionMember") : t("descriptionGuest");
-  const primaryCta = user ? t("primaryCtaMember") : t("primaryCtaGuest");
-  const secondaryLabel = user ? t("secondaryMember") : t("secondaryGuest");
+  const description = user
+    ? "VIP-сервис: приедем, починим, скидки на работы и запчасти."
+    : "Станьте VIP: если что-то сломается, мастер приедет и починит, плюс скидки и приоритет.";
+  const primaryCta = user ? "Мой VIP-статус" : "Стать VIP-клиентом";
+  const secondaryLabel = user ? "История сервисов" : "Узнать о льготах";
   const secondaryHref = user
     ? paths.account.profile.asPath()
     : paths.createAccount.asPath();
@@ -33,7 +35,7 @@ export const MembershipBanner = async ({
           <div className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-gradient-to-r from-amber-500 to-yellow-600 px-4 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white dark:border-amber-700">
               <Crown className="h-3.5 w-3.5" />
-              {t("badge")}
+              VIP сервис
             </span>
             <h2 className="text-3xl font-semibold leading-tight tracking-tight hyphens-auto break-words sm:text-4xl lg:text-5xl">
               {title}
@@ -70,10 +72,10 @@ export const MembershipBanner = async ({
                 </div>
                 <div>
                   <p className="text-lg font-semibold hyphens-auto break-words">
-                    {t("card.title")}
+                    VIP-клиент нашего сервиса
                   </p>
                   <p className="text-sm text-neutral-600 hyphens-auto break-words dark:text-white/70">
-                    {t("card.subtitle")}
+                    Приезжаем, чиним, предоставляем льготные условия.
                   </p>
                 </div>
               </div>
@@ -81,19 +83,19 @@ export const MembershipBanner = async ({
                 <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/30 dark:bg-amber-950/20">
                   <TrendingDown className="mt-1 h-5 w-5 text-amber-600 dark:text-amber-400" />
                   <span className="hyphens-auto break-words">
-                    {t("perks.discount")}
+                    Скидки на ремонт и запчасти для VIP.
                   </span>
                 </div>
                 <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/30 dark:bg-amber-950/20">
                   <Truck className="mt-1 h-5 w-5 text-amber-600 dark:text-amber-400" />
                   <span className="hyphens-auto break-words">
-                    {t("perks.shipping")}
+                    Выезд мастера и приоритетные сроки.
                   </span>
                 </div>
                 <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/30 dark:bg-amber-950/20">
-                  <Star className="mt-1 h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  <ShieldCheck className="mt-1 h-5 w-5 text-amber-600 dark:text-amber-400" />
                   <span className="hyphens-auto break-words">
-                    {t("perks.exclusive")}
+                    Прозрачные работы с гарантией для VIP-клиентов.
                   </span>
                 </div>
               </div>
