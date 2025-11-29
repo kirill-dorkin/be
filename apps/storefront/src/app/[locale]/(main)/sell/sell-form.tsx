@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Check, Image as ImageIcon, Send, Tag } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
@@ -10,10 +10,20 @@ import { Textarea } from "@nimara/ui/components/textarea";
 
 import { submitListingAction } from "./actions";
 
+type ListingDraft = {
+  category: string;
+  contact: string;
+  description: string;
+  photoUrl?: string;
+  price: string;
+  title: string;
+};
+
 export const SellForm = () => {
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   // keep success message visible until manual reload
   useEffect(() => {
@@ -22,8 +32,38 @@ export const SellForm = () => {
     }
   }, [success]);
 
+  const getDraftFromForm = (): ListingDraft | null => {
+    const form = formRef.current;
+    if (!form) return null;
+
+    const formData = new FormData(form);
+    const draft: ListingDraft = {
+      title: (formData.get("title") as string) ?? "",
+      price: (formData.get("price") as string) ?? "",
+      category: (formData.get("category") as string) ?? "",
+      description: (formData.get("description") as string) ?? "",
+      photoUrl: (formData.get("photoUrl") as string) ?? "",
+      contact: (formData.get("contact") as string) ?? "",
+    };
+
+    return draft;
+  };
+
+  const persistLocalListing = (draft: ListingDraft) => {
+    try {
+      const existing = localStorage.getItem("be-seller-listings");
+      const parsed: ListingDraft[] = existing ? JSON.parse(existing) : [];
+      parsed.unshift({ ...draft });
+      localStorage.setItem("be-seller-listings", JSON.stringify(parsed.slice(0, 15)));
+    } catch {
+      // ignore localStorage errors silently
+    }
+  };
+
   const handleSubmit = (formData: FormData) => {
     setError(null);
+    const draft = getDraftFromForm();
+
     startTransition(async () => {
       const result = await submitListingAction(formData);
 
@@ -34,6 +74,9 @@ export const SellForm = () => {
       }
 
       setSuccess(true);
+      if (draft) {
+        persistLocalListing(draft);
+      }
     });
   };
 
@@ -57,7 +100,7 @@ export const SellForm = () => {
         </div>
       )}
 
-      <form action={handleSubmit} className="grid gap-4">
+      <form ref={formRef} action={handleSubmit} className="grid gap-4">
         <div className="grid gap-2">
           <Label htmlFor="title" className="font-medium">
             Название товара

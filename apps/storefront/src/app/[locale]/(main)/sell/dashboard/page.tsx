@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Button } from "@nimara/ui/components/button";
 
+import { MyListings } from "../my-listings";
+
 const SellerDashboardPage = () => {
   return (
     <div className="container max-w-5xl pb-16 pt-10">
@@ -61,6 +63,10 @@ const SellerDashboardPage = () => {
             Сейчас все товары витрины закреплены за продавцом <strong>Кирилл Доркин</strong>, что видно на карточках
             (бейдж на странице товара).
           </p>
+        </div>
+
+        <div className="mt-6">
+          <MyListings />
         </div>
       </div>
     </div>
