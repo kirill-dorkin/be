@@ -37,26 +37,21 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
   const hasReferrals = (referralData.referralCount || 0) > 0;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 p-8 shadow-lg dark:border-slate-800 dark:from-violet-950/30 dark:via-purple-950/30 dark:to-pink-950/30 sm:p-12">
-      {/* Background decoration */}
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-violet-200/30 blur-3xl dark:bg-violet-900/20" />
-      <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-purple-200/30 blur-3xl dark:bg-purple-900/20" />
-
-      <div className="relative grid gap-8 lg:grid-cols-2 lg:gap-12">
-        {/* Left side - Info */}
+    <div className="rounded-3xl border border-border/60 bg-card/70 p-8 shadow-sm sm:p-10">
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-violet-700 dark:bg-slate-900/60 dark:text-violet-400">
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700">
             <Gift className="h-4 w-4" />
             {referralT("title")}
           </div>
 
           <div>
-            <h2 className="mb-3 text-3xl font-bold text-slate-900 dark:text-primary sm:text-4xl">
+            <h2 className="mb-3 text-2xl font-bold text-foreground sm:text-3xl">
               {hasReferrals
                 ? referralT("promo-title-active")
                 : referralT("promo-title")}
             </h2>
-            <p className="text-lg text-slate-600 dark:text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {hasReferrals
                 ? referralT("promo-description-active", {
                     count: referralData.vipReferralCount || 0,
@@ -71,7 +66,7 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" className="gap-2">
+            <Button asChild size="lg" className="gap-2 bg-amber-500 text-white hover:bg-amber-600 shadow-sm">
               <LocalizedLink href={paths.account.referral.asPath()}>
                 {hasReferrals
                   ? referralT("view-my-stats")
@@ -89,28 +84,27 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
           </div>
         </div>
 
-        {/* Right side - Stats */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-          <div className="rounded-2xl border border-white/60 bg-white/80 p-6 backdrop-blur-sm dark:border-slate-800/60 dark:bg-slate-900/60">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900/30">
-              <Users className="h-6 w-6 text-violet-600 dark:text-violet-400" />
+          <div className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
+              <Users className="h-6 w-6 text-amber-600" />
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-primary">
+            <div className="text-3xl font-bold text-foreground">
               {referralData.vipReferralCount || 0}
             </div>
-            <div className="text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               {referralT("vip-referrals")}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/60 bg-white/80 p-6 backdrop-blur-sm dark:border-slate-800/60 dark:bg-slate-900/60">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30">
-              <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+          <div className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
+              <Wallet className="h-6 w-6 text-emerald-600" />
             </div>
-            <div className="text-3xl font-bold text-slate-900 dark:text-primary">
+            <div className="text-3xl font-bold text-foreground">
               {referralData.totalEarned || 0} {commonT("currency")}
             </div>
-            <div className="text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               {referralT("total-earned")}
             </div>
           </div>
