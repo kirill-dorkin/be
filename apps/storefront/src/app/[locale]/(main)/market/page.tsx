@@ -174,7 +174,11 @@ const MarketplacePage = async () => {
 
         <div className="grid gap-3 md:grid-cols-3">
           <div className="rounded-2xl border border-border/60 bg-muted/30 p-4 shadow-sm">
-            <SellerChip name="Кирилл Доркин" className="w-full justify-center" />
+            <SellerChip
+              name="Кирилл Доркин"
+              className="w-full justify-center"
+              href="/market/kirill-dorkin"
+            />
             <div className="mt-3 space-y-1 text-sm text-muted-foreground">
               <p>Активный продавец маркетплейса.</p>
               <p>Товары: вся текущая витрина.</p>

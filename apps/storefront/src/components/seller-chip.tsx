@@ -7,10 +7,11 @@ import { cn } from "@/lib/utils";
 type SellerChipProps = {
   name: string;
   className?: string;
+  href?: string;
 };
 
-export const SellerChip = ({ name, className }: SellerChipProps) => {
-  return (
+export const SellerChip = ({ name, className, href }: SellerChipProps) => {
+  const content = (
     <div
       className={cn(
         "inline-flex items-center gap-2 rounded-xl border border-border/60 bg-card/70 px-3 py-2 text-sm text-muted-foreground ring-1 ring-border/60",
@@ -23,4 +24,14 @@ export const SellerChip = ({ name, className }: SellerChipProps) => {
       {name}
     </div>
   );
+
+  if (href) {
+    return (
+      <a href={href} className="inline-flex" aria-label={`Продавец: ${name}`}>
+        {content}
+      </a>
+    );
+  }
+
+  return content;
 };
