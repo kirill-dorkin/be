@@ -11,7 +11,7 @@ export type MarketplaceListing = {
   contact: string;
   userId?: string;
   userName?: string | null;
-  status: "pending" | "published";
+  status: "pending" | "published" | "rejected";
   createdAt: string;
 };
 

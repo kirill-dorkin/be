@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@nimara/ui/components/
 import { DEFAULT_RESULTS_PER_PAGE } from "@/config";
 import { SearchProductCard } from "@/components/search-product-card";
 import { SellerChip } from "@/components/seller-chip";
+import { loadMarketplaceListings } from "@/lib/marketplace-storage";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 
@@ -62,6 +63,9 @@ const fetchMarketplaceProducts = async () => {
 
 const MarketplacePage = async () => {
   const products = await fetchMarketplaceProducts();
+  const listings = (await loadMarketplaceListings()).filter(
+    (item) => item.status === "published",
+  );
   const adminBadge = (
     <div className="rounded-2xl border border-border/50 bg-card/70 px-4 py-3 text-sm text-foreground shadow-sm">
       <div className="flex items-center gap-2">
@@ -137,6 +141,41 @@ const MarketplacePage = async () => {
           </div>
         )}
       </div>
+
+      {listings.length > 0 && (
+        <div className="mt-12 rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm">
+          <div className="flex flex-col gap-2 pb-4">
+            <h2 className="text-xl font-semibold text-foreground">Товары продавцов</h2>
+            <p className="text-muted-foreground text-sm">
+              Опубликованные после модерации. Добавление — через форму, модерация — через кабинет администратора.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {listings.map((listing) => (
+              <div
+                key={listing.id}
+                className="rounded-2xl border border-border/60 bg-muted/30 p-4 shadow-sm"
+              >
+                <div className="mb-2 inline-flex rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                  {listing.category}
+                </div>
+                <h3 className="text-lg font-semibold text-foreground line-clamp-2">
+                  {listing.title}
+                </h3>
+                <p className="text-muted-foreground text-sm line-clamp-3">
+                  {listing.description}
+                </p>
+                <p className="mt-3 text-xl font-semibold text-foreground">{listing.price} с</p>
+                <SellerChip
+                  name={listing.userName || "Продавец"}
+                  className="mt-3"
+                  href="/market/moderation"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-10 grid gap-4 rounded-2xl border border-border/60 bg-muted/30 p-6 shadow-sm md:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-2">
