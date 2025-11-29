@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import { type LucideIcon, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -16,10 +15,7 @@ import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import type { SupportedLocale } from "@/regions/types";
 
-const ContactMap = dynamic(
-  () => import("./contact-map").then((mod) => mod.ContactMap),
-  { ssr: false },
-);
+import { ContactMapContainer } from "./contact-map-container";
 
 type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
