@@ -148,14 +148,16 @@ export default async function HelpOverviewPage(props: PageProps) {
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
             <p>{t("support.description")}</p>
-            <ul className="space-y-2.5">
-              {supportItems.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <span className="text-primary mt-1.5 flex h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
-                  <span className="flex-1">{item}</span>
-                </li>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {supportItems.slice(0, 2).map((item) => (
+                <div
+                  key={item}
+                  className="rounded-lg border border-border/60 bg-muted/40 px-3 py-2 text-foreground"
+                >
+                  {item}
+                </div>
               ))}
-            </ul>
+            </div>
             <Button asChild variant="secondary" size="default" className="w-full sm:w-auto">
               <LocalizedLink href={paths.help.faq.asPath()}>
                 {t("support.cta")}
@@ -172,7 +174,6 @@ export default async function HelpOverviewPage(props: PageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
-            <p>{t("visit.description")}</p>
             <div className="space-y-1 rounded-lg bg-muted/50 p-3 text-foreground text-sm font-medium">
               {t("visit.address")
                 .split("\n")
@@ -180,26 +181,15 @@ export default async function HelpOverviewPage(props: PageProps) {
                   <div key={line}>{line}</div>
                 ))}
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-              <Button asChild variant="outline" size="default" className="w-full sm:w-auto sm:flex-1">
-                <a
-                  href="https://maps.google.com/maps?q=Кулатова%208%2F1%20Бишкек&output=classic"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("visit.actions.google")}
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="default" className="w-full sm:w-auto sm:flex-1">
-                <a
-                  href="https://2gis.kg/bishkek/search/%D0%9A%D1%83%D0%BB%D0%B0%D1%82%D0%BE%D0%B2%D0%B0%208%2F1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("visit.actions.twoGis")}
-                </a>
-              </Button>
-            </div>
+            <Button asChild variant="outline" size="default" className="w-full sm:w-auto">
+              <a
+                href="https://maps.google.com/maps?q=Кулатова%208%2F1%20Бишкек&output=classic"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("visit.actions.google")}
+              </a>
+            </Button>
           </CardContent>
         </Card>
       </section>
