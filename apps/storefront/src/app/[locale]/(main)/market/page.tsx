@@ -125,7 +125,6 @@ const MarketplacePage = async () => {
             {products.map((product) => (
               <div key={product.id} className="group space-y-2 rounded-2xl border border-border/60 bg-muted/30 p-3">
                 <SearchProductCard product={product} />
-                <SellerChip name="BestElectronics" href="/market/bestelectronics" />
               </div>
             ))}
           </div>
