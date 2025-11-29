@@ -158,6 +158,33 @@ const MarketplacePage = async () => {
           </ul>
         </div>
       </div>
+
+      <div className="mt-10 rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm">
+        <div className="flex flex-col gap-2 pb-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">Продавцы</h2>
+            <p className="text-muted-foreground text-sm">
+              Сейчас витрина закреплена за продавцом Кирилл Доркин. Добавим больше профилей после подключения CRM.
+            </p>
+          </div>
+          <Button asChild variant="outline">
+            <Link href="/sell">Стать продавцом</Link>
+          </Button>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="rounded-2xl border border-border/60 bg-muted/30 p-4 shadow-sm">
+            <SellerChip name="Кирилл Доркин" className="w-full justify-center" />
+            <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+              <p>Активный продавец маркетплейса.</p>
+              <p>Товары: вся текущая витрина.</p>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-dashed border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground">
+            Скоро: список продавцов, быстрый поиск и фильтр по продавцу на витрине.
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
