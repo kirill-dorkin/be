@@ -54,6 +54,10 @@ export default async function ContactPage() {
   const email = clientEnvs.NEXT_PUBLIC_DEFAULT_EMAIL;
   const phoneNumber = "+996 501 313 114";
   const phoneHref = "+996501313114";
+  const whatsappMessage = encodeURIComponent(
+    "Здравствуйте! Хочу получить консультацию по ремонту.",
+  );
+  const whatsappLink = `https://wa.me/996501313114?text=${whatsappMessage}`;
 
   const channels: ContactChannel[] = [
     {
@@ -64,6 +68,16 @@ export default async function ContactPage() {
       action: {
         href: `tel:${phoneHref}`,
         label: t("channels.phone.cta"),
+      },
+    },
+    {
+      icon: MessageCircle,
+      title: "WhatsApp",
+      description: "Быстро ответим в мессенджере",
+      value: phoneNumber,
+      action: {
+        href: whatsappLink,
+        label: "Открыть WhatsApp",
       },
     },
     {
@@ -125,12 +139,14 @@ export default async function ContactPage() {
           </p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg">
-              <a href={`tel:${phoneHref}`}>
-                {t("hero.secondaryCta", { phone: phoneNumber })}
+              <a href={whatsappLink} target="_blank" rel="noreferrer">
+                {t("hero.primaryCta")}
               </a>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a href={`mailto:${email}`}>{t("hero.primaryCta")}</a>
+              <a href={`tel:${phoneHref}`}>
+                {t("hero.secondaryCta", { phone: phoneNumber })}
+              </a>
             </Button>
           </div>
         </section>
