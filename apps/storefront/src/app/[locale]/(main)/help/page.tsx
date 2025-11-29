@@ -147,7 +147,6 @@ export default async function HelpOverviewPage(props: PageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
-            <p>{t("support.description")}</p>
             <div className="grid gap-3 sm:grid-cols-2">
               {supportItems.slice(0, 2).map((item) => (
                 <div
@@ -173,7 +172,7 @@ export default async function HelpOverviewPage(props: PageProps) {
               {t("visit.title")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
+          <CardContent className="space-y-3 text-muted-foreground text-sm leading-relaxed">
             <div className="space-y-1 rounded-lg bg-muted/50 p-3 text-foreground text-sm font-medium">
               {t("visit.address")
                 .split("\n")
