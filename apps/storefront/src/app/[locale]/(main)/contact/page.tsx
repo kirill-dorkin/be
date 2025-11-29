@@ -52,8 +52,8 @@ type ContactChannel = {
 export default async function ContactPage() {
   const t = await getTranslations("contact");
   const email = clientEnvs.NEXT_PUBLIC_DEFAULT_EMAIL;
-  const phoneNumber = t("channels.phone.value");
-  const phoneHref = t("channels.phone.href");
+  const phoneNumber = "+996 501 313 114";
+  const phoneHref = "+996501313114";
 
   const channels: ContactChannel[] = [
     {
@@ -108,13 +108,13 @@ export default async function ContactPage() {
     ),
   });
 
-  const addressLines = t("visit.address").split("\n");
+  const addressLines = ["ул. Кулатова 8/1", "Бишкек, Кыргызстан"];
 
   return (
     <div className="bg-background">
-      <div className="container space-y-12 py-12 lg:space-y-16 lg:py-16">
-        <section className="mx-auto max-w-3xl space-y-6 text-center">
-          <span className="text-primary inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest">
+      <div className="container space-y-12 pb-16 pt-12 lg:space-y-16 lg:pb-24 lg:pt-16">
+        <section className="mx-auto max-w-4xl space-y-6 text-center">
+          <span className="inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             {t("hero.badge")}
           </span>
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
@@ -125,14 +125,62 @@ export default async function ContactPage() {
           </p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg">
-              <a href={`mailto:${email}`}>{t("hero.primaryCta")}</a>
-            </Button>
-            <Button asChild variant="outline" size="lg">
               <a href={`tel:${phoneHref}`}>
                 {t("hero.secondaryCta", { phone: phoneNumber })}
               </a>
             </Button>
+            <Button asChild size="lg" variant="outline">
+              <a href={`mailto:${email}`}>{t("hero.primaryCta")}</a>
+            </Button>
           </div>
+        </section>
+
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card className="border-border/60 bg-card/70 shadow-sm">
+            <CardContent className="flex items-center gap-3 p-5">
+              <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
+                <Phone className="h-5 w-5" aria-hidden />
+              </span>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {t("channels.phone.title")}
+                </p>
+                <p className="text-foreground text-lg font-semibold">
+                  {phoneNumber}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-border/60 bg-card/70 shadow-sm">
+            <CardContent className="flex items-center gap-3 p-5">
+              <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
+                <MapPin className="h-5 w-5" aria-hidden />
+              </span>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {t("visit.addressTitle")}
+                </p>
+                <p className="text-foreground text-sm">
+                  {addressLines.join(", ")}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-border/60 bg-card/70 shadow-sm sm:col-span-2 lg:col-span-1">
+            <CardContent className="flex items-center gap-3 p-5">
+              <span className="bg-primary/10 text-primary inline-flex h-10 w-10 items-center justify-center rounded-full">
+                <Clock className="h-5 w-5" aria-hidden />
+              </span>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  {t("support.hoursTitle")}
+                </p>
+                <p className="text-foreground text-sm">
+                  {t("support.hoursValue")}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         <section aria-labelledby="contact-channels" className="space-y-6">
@@ -152,9 +200,12 @@ export default async function ContactPage() {
               const Icon = channel.icon;
 
               return (
-                <Card key={channel.title} className="border-muted/80 h-full">
+                <Card
+                  key={channel.title}
+                  className="h-full border-border/70 bg-card/80 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                >
                   <CardHeader className="space-y-4">
-                    <span className="bg-primary/10 text-primary inline-flex h-12 w-12 items-center justify-center rounded-full">
+                    <span className="bg-primary/10 text-primary inline-flex h-12 w-12 items-center justify-center rounded-2xl">
                       <Icon aria-hidden className="h-6 w-6" />
                     </span>
                     <div className="space-y-2">
@@ -186,8 +237,8 @@ export default async function ContactPage() {
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-          <Card className="border-muted/80 h-full">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+          <Card className="h-full border-border/70 bg-card/80 shadow-sm">
             <CardHeader className="space-y-2">
               <CardTitle className="text-2xl font-semibold">
                 {t("support.title")}
@@ -227,7 +278,7 @@ export default async function ContactPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-muted/80 h-full">
+          <Card className="h-full border-border/70 bg-card/80 shadow-sm">
             <CardHeader className="space-y-2">
               <CardTitle className="text-2xl font-semibold">
                 {t("visit.title")}
@@ -252,7 +303,7 @@ export default async function ContactPage() {
                   </div>
                 </div>
               </div>
-              <div className="rounded-2xl border border-dashed border-muted bg-muted/40 p-6 text-center">
+              <div className="rounded-2xl border border-dashed border-border/70 bg-muted/40 p-6 text-center">
                 <p className="text-muted-foreground text-sm">
                   {t("visit.mapDescription")}
                 </p>
