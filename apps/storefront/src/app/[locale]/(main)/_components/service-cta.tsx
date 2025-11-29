@@ -6,6 +6,8 @@ import { LocalizedLink } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 
 export const ServiceCta = () => {
+  const contactHref = paths.contact?.asPath ? paths.contact.asPath() : "/contact";
+
   return (
     <section className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 py-12 text-white shadow-inner">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
@@ -34,7 +36,7 @@ export const ServiceCta = () => {
             size="lg"
             className="gap-2 text-white hover:bg-white/10"
           >
-            <LocalizedLink href={paths.contact.asPath()}>
+            <LocalizedLink href={contactHref}>
               <PhoneCall className="h-5 w-5" />
               Позвонить нам
             </LocalizedLink>
