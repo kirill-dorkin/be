@@ -1,11 +1,14 @@
 "use server";
 
 import { z } from "zod";
+import { randomUUID } from "crypto";
+import { revalidateTag } from "next/cache";
 
-import { sendSellerListingToTelegram } from "@/services/telegram";
+import { auth } from "@/auth";
+import { saveMarketplaceListing } from "@/lib/marketplace-storage";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
-import { revalidateTag } from "next/cache";
+import { sendSellerListingToTelegram } from "@/services/telegram";
 
 const listingSchema = z.object({
   title: z.string().min(3, "Название слишком короткое"),
@@ -19,6 +22,12 @@ const listingSchema = z.object({
 export type SubmitListingInput = z.infer<typeof listingSchema>;
 
 export const submitListingAction = async (formData: FormData) => {
+  const session = await auth();
+
+  if (!session?.user) {
+    return { ok: false as const, error: "Нужно войти, чтобы добавить товар." };
+  }
+
   const parsed = listingSchema.safeParse({
     title: formData.get("title"),
     price: formData.get("price"),
@@ -36,6 +45,25 @@ export const submitListingAction = async (formData: FormData) => {
   }
 
   const payload = parsed.data;
+
+  // Persist listing locally (filesystem) to simulate marketplace feed
+  try {
+    await saveMarketplaceListing({
+      id: randomUUID(),
+      title: payload.title,
+      price: payload.price,
+      category: payload.category,
+      description: payload.description,
+      photoUrl: payload.photoUrl,
+      contact: payload.contact,
+      userId: (session.user as { id?: string })?.id,
+      userName: session.user?.name ?? session.user?.email ?? "Пользователь",
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    });
+  } catch {
+    // ignore fs errors to not block user
+  }
 
   // Try to refresh marketplace cache after submission
   try {

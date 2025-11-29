@@ -2,9 +2,12 @@ import Link from "next/link";
 
 import { Button } from "@nimara/ui/components/button";
 
+import { loadMarketplaceListings } from "@/lib/marketplace-storage";
 import { MyListings } from "../my-listings";
 
-const SellerDashboardPage = () => {
+const SellerDashboardPage = async () => {
+  const listings = await loadMarketplaceListings();
+
   return (
     <div className="container max-w-5xl pb-16 pt-10">
       <div className="flex flex-col gap-2 pb-6">
@@ -56,13 +59,19 @@ const SellerDashboardPage = () => {
         </div>
 
         <div className="mt-4 grid gap-3 text-sm text-muted-foreground">
-          <div className="rounded-xl border border-dashed border-border/70 bg-muted/40 p-4">
-            Список товаров появится после подключения постоянного хранилища (Saleor API / БД).
-          </div>
-          <p>
-            Сейчас все товары витрины закреплены за продавцом <strong>Кирилл Доркин</strong>, что видно на карточках
-            (бейдж на странице товара).
-          </p>
+          {listings.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border/70 bg-muted/40 p-4">
+              Пока нет заявок. Заполните форму, и товар появится в списке черновиков.
+            </div>
+          ) : (
+            <div className="rounded-xl border border-border/70 bg-muted/40 p-4">
+              <p className="font-semibold text-foreground">Черновики (файл-хранилище)</p>
+              <p>
+                Хранение временное в файловой системе. Кол-во заявок: <strong>{listings.length}</strong>.
+                Следующий шаг — запись в Saleor (создание продуктов).
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mt-6">
