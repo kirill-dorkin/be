@@ -143,10 +143,11 @@ export default async function ContactPage() {
               <div className="rounded-2xl border border-dashed border-border/70 bg-muted/40 p-6 text-center">
                 <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
                   <iframe
-                    src="https://go.2gis.com/eNlWq"
+                    src="https://widgets.2gis.com/widget?type=firmsonmap&xf=70000001058839512&org=70000001058839512&map=74.595204%2C42.848524%2C17"
                     title="BestElectronics на карте 2ГИС"
                     className="h-72 w-full border-0"
                     loading="lazy"
+                    allowFullScreen
                   />
                 </div>
                 <Button asChild className="mt-4" variant="ghost">
