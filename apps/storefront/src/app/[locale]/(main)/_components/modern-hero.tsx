@@ -62,8 +62,8 @@ export async function ModernHero({ user }: ModernHeroProps) {
               size="lg"
               className="group min-w-[200px] bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 text-base font-semibold text-white shadow-lg shadow-amber-500/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:from-amber-600 hover:via-yellow-600 hover:to-orange-600 hover:shadow-xl hover:shadow-amber-500/40"
             >
-              <LocalizedLink href={paths.search.asPath()}>
-                {t("hero.cta.primary")}
+              <LocalizedLink href={paths.services.asPath()}>
+                Заказать ремонт
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </LocalizedLink>
             </Button>
@@ -73,8 +73,8 @@ export async function ModernHero({ user }: ModernHeroProps) {
               size="lg"
               className="min-w-[200px] border-2 bg-background/50 text-base font-semibold backdrop-blur-sm transition-all hover:scale-105 hover:bg-muted"
             >
-              <LocalizedLink href={paths.services.asPath()}>
-                {t("hero.cta.secondary")}
+              <LocalizedLink href={paths.search.asPath()}>
+                Каталог товаров
               </LocalizedLink>
             </Button>
           </div>
@@ -93,15 +93,15 @@ export async function ModernHero({ user }: ModernHeroProps) {
             </div>
 
             <div className="space-y-3">
-              <AnimatedCounter
-                value={3000}
-                // suffix="+"
-                className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-6xl"
-              />
-              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            <AnimatedCounter
+              value={3000}
+              // suffix="+"
+              className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-6xl"
+            />
+            <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                 {t("hero.stats.products")}
-              </div>
             </div>
+          </div>
 
             <div className="space-y-3">
               <AnimatedCounter

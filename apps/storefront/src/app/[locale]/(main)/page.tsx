@@ -17,6 +17,7 @@ import { getUserService } from "@/services/user";
 import { FeaturesSection } from "./_components/features-section";
 import { ModernHero } from "./_components/modern-hero";
 import { ProductsGridSkeleton } from "./_components/products-grid";
+import { RepairFocus } from "./_components/repair-focus";
 
 // Dynamic imports для оптимизации
 const ProductsGrid = dynamic(
@@ -97,6 +98,9 @@ export default async function Page() {
     <>
       {/* Modern Hero Section */}
       <ModernHero user={user} />
+
+      {/* Repair focus */}
+      <RepairFocus />
 
       {/* Features Section */}
       <FeaturesSection />
