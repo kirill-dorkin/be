@@ -71,14 +71,11 @@ export function ContactMap() {
   }, [scriptReady]);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative h-72 overflow-hidden rounded-xl border border-border/60 bg-card"
-    >
+    <div ref={containerRef} className="relative h-72 overflow-hidden rounded-xl bg-card">
       {failed && (
         <div className="absolute inset-0 flex items-center justify-center bg-muted">
           <p className="text-muted-foreground text-sm">
-            Карта недоступна, попробуйте открыть 2ГИС по ссылке ниже.
+            Карта недоступна, откройте 2ГИС по ссылке ниже.
           </p>
         </div>
       )}

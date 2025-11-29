@@ -142,14 +142,16 @@ export default async function ContactPage() {
                   </div>
                 </div>
               </div>
-              <div className="rounded-2xl border border-dashed border-border/70 bg-muted/40 p-6 text-center">
-                <ContactMapContainer />
-                <Button asChild className="mt-4" variant="ghost">
-                  <a href="https://go.2gis.com/eNlWq" rel="noreferrer" target="_blank">
-                    Открыть в 2ГИС
-                  </a>
-                </Button>
-              </div>
+              <Card className="border border-border/60 bg-card shadow-sm">
+                <CardContent className="space-y-4 p-5">
+                  <ContactMapContainer />
+                  <Button asChild variant="outline" className="w-full sm:w-auto">
+                    <a href="https://go.2gis.com/eNlWq" rel="noreferrer" target="_blank">
+                      Открыть в 2ГИС
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
             </CardContent>
           </Card>
         </section>
