@@ -70,7 +70,6 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
                     availability={availability}
                     cart={cart}
                     product={product}
-                    user={user}
                   />
 
                   <ProductHighlights product={product} />

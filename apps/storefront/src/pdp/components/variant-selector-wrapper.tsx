@@ -8,7 +8,6 @@ import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
-import { type User } from "@nimara/domain/objects/User";
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
 const VariantSelector = dynamic(
@@ -26,7 +25,6 @@ type VariantPickerProps = {
   availability: ProductAvailability;
   cart: Cart | null;
   product: Product;
-  user: User | null;
 };
 
 /**
@@ -37,14 +35,12 @@ const VariantSelectorWrapperComponent = ({
   availability,
   cart,
   product,
-  user,
 }: VariantPickerProps) => {
   return (
     <VariantSelector
       cart={cart}
       product={product}
       productAvailability={availability}
-      user={user}
     />
   );
 };
@@ -56,8 +52,7 @@ export const VariantSelectorWrapper = memo(
     return (
       prevProps.product.id === nextProps.product.id &&
       prevProps.cart?.id === nextProps.cart?.id &&
-      prevProps.availability === nextProps.availability &&
-      prevProps.user?.id === nextProps.user?.id
+      prevProps.availability === nextProps.availability
     );
   },
 );

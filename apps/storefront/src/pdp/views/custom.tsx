@@ -26,7 +26,7 @@ export const CustomPDPView = async (props: PDPViewProps) => {
   return (
     <ProductProvider
       slug={slug}
-      render={(product, availability, { cart, user }) => (
+      render={(product, availability, { cart }) => (
         <div className="relative grid w-full gap-8 overflow-hidden pt-8 md:pt-0">
           <ProductBreadcrumbs
             category={product.category}
@@ -56,7 +56,6 @@ export const CustomPDPView = async (props: PDPViewProps) => {
               <VariantSelectorWrapper
                 availability={availability}
                 cart={cart}
-                user={user}
                 product={product}
               />
             </div>
