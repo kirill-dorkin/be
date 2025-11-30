@@ -18,7 +18,9 @@ vi.mock("@/services/auth", () => ({
 }));
 
 vi.mock("@/lib/account-confirmation", () => ({
-  getAccountConfirmationRedirectUrl: vi.fn(async () => "https://example.com/confirm"),
+  getAccountConfirmationRedirectUrl: vi.fn(
+    async () => "https://example.com/confirm",
+  ),
 }));
 
 vi.mock("@/lib/actions/login", () => ({

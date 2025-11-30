@@ -21,11 +21,12 @@ const ProductExternalSearchComponent = ({
   // Мемоизация query и searchUrl
   const query = useMemo(
     () => `${productName} ${t("search-online-query-suffix")}`.trim(),
-    [productName, t]
+    [productName, t],
   );
   const searchUrl = useMemo(
-    () => `https://www.google.com/search?tbm=isch&hl=${encodeURIComponent(locale)}&q=${encodeURIComponent(query)}`,
-    [locale, query]
+    () =>
+      `https://www.google.com/search?tbm=isch&hl=${encodeURIComponent(locale)}&q=${encodeURIComponent(query)}`,
+    [locale, query],
   );
 
   // Не показываем кнопку если у товара есть изображения
@@ -54,9 +55,12 @@ const ProductExternalSearchComponent = ({
 };
 
 // Мемоизация - кнопка внешнего поиска товара
-export const ProductExternalSearch = memo(ProductExternalSearchComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.productName === nextProps.productName &&
-    prevProps.hasImages === nextProps.hasImages
-  );
-});
+export const ProductExternalSearch = memo(
+  ProductExternalSearchComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.productName === nextProps.productName &&
+      prevProps.hasImages === nextProps.hasImages
+    );
+  },
+);

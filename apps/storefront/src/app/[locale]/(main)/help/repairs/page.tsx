@@ -1,9 +1,4 @@
-import {
-  BadgeCheck,
-  MapPinned,
-  Sparkles,
-  Wrench,
-} from "lucide-react";
+import { BadgeCheck, MapPinned, Sparkles, Wrench } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -23,9 +18,7 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
 
-export async function generateMetadata(
-  _props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(_props: PageProps): Promise<Metadata> {
   const { locale } = await _props.params;
   const t = await getTranslations({
     locale,
@@ -53,12 +46,10 @@ export default async function HelpRepairsPage(props: PageProps) {
       <section className="space-y-4">
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <Badge variant="secondary" className="flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            <Sparkles className="text-primary h-3.5 w-3.5" />
             {t("hero.badge")}
           </Badge>
-          <span className="text-muted-foreground">
-            {t("hero.subtitle")}
-          </span>
+          <span className="text-muted-foreground">{t("hero.subtitle")}</span>
         </div>
         <h1 className="text-foreground text-3xl font-semibold tracking-tight sm:text-4xl">
           {t("hero.title")}
@@ -69,17 +60,17 @@ export default async function HelpRepairsPage(props: PageProps) {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-        <Card className="border border-border/70">
+        <Card className="border-border/70 border">
           <CardHeader className="space-y-3">
             <CardTitle className="flex items-center gap-2 text-xl">
-              <Wrench className="h-5 w-5 text-primary" />
+              <Wrench className="text-primary h-5 w-5" />
               {t("process.title")}
             </CardTitle>
             <p className="text-muted-foreground text-sm">
               {t("process.subtitle")}
             </p>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground space-y-3 text-sm">
             <ol className="list-decimal space-y-2 pl-5">
               {steps.map((item) => (
                 <li key={item} className="leading-relaxed">
@@ -96,24 +87,26 @@ export default async function HelpRepairsPage(props: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="border border-border/70">
+        <Card className="border-border/70 border">
           <CardHeader className="space-y-3">
             <CardTitle className="flex items-center gap-2 text-xl">
-              <BadgeCheck className="h-5 w-5 text-primary" />
+              <BadgeCheck className="text-primary h-5 w-5" />
               {t("services.title")}
             </CardTitle>
             <p className="text-muted-foreground text-sm">
               {t("services.subtitle")}
             </p>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground space-y-2 text-sm">
             <ul className="space-y-1.5">
               {services.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
             </ul>
             <LocalizedLink
-              href={paths.services.detail.asPath({ slug: "diagnostika-kompyutera" })}
+              href={paths.services.detail.asPath({
+                slug: "diagnostika-kompyutera",
+              })}
               className="text-primary font-semibold underline-offset-4 hover:underline"
             >
               {t("services.cta")}
@@ -123,14 +116,14 @@ export default async function HelpRepairsPage(props: PageProps) {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <Card className="border border-border/70">
+        <Card className="border-border/70 border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <Sparkles className="h-5 w-5 text-primary" />
+              <Sparkles className="text-primary h-5 w-5" />
               {t("discount.title")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground space-y-3 text-sm">
             <p>{t("discount.description")}</p>
             <ul className="space-y-2">
               {(t.raw("discount.items") as string[]).map((item) => (
@@ -145,10 +138,10 @@ export default async function HelpRepairsPage(props: PageProps) {
             </LocalizedLink>
           </CardContent>
         </Card>
-        <Card className="border border-border/70">
+        <Card className="border-border/70 border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <MapPinned className="h-5 w-5 text-primary" />
+              <MapPinned className="text-primary h-5 w-5" />
               {t("location.title")}
             </CardTitle>
           </CardHeader>
@@ -156,7 +149,7 @@ export default async function HelpRepairsPage(props: PageProps) {
             <p className="text-muted-foreground text-sm">
               {t("location.description")}
             </p>
-            <div className="aspect-video overflow-hidden rounded-xl border border-border/80">
+            <div className="border-border/80 aspect-video overflow-hidden rounded-xl border">
               <iframe
                 title={t("location.mapTitle")}
                 src={MAP_EMBED_SRC}

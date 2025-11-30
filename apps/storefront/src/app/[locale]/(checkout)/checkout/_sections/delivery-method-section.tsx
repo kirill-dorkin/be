@@ -15,11 +15,13 @@ export const DeliveryMethodSection = async ({
   const tc = await getTranslations("common");
 
   return (
-    <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
+    <section className="border-border/60 bg-card rounded-xl border p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
-          <h3 className="text-lg font-semibold text-foreground sm:text-xl">{t("title")}</h3>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <h3 className="text-foreground text-lg font-semibold sm:text-xl">
+            {t("title")}
+          </h3>
+          <p className="text-muted-foreground text-sm leading-relaxed">
             {checkout.deliveryMethod?.name || t("select-delivery-method")}
           </p>
         </div>

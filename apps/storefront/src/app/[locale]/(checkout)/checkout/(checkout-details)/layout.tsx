@@ -27,7 +27,7 @@ export default function Layout({
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
       <div className="flex justify-center xl:mr-48 xl:justify-end">
         <main className="w-full max-w-md space-y-6 p-4 sm:p-6">
-          <header className="flex w-full items-center justify-between border-b border-border/60 pb-5">
+          <header className="border-border/60 flex w-full items-center justify-between border-b pb-5">
             <Logo />
             <div className="md:hidden">
               <SideSummary />

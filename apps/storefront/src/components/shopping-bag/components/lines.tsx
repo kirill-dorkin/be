@@ -27,19 +27,17 @@ export const Lines = ({
 
   // Мемоизация списка товаров с проблемами для производительности
   const linesWithProblems = useMemo(
-    () => [
-      ...problems.insufficientStock,
-      ...problems.variantNotAvailable,
-    ],
-    [problems.insufficientStock, problems.variantNotAvailable]
+    () => [...problems.insufficientStock, ...problems.variantNotAvailable],
+    [problems.insufficientStock, problems.variantNotAvailable],
   );
 
   // Мемоизация фильтрации товаров без проблем
   const lines = useMemo(
-    () => props.lines.filter(
-      ({ id }) => !linesWithProblems.some(({ line }) => line.id === id),
-    ),
-    [props.lines, linesWithProblems]
+    () =>
+      props.lines.filter(
+        ({ id }) => !linesWithProblems.some(({ line }) => line.id === id),
+      ),
+    [props.lines, linesWithProblems],
   );
 
   return (
@@ -56,13 +54,10 @@ export const Lines = ({
 
         {linesWithProblems.map(({ line }) => (
           <div key={line.id} className="space-y-3">
-            <h2 className="text-muted-foreground text-sm font-medium">{t("cart.unavailable-products")}</h2>
-            <Line
-              line={line}
-              {...props}
-              isLineEditable={true}
-              isOutOfStock
-            />
+            <h2 className="text-muted-foreground text-sm font-medium">
+              {t("cart.unavailable-products")}
+            </h2>
+            <Line line={line} {...props} isLineEditable={true} isOutOfStock />
           </div>
         ))}
       </div>

@@ -1,9 +1,16 @@
 "use client";
 
-import { Loader2,PlusCircle, Trash2 } from "lucide-react";
+import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 
 import { type Cart } from "@nimara/domain/objects/Cart";
 import { Button } from "@nimara/ui/components/button";
@@ -27,12 +34,19 @@ type AddToBagProps = {
 
 type ProcessingState = "adding" | "removing" | "updating" | null;
 
-const AddToBagComponent = ({ cart, variantId, isVariantAvailable, quantity = 1 }: AddToBagProps) => {
+const AddToBagComponent = ({
+  cart,
+  variantId,
+  isVariantAvailable,
+  quantity = 1,
+}: AddToBagProps) => {
   const t = useTranslations();
   const { toast } = useToast();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [optimisticInCart, setOptimisticInCart] = useState<boolean | null>(null);
+  const [optimisticInCart, setOptimisticInCart] = useState<boolean | null>(
+    null,
+  );
   const [processingState, setProcessingState] = useState<ProcessingState>(null);
 
   // Actual cart state from server
@@ -41,7 +55,7 @@ const AddToBagComponent = ({ cart, variantId, isVariantAvailable, quantity = 1 }
       return false;
     }
 
-return cart.lines.some((line) => line.variant.id === variantId);
+    return cart.lines.some((line) => line.variant.id === variantId);
   }, [cart, variantId]);
 
   // Get cart line info (quantity and lineId)
@@ -81,8 +95,8 @@ return cart.lines.some((line) => line.variant.id === variantId);
     if (optimisticInCart !== null) {
       return optimisticInCart;
     }
-    
-return actualIsInCart;
+
+    return actualIsInCart;
   }, [actualIsInCart, optimisticInCart]);
 
   const handleProductAdd = useCallback(() => {
@@ -270,7 +284,9 @@ return actualIsInCart;
     // If in cart and quantity changed, show update button
     if (isInCart && quantityChanged) {
       return {
-        icon: <PlusCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />,
+        icon: (
+          <PlusCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+        ),
         text: t("common.update-quantity"),
       };
     }
@@ -278,14 +294,18 @@ return actualIsInCart;
     // If in cart and quantity same, show remove button
     if (isInCart) {
       return {
-        icon: <Trash2 className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />,
+        icon: (
+          <Trash2 className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+        ),
         text: t("common.remove-from-bag"),
       };
     }
 
     if (isVariantAvailable) {
       return {
-        icon: <PlusCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />,
+        icon: (
+          <PlusCircle className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+        ),
         text: t("common.add-to-bag"),
       };
     }
@@ -297,7 +317,7 @@ return actualIsInCart;
   }, [processingState, isInCart, quantityChanged, isVariantAvailable, t]);
 
   // Generate key for animation trigger
-  const contentKey = `${processingState || ''}-${isInCart ? 'in-cart' : 'not-in-cart'}`;
+  const contentKey = `${processingState || ""}-${isInCart ? "in-cart" : "not-in-cart"}`;
 
   return (
     <Button
@@ -317,25 +337,21 @@ return actualIsInCart;
     >
       <span
         key={contentKey}
-        className="relative flex items-center justify-center gap-2 animate-fade-in"
+        className="animate-fade-in relative flex items-center justify-center gap-2"
       >
-        <span className="inline-flex">
-          {buttonContent.icon}
-        </span>
-        <span className="inline-flex">
-          {buttonContent.text}
-        </span>
+        <span className="inline-flex">{buttonContent.icon}</span>
+        <span className="inline-flex">{buttonContent.text}</span>
       </span>
 
       {/* Subtle shine effect on hover */}
       {!isPending && (
-        <span className="pointer-events-none absolute inset-0 -z-10 rounded-md bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-out" />
+        <span className="pointer-events-none absolute inset-0 -z-10 -translate-x-full rounded-md bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full" />
       )}
 
       {/* Progress indicator */}
       {showProcessing && (
-        <span className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] overflow-hidden rounded-b-md bg-white/10 animate-fade-in">
-          <span className="absolute inset-0 animate-progress-bar bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+        <span className="animate-fade-in pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] overflow-hidden rounded-b-md bg-white/10">
+          <span className="animate-progress-bar absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent" />
         </span>
       )}
     </Button>
@@ -345,12 +361,14 @@ return actualIsInCart;
 // Мемоизация - используется на каждой странице товара (PDP)
 export const AddToBag = memo(AddToBagComponent, (prevProps, nextProps) => {
   // Check if variant is in prev and next cart
-  const prevInCart = prevProps.cart?.lines.some(
-    (line) => line.variant.id === prevProps.variantId
-  ) ?? false;
-  const nextInCart = nextProps.cart?.lines.some(
-    (line) => line.variant.id === nextProps.variantId
-  ) ?? false;
+  const prevInCart =
+    prevProps.cart?.lines.some(
+      (line) => line.variant.id === prevProps.variantId,
+    ) ?? false;
+  const nextInCart =
+    nextProps.cart?.lines.some(
+      (line) => line.variant.id === nextProps.variantId,
+    ) ?? false;
 
   return (
     prevProps.variantId === nextProps.variantId &&

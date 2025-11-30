@@ -20,7 +20,7 @@ const ProductMediaEmptyStateComponent = ({
   return (
     <div
       className={cn(
-        "relative flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-muted-foreground/30 bg-gradient-to-br from-muted/40 via-background to-muted/30 p-6 text-center shadow-sm md:p-12 min-h-[260px] md:min-h-[420px] max-w-full",
+        "border-muted-foreground/30 from-muted/40 via-background to-muted/30 relative flex min-h-[260px] w-full max-w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed bg-gradient-to-br p-6 text-center shadow-sm md:min-h-[420px] md:p-12",
         className,
       )}
     >
@@ -34,19 +34,19 @@ const ProductMediaEmptyStateComponent = ({
           <ImageOff className="h-8 w-8" aria-hidden />
         </span>
 
-        <div className="space-y-3 w-full">
-          <p className="text-xl font-semibold text-foreground md:text-2xl">
+        <div className="w-full space-y-3">
+          <p className="text-foreground text-xl font-semibold md:text-2xl">
             {t("media-placeholder-title")}
           </p>
           <p
-            className="text-sm text-muted-foreground md:text-base break-words max-w-full"
+            className="text-muted-foreground max-w-full break-words text-sm md:text-base"
             style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
           >
             {t("media-placeholder-description", { productName })}
           </p>
         </div>
 
-        <p className="text-xs text-muted-foreground/80 md:text-sm">
+        <p className="text-muted-foreground/80 text-xs md:text-sm">
           {t("media-placeholder-hint")}
         </p>
       </div>
@@ -55,9 +55,12 @@ const ProductMediaEmptyStateComponent = ({
 };
 
 // Мемоизация - пустое состояние для медиа товара
-export const ProductMediaEmptyState = memo(ProductMediaEmptyStateComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.productName === nextProps.productName &&
-    prevProps.className === nextProps.className
-  );
-});
+export const ProductMediaEmptyState = memo(
+  ProductMediaEmptyStateComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.productName === nextProps.productName &&
+      prevProps.className === nextProps.className
+    );
+  },
+);

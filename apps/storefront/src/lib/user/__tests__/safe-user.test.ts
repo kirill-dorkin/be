@@ -45,9 +45,10 @@ describe("safeUserGet", () => {
   it("returns null on timeout", async () => {
     const userService = {
       userGet: vi.fn(
-        async () => new Promise(() => {
-          // never resolve
-        }),
+        async () =>
+          new Promise(() => {
+            // never resolve
+          }),
       ),
     };
 

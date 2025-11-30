@@ -29,18 +29,21 @@ const ErrorDialogComponent = ({ checkout }: ErrorDialogProps) => {
   const unavailableLinesNumber = checkout.problems.insufficientStock.length;
 
   // Мемоизация заголовка и описания
-  const dialogContent = useMemo(() => ({
-    title: t(
-      unavailableLinesNumber === 1
-        ? "stock-errors.some-of-products-unavailable"
-        : "stock-errors.products-unavailable"
-    ),
-    message: t(
-      unavailableLinesNumber === 1
-        ? "stock-errors.some-of-products-message"
-        : "stock-errors.products-message"
-    ),
-  }), [unavailableLinesNumber, t]);
+  const dialogContent = useMemo(
+    () => ({
+      title: t(
+        unavailableLinesNumber === 1
+          ? "stock-errors.some-of-products-unavailable"
+          : "stock-errors.products-unavailable",
+      ),
+      message: t(
+        unavailableLinesNumber === 1
+          ? "stock-errors.some-of-products-message"
+          : "stock-errors.products-message",
+      ),
+    }),
+    [unavailableLinesNumber, t],
+  );
 
   return (
     <Dialog open>
@@ -76,11 +79,17 @@ const ErrorDialogComponent = ({ checkout }: ErrorDialogProps) => {
 };
 
 // Мемоизация - отображается при проблемах с наличием товара
-export const ErrorDialog = memo(ErrorDialogComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.checkout.problems.insufficientStock.length === nextProps.checkout.problems.insufficientStock.length &&
-    prevProps.checkout.problems.insufficientStock.every((item, i) =>
-      item.line.id === nextProps.checkout.problems.insufficientStock[i]?.line.id
-    )
-  );
-});
+export const ErrorDialog = memo(
+  ErrorDialogComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.checkout.problems.insufficientStock.length ===
+        nextProps.checkout.problems.insufficientStock.length &&
+      prevProps.checkout.problems.insufficientStock.every(
+        (item, i) =>
+          item.line.id ===
+          nextProps.checkout.problems.insufficientStock[i]?.line.id,
+      )
+    );
+  },
+);

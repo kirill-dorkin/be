@@ -1,113 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-const MAP_CENTER: [number, number] = [42.848524, 74.595204];
-// 2ГИС тайлы. Используем один сервер без поддоменов.
-const TILE_URL = "https://tile0.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.3";
-const ATTRIBUTION = "© 2ГИС";
-const MARKER_ICON =
-  "data:image/svg+xml,%3Csvg width='32' height='46' viewBox='0 0 32 46' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 0C7.164 0 0 7.163 0 16c0 11.492 16 30 16 30s16-18.508 16-30C32 7.163 24.836 0 16 0Z' fill='%230078ff'/%3E%3Cpath d='M16 23a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z' fill='%23fff'/%3E%3Cpath d='M16 21a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z' fill='%230078ff'/%3E%3C/svg%3E";
-
-const LEAFLET_STYLE_ID = "leaflet-css";
-const LEAFLET_SCRIPT_ID = "leaflet-js";
-const LEAFLET_STYLE_HREF = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-const LEAFLET_SCRIPT_SRC = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+const MAP_SRC =
+  "https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A42.848524%2C%22lon%22%3A74.595204%2C%22zoom%22%3A17%7D%2C%22opt%22%3A%7B%22city%22%3A%22bishkek%22%7D%2C%22org%22%3A%2270000001058839512%22%7D";
 
 export function ContactMap() {
-  const mapEl = useRef<HTMLDivElement | null>(null);
-  const mapInstance = useRef<any>(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const ensureStyles = () => {
-      if (!document.getElementById(LEAFLET_STYLE_ID)) {
-        const link = document.createElement("link");
-        link.id = LEAFLET_STYLE_ID;
-        link.rel = "stylesheet";
-        link.href = LEAFLET_STYLE_HREF;
-        document.head.appendChild(link);
-      }
-    };
-
-    const loadScript = () =>
-      new Promise<void>((resolve, reject) => {
-        const existing = document.getElementById(LEAFLET_SCRIPT_ID) as
-          | HTMLScriptElement
-          | null;
-        if (existing && (window as any).L) {
-          resolve();
-          return;
-        }
-        if (existing) {
-          existing.addEventListener("load", () => resolve());
-          existing.addEventListener("error", reject);
-          return;
-        }
-        const script = document.createElement("script");
-        script.id = LEAFLET_SCRIPT_ID;
-        script.src = LEAFLET_SCRIPT_SRC;
-        script.async = true;
-        script.onload = () => resolve();
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-
-    ensureStyles();
-
-    loadScript()
-      .then(() => {
-        const L = (window as any).L;
-        if (!mapEl.current || !L) {
-          setFailed(true);
-          return;
-        }
-        if (mapInstance.current) {
-          mapInstance.current.remove();
-          mapInstance.current = null;
-        }
-        const map = L.map(mapEl.current, {
-          zoomControl: true,
-          scrollWheelZoom: true,
-          dragging: true,
-        }).setView(MAP_CENTER, 17);
-
-        L.tileLayer(TILE_URL, {
-          attribution: ATTRIBUTION,
-          maxZoom: 19,
-        }).addTo(map);
-
-        const icon = L.icon({
-          iconUrl: MARKER_ICON,
-          iconSize: [32, 46],
-          iconAnchor: [16, 46],
-        });
-
-        L.marker(MAP_CENTER, { icon }).addTo(map);
-        mapInstance.current = map;
-      })
-      .catch(() => setFailed(true));
-
-    return () => {
-      if (mapInstance.current) {
-        mapInstance.current.remove();
-      }
-    };
-  }, []);
-
   return (
-    <div
-      ref={mapEl}
-      className="relative h-72 overflow-hidden rounded-xl bg-muted"
-      aria-label="Карта офиса BestElectronics"
-    >
-      {failed && (
-        <div className="absolute inset-0 flex items-center justify-center text-sm text-muted-foreground">
-          Карта недоступна, откройте 2ГИС по ссылке ниже.
-        </div>
-      )}
+    <div className="bg-card relative h-72 overflow-hidden rounded-xl">
+      <iframe
+        src={MAP_SRC}
+        title="BestElectronics на карте 2ГИС"
+        className="h-full w-full border-0"
+        loading="lazy"
+        allowFullScreen
+      />
+      <div className="pointer-events-none absolute inset-0 rounded-xl border border-transparent bg-gradient-to-b from-transparent to-transparent" />
     </div>
   );
 }

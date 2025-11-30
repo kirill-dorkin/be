@@ -8,7 +8,7 @@ const CHANNEL_SLUG =
 
 if (!API_URL || !APP_TOKEN) {
   throw new Error(
-    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения."
+    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения.",
   );
 }
 
@@ -16,7 +16,7 @@ const CATALOG_FILE = path.join(__dirname, "..", "catalog_curated.json");
 
 if (!fs.existsSync(CATALOG_FILE)) {
   throw new Error(
-    "Файл catalog_curated.json не найден. Сначала выполните scripts/build_curated_catalog.js."
+    "Файл catalog_curated.json не найден. Сначала выполните scripts/build_curated_catalog.js.",
   );
 }
 
@@ -41,7 +41,7 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
     }
     const waitMs = 2000 * (attempt + 1);
     console.warn(
-      `Ошибка сети при запросе к Saleor (попытка ${attempt + 1}). Ждем ${waitMs} мс`
+      `Ошибка сети при запросе к Saleor (попытка ${attempt + 1}). Ждем ${waitMs} мс`,
     );
     await delay(waitMs);
     return graphqlRequest(query, variables, attempt + 1);
@@ -53,13 +53,13 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
     if (attempt >= 5) {
       throw new Error(
         `Saleor API ограничил запросы после нескольких попыток: ${JSON.stringify(
-          json
-        )}`
+          json,
+        )}`,
       );
     }
     const waitMs = 2000 * (attempt + 1);
     console.warn(
-      `Получен ответ о лимите запросов. Ожидаем ${waitMs} мс перед повтором…`
+      `Получен ответ о лимите запросов. Ожидаем ${waitMs} мс перед повтором…`,
     );
     await delay(waitMs);
     return graphqlRequest(query, variables, attempt + 1);
@@ -74,7 +74,7 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
 
   if (typeof json.data === "undefined") {
     throw new Error(
-      `Пустой ответ от GraphQL: ${JSON.stringify(json, null, 2)}`
+      `Пустой ответ от GraphQL: ${JSON.stringify(json, null, 2)}`,
     );
   }
 
@@ -218,7 +218,7 @@ async function bulkDeleteProducts(ids) {
       throw new Error(
         `Ошибка удаления продуктов: ${result.errors
           .map((e) => e.message)
-          .join(", ")}`
+          .join(", ")}`,
       );
     }
     console.log(`Удалено продуктов: ${result?.count ?? group.length}`);
@@ -248,7 +248,7 @@ async function bulkDeleteCategories(ids) {
     } catch (error) {
       if (error.message.includes("There is no node of type Category")) {
         console.warn(
-          "Часть категорий уже отсутствует, пропускаем текущий пакет."
+          "Часть категорий уже отсутствует, пропускаем текущий пакет.",
         );
         continue;
       }
@@ -258,19 +258,17 @@ async function bulkDeleteCategories(ids) {
     const errors =
       result.errors?.filter(
         (error) =>
-          !error.message?.includes("There is no node of type Category")
+          !error.message?.includes("There is no node of type Category"),
       ) || [];
     if (errors.length) {
       throw new Error(
-        `Ошибка удаления категорий: ${errors
-          .map((e) => e.message)
-          .join(", ")}`
+        `Ошибка удаления категорий: ${errors.map((e) => e.message).join(", ")}`,
       );
     }
     console.log(
       `Удалено категорий: ${result?.count ?? 0}${
         result.errors?.length ? " (часть уже удалена)" : ""
-      }`
+      }`,
     );
   }
 }
@@ -298,7 +296,7 @@ async function bulkDeleteProductTypes(ids) {
       throw new Error(
         `Ошибка удаления типов продуктов: ${result.errors
           .map((e) => e.message)
-          .join(", ")}`
+          .join(", ")}`,
       );
     }
     console.log(`Удалено типов продуктов: ${result?.count ?? group.length}`);
@@ -325,24 +323,22 @@ async function fetchChannelId(slug) {
 }
 
 async function ensureProductType() {
-  const existing = await graphqlRequest(
-    /* GraphQL */ `
-      query ExistingProductTypes {
-        productTypes(first: 50) {
-          edges {
-            node {
-              id
-              name
-            }
+  const existing = await graphqlRequest(/* GraphQL */ `
+    query ExistingProductTypes {
+      productTypes(first: 50) {
+        edges {
+          node {
+            id
+            name
           }
         }
       }
-    `
-  );
+    }
+  `);
 
   const found =
     existing.productTypes?.edges?.find(
-      (edge) => edge.node.name === "Электроника и аксессуары"
+      (edge) => edge.node.name === "Электроника и аксессуары",
     ) || existing.productTypes?.edges?.[0];
 
   if (found) {
@@ -381,7 +377,7 @@ async function ensureProductType() {
     throw new Error(
       `Не удалось создать тип продукта: ${result.errors
         .map((e) => e.message)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
@@ -397,7 +393,7 @@ async function createCategory(node, parentId, pathStack, map) {
         }
       }
     `,
-    { slug: node.slug }
+    { slug: node.slug },
   );
 
   if (lookup?.category?.id) {
@@ -443,7 +439,7 @@ async function createCategory(node, parentId, pathStack, map) {
     throw new Error(
       `Не удалось создать категорию "${node.name}": ${result.errors
         .map((e) => e.message)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
@@ -525,7 +521,7 @@ async function createProductRecord({
         }
       }
     `,
-    { sku: product.sku }
+    { sku: product.sku },
   );
 
   if (existingVariant?.productVariant?.id) {
@@ -558,7 +554,7 @@ async function createProductRecord({
 
   if (!productResponse) {
     throw new Error(
-      `Пустой ответ productCreate для "${product.name}" (SKU ${product.sku})`
+      `Пустой ответ productCreate для "${product.name}" (SKU ${product.sku})`,
     );
   }
 
@@ -566,7 +562,7 @@ async function createProductRecord({
 
   if (!productResult) {
     throw new Error(
-      `Нет данных productCreate для "${product.name}" (SKU ${product.sku})`
+      `Нет данных productCreate для "${product.name}" (SKU ${product.sku})`,
     );
   }
 
@@ -574,7 +570,7 @@ async function createProductRecord({
     throw new Error(
       `Ошибка создания продукта "${product.name}": ${productResult.errors
         .map((e) => e.message)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
@@ -607,7 +603,7 @@ async function createProductRecord({
 
   if (!variantResponse) {
     throw new Error(
-      `Пустой ответ productVariantCreate для "${product.name}" (SKU ${product.sku})`
+      `Пустой ответ productVariantCreate для "${product.name}" (SKU ${product.sku})`,
     );
   }
 
@@ -615,7 +611,7 @@ async function createProductRecord({
 
   if (!variantResult) {
     throw new Error(
-      `Нет данных productVariantCreate для "${product.name}" (SKU ${product.sku})`
+      `Нет данных productVariantCreate для "${product.name}" (SKU ${product.sku})`,
     );
   }
 
@@ -623,14 +619,17 @@ async function createProductRecord({
     throw new Error(
       `Ошибка создания варианта "${product.name}": ${variantResult.errors
         .map((e) => e.message)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
   const variantId = variantResult.productVariant.id;
 
   const productChannelMutation = /* GraphQL */ `
-    mutation ProductChannelListingUpdate($id: ID!, $input: ProductChannelListingUpdateInput!) {
+    mutation ProductChannelListingUpdate(
+      $id: ID!
+      $input: ProductChannelListingUpdateInput!
+    ) {
       productChannelListingUpdate(id: $id, input: $input) {
         errors {
           field
@@ -640,26 +639,23 @@ async function createProductRecord({
     }
   `;
 
-  const productChannelResponse = await graphqlRequest(
-    productChannelMutation,
-    {
-      id: productId,
-      input: {
-        updateChannels: [
-          {
-            channelId,
-            isPublished: true,
-            visibleInListings: true,
-            isAvailableForPurchase: true,
-          },
-        ],
-      },
-    }
-  );
+  const productChannelResponse = await graphqlRequest(productChannelMutation, {
+    id: productId,
+    input: {
+      updateChannels: [
+        {
+          channelId,
+          isPublished: true,
+          visibleInListings: true,
+          isAvailableForPurchase: true,
+        },
+      ],
+    },
+  });
 
   if (!productChannelResponse) {
     throw new Error(
-      `Пустой ответ от productChannelListingUpdate для "${product.name}"`
+      `Пустой ответ от productChannelListingUpdate для "${product.name}"`,
     );
   }
 
@@ -668,7 +664,7 @@ async function createProductRecord({
 
   if (!productChannelResult) {
     throw new Error(
-      `Нет данных в productChannelListingUpdate для "${product.name}"`
+      `Нет данных в productChannelListingUpdate для "${product.name}"`,
     );
   }
 
@@ -676,12 +672,15 @@ async function createProductRecord({
     throw new Error(
       `Ошибка публикации продукта "${product.name}": ${productChannelResult.errors
         .map((e) => e.message)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
   const variantChannelMutation = /* GraphQL */ `
-    mutation ProductVariantChannelListingUpdate($id: ID!, $input: [ProductVariantChannelListingAddInput!]!) {
+    mutation ProductVariantChannelListingUpdate(
+      $id: ID!
+      $input: [ProductVariantChannelListingAddInput!]!
+    ) {
       productVariantChannelListingUpdate(id: $id, input: $input) {
         errors {
           field
@@ -711,16 +710,14 @@ async function createProductRecord({
     variantChannelResponse?.productVariantChannelListingUpdate;
 
   if (!variantChannelResult) {
-    throw new Error(
-      `Пустой ответ при назначении цены для "${product.name}"`
-    );
+    throw new Error(`Пустой ответ при назначении цены для "${product.name}"`);
   }
 
   if (variantChannelResult.errors?.length) {
     throw new Error(
       `Ошибка назначения цены для "${product.name}": ${variantChannelResult.errors
         .map((e) => e.message)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 }
@@ -746,7 +743,7 @@ async function importProducts({
       const categoryId = categoryMap.get(categoryKey);
       if (!categoryId) {
         throw new Error(
-          `Не найдена категория для пути "${categoryKey}" (SKU ${current.sku})`
+          `Не найдена категория для пути "${categoryKey}" (SKU ${current.sku})`,
         );
       }
       try {
@@ -769,14 +766,14 @@ async function importProducts({
       }
       if (completed % 25 === 0 || completed === total) {
         console.log(
-          `[${completed}/${total}] Импортировано (worker ${workerIndex})`
+          `[${completed}/${total}] Импортировано (worker ${workerIndex})`,
         );
       }
     }
   }
 
   const workers = Array.from({ length: concurrency }, (_, index) =>
-    worker(index + 1)
+    worker(index + 1),
   );
 
   await Promise.all(workers);
@@ -803,7 +800,7 @@ async function main() {
     while (categoryIds.length) {
       categoryPass += 1;
       console.log(
-        `Удаляем ${categoryIds.length} корневых категорий… (итерация ${categoryPass})`
+        `Удаляем ${categoryIds.length} корневых категорий… (итерация ${categoryPass})`,
       );
       await bulkDeleteCategories(categoryIds);
       categoryIds = await fetchRootCategoryIds();
@@ -817,7 +814,7 @@ async function main() {
     while (productTypeIds.length) {
       productTypePass += 1;
       console.log(
-        `Удаляем ${productTypeIds.length} типов продуктов… (итерация ${productTypePass})`
+        `Удаляем ${productTypeIds.length} типов продуктов… (итерация ${productTypePass})`,
       );
       await bulkDeleteProductTypes(productTypeIds);
       productTypeIds = await fetchAllProductTypeIds();
@@ -832,7 +829,7 @@ async function main() {
   console.log("Шаг 2. Подготовка инфраструктуры…");
   const channel = await fetchChannelId(CHANNEL_SLUG);
   console.log(
-    `Канал найден: ${channel.name} (${channel.currencyCode}), активен: ${channel.isActive}`
+    `Канал найден: ${channel.name} (${channel.currencyCode}), активен: ${channel.isActive}`,
   );
 
   const productTypeId = await ensureProductType();
@@ -851,7 +848,7 @@ async function main() {
   const slice = allProducts.slice(offset, end);
 
   console.log(
-    `Всего продуктов к импорту: ${allProducts.length}. Обрабатываем диапазон ${offset}–${end}.`
+    `Всего продуктов к импорту: ${allProducts.length}. Обрабатываем диапазон ${offset}–${end}.`,
   );
 
   await importProducts({

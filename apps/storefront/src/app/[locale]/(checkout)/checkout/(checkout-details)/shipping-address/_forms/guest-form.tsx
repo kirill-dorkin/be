@@ -42,7 +42,9 @@ const ShippingAddressFormComponent = ({
   const { isRedirecting, push } = useRouterWithState();
 
   const form = useForm<AddressSchema>({
-    resolver: zodResolver(addressSchema({ addressFormRows, t, country: countryCode as any })),
+    resolver: zodResolver(
+      addressSchema({ addressFormRows, t, country: countryCode as any }),
+    ),
     defaultValues: [...ADDRESS_CORE_FIELDS].reduce(
       (acc, fieldName) => ({
         ...acc,
@@ -58,37 +60,40 @@ const ShippingAddressFormComponent = ({
   // Мемоизация флага canProceed
   const canProceed = useMemo(
     () => !form.formState.isSubmitting && !isCountryChanging && !isRedirecting,
-    [form.formState.isSubmitting, isCountryChanging, isRedirecting]
+    [form.formState.isSubmitting, isCountryChanging, isRedirecting],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit = useCallback(async (input: AddressSchema) => {
-    const result = await updateCheckoutAddressAction({
-      checkoutId: checkout.id,
-      address: schemaToAddress(input),
-      type: "shipping",
-    });
+  const handleSubmit = useCallback(
+    async (input: AddressSchema) => {
+      const result = await updateCheckoutAddressAction({
+        checkoutId: checkout.id,
+        address: schemaToAddress(input),
+        type: "shipping",
+      });
 
-    if (result.ok) {
-      push(paths.checkout.deliveryMethod.asPath());
+      if (result.ok) {
+        push(paths.checkout.deliveryMethod.asPath());
 
-      return;
-    }
-
-    result.errors.map(({ field, code }) => {
-      if (isGlobalError(field)) {
-        toast({
-          variant: "destructive",
-          description: t(`errors.${code}`),
-          title: "Error",
-        });
-      } else {
-        form.setError(field as keyof AddressSchema, {
-          message: t(`errors.${code}`),
-        });
+        return;
       }
-    });
-  }, [checkout.id, push, toast, form, t]);
+
+      result.errors.map(({ field, code }) => {
+        if (isGlobalError(field)) {
+          toast({
+            variant: "destructive",
+            description: t(`errors.${code}`),
+            title: "Error",
+          });
+        } else {
+          form.setError(field as keyof AddressSchema, {
+            message: t(`errors.${code}`),
+          });
+        }
+      });
+    },
+    [checkout.id, push, toast, form, t],
+  );
 
   return (
     <section className="space-y-8 pt-8">
@@ -125,10 +130,13 @@ const ShippingAddressFormComponent = ({
 };
 
 // Мемоизация - форма адреса доставки для гостя в checkout
-export const ShippingAddressForm = memo(ShippingAddressFormComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.checkout.id === nextProps.checkout.id &&
-    prevProps.addressFormRows === nextProps.addressFormRows &&
-    prevProps.countryCode === nextProps.countryCode
-  );
-});
+export const ShippingAddressForm = memo(
+  ShippingAddressFormComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.checkout.id === nextProps.checkout.id &&
+      prevProps.addressFormRows === nextProps.addressFormRows &&
+      prevProps.countryCode === nextProps.countryCode
+    );
+  },
+);

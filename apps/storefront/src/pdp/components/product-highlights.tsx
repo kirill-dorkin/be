@@ -35,11 +35,13 @@ export const ProductHighlights = async (props: Props) => {
   }
 
   return (
-    <div className="border-border/30 dark:border-white/10 my-8 space-y-3 border-t pt-6">
+    <div className="border-border/30 my-8 space-y-3 border-t pt-6 dark:border-white/10">
       {hasFreeShipping && (
         <Alert className="border-green-200 bg-green-50/50 text-slate-700 dark:border-green-900/30 dark:bg-green-900/10 dark:text-green-100">
           <Truck className="size-4" />
-          <AlertTitle className="font-semibold">{t("free-shipping")}</AlertTitle>
+          <AlertTitle className="font-semibold">
+            {t("free-shipping")}
+          </AlertTitle>
           <AlertDescription>{t("standard-parcel")}</AlertDescription>
         </Alert>
       )}

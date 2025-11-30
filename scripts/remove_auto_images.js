@@ -3,7 +3,7 @@ const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
 
 if (!API_URL || !APP_TOKEN) {
   throw new Error(
-    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения."
+    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения.",
   );
 }
 
@@ -26,7 +26,7 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
     }
     const waitMs = 2000 * (attempt + 1);
     console.warn(
-      `Ошибка сети при запросе к Saleor (попытка ${attempt + 1}). Ждем ${waitMs} мс`
+      `Ошибка сети при запросе к Saleor (попытка ${attempt + 1}). Ждем ${waitMs} мс`,
     );
     await delay(waitMs);
     return graphqlRequest(query, variables, attempt + 1);
@@ -38,13 +38,13 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
     if (attempt >= 5) {
       throw new Error(
         `Saleor API ограничил запросы после нескольких попыток: ${JSON.stringify(
-          json
-        )}`
+          json,
+        )}`,
       );
     }
     const waitMs = 2000 * (attempt + 1);
     console.warn(
-      `Получен ответ о лимите запросов. Ожидаем ${waitMs} мс перед повтором…`
+      `Получен ответ о лимите запросов. Ожидаем ${waitMs} мс перед повтором…`,
     );
     await delay(waitMs);
     return graphqlRequest(query, variables, attempt + 1);
@@ -59,7 +59,7 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
 
   if (typeof json.data === "undefined") {
     throw new Error(
-      `Пустой ответ от GraphQL: ${JSON.stringify(json, null, 2)}`
+      `Пустой ответ от GraphQL: ${JSON.stringify(json, null, 2)}`,
     );
   }
 
@@ -110,7 +110,7 @@ async function fetchProductsWithAutoImages() {
       const product = edge.node;
       // Ищем продукты с metadata autoImage: true и изображениями
       const hasAutoImage = product.metadata?.some(
-        (meta) => meta.key === "autoImage" && meta.value === "true"
+        (meta) => meta.key === "autoImage" && meta.value === "true",
       );
 
       if (hasAutoImage && product.media && product.media.length > 0) {
@@ -152,8 +152,8 @@ async function deleteProductImage(productId, mediaId) {
     ) {
       throw new Error(
         `Ошибки при удалении изображения: ${JSON.stringify(
-          data.productMediaDelete.errors
-        )}`
+          data.productMediaDelete.errors,
+        )}`,
       );
     }
 
@@ -161,7 +161,7 @@ async function deleteProductImage(productId, mediaId) {
   } catch (error) {
     console.error(
       `Ошибка при удалении изображения ${mediaId} продукта ${productId}:`,
-      error.message
+      error.message,
     );
     throw error;
   }
@@ -194,7 +194,7 @@ async function removeAutoImageMetadata(productId) {
     if (data.deleteMetadata?.errors && data.deleteMetadata.errors.length > 0) {
       console.warn(
         `Предупреждение при удалении метаданных ${productId}:`,
-        data.deleteMetadata.errors
+        data.deleteMetadata.errors,
       );
     }
 
@@ -202,7 +202,7 @@ async function removeAutoImageMetadata(productId) {
   } catch (error) {
     console.error(
       `Ошибка при удалении метаданных продукта ${productId}:`,
-      error.message
+      error.message,
     );
     // Не прерываем выполнение
   }
@@ -210,14 +210,16 @@ async function removeAutoImageMetadata(productId) {
 
 // Основная функция
 async function main() {
-  console.log("🧹 Начинаем удаление автоматически добавленных изображений...\n");
+  console.log(
+    "🧹 Начинаем удаление автоматически добавленных изображений...\n",
+  );
 
   // Получаем продукты с автоматически добавленными изображениями
   console.log("📦 Получаем список продуктов с автоматическими фото...");
   const productsWithAutoImages = await fetchProductsWithAutoImages();
 
   console.log(
-    `\n✅ Найдено ${productsWithAutoImages.length} продуктов с автоматическими фото\n`
+    `\n✅ Найдено ${productsWithAutoImages.length} продуктов с автоматическими фото\n`,
   );
 
   if (productsWithAutoImages.length === 0) {

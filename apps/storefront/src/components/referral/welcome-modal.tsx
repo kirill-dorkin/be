@@ -63,10 +63,10 @@ export function ReferralWelcomeModal({
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30">
                 <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="mb-1 text-sm font-semibold text-slate-900 dark:text-primary">
+              <h3 className="dark:text-primary mb-1 text-sm font-semibold text-slate-900">
                 {t("referral.step-1-title")}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-xs text-slate-600">
                 {t("referral.welcome-step-1")}
               </p>
             </div>
@@ -75,10 +75,10 @@ export function ReferralWelcomeModal({
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30">
                 <Gift className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h3 className="mb-1 text-sm font-semibold text-slate-900 dark:text-primary">
+              <h3 className="dark:text-primary mb-1 text-sm font-semibold text-slate-900">
                 {t("referral.step-2-title")}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-xs text-slate-600">
                 {t("referral.welcome-step-2")}
               </p>
             </div>
@@ -87,10 +87,10 @@ export function ReferralWelcomeModal({
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30">
                 <Wallet className="h-6 w-6 text-amber-600 dark:text-amber-400" />
               </div>
-              <h3 className="mb-1 text-sm font-semibold text-slate-900 dark:text-primary">
+              <h3 className="dark:text-primary mb-1 text-sm font-semibold text-slate-900">
                 {t("referral.step-3-title")}
               </h3>
-              <p className="text-xs text-slate-600 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-xs text-slate-600">
                 {t("referral.welcome-step-3", {
                   amount: REFERRAL_BONUS_AMOUNT,
                   currency: t("common.currency"),
@@ -109,10 +109,10 @@ export function ReferralWelcomeModal({
           </div>
 
           <div className="rounded-2xl border border-dashed border-slate-200 bg-white/70 p-4 text-center dark:border-slate-700 dark:bg-slate-900/30">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-muted-foreground">
+            <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
               {t("referral.your-referral-link")}
             </p>
-            <p className="mt-1 font-mono text-lg text-slate-900 dark:text-primary">
+            <p className="dark:text-primary mt-1 font-mono text-lg text-slate-900">
               {referralCode}
             </p>
           </div>

@@ -17,6 +17,9 @@ const ErrorServiceClientComponent = ({ user }: Props) => {
 };
 
 // Мемоизация - Sentry клиент
-export const ErrorServiceClient = memo(ErrorServiceClientComponent, (prevProps, nextProps) => {
-  return prevProps.user?.id === nextProps.user?.id;
-});
+export const ErrorServiceClient = memo(
+  ErrorServiceClientComponent,
+  (prevProps, nextProps) => {
+    return prevProps.user?.id === nextProps.user?.id;
+  },
+);

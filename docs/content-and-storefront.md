@@ -3,11 +3,13 @@
 Руководство для контент-менеджеров и дизайнеров: как обновлять страницы, меню, баннеры и проверять публикации на сайте Nimara.
 
 ## 1. Источники контента
+
 - **Saleor CMS (Content → Pages, Navigation, Collections)** — используется для ключевых страниц и меню.
 - **ButterCMS** — подключается через API (см. [apps/storefront/src/services/cms.ts](https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/services/cms.ts)).
 - **Локальные компоненты Next.js** — баннеры, карусели и блоки на главной странице (см. [apps/storefront/src/app](https://github.com/kirill-dorkin/be/tree/main/apps/storefront/src/app)).
 
 ## 2. Обновление страниц в Saleor
+
 1. Перейдите в **Content → Pages**.
 2. Выберите существующую страницу или нажмите **Create page**.
 3. Заполните поля:
@@ -18,6 +20,7 @@
 5. Нажмите **Save**. Страница появится на сайте после обновления кеша (обычно до 1 минуты).
 
 ### 2.1 Добавление страницы в меню
+
 1. Перейдите в **Content → Navigation**.
 2. Выберите нужное меню (например, `Main Navigation`).
 3. Нажмите **Add menu item**.
@@ -25,23 +28,27 @@
 5. Перетащите пункт в нужное место, нажмите **Save**.
 
 ## 3. Работа с ButterCMS
+
 1. Войдите в аккаунт ButterCMS.
 2. Найдите нужную коллекцию или страницу, отредактируйте текст/изображения.
 3. Опубликуйте изменения.
 4. Чтобы обновления появились на сайте сразу, попросите разработчиков сбросить кеш (вызвать API `/api/revalidate?tag=...` или обновить страницу). Подробнее — в [apps/storefront/src/lib/cache.ts](https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/lib/cache.ts).
 
 ## 4. Баннеры и визуальные блоки
-- Главная страница использует компоненты из [apps/storefront/src/app/%5Blocale%5D/(main)/page.tsx](https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/app/%5Blocale%5D/(main)/page.tsx) и связанных блоков в `src/sections`.
+
+- Главная страница использует компоненты из [apps/storefront/src/app/%5Blocale%5D/(main)/page.tsx](<https://github.com/kirill-dorkin/be/blob/main/apps/storefront/src/app/%5Blocale%5D/(main)/page.tsx>) и связанных блоков в `src/sections`.
 - Изображения хранятся в публичной папке [apps/storefront/public](https://github.com/kirill-dorkin/be/tree/main/apps/storefront/public). Загружайте файлы через Git или попросите разработчиков обновить ресурсы.
 - Для лендингов можно создавать отдельные маршруты в `src/app/[locale]/(landing)`.
 
 ## 5. Проверка перед публикацией
+
 - Просмотрите страницу на тестовом канале (Staging). Убедитесь, что локализация работает (переключите язык в шапке сайта).
 - Проверяйте адаптивность: уменьшите окно браузера или используйте инструменты разработчика.
 - Убедитесь, что ссылки не ведут на черновые страницы.
 - Обновите кеш вручную, вызвав `https://nimara.example.com/api/revalidate?tag=main-navigation` (замените тег на нужный).
 
 ## 6. Контрольный список контент-редактора
+
 - [ ] Страница сохранена и опубликована.
 - [ ] Канал продаж выбран корректно.
 - [ ] Добавлены изображения нужного размера (минимум 1200×600 для баннера).

@@ -129,8 +129,14 @@ export const CartDetails = ({
           <MembershipSavings cart={cart} user={user} />
         </ShoppingBag.Pricing>
       </ShoppingBag>
-      <div className="sticky bottom-0 w-full bg-background py-4 text-center">
-        <Button asChild size="lg" disabled={isDisabled} loading={isProcessing} className="w-full shadow-md sm:w-auto sm:min-w-[280px]">
+      <div className="bg-background sticky bottom-0 w-full py-4 text-center">
+        <Button
+          asChild
+          size="lg"
+          disabled={isDisabled}
+          loading={isProcessing}
+          className="w-full shadow-md sm:w-auto sm:min-w-[280px]"
+        >
           <LocalizedLink
             href={
               !!user ? paths.checkout.asPath() : paths.checkout.signIn.asPath()

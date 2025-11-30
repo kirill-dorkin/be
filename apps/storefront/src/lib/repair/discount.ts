@@ -59,11 +59,11 @@ export const getRepairDiscountForUser = (
   };
 };
 
-export const hasRepairDiscount = (discount: RepairDiscount | null | undefined) =>
-  !!discount && discount.percentage > 0;
+export const hasRepairDiscount = (
+  discount: RepairDiscount | null | undefined,
+) => !!discount && discount.percentage > 0;
 
-export const toDiscountPercent = (rate: number) =>
-  Math.round(rate * 100);
+export const toDiscountPercent = (rate: number) => Math.round(rate * 100);
 
 export const currencyMath = {
   toCurrency,

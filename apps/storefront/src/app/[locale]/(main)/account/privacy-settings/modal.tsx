@@ -44,78 +44,81 @@ const DeleteAccountModalComponent = () => {
   const content: ReactNode = useMemo(() => {
     if (searchParams.get("emailSent")) {
       return (
-      <>
-        <DialogHeader>
-          <DialogTitle>{t("account.confirm-account-deletion")}</DialogTitle>
-          <DialogDescription className="dark:text-muted-foreground text-sm text-stone-500">
-            {t("account.confirm-account-deletion-description")}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="mt-6">
-          <DialogClose asChild className="mt-4 w-full">
-            <Button asChild>
-              <LocalizedLink href={paths.account.privacySettings.asPath()}>
-                {t("account.ok-i-will-check-my-email")}
-              </LocalizedLink>
-            </Button>
-          </DialogClose>
-        </DialogFooter>
-      </>
+        <>
+          <DialogHeader>
+            <DialogTitle>{t("account.confirm-account-deletion")}</DialogTitle>
+            <DialogDescription className="dark:text-muted-foreground text-sm text-stone-500">
+              {t("account.confirm-account-deletion-description")}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-6">
+            <DialogClose asChild className="mt-4 w-full">
+              <Button asChild>
+                <LocalizedLink href={paths.account.privacySettings.asPath()}>
+                  {t("account.ok-i-will-check-my-email")}
+                </LocalizedLink>
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </>
       );
     } else {
       return (
-      <>
-        <DialogHeader>
-          <DialogTitle>{t("account.delete-account")}</DialogTitle>
-          <DialogDescription className="dark:text-muted-foreground text-sm text-stone-500">
-            {t("account.delete-account-modal-description")}{" "}
-            {t.rich("account.in-case-of-any-questions", {
-              contactUs: () => (
-                <LocalizedLink
-                  href={`mailto:${clientEnvs.NEXT_PUBLIC_DEFAULT_EMAIL}`}
-                  className="underline decoration-gray-400 underline-offset-2 dark:decoration-gray-300"
-                  target="_blank"
-                >
-                  {t("common.contact-us")}
-                </LocalizedLink>
-              ),
-              privacyPolicy: () => (
-                <LocalizedLink
-                  href={paths.privacyPolicy.asPath()}
-                  className="underline decoration-gray-400 underline-offset-2 dark:decoration-gray-300"
-                >
-                  {t("common.privacy-policy")}
-                </LocalizedLink>
-              ),
-            })}
-          </DialogDescription>
-        </DialogHeader>
-        {searchParams.get("error") ? (
-          <p className="destructive mt-6 text-sm">
-            {t("errors.account.deleteAccount")}
-          </p>
-        ) : (
-          <form action={requestUserAccountDeletion} className="mt-6 space-y-6">
-            <div className="flex w-full gap-2">
-              <Checkbox
-                checked={isDeleteAccountChecked}
-                onCheckedChange={handleCheckboxChange}
-                className="mt-1"
-                id={DELETE_ACCOUNT}
-                name={DELETE_ACCOUNT}
-              />
-              <Label className="!leading-5" htmlFor={DELETE_ACCOUNT}>
-                {t(
-                  "account.i-want-permanently-delete-my-account-and-all-data-from-store",
-                )}
-              </Label>
-            </div>
-            <DialogFooter>
-              <SubmitButton disabled={!isDeleteAccountChecked} />
-            </DialogFooter>
-          </form>
-        )}
-      </>
+        <>
+          <DialogHeader>
+            <DialogTitle>{t("account.delete-account")}</DialogTitle>
+            <DialogDescription className="dark:text-muted-foreground text-sm text-stone-500">
+              {t("account.delete-account-modal-description")}{" "}
+              {t.rich("account.in-case-of-any-questions", {
+                contactUs: () => (
+                  <LocalizedLink
+                    href={`mailto:${clientEnvs.NEXT_PUBLIC_DEFAULT_EMAIL}`}
+                    className="underline decoration-gray-400 underline-offset-2 dark:decoration-gray-300"
+                    target="_blank"
+                  >
+                    {t("common.contact-us")}
+                  </LocalizedLink>
+                ),
+                privacyPolicy: () => (
+                  <LocalizedLink
+                    href={paths.privacyPolicy.asPath()}
+                    className="underline decoration-gray-400 underline-offset-2 dark:decoration-gray-300"
+                  >
+                    {t("common.privacy-policy")}
+                  </LocalizedLink>
+                ),
+              })}
+            </DialogDescription>
+          </DialogHeader>
+          {searchParams.get("error") ? (
+            <p className="destructive mt-6 text-sm">
+              {t("errors.account.deleteAccount")}
+            </p>
+          ) : (
+            <form
+              action={requestUserAccountDeletion}
+              className="mt-6 space-y-6"
+            >
+              <div className="flex w-full gap-2">
+                <Checkbox
+                  checked={isDeleteAccountChecked}
+                  onCheckedChange={handleCheckboxChange}
+                  className="mt-1"
+                  id={DELETE_ACCOUNT}
+                  name={DELETE_ACCOUNT}
+                />
+                <Label className="!leading-5" htmlFor={DELETE_ACCOUNT}>
+                  {t(
+                    "account.i-want-permanently-delete-my-account-and-all-data-from-store",
+                  )}
+                </Label>
+              </div>
+              <DialogFooter>
+                <SubmitButton disabled={!isDeleteAccountChecked} />
+              </DialogFooter>
+            </form>
+          )}
+        </>
       );
     }
   }, [searchParams, isDeleteAccountChecked, handleCheckboxChange, t]);
@@ -128,7 +131,7 @@ const DeleteAccountModalComponent = () => {
       <DialogContent className="sm:max-w-[425px]">{content}</DialogContent>
     </Dialog>
   );
-}
+};
 
 function SubmitButton({ disabled }: Pick<ButtonProps, "disabled">) {
   const t = useTranslations();

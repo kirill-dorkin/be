@@ -55,10 +55,7 @@ const AddNewAddressModalComponent = ({
       <DialogTrigger asChild>
         <Button {...buttonProps}>{buttonContent}</Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        aria-describedby={undefined}
-      >
+      <DialogContent className="sm:max-w-[425px]" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{t("address.add-new-address")}</DialogTitle>
         </DialogHeader>
@@ -74,10 +71,13 @@ const AddNewAddressModalComponent = ({
 };
 
 // Мемоизация - модальное окно добавления адреса
-export const AddNewAddressModal = memo(AddNewAddressModalComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.addressFormRows === nextProps.addressFormRows &&
-    prevProps.countries.length === nextProps.countries.length &&
-    prevProps.countryCode === nextProps.countryCode
-  );
-});
+export const AddNewAddressModal = memo(
+  AddNewAddressModalComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.addressFormRows === nextProps.addressFormRows &&
+      prevProps.countries.length === nextProps.countries.length &&
+      prevProps.countryCode === nextProps.countryCode
+    );
+  },
+);

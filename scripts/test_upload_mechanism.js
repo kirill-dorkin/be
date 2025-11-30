@@ -5,9 +5,15 @@ const axios = require("axios");
 
 // Этот скрипт показывает КАК ИМЕННО работает загрузка файла в Saleor
 
-console.log("╔════════════════════════════════════════════════════════════════╗");
-console.log("║  Демонстрация механизма загрузки изображения в Saleor         ║");
-console.log("╚════════════════════════════════════════════════════════════════╝\n");
+console.log(
+  "╔════════════════════════════════════════════════════════════════╗",
+);
+console.log(
+  "║  Демонстрация механизма загрузки изображения в Saleor         ║",
+);
+console.log(
+  "╚════════════════════════════════════════════════════════════════╝\n",
+);
 
 console.log("📚 Как работает загрузка файла в Saleor через GraphQL:\n");
 
@@ -17,7 +23,9 @@ console.log("    Файл сохраняется локально на ваше�
 
 console.log("2️⃣  СОЗДАНИЕ MULTIPART/FORM-DATA ЗАПРОСА");
 console.log("    Используется спецификация GraphQL multipart request:");
-console.log("    https://github.com/jaydenseric/graphql-multipart-request-spec\n");
+console.log(
+  "    https://github.com/jaydenseric/graphql-multipart-request-spec\n",
+);
 
 console.log("    Структура запроса:");
 console.log("    ┌─────────────────────────────────────────────────┐");
@@ -70,7 +78,9 @@ console.log("          'product': { 'id': 'Product:123', ... },");
 console.log("          'media': [");
 console.log("            {");
 console.log("              'id': 'ProductMedia:456',");
-console.log("              'url': 'https://cdn.saleor.com/media/products/product_abc.jpg',");
+console.log(
+  "              'url': 'https://cdn.saleor.com/media/products/product_abc.jpg',",
+);
 console.log("              'type': 'IMAGE'");
 console.log("            }");
 console.log("          ]");
@@ -84,7 +94,9 @@ console.log("    ✅ Изображение доступно по URL");
 console.log("    ✅ URL будет работать всегда (файл хранится у вас)");
 console.log("    ✅ НЕ зависит от внешних источников\n");
 
-console.log("════════════════════════════════════════════════════════════════\n");
+console.log(
+  "════════════════════════════════════════════════════════════════\n",
+);
 
 console.log("💡 Пример кода (из add_product_images.js):\n");
 console.log("```javascript");
@@ -116,13 +128,19 @@ console.log("  }");
 console.log("});");
 console.log("```\n");
 
-console.log("════════════════════════════════════════════════════════════════\n");
+console.log(
+  "════════════════════════════════════════════════════════════════\n",
+);
 console.log("📖 Дополнительная информация:\n");
 console.log("  • GraphQL Multipart Request Spec:");
-console.log("    https://github.com/jaydenseric/graphql-multipart-request-spec");
+console.log(
+  "    https://github.com/jaydenseric/graphql-multipart-request-spec",
+);
 console.log("");
 console.log("  • Saleor GraphQL API - Product Media:");
-console.log("    https://docs.saleor.io/api-reference/products/mutations/product-media-create");
+console.log(
+  "    https://docs.saleor.io/api-reference/products/mutations/product-media-create",
+);
 console.log("");
 console.log("  • FormData (npm package):");
 console.log("    https://www.npmjs.com/package/form-data");

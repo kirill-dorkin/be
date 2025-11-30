@@ -40,10 +40,9 @@ describe("sendWorkerApplicationToTelegram", () => {
 
   it("returns error message from Telegram API on non-200", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(
-        JSON.stringify({ description: "Bad chat id" }),
-        { status: 400 },
-      ),
+      new Response(JSON.stringify({ description: "Bad chat id" }), {
+        status: 400,
+      }),
     );
 
     const send = await loadService();

@@ -14,11 +14,7 @@ import type {
   SearchService,
 } from "@nimara/infrastructure/use-cases/search/types";
 
-import {
-  CACHE_TTL,
-  DEFAULT_RESULTS_PER_PAGE,
-  DEFAULT_SORT_BY,
-} from "@/config";
+import { CACHE_TTL, DEFAULT_RESULTS_PER_PAGE, DEFAULT_SORT_BY } from "@/config";
 import { clientEnvs } from "@/envs/client";
 import { saleorClient } from "@/graphql/client";
 import { JsonLd, mappedSearchProductsToJsonLd } from "@/lib/json-ld";
@@ -30,7 +26,10 @@ import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { SearchPagination } from "../_components/search-pagination";
 import { ProductsListWithMode } from "./_components/products-list-with-mode";
 import { ProductsSkeletonWrapper } from "./_components/products-skeleton-wrapper";
-import { ViewModeProvider, ViewToggleControl } from "./_components/search-header";
+import {
+  ViewModeProvider,
+  ViewToggleControl,
+} from "./_components/search-header";
 import { FiltersContainer } from "./_filters/filters-container";
 import { NoResults } from "./_listing/no-results";
 import { SearchSortBy } from "./_listing/search-sort-by";
@@ -172,14 +171,11 @@ const buildSearchViewModel = async ({
   searchResultPromise,
 }: {
   categoryLabelsPromise: Promise<(string | null)[]>;
-  fallbackPromise: Promise<
-    | {
-        categoryLabel: string | null;
-        pageInfo: Extract<PageInfo, { type: "cursor" }>;
-        products: SearchProduct[];
-      }
-    | null
-  > | null;
+  fallbackPromise: Promise<{
+    categoryLabel: string | null;
+    pageInfo: Extract<PageInfo, { type: "cursor" }>;
+    products: SearchProduct[];
+  } | null> | null;
   searchContext: SearchContext;
   searchResultPromise: Promise<SearchResult>;
 }): Promise<SearchViewModel> => {
@@ -458,10 +454,10 @@ async function SearchContent({
       <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <div
           className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
-          style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
+          style={{ boxShadow: "0 -100vh 0 100vh hsl(var(--background))" }}
         >
           <Breadcrumbs pageName={header} />
-          <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
+          <div className="border-border/40 flex items-center justify-between border-b pb-4 pt-1">
             <h2 className="text-foreground text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
               {header}
             </h2>
@@ -469,7 +465,10 @@ async function SearchContent({
               <ViewToggleControl />
               <div className="flex gap-4">
                 <div className="hidden md:block">
-                  <SearchSortBy options={viewModel.sortOptions} searchParams={searchParams} />
+                  <SearchSortBy
+                    options={viewModel.sortOptions}
+                    searchParams={searchParams}
+                  />
                 </div>
                 <Suspense fallback={<FiltersSkeleton />}>
                   <SearchFilters
@@ -505,39 +504,33 @@ async function SearchContent({
   );
 }
 
-function SearchPageSkeleton({
-  query,
-}: {
-  query: string;
-}) {
-  const placeholderTitle = query
-    ? `Поиск: ${query}`
-    : "Загрузка товаров...";
+function SearchPageSkeleton({ query }: { query: string }) {
+  const placeholderTitle = query ? `Поиск: ${query}` : "Загрузка товаров...";
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <div
         className="bg-background sticky top-20 z-40 mt-8 pt-2 md:static md:mt-8 md:pt-0"
-        style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' }}
+        style={{ boxShadow: "0 -100vh 0 100vh hsl(var(--background))" }}
       >
         {/* Breadcrumbs skeleton */}
-        <div className="mb-4 h-4 w-32 animate-pulse rounded bg-muted/50" />
+        <div className="bg-muted/50 mb-4 h-4 w-32 animate-pulse rounded" />
 
-        <div className="flex items-center justify-between border-b border-border/40 pb-4 pt-1">
+        <div className="border-border/40 flex items-center justify-between border-b pb-4 pt-1">
           {/* Title skeleton */}
-          <div className="h-8 w-64 animate-pulse rounded bg-muted/50">
+          <div className="bg-muted/50 h-8 w-64 animate-pulse rounded">
             <span className="sr-only">{placeholderTitle}</span>
           </div>
 
           <div className="flex gap-3">
             {/* ViewToggle skeleton */}
-            <div className="h-10 w-28 animate-pulse rounded-lg bg-muted/50" />
+            <div className="bg-muted/50 h-10 w-28 animate-pulse rounded-lg" />
 
             <div className="flex gap-4">
               {/* Sort skeleton */}
-              <div className="hidden h-10 w-32 animate-pulse rounded-lg bg-muted/50 md:block" />
+              <div className="bg-muted/50 hidden h-10 w-32 animate-pulse rounded-lg md:block" />
               {/* Filter skeleton */}
-              <div className="h-10 w-10 animate-pulse rounded-xl bg-muted/50 sm:w-28" />
+              <div className="bg-muted/50 h-10 w-10 animate-pulse rounded-xl sm:w-28" />
             </div>
           </div>
         </div>
@@ -807,7 +800,7 @@ const mapFallbackProduct = (node: FallbackProductNode): SearchProduct => {
 
   const getPrice = (range?: MoneyRange | null) => {
     const money =
-      priceType === "gross" ? range?.gross ?? null : range?.net ?? null;
+      priceType === "gross" ? (range?.gross ?? null) : (range?.net ?? null);
     const currency = normalizeCurrency(
       money?.currency,
       range?.gross?.currency,
@@ -843,10 +836,11 @@ const mapFallbackProduct = (node: FallbackProductNode): SearchProduct => {
           url: node.thumbnail.url,
         }
       : null,
-    media: node.media?.map((media) => ({
-      alt: media.alt ?? node.name,
-      url: media.url,
-    })) ?? null,
+    media:
+      node.media?.map((media) => ({
+        alt: media.alt ?? node.name,
+        url: media.url,
+      })) ?? null,
     updatedAt: new Date(node.updatedAt),
   } satisfies SearchProduct;
 };
@@ -858,14 +852,11 @@ const fetchCategoryProducts = async (params: {
   languageCode: string;
   limit: number;
   slug: string;
-}): Promise<
-  | {
-      categoryLabel: string | null;
-      pageInfo: Extract<PageInfo, { type: "cursor" }>;
-      products: SearchProduct[];
-    }
-  | null
-> => {
+}): Promise<{
+  categoryLabel: string | null;
+  pageInfo: Extract<PageInfo, { type: "cursor" }>;
+  products: SearchProduct[];
+} | null> => {
   return loadCategoryProducts(
     stableJSONStringify({
       ...params,
@@ -889,14 +880,11 @@ async function fetchCategoryProductsInternal({
   languageCode: string;
   limit: number;
   slug: string;
-}): Promise<
-  | {
-      categoryLabel: string | null;
-      pageInfo: Extract<PageInfo, { type: "cursor" }>;
-      products: SearchProduct[];
-    }
-  | null
-> {
+}): Promise<{
+  categoryLabel: string | null;
+  pageInfo: Extract<PageInfo, { type: "cursor" }>;
+  products: SearchProduct[];
+} | null> {
   const result = await saleorClient().execute(
     CATEGORY_PRODUCTS_FALLBACK_QUERY,
     {
@@ -937,7 +925,9 @@ async function fetchCategoryProductsInternal({
   };
 
   const categoryLabel =
-    categoryNode?.translation?.name?.trim() || categoryNode?.name?.trim() || null;
+    categoryNode?.translation?.name?.trim() ||
+    categoryNode?.name?.trim() ||
+    null;
 
   return {
     categoryLabel,

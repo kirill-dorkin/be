@@ -144,7 +144,7 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
           Получайте доступ к клубным акциям и персональным предложениям
         </DialogDescription>
         <div className="relative flex flex-col gap-6 px-5 pb-6 pt-10">
-          <div className="space-y-4 rounded-3xl bg-muted/30 p-4">
+          <div className="bg-muted/30 space-y-4 rounded-3xl p-4">
             <div className="rounded-2xl bg-slate-900 text-white">
               <Button
                 className="h-12 w-full rounded-2xl bg-transparent text-base font-semibold text-white !transition-none hover:!bg-transparent focus-visible:!outline-none focus-visible:!ring-0 focus-visible:!ring-offset-0 active:!scale-100"
@@ -170,7 +170,7 @@ export function ClubInviteModal({ isAuthenticated }: ClubInviteModalProps) {
                 </LocalizedLink>
               </Button>
             </div>
-            <p className="text-center text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-center text-xs">
               Уже есть аккаунт? Просто войдите — все преимущества сохранятся.
             </p>
           </div>

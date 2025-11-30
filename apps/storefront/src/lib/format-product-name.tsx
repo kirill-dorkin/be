@@ -15,20 +15,22 @@ import type { ReactElement } from "react";
  * // Returns: "MB (new) old, value"
  */
 function normalizeProductName(name: string): string {
-  return name
-    // Normalize spaces around opening bracket "("
-    // Remove all spaces before and after, then add one space before
-    .replace(/\s*\(\s*/g, ' (')
-    // Normalize spaces around closing bracket ")"
-    // Remove all spaces before and after, then add one space after
-    .replace(/\s*\)\s*/g, ') ')
-    // Normalize spaces around comma ","
-    // Remove all spaces before and after, then add one space after
-    .replace(/\s*,\s*/g, ', ')
-    // Clean up multiple consecutive spaces
-    .replace(/\s{2,}/g, ' ')
-    // Trim leading/trailing spaces
-    .trim();
+  return (
+    name
+      // Normalize spaces around opening bracket "("
+      // Remove all spaces before and after, then add one space before
+      .replace(/\s*\(\s*/g, " (")
+      // Normalize spaces around closing bracket ")"
+      // Remove all spaces before and after, then add one space after
+      .replace(/\s*\)\s*/g, ") ")
+      // Normalize spaces around comma ","
+      // Remove all spaces before and after, then add one space after
+      .replace(/\s*,\s*/g, ", ")
+      // Clean up multiple consecutive spaces
+      .replace(/\s{2,}/g, " ")
+      // Trim leading/trailing spaces
+      .trim()
+  );
 }
 
 /**

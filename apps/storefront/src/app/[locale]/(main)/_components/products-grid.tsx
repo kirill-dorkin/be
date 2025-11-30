@@ -151,14 +151,14 @@ export const ProductsGrid = async ({
             return (
               <div
                 key={product.id}
-                className="rounded-2xl border border-border/40 bg-card/60 p-4 transition-all hover:-translate-y-1 hover:border-border hover:bg-card shadow-sm hover:shadow-lg"
+                className="border-border/40 bg-card/60 hover:border-border hover:bg-card rounded-2xl border p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
               >
                 <LocalizedLink
                   href={href}
                   className="group flex h-full flex-col gap-3"
                   aria-label={product.name}
                 >
-                  <div className="relative aspect-square overflow-hidden rounded-xl border border-border/50 bg-muted/30 p-2">
+                  <div className="border-border/50 bg-muted/30 relative aspect-square overflow-hidden rounded-xl border p-2">
                     {product.thumbnail ? (
                       <OptimizedImage
                         src={product.thumbnail.url}
@@ -170,18 +170,18 @@ export const ProductsGrid = async ({
                         disableGoogleLens
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center rounded-xl bg-gradient-to-tr from-muted via-muted/70 to-muted/40 text-2xl font-semibold text-muted-foreground">
+                      <div className="from-muted via-muted/70 to-muted/40 text-muted-foreground flex h-full items-center justify-center rounded-xl bg-gradient-to-tr text-2xl font-semibold">
                         {initial}
                       </div>
                     )}
                   </div>
                   <div className="space-y-1">
-                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+                    <p className="text-foreground line-clamp-2 text-sm font-semibold leading-snug">
                       {formatProductName(product.name)}
                     </p>
-                    <div className="flex items-baseline gap-2 text-sm text-foreground">
+                    <div className="text-foreground flex items-baseline gap-2 text-sm">
                       {oldPrice ? (
-                        <span className="text-xs text-muted-foreground line-through">
+                        <span className="text-muted-foreground text-xs line-through">
                           {oldPrice}
                         </span>
                       ) : null}
@@ -216,7 +216,7 @@ export const ProductsGridSkeleton = () => {
           {Array.from({ length: HOMEPAGE_PRODUCT_LIMIT }).map((_, index) => (
             <div
               key={index}
-              className="rounded-2xl border border-border/40 bg-card/40 p-4"
+              className="border-border/40 bg-card/40 rounded-2xl border p-4"
             >
               <Skeleton className="mb-3 aspect-square w-full rounded-xl" />
               <Skeleton className="mb-2 h-4 w-3/4" />

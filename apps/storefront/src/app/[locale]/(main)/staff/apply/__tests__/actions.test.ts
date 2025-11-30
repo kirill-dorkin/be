@@ -38,10 +38,9 @@ describe("submitWorkerApplication", () => {
 
   it("propagates Telegram errors", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(
-        JSON.stringify({ description: "Bad chat id" }),
-        { status: 400 },
-      ),
+      new Response(JSON.stringify({ description: "Bad chat id" }), {
+        status: 400,
+      }),
     );
 
     const { submitWorkerApplication } = await import("../actions");

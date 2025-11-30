@@ -49,7 +49,10 @@ const EditAddressModalComponent = ({
   const [mode, setMode] = useState<"UPDATE" | "DELETE">("UPDATE");
 
   // Мемоизация params
-  useMemo(() => params.set("country", address.country), [params, address.country]);
+  useMemo(
+    () => params.set("country", address.country),
+    [params, address.country],
+  );
 
   // Мемоизация обработчика удаления адреса
   const handleAddressDelete = useCallback(async () => {
@@ -72,7 +75,6 @@ const EditAddressModalComponent = ({
 
   // Мемоизация content
   const content: ReactNode = useMemo(() => {
-
     if (mode === "UPDATE") {
       return (
         <>
@@ -114,7 +116,15 @@ const EditAddressModalComponent = ({
         </>
       );
     }
-  }, [mode, t, address, addressFormRows, countries, isDeleting, handleAddressDelete]);
+  }, [
+    mode,
+    t,
+    address,
+    addressFormRows,
+    countries,
+    isDeleting,
+    handleAddressDelete,
+  ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -137,9 +147,12 @@ const EditAddressModalComponent = ({
 };
 
 // Мемоизация - модальное окно редактирования адреса
-export const EditAddressModal = memo(EditAddressModalComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.address.id === nextProps.address.id &&
-    prevProps.addressFormRows === nextProps.addressFormRows
-  );
-});
+export const EditAddressModal = memo(
+  EditAddressModalComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.address.id === nextProps.address.id &&
+      prevProps.addressFormRows === nextProps.addressFormRows
+    );
+  },
+);

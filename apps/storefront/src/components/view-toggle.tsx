@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGrid, List,type LucideIcon  } from "lucide-react";
+import { LayoutGrid, List, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
@@ -33,9 +33,9 @@ export const ViewToggle = ({ currentView, onViewChange }: ViewToggleProps) => {
   }, [currentView]);
 
   return (
-    <div className="relative flex items-center gap-1 rounded-lg border border-border/60 bg-muted/30 p-1 shadow-sm dark:border-white/10 dark:bg-muted/20">
+    <div className="border-border/60 bg-muted/30 dark:bg-muted/20 relative flex items-center gap-1 rounded-lg border p-1 shadow-sm dark:border-white/10">
       <div
-        className="absolute left-1 h-8 w-8 rounded-md bg-primary shadow-md"
+        className="bg-primary absolute left-1 h-8 w-8 rounded-md shadow-md"
         style={{
           transform: `translateX(${currentIndex * 36}px) scaleX(${isAnimating ? 1.075 : 1}) scaleY(${isAnimating ? 0.9 : 1})`,
           transition: "transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1)",
@@ -54,7 +54,7 @@ export const ViewToggle = ({ currentView, onViewChange }: ViewToggleProps) => {
           <Icon
             className={`h-4 w-4 transition-all duration-300 ease-in-out ${
               currentView === mode
-                ? "scale-110 text-primary-foreground"
+                ? "text-primary-foreground scale-110"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           />

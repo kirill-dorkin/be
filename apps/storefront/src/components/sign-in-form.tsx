@@ -28,11 +28,11 @@ function SignInFormComponent({ redirectUrl }: { redirectUrl?: string }) {
   // Мемоизация флагов
   const hasPasswordChanged = useMemo(
     () => searchParams.get("hasPasswordChanged") === "true",
-    [searchParams]
+    [searchParams],
   );
   const isFromConfirmation = useMemo(
     () => searchParams.get("confirmationSuccess") === "true",
-    [searchParams]
+    [searchParams],
   );
 
   const form = useForm<SignInSchema>({
@@ -46,28 +46,31 @@ function SignInFormComponent({ redirectUrl }: { redirectUrl?: string }) {
   // Мемоизация isDisabled
   const isDisabled = useMemo(
     () => isRedirecting || form.formState?.isSubmitting,
-    [isRedirecting, form.formState?.isSubmitting]
+    [isRedirecting, form.formState?.isSubmitting],
   );
 
   // Мемоизация redirectTarget
   const redirectTarget = useMemo(
     () => redirectUrl ?? searchParams.get("redirectUrl") ?? undefined,
-    [redirectUrl, searchParams]
+    [redirectUrl, searchParams],
   );
 
   // Мемоизация handleSubmit
-  const handleSubmit = useCallback(async (values: SignInSchema) => {
-    const data = await login({ ...values, redirectUrl: redirectTarget });
+  const handleSubmit = useCallback(
+    async (values: SignInSchema) => {
+      const data = await login({ ...values, redirectUrl: redirectTarget });
 
-    if (data.redirectUrl) {
-      push(data.redirectUrl);
-    }
+      if (data.redirectUrl) {
+        push(data.redirectUrl);
+      }
 
-    if (data.error) {
-      form.setError("email", { message: "" });
-      form.setError("password", { message: "" });
-    }
-  }, [redirectTarget, push, form]);
+      if (data.error) {
+        form.setError("email", { message: "" });
+        form.setError("password", { message: "" });
+      }
+    },
+    [redirectTarget, push, form],
+  );
 
   useEffect(() => {
     const toastTimeout = setTimeout(() => {
@@ -93,7 +96,7 @@ function SignInFormComponent({ redirectUrl }: { redirectUrl?: string }) {
 
   return (
     <>
-      <h1 className="text-slate-700 dark:text-primary pb-8 text-2xl font-normal leading-8">
+      <h1 className="dark:text-primary pb-8 text-2xl font-normal leading-8 text-slate-700">
         {t("auth.sign-in")}
       </h1>
 

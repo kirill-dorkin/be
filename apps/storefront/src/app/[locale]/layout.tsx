@@ -54,27 +54,42 @@ export default async function LocaleLayout({
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
-  const [messages, region] = await Promise.all([getMessages(), getCurrentRegion()]);
+  const [messages, region] = await Promise.all([
+    getMessages(),
+    getCurrentRegion(),
+  ]);
 
   return (
     <html lang={locale ?? "en"} suppressHydrationWarning>
       <head>
         {/* Resource Hints для оптимизации производительности */}
         {/* API и CDN */}
-        <link rel="preconnect" href={clientEnvs.NEXT_PUBLIC_SALEOR_API_URL} crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href={clientEnvs.NEXT_PUBLIC_SALEOR_API_URL}
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href={clientEnvs.NEXT_PUBLIC_SALEOR_API_URL} />
-        <link rel="preconnect" href="https://cdn.buttercms.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://cdn.buttercms.com"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://cdn.buttercms.com" />
         {/* Google Fonts - критически важно для производительности */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </head>
       <body
         className={cn(
           "min-h-[100dvh]",
           "flex flex-col",
           "bg-background",
-          "text-foreground text-base md:text-[17px] leading-[1.55] font-medium",
+          "text-foreground text-base font-medium leading-[1.55] md:text-[17px]",
           "overscroll-none",
           aspekta.className,
         )}
@@ -85,9 +100,7 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{ __html: themePreloadScript }}
         />
         <ClientThemeProvider>
-          <RegionProvider
-            initialRegion={region}
-          >
+          <RegionProvider initialRegion={region}>
             <NextIntlClientProvider messages={messages}>
               <NuqsAdapter>
                 {children}

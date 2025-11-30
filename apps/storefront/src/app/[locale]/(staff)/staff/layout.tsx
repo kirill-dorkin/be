@@ -28,9 +28,8 @@ const buildLocalizedPath = (locale: SupportedLocale, path: string) => {
     return path;
   }
 
-  const prefix = localePrefixes[
-    locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
-  ];
+  const prefix =
+    localePrefixes[locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>];
 
   return `${prefix}${path}`;
 };
@@ -50,15 +49,18 @@ export default async function StaffLayout({ children, params }: LayoutProps) {
 
   const redirectToSignIn = () =>
     nextRedirect(
-      buildLocalizedPath(locale, paths.signIn.asPath({
-        query: { redirectUrl: paths.staff.orders.asPath() },
-      })),
+      buildLocalizedPath(
+        locale,
+        paths.signIn.asPath({
+          query: { redirectUrl: paths.staff.orders.asPath() },
+        }),
+      ),
     );
 
   if (!session?.user) {
     redirectToSignIn();
-    
-return null;
+
+    return null;
   }
 
   const user = session.user as {
@@ -91,11 +93,11 @@ return null;
     `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email;
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="bg-muted/30 min-h-screen">
       <header className="border-border/60 bg-background sticky top-0 z-40 border-b shadow-sm">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
           <div className="flex flex-col">
-            <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+            <span className="text-primary text-sm font-semibold uppercase tracking-wider">
               {t("title")}
             </span>
             <span className="text-muted-foreground text-xs">
@@ -108,26 +110,26 @@ return null;
               <nav className="hidden gap-3 md:flex">
                 <LocalizedLink
                   href={paths.staff.orders.asPath()}
-                  className="text-sm font-medium text-muted-foreground transition hover:text-primary"
+                  className="text-muted-foreground hover:text-primary text-sm font-medium transition"
                 >
                   {t("nav.orders")}
                 </LocalizedLink>
                 <LocalizedLink
                   href={paths.staff.adminWorkers.asPath()}
-                  className="text-sm font-medium text-muted-foreground transition hover:text-primary"
+                  className="text-muted-foreground hover:text-primary text-sm font-medium transition"
                 >
                   {t("nav.workers")}
                 </LocalizedLink>
               </nav>
             )}
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-foreground text-sm font-medium">
               {staffDisplayName}
             </span>
             <form action={logout}>
               <button
                 type="submit"
                 className={cn(
-                  "border border-border/60 bg-background px-3 py-1 text-sm font-medium transition hover:bg-muted",
+                  "border-border/60 bg-background hover:bg-muted border px-3 py-1 text-sm font-medium transition",
                   "rounded-full",
                 )}
               >
@@ -140,7 +142,7 @@ return null;
 
       <main className="mx-auto w-full max-w-6xl px-4 py-8">
         {isPendingWorker && !belongsToRepairGroup ? (
-          <div className="border border-dashed border-primary/50 bg-primary/5 p-6 text-sm text-primary">
+          <div className="border-primary/50 bg-primary/5 text-primary border border-dashed p-6 text-sm">
             {t("pending-message")}
           </div>
         ) : (

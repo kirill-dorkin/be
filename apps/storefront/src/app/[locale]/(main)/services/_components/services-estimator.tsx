@@ -9,11 +9,7 @@ import { z } from "zod";
 
 import { Badge } from "@nimara/ui/components/badge";
 import { Button } from "@nimara/ui/components/button";
-import {
-  Form,
-  FormField,
-  FormItem,
-} from "@nimara/ui/components/form";
+import { Form, FormField, FormItem } from "@nimara/ui/components/form";
 import { useToast } from "@nimara/ui/hooks";
 
 import { CheckboxField } from "@/components/form/checkbox-field";
@@ -37,10 +33,7 @@ import {
   getRepairServiceDescription,
   getRepairServiceLabel,
 } from "@/lib/repair-services/translations";
-import type {
-  SupportedCurrency,
-  SupportedLocale,
-} from "@/regions/types";
+import type { SupportedCurrency, SupportedLocale } from "@/regions/types";
 
 import {
   type DeviceSelection,
@@ -95,17 +88,9 @@ type Translator = ReturnType<typeof useTranslations>;
 
 const buildSchema = (t: Translator) => {
   const serviceSelectionSchema = z.object({
-    deviceType: z
-      .string()
-      .min(1, t("calculator.errors.deviceType"))
-      .max(40),
+    deviceType: z.string().min(1, t("calculator.errors.deviceType")).max(40),
     serviceSlugs: z
-      .array(
-        z
-          .string()
-          .min(1, t("calculator.errors.serviceSlug"))
-          .max(120),
-      )
+      .array(z.string().min(1, t("calculator.errors.serviceSlug")).max(120))
       .min(1, t("calculator.errors.serviceSelection")),
   });
 
@@ -160,8 +145,7 @@ const buildSchema = (t: Translator) => {
         const trimmed = data.email.trim();
 
         return (
-          trimmed.length === 0 ||
-          z.string().email().safeParse(trimmed).success
+          trimmed.length === 0 || z.string().email().safeParse(trimmed).success
         );
       },
       {
@@ -265,13 +249,9 @@ const calculateServiceEstimate = ({
       : currencyMath.toCurrency(service.price.max);
 
   if (urgent) {
-    serviceMin = currencyMath.toCurrency(
-      serviceMin * URGENCY_MULTIPLIER,
-    );
+    serviceMin = currencyMath.toCurrency(serviceMin * URGENCY_MULTIPLIER);
     if (serviceMax !== null) {
-      serviceMax = currencyMath.toCurrency(
-        serviceMax * URGENCY_MULTIPLIER,
-      );
+      serviceMax = currencyMath.toCurrency(serviceMax * URGENCY_MULTIPLIER);
     }
   }
 
@@ -283,14 +263,9 @@ const calculateServiceEstimate = ({
       ? currencyMath.toCurrency(serviceMax + pickupFee)
       : null;
 
-  const discountedServiceMin = applyRepairDiscount(
-    serviceMin,
-    discountRate,
-  );
+  const discountedServiceMin = applyRepairDiscount(serviceMin, discountRate);
   const discountedServiceMax =
-    serviceMax !== null
-      ? applyRepairDiscount(serviceMax, discountRate)
-      : null;
+    serviceMax !== null ? applyRepairDiscount(serviceMax, discountRate) : null;
 
   const discountedTotalMin = currencyMath.toCurrency(
     discountedServiceMin + pickupFee,
@@ -300,9 +275,7 @@ const calculateServiceEstimate = ({
       ? currencyMath.toCurrency(discountedServiceMax + pickupFee)
       : null;
 
-  const savingsMin = currencyMath.toCurrency(
-    totalMin - discountedTotalMin,
-  );
+  const savingsMin = currencyMath.toCurrency(totalMin - discountedTotalMin);
   const savingsMax =
     totalMax !== null && discountedTotalMax !== null
       ? currencyMath.toCurrency(totalMax - discountedTotalMax)
@@ -384,9 +357,8 @@ export const ServicesEstimator = ({
   );
 
   const initialService =
-    (initialServiceSlug
-      ? serviceIndex.get(initialServiceSlug)
-      : undefined) ?? null;
+    (initialServiceSlug ? serviceIndex.get(initialServiceSlug) : undefined) ??
+    null;
 
   const getDeviceLabelKey = (
     deviceType: RepairDeviceType,
@@ -472,7 +444,9 @@ export const ServicesEstimator = ({
       serviceSelections.flatMap(({ deviceType, serviceSlugs }) => {
         const validServices =
           servicesByDevice.get(deviceType as RepairDeviceType) ?? [];
-        const allowedSlugs = new Set(validServices.map((item) => item.serviceSlug));
+        const allowedSlugs = new Set(
+          validServices.map((item) => item.serviceSlug),
+        );
 
         return serviceSlugs
           .filter((slug) => allowedSlugs.has(slug))
@@ -488,8 +462,13 @@ export const ServicesEstimator = ({
               service,
             };
           })
-          .filter((entry): entry is { deviceType: RepairDeviceType; service: RepairService } =>
-            entry !== null,
+          .filter(
+            (
+              entry,
+            ): entry is {
+              deviceType: RepairDeviceType;
+              service: RepairService;
+            } => entry !== null,
           );
       }),
     [serviceSelections, servicesByDevice, serviceIndex],
@@ -580,9 +559,7 @@ export const ServicesEstimator = ({
         if (value === null) {
           discounted.max = null;
         } else {
-          discounted.max = currencyMath.toCurrency(
-            discounted.max + value,
-          );
+          discounted.max = currencyMath.toCurrency(discounted.max + value);
         }
       }
     }
@@ -649,13 +626,7 @@ export const ServicesEstimator = ({
       base: buildLabel(aggregatedTotals.base),
       discounted: buildLabel(aggregatedTotals.discounted),
     };
-  }, [
-    aggregatedTotals,
-    priceLabelStrings,
-    currency,
-    activeLocale,
-    t,
-  ]);
+  }, [aggregatedTotals, priceLabelStrings, currency, activeLocale, t]);
 
   const isEstimateFree =
     !!aggregatedTotals &&
@@ -664,9 +635,7 @@ export const ServicesEstimator = ({
       aggregatedTotals.discounted.max === 0);
 
   const hasDiscountApplied =
-    hasDiscount &&
-    !!aggregatedTotals &&
-    aggregatedTotals.savings.min > 0;
+    hasDiscount && !!aggregatedTotals && aggregatedTotals.savings.min > 0;
 
   const totalSavingsLabel =
     hasDiscountApplied && aggregatedTotals
@@ -739,10 +708,7 @@ export const ServicesEstimator = ({
   const serviceSummaries = useMemo(
     () =>
       selectedServiceEstimates.map(({ deviceType, service, estimate }) => {
-        const serviceLabel = getRepairServiceLabel(
-          service.name,
-          activeLocale,
-        );
+        const serviceLabel = getRepairServiceLabel(service.name, activeLocale);
 
         const basePriceLabel = toPriceLabel({
           currency,
@@ -756,10 +722,8 @@ export const ServicesEstimator = ({
         });
 
         const hasDiscountApplied =
-          estimate.discounted.total.min !==
-            estimate.base.total.min ||
-          estimate.discounted.total.max !==
-            estimate.base.total.max;
+          estimate.discounted.total.min !== estimate.base.total.min ||
+          estimate.discounted.total.max !== estimate.base.total.max;
 
         const discountedPriceLabel = hasDiscountApplied
           ? toPriceLabel({
@@ -802,13 +766,7 @@ export const ServicesEstimator = ({
           savingsLabel,
         };
       }),
-    [
-      selectedServiceEstimates,
-      t,
-      currency,
-      activeLocale,
-      priceLabelStrings,
-    ],
+    [selectedServiceEstimates, t, currency, activeLocale, priceLabelStrings],
   );
 
   const serviceSelectionsError = extractErrorMessage(
@@ -1008,7 +966,7 @@ export const ServicesEstimator = ({
               name="consent"
               label={t("calculator.consentLabel")}
               isRequired
-              className="border border-dashed border-stone-300/70 rounded-md px-3 py-2"
+              className="rounded-md border border-dashed border-stone-300/70 px-3 py-2"
             />
 
             <Button
@@ -1037,7 +995,7 @@ export const ServicesEstimator = ({
                 {t("calculator.estimateBadge")}
               </Badge>
               {selectedServiceEstimates.length > 0 && (
-                <span className="text-xs text-muted-foreground">
+                <span className="text-muted-foreground text-xs">
                   {t("calculator.selectedServicesCount", {
                     count: selectedServiceEstimates.length,
                   })}
@@ -1060,7 +1018,7 @@ export const ServicesEstimator = ({
               </div>
             )}
             {selectedServiceEstimates.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 {t("calculator.noServicesSelected")}
               </p>
             ) : isEstimateFree ? (
@@ -1068,11 +1026,11 @@ export const ServicesEstimator = ({
                 <span className="text-muted-foreground text-sm line-through">
                   {aggregateLabels.base}
                 </span>
-                <span className="text-emerald-600 text-2xl font-semibold">
+                <span className="text-2xl font-semibold text-emerald-600">
                   {freeLabel}
                 </span>
                 {totalSavingsLabel && (
-                  <span className="text-emerald-700 text-sm font-medium">
+                  <span className="text-sm font-medium text-emerald-700">
                     {totalSavingsLabel}
                   </span>
                 )}
@@ -1082,17 +1040,17 @@ export const ServicesEstimator = ({
                 <span className="text-muted-foreground text-sm line-through">
                   {aggregateLabels.base}
                 </span>
-                <span className="text-emerald-600 text-3xl font-semibold">
+                <span className="text-3xl font-semibold text-emerald-600">
                   {aggregateLabels.discounted}
                 </span>
                 {totalSavingsLabel && (
-                  <span className="text-emerald-700 text-sm font-medium">
+                  <span className="text-sm font-medium text-emerald-700">
                     {totalSavingsLabel}
                   </span>
                 )}
               </div>
             ) : (
-              <p className="text-2xl font-semibold leading-tight text-primary">
+              <p className="text-primary text-2xl font-semibold leading-tight">
                 {aggregateLabels.discounted}
               </p>
             )}
@@ -1101,34 +1059,34 @@ export const ServicesEstimator = ({
                 {serviceSummaries.map((summary) => (
                   <div
                     key={summary.id}
-                    className="bg-muted/50 text-muted-foreground flex flex-col gap-1 rounded-lg border border-muted/60 p-2.5 sm:p-3"
+                    className="bg-muted/50 text-muted-foreground border-muted/60 flex flex-col gap-1 rounded-lg border p-2.5 sm:p-3"
                   >
-                    <span className="break-words text-sm font-semibold text-foreground">
+                    <span className="text-foreground break-words text-sm font-semibold">
                       {summary.name}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       {summary.deviceLabel}
                     </span>
                     {summary.discountedPriceLabel ? (
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-xs text-muted-foreground line-through">
+                        <span className="text-muted-foreground text-xs line-through">
                           {summary.basePriceLabel}
                         </span>
-                        <span className="text-emerald-600 text-sm font-semibold">
+                        <span className="text-sm font-semibold text-emerald-600">
                           {summary.discountedPriceLabel}
                         </span>
                         {summary.savingsLabel && (
-                          <span className="text-emerald-700 text-xs font-medium">
+                          <span className="text-xs font-medium text-emerald-700">
                             {summary.savingsLabel}
                           </span>
                         )}
                       </div>
                     ) : (
-                      <span className="text-sm font-semibold text-primary">
+                      <span className="text-primary text-sm font-semibold">
                         {summary.basePriceLabel}
                       </span>
                     )}
-                    <span className="break-words text-xs text-muted-foreground">
+                    <span className="text-muted-foreground break-words text-xs">
                       {summary.description}
                     </span>
                   </div>

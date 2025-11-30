@@ -10,7 +10,7 @@ type ProductTitleProps = {
 export const ProductTitle = ({ title, className }: ProductTitleProps) => {
   return (
     <h1
-      className={`text-foreground text-left text-2xl font-bold leading-tight tracking-tight break-words max-w-full md:text-3xl lg:text-4xl md:leading-tight ${className}`}
+      className={`text-foreground max-w-full break-words text-left text-2xl font-bold leading-tight tracking-tight md:text-3xl md:leading-tight lg:text-4xl ${className}`}
       style={{
         wordBreak: "break-word",
         overflowWrap: "break-word",

@@ -34,8 +34,7 @@ const SearchPaginationComponent = ({
   const localePrefix = useMemo(() => {
     const isLocaleDifferent = locale !== DEFAULT_LOCALE;
 
-    
-return isLocaleDifferent
+    return isLocaleDifferent
       ? localePrefixes[
           locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
         ]
@@ -43,40 +42,45 @@ return isLocaleDifferent
   }, [locale]);
 
   // Мемоизация функции генерации пути
-  const getPathName = useCallback((direction: "next" | "previous") => {
-    const params = new URLSearchParams(searchParams);
+  const getPathName = useCallback(
+    (direction: "next" | "previous") => {
+      const params = new URLSearchParams(searchParams);
 
-    // Delete all the pagination-related params
-    params.delete("before");
-    params.delete("after");
-    params.delete("page");
+      // Delete all the pagination-related params
+      params.delete("before");
+      params.delete("after");
+      params.delete("page");
 
-    if (pageInfo.type === "cursor") {
-      if (direction === "next") {
-        params.set("after", pageInfo.after ?? "");
+      if (pageInfo.type === "cursor") {
+        if (direction === "next") {
+          params.set("after", pageInfo.after ?? "");
+        } else {
+          params.set("before", pageInfo.before ?? "");
+        }
       } else {
-        params.set("before", pageInfo.before ?? "");
+        const page =
+          direction === "next"
+            ? pageInfo.currentPage + 1
+            : pageInfo.currentPage - 1;
+
+        params.set("page", page.toString());
       }
-    } else {
-      const page =
-        direction === "next"
-          ? pageInfo.currentPage + 1
-          : pageInfo.currentPage - 1;
 
-      params.set("page", page.toString());
-    }
+      const queryString = params.toString();
+      const baseUrlWithParams = queryString
+        ? `${baseUrl}?${queryString}`
+        : baseUrl;
 
-    const queryString = params.toString();
-    const baseUrlWithParams = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+      if (!localePrefix) {
+        return baseUrlWithParams;
+      }
 
-    if (!localePrefix) {
-      return baseUrlWithParams;
-    }
-
-    return baseUrlWithParams.startsWith(localePrefix)
-      ? baseUrlWithParams
-      : `${localePrefix}${baseUrlWithParams}`;
-  }, [pageInfo, searchParams, baseUrl, localePrefix]);
+      return baseUrlWithParams.startsWith(localePrefix)
+        ? baseUrlWithParams
+        : `${localePrefix}${baseUrlWithParams}`;
+    },
+    [pageInfo, searchParams, baseUrl, localePrefix],
+  );
 
   return (
     <div className="flex justify-center gap-4">
@@ -110,11 +114,16 @@ return isLocaleDifferent
 };
 
 // Мемоизация - используется на страницах поиска и категорий
-export const SearchPagination = memo(SearchPaginationComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.baseUrl === nextProps.baseUrl &&
-    prevProps.pageInfo.hasNextPage === nextProps.pageInfo.hasNextPage &&
-    prevProps.pageInfo.hasPreviousPage === nextProps.pageInfo.hasPreviousPage &&
-    JSON.stringify(prevProps.searchParams) === JSON.stringify(nextProps.searchParams)
-  );
-});
+export const SearchPagination = memo(
+  SearchPaginationComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.baseUrl === nextProps.baseUrl &&
+      prevProps.pageInfo.hasNextPage === nextProps.pageInfo.hasNextPage &&
+      prevProps.pageInfo.hasPreviousPage ===
+        nextProps.pageInfo.hasPreviousPage &&
+      JSON.stringify(prevProps.searchParams) ===
+        JSON.stringify(nextProps.searchParams)
+    );
+  },
+);

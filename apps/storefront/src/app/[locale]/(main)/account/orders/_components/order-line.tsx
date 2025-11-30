@@ -39,18 +39,20 @@ export const OrderLine = async ({
           width={IMAGE_SIZES.thumbnail}
           height={IMAGE_SIZES.thumbnail}
           quality={IMAGE_QUALITY.low}
-          className="col-span-1 h-[56px] w-[42px] rounded border object-contain p-1 bg-muted/30 dark:bg-muted/20"
+          className="bg-muted/30 dark:bg-muted/20 col-span-1 h-[56px] w-[42px] rounded border object-contain p-1"
         />
       ) : (
         <ProductImagePlaceholder height={56} width={42} />
       )}
       <div className="col-span-3 block sm:hidden">
-        <p className="text-slate-700 dark:text-primary break-words">{formatProductName(lineName)}</p>
+        <p className="dark:text-primary break-words text-slate-700">
+          {formatProductName(lineName)}
+        </p>
         <span className="flex gap-2">
           <p className="w-1/3 text-stone-500 dark:text-stone-400">
             {quantityLabel}
           </p>
-          <p className="text-slate-700 dark:text-primary w-1/3 text-center font-bold">
+          <p className="dark:text-primary w-1/3 text-center font-bold text-slate-700">
             {returnStatus || ""}
           </p>
           <p className="w-1/3 text-end text-stone-500 dark:text-stone-400">
@@ -58,10 +60,10 @@ export const OrderLine = async ({
           </p>
         </span>
       </div>
-      <p className="text-slate-700 dark:text-primary col-span-5 hidden sm:block break-words">
+      <p className="dark:text-primary col-span-5 hidden break-words text-slate-700 sm:block">
         {formatProductName(lineName)}
       </p>
-      <p className="text-slate-700 dark:text-primary col-span-2 hidden text-center text-sm font-bold sm:block">
+      <p className="dark:text-primary col-span-2 hidden text-center text-sm font-bold text-slate-700 sm:block">
         {returnStatus || ""}
       </p>
       <p className="dark:text-muted-foreground col-span-2 hidden text-end text-stone-500 sm:block">

@@ -51,12 +51,12 @@ export type IndicesSettings = Array<
      */
     availableFacets: AvailableFacets;
     /**
-   * A main index name.
-   *
-   * @example
-   * "DEV.channel-uk.GBP.products"
-   */
-   indexName: string;
+     * A main index name.
+     *
+     * @example
+     * "DEV.channel-uk.GBP.products"
+     */
+    indexName: string;
     /**
      * An array of virtual replicas used for sorting. {@link VirtualReplica}.
      */

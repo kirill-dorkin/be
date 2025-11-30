@@ -16,8 +16,8 @@ const ShippingComponent = (props: Pick<ShoppingBagPriceProps, "price">) => {
     if (props?.price && props.price.amount > 0) {
       return formatter.price({ amount: props.price.amount });
     }
-    
-return t("common.free");
+
+    return t("common.free");
   }, [props?.price, formatter, t]);
 
   return (

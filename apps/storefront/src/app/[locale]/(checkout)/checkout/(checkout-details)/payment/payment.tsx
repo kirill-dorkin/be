@@ -285,7 +285,12 @@ export const Payment = ({
         setIsInitialized(true);
       }
     })();
-  }, [checkout.id, checkout.totalPrice.gross.amount, paymentServiceUnavailable, t]);
+  }, [
+    checkout.id,
+    checkout.totalPrice.gross.amount,
+    paymentServiceUnavailable,
+    t,
+  ]);
 
   useEffect(() => {
     if (paymentServiceUnavailable) {

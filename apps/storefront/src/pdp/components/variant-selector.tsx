@@ -8,7 +8,6 @@ import {
   type Product,
   type ProductAvailability,
 } from "@nimara/domain/objects/Product";
-import { type User } from "@nimara/domain/objects/User";
 import { Label } from "@nimara/ui/components/label";
 import {
   ToggleGroup,
@@ -28,14 +27,12 @@ type VariantSelectorProps = {
   cart: Cart | null;
   product: Product;
   productAvailability: ProductAvailability;
-  user: User | null;
 };
 
 export const VariantSelector = ({
   product,
   productAvailability,
   cart,
-  user,
 }: VariantSelectorProps) => {
   const t = useTranslations();
   const [quantity, setQuantity] = useState(1);
@@ -59,14 +56,15 @@ export const VariantSelector = ({
   const regularPrice = chosenVariantAvailability?.price?.amount || 0;
 
   // Sync quantity with cart when variant changes or cart updates
-  const currentVariantId = matchingVariants?.length > 1
-    ? discriminatedVariantId
-    : chosenVariant?.id;
+  const currentVariantId =
+    matchingVariants?.length > 1 ? discriminatedVariantId : chosenVariant?.id;
 
   // Sync local quantity state with cart quantity when item is in cart
   useEffect(() => {
     if (currentVariantId && cart) {
-      const cartLine = cart.lines.find((line) => line.variant.id === currentVariantId);
+      const cartLine = cart.lines.find(
+        (line) => line.variant.id === currentVariantId,
+      );
 
       if (cartLine && cartLine.quantity !== quantity) {
         setQuantity(cartLine.quantity);
@@ -77,31 +75,37 @@ export const VariantSelector = ({
   // Мемоизация проверки бесплатных вариантов
   const hasFreeVariant = useMemo(
     () => variantsAvailability?.some((variant) => variant.price.amount === 0),
-    [variantsAvailability]
+    [variantsAvailability],
   );
 
   // Мемоизация обработчика изменения атрибута
-  const handleAttributeChange = useCallback((slug: string, valueSlug: string) => {
-    setDiscriminatedVariantId("");
-    setParams({
-      ...params,
-      [slug]: valueSlug,
-    }).catch((e) => {
-      console.error(e);
-    });
-  }, [params, setDiscriminatedVariantId, setParams]);
+  const handleAttributeChange = useCallback(
+    (slug: string, valueSlug: string) => {
+      setDiscriminatedVariantId("");
+      setParams({
+        ...params,
+        [slug]: valueSlug,
+      }).catch((e) => {
+        console.error(e);
+      });
+    },
+    [params, setDiscriminatedVariantId, setParams],
+  );
 
   // Мемоизация обработчика выбора варианта
-  const handleVariantSelect = useCallback((variantId: string) => {
-    setDiscriminatedVariantId(variantId);
-  }, [setDiscriminatedVariantId]);
+  const handleVariantSelect = useCallback(
+    (variantId: string) => {
+      setDiscriminatedVariantId(variantId);
+    },
+    [setDiscriminatedVariantId],
+  );
 
   return (
     <>
-      <div className="border-border/30 dark:border-white/10 my-5 border-t pt-4">
+      <div className="border-border/30 my-5 border-t pt-4 dark:border-white/10">
         <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end md:gap-6">
           {/* Price section */}
-          <div className="text-left flex-1" aria-live="polite">
+          <div className="flex-1 text-left" aria-live="polite">
             {regularPrice > 0 ? (
               <PriceComparison regularPrice={regularPrice} size="lg" />
             ) : (
@@ -124,7 +128,6 @@ export const VariantSelector = ({
             />
           </div>
         </div>
-
       </div>
 
       <div className="space-y-4">
@@ -142,7 +145,10 @@ export const VariantSelector = ({
 
           return (
             <div key={slug} className="flex flex-col gap-2">
-              <Label id={`label-${slug}`} className="text-foreground text-xs font-medium uppercase tracking-wider">
+              <Label
+                id={`label-${slug}`}
+                className="text-foreground text-xs font-medium uppercase tracking-wider"
+              >
                 {name}
                 {type === "SWATCH" &&
                   !!chosenAttribute?.value &&
@@ -161,7 +167,9 @@ export const VariantSelector = ({
                     : "grid grid-cols-2 md:grid-cols-3",
                 )}
                 aria-labelledby={t("products.label-slug", { slug })}
-                onValueChange={(valueSlug) => handleAttributeChange(slug, valueSlug)}
+                onValueChange={(valueSlug) =>
+                  handleAttributeChange(slug, valueSlug)
+                }
               >
                 {values
                   .sort((a, b) => a.name.localeCompare(b.name))

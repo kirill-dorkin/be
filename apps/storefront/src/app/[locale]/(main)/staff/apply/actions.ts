@@ -23,17 +23,15 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
     email,
     phone,
     role:
-      role === REPAIR_ROLE.courier
-        ? "Курьер-доставщик"
-        : "Мастер по ремонту",
+      role === REPAIR_ROLE.courier ? "Курьер-доставщик" : "Мастер по ремонту",
     passwordLength: password.length,
   });
 
   if (!throttled.ok && Array.isArray(throttled.error)) {
     const hasThrottle = throttled.error.some(
       (err) =>
-        err.code === "TELEGRAM_REQUEST_ERROR" &&
-        err.message.toLowerCase().includes("too many") ||
+        (err.code === "TELEGRAM_REQUEST_ERROR" &&
+          err.message.toLowerCase().includes("too many")) ||
         err.code === "RATE_LIMITED",
     );
 

@@ -70,43 +70,46 @@ const DeviceServiceSelectorComponent = ({
   }, [selections]);
 
   // Мемоизация обработчика переключения устройства
-  const handleDeviceToggle = useCallback((deviceType: RepairDeviceType) => {
-    const existing = selectionMap.get(deviceType);
+  const handleDeviceToggle = useCallback(
+    (deviceType: RepairDeviceType) => {
+      const existing = selectionMap.get(deviceType);
 
-    if (existing) {
-      onChange(selections.filter((item) => item.deviceType !== deviceType));
+      if (existing) {
+        onChange(selections.filter((item) => item.deviceType !== deviceType));
 
-      return;
-    }
+        return;
+      }
 
-    onChange([...selections, { deviceType, serviceSlugs: [] }]);
-  }, [selectionMap, selections, onChange]);
+      onChange([...selections, { deviceType, serviceSlugs: [] }]);
+    },
+    [selectionMap, selections, onChange],
+  );
 
   // Мемоизация обработчика переключения услуги
-  const handleServiceToggle = useCallback((
-    deviceType: RepairDeviceType,
-    serviceSlug: string,
-  ) => {
-    const current = selectionMap.get(deviceType);
+  const handleServiceToggle = useCallback(
+    (deviceType: RepairDeviceType, serviceSlug: string) => {
+      const current = selectionMap.get(deviceType);
 
-    if (!current) {
-      return;
-    }
+      if (!current) {
+        return;
+      }
 
-    const nextServiceSlugs = toggleItem(
-      current.serviceSlugs,
-      serviceSlug,
-      (candidate) => candidate === serviceSlug,
-    );
+      const nextServiceSlugs = toggleItem(
+        current.serviceSlugs,
+        serviceSlug,
+        (candidate) => candidate === serviceSlug,
+      );
 
-    const nextSelections = selections.map((selection) =>
-      selection.deviceType === deviceType
-        ? { ...selection, serviceSlugs: nextServiceSlugs }
-        : selection,
-    );
+      const nextSelections = selections.map((selection) =>
+        selection.deviceType === deviceType
+          ? { ...selection, serviceSlugs: nextServiceSlugs }
+          : selection,
+      );
 
-    onChange(nextSelections);
-  }, [selectionMap, selections, onChange]);
+      onChange(nextSelections);
+    },
+    [selectionMap, selections, onChange],
+  );
 
   const selectedDevices = new Set(
     selections.map((selection) => selection.deviceType),
@@ -115,10 +118,10 @@ const DeviceServiceSelectorComponent = ({
   return (
     <div className="w-full space-y-4">
       <div className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-foreground">
+        <span className="text-foreground text-sm font-medium">
           {labels.deviceLabel}
         </span>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-muted-foreground text-sm">
           {labels.deviceSelectionHint}
         </span>
       </div>
@@ -132,7 +135,7 @@ const DeviceServiceSelectorComponent = ({
               key={deviceType}
               type="button"
               className={cn(
-                "h-auto w-full min-h-[2.5rem] justify-start whitespace-normal rounded-full border px-3 py-2 text-left text-sm font-medium transition-colors sm:px-4",
+                "h-auto min-h-[2.5rem] w-full justify-start whitespace-normal rounded-full border px-3 py-2 text-left text-sm font-medium transition-colors sm:px-4",
                 isSelected
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-border bg-muted hover:bg-muted/70",
@@ -152,8 +155,7 @@ const DeviceServiceSelectorComponent = ({
 
       <div className="w-full space-y-4">
         {selections.map((selection) => {
-          const services =
-            servicesByDevice.get(selection.deviceType) ?? [];
+          const services = servicesByDevice.get(selection.deviceType) ?? [];
 
           return (
             <div
@@ -162,14 +164,14 @@ const DeviceServiceSelectorComponent = ({
             >
               <div className="flex w-full flex-wrap items-start justify-between gap-2">
                 <div className="flex min-w-0 max-w-[calc(100%-3rem)] flex-1 flex-col gap-1">
-                  <span className="break-words text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  <span className="text-muted-foreground break-words text-sm font-semibold uppercase tracking-wide">
                     {
                       deviceOptions.find(
                         ({ value }) => value === selection.deviceType,
                       )?.label
                     }
                   </span>
-                  <span className="break-words text-xs text-muted-foreground">
+                  <span className="text-muted-foreground break-words text-xs">
                     {labels.serviceHint}
                   </span>
                 </div>
@@ -195,7 +197,7 @@ const DeviceServiceSelectorComponent = ({
                       type="button"
                       key={serviceSlug}
                       className={cn(
-                        "h-auto max-w-full min-h-[2.5rem] justify-start whitespace-normal rounded-lg border px-3 py-2 text-left text-sm font-medium transition sm:px-4",
+                        "h-auto min-h-[2.5rem] max-w-full justify-start whitespace-normal rounded-lg border px-3 py-2 text-left text-sm font-medium transition sm:px-4",
                         isActive
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border bg-muted text-muted-foreground hover:bg-muted/70",
@@ -215,7 +217,7 @@ const DeviceServiceSelectorComponent = ({
               </div>
 
               {selection.serviceSlugs.length === 0 && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   {labels.servicePlaceholder}
                 </p>
               )}
@@ -224,19 +226,20 @@ const DeviceServiceSelectorComponent = ({
         })}
       </div>
 
-      {error && (
-        <p className="text-sm font-medium text-destructive">{error}</p>
-      )}
+      {error && <p className="text-destructive text-sm font-medium">{error}</p>}
     </div>
   );
 };
 
 // Мемоизация - селектор устройств и услуг для калькулятора ремонта
-export const DeviceServiceSelector = memo(DeviceServiceSelectorComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.value === nextProps.value &&
-    prevProps.error === nextProps.error &&
-    prevProps.deviceOptions.length === nextProps.deviceOptions.length &&
-    prevProps.servicesByDevice.size === nextProps.servicesByDevice.size
-  );
-});
+export const DeviceServiceSelector = memo(
+  DeviceServiceSelectorComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.value === nextProps.value &&
+      prevProps.error === nextProps.error &&
+      prevProps.deviceOptions.length === nextProps.deviceOptions.length &&
+      prevProps.servicesByDevice.size === nextProps.servicesByDevice.size
+    );
+  },
+);

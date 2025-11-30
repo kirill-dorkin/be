@@ -32,7 +32,9 @@ export const activateRepairWorker = async (id: string) => {
     throw new Error("Failed to activate worker");
   }
 
-  const errors = (result.data as { customerUpdate?: { errors?: Array<{ message?: string }> } }).customerUpdate?.errors;
+  const errors = (
+    result.data as { customerUpdate?: { errors?: Array<{ message?: string }> } }
+  ).customerUpdate?.errors;
 
   if (errors && errors.length) {
     throw new Error("Failed to activate worker");

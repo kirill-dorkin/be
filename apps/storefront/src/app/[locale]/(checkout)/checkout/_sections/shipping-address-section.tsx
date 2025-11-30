@@ -20,12 +20,12 @@ export async function ShippingAddressSection({
 
   if (!checkout?.shippingAddress) {
     return (
-      <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
+      <section className="border-border/60 bg-card rounded-xl border p-5 shadow-sm">
         <div>
-          <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+          <h3 className="text-foreground text-lg font-semibold sm:text-xl">
             {t("shipping-address.title")}
           </h3>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             {t("shipping-address.add-address")}
           </p>
         </div>
@@ -46,13 +46,13 @@ export async function ShippingAddressSection({
   }
 
   return (
-    <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
+    <section className="border-border/60 bg-card rounded-xl border p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
-          <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+          <h3 className="text-foreground text-lg font-semibold sm:text-xl">
             {t("shipping-address.title")}
           </h3>
-          <div className="text-sm leading-relaxed text-muted-foreground">
+          <div className="text-muted-foreground text-sm leading-relaxed">
             {displayFormattedAddressLines({
               addressId: shippingAddress.id,
               formattedAddress: result.data.formattedAddress,

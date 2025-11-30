@@ -4,12 +4,12 @@ import { serverEnvs } from "@/envs/server";
 type RawMetadataEntry = { key: string; value: string | null };
 
 export type ProductReview = {
-  id: string;
   authorId?: string;
   authorName: string;
-  rating: number;
   comment: string;
   createdAt: string;
+  id: string;
+  rating: number;
 };
 
 const REVIEWS_METADATA_KEY = "reviews";
@@ -36,13 +36,21 @@ const saleorFetch = async <T>(
 };
 
 const parseReviews = (metadata: RawMetadataEntry[] | null | undefined) => {
-  if (!metadata?.length) return [];
+  if (!metadata?.length) {
+    return [];
+  }
 
-  const raw = metadata.find((entry) => entry.key === REVIEWS_METADATA_KEY)?.value;
-  if (!raw) return [];
+  const raw = metadata.find(
+    (entry) => entry.key === REVIEWS_METADATA_KEY,
+  )?.value;
+
+  if (!raw) {
+    return [];
+  }
 
   try {
     const parsed = JSON.parse(raw) as ProductReview[];
+
     if (Array.isArray(parsed)) {
       return parsed;
     }
@@ -53,7 +61,9 @@ const parseReviews = (metadata: RawMetadataEntry[] | null | undefined) => {
   return [];
 };
 
-export const fetchProductReviews = async (productId: string): Promise<ProductReview[]> => {
+export const fetchProductReviews = async (
+  productId: string,
+): Promise<ProductReview[]> => {
   const query = /* GraphQL */ `
     query ProductReviews($id: ID!) {
       product(id: $id) {
@@ -71,10 +81,14 @@ export const fetchProductReviews = async (productId: string): Promise<ProductRev
   }>(query, { id: productId });
 
   const metadata = result.data?.product?.metadata;
+
   return parseReviews(metadata);
 };
 
-export const appendProductReview = async (productId: string, review: ProductReview) => {
+export const appendProductReview = async (
+  productId: string,
+  review: ProductReview,
+) => {
   const existing = await fetchProductReviews(productId);
   const next = [review, ...existing].slice(0, 50); // keep recent 50
 
@@ -93,7 +107,11 @@ export const appendProductReview = async (productId: string, review: ProductRevi
   `;
 
   const updateResult = await saleorFetch<{
-    data?: { updateMetadata?: { errors?: Array<{ field: string | null; message: string }> | null } };
+    data?: {
+      updateMetadata?: {
+        errors?: Array<{ field: string | null; message: string }> | null;
+      };
+    };
     errors?: Array<{ message: string }>;
   }>(mutation, {
     id: productId,
@@ -101,6 +119,7 @@ export const appendProductReview = async (productId: string, review: ProductRevi
   });
 
   const apiErrors = updateResult.data?.updateMetadata?.errors;
+
   if (apiErrors?.length) {
     throw new Error(apiErrors.map((e) => e.message).join(", "));
   }

@@ -39,7 +39,10 @@ export default async function StaffWorkersAdminPage() {
     switch (status) {
       case REPAIR_STATUS.approved:
         return (
-          <Badge variant="secondary" className="bg-emerald-100 text-emerald-900">
+          <Badge
+            variant="secondary"
+            className="bg-emerald-100 text-emerald-900"
+          >
             {t("statuses.approved")}
           </Badge>
         );
@@ -61,15 +64,13 @@ export default async function StaffWorkersAdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-foreground">
-          {t("title")}
-        </h1>
+        <h1 className="text-foreground text-2xl font-semibold">{t("title")}</h1>
         <p className="text-muted-foreground text-sm">{t("subtitle")}</p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border/40 bg-background shadow-sm">
-        <table className="min-w-full divide-y divide-border/60">
-          <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+      <div className="border-border/40 bg-background overflow-hidden rounded-2xl border shadow-sm">
+        <table className="divide-border/60 min-w-full divide-y">
+          <thead className="bg-muted/40 text-muted-foreground text-left text-xs uppercase tracking-wide">
             <tr>
               <th className="px-4 py-3">{t("table.name")}</th>
               <th className="px-4 py-3">{t("table.email")}</th>
@@ -78,18 +79,18 @@ export default async function StaffWorkersAdminPage() {
               <th className="px-4 py-3 text-right">{t("table.actions")}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/40 text-sm">
+          <tbody className="divide-border/40 divide-y text-sm">
             {workers.map((worker) => (
               <tr key={worker.id}>
                 <td className="px-4 py-3">
-                  <div className="font-medium text-foreground">
+                  <div className="text-foreground font-medium">
                     {worker.firstName} {worker.lastName}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td className="text-muted-foreground px-4 py-3">
                   {worker.email}
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td className="text-muted-foreground px-4 py-3">
                   {worker.phone || "—"}
                 </td>
                 <td className="px-4 py-3">{statusBadge(worker.status)}</td>
@@ -140,7 +141,7 @@ export default async function StaffWorkersAdminPage() {
               <tr>
                 <td
                   colSpan={5}
-                  className="px-4 py-8 text-center text-sm text-muted-foreground"
+                  className="text-muted-foreground px-4 py-8 text-center text-sm"
                 >
                   {t("empty")}
                 </td>

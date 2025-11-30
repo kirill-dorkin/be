@@ -60,7 +60,9 @@ export default async function HelpLayout({
             }}
             links={links}
           />
-          <div className="space-y-8 sm:space-y-10 lg:space-y-12">{children}</div>
+          <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+            {children}
+          </div>
         </div>
       </div>
     </div>

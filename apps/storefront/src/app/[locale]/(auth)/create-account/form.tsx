@@ -49,84 +49,90 @@ const SignUpFormComponent = () => {
   // Мемоизация isDisabled
   const isDisabled = useMemo(
     () => isRedirecting || form.formState?.isSubmitting,
-    [isRedirecting, form.formState?.isSubmitting]
+    [isRedirecting, form.formState?.isSubmitting],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit = useCallback(async (values: FormSchema) => {
-    const result = await registerAccount(values);
+  const handleSubmit = useCallback(
+    async (values: FormSchema) => {
+      const result = await registerAccount(values);
 
-    console.log("[CreateAccount Form] Full result:", JSON.stringify(result, null, 2));
+      console.log(
+        "[CreateAccount Form] Full result:",
+        JSON.stringify(result, null, 2),
+      );
 
-    if (result.ok) {
-      // Check if email confirmation is required
-      if (result.data?.requiresEmailConfirmation) {
-        toast({
-          description: t("auth.create-account-success-confirm-email"),
-          position: "center",
-          duration: 10000,
-        });
-      } else {
-        toast({
-          description: t("auth.create-account-success"),
-          position: "center",
-        });
+      if (result.ok) {
+        // Check if email confirmation is required
+        if (result.data?.requiresEmailConfirmation) {
+          toast({
+            description: t("auth.create-account-success-confirm-email"),
+            position: "center",
+            duration: 10000,
+          });
+        } else {
+          toast({
+            description: t("auth.create-account-success"),
+            position: "center",
+          });
+        }
+
+        const redirectTarget =
+          result.data?.redirectUrl ?? paths.account.profile.asPath();
+
+        push(redirectTarget);
+
+        return;
       }
 
-      const redirectTarget =
-        result.data?.redirectUrl ?? paths.account.profile.asPath();
+      const getErrorMessage = (
+        error?: (typeof result.errors)[number],
+      ): string => {
+        if (!error) {
+          return t("auth.create-account-error");
+        }
 
-      push(redirectTarget);
+        if (error.message) {
+          return error.message;
+        }
+
+        if (error.code) {
+          try {
+            return t(`errors.${error.code}` as any);
+          } catch {
+            // no-op
+          }
+        }
+
+        return t("auth.create-account-error");
+      };
+
+      const firstErrorMessage = getErrorMessage(result.errors[0]);
+
+      toast({
+        description: firstErrorMessage,
+        position: "center",
+        variant: "destructive",
+      });
+
+      result.errors.forEach((error) => {
+        const message = getErrorMessage(error);
+
+        if (error.field) {
+          form.setError(error.field as keyof FormSchema, {
+            message,
+          });
+        } else {
+          form.setError("email", {
+            message,
+          });
+        }
+      });
 
       return;
-    }
-
-    const getErrorMessage = (
-      error?: (typeof result.errors)[number],
-    ): string => {
-      if (!error) {
-        return t("auth.create-account-error");
-      }
-
-      if (error.message) {
-        return error.message;
-      }
-
-      if (error.code) {
-        try {
-          return t(`errors.${error.code}` as any);
-        } catch {
-          // no-op
-        }
-      }
-
-      return t("auth.create-account-error");
-    };
-
-    const firstErrorMessage = getErrorMessage(result.errors[0]);
-
-    toast({
-      description: firstErrorMessage,
-      position: "center",
-      variant: "destructive",
-    });
-
-    result.errors.forEach((error) => {
-      const message = getErrorMessage(error);
-
-      if (error.field) {
-        form.setError(error.field as keyof FormSchema, {
-          message,
-        });
-      } else {
-        form.setError("email", {
-          message,
-        });
-      }
-    });
-
-    return;
-  }, [push, form, t, toast]);
+    },
+    [push, form, t, toast],
+  );
 
   return (
     <Form {...form}>

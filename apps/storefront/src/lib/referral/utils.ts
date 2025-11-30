@@ -1,10 +1,6 @@
 import { randomBytes } from "crypto";
 
-import type {
-  BalanceTransaction,
-  ReferralData,
-  UserBalance,
-} from "./types";
+import type { BalanceTransaction, ReferralData, UserBalance } from "./types";
 
 /**
  * Generate a unique referral code
@@ -17,7 +13,11 @@ export function generateReferralCode(): string {
  * Parse user metadata to extract referral data
  */
 export function parseReferralData(
-  metadata: Record<string, string> | Array<{ key: string; value: string }> | null | undefined,
+  metadata:
+    | Record<string, string>
+    | Array<{ key: string; value: string }>
+    | null
+    | undefined,
 ): ReferralData | null {
   if (!metadata) {
     return null;
@@ -25,7 +25,10 @@ export function parseReferralData(
 
   // Convert array format to object format if needed
   const metadataObj = Array.isArray(metadata)
-    ? metadata.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {} as Record<string, string>)
+    ? metadata.reduce(
+        (acc, item) => ({ ...acc, [item.key]: item.value }),
+        {} as Record<string, string>,
+      )
     : metadata;
 
   const referralCode = metadataObj.referralCode || "";
@@ -51,7 +54,11 @@ export function parseReferralData(
  * Parse user metadata to extract balance data
  */
 export function parseBalanceData(
-  metadata: Record<string, string> | Array<{ key: string; value: string }> | null | undefined,
+  metadata:
+    | Record<string, string>
+    | Array<{ key: string; value: string }>
+    | null
+    | undefined,
 ): UserBalance {
   if (!metadata) {
     return {
@@ -63,7 +70,10 @@ export function parseBalanceData(
 
   // Convert array format to object format if needed
   const metadataObj = Array.isArray(metadata)
-    ? metadata.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {} as Record<string, string>)
+    ? metadata.reduce(
+        (acc, item) => ({ ...acc, [item.key]: item.value }),
+        {} as Record<string, string>,
+      )
     : metadata;
 
   const balance = parseFloat(metadataObj.balance || "0");

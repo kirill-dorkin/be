@@ -30,8 +30,7 @@ const getCategorySlug = (
 export async function POST(request: Request) {
   await verifySaleorWebhookSignature(request);
 
-  const payload =
-    (await request.json()) as CategoryEventSubscriptionFragment;
+  const payload = (await request.json()) as CategoryEventSubscriptionFragment;
 
   const slug = getCategorySlug(payload);
 

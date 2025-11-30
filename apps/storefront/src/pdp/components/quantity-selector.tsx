@@ -44,15 +44,17 @@ const QuantitySelectorComponent = ({
         {t("quantity")}:
       </Label>
       <Select value={value.toString()} onValueChange={handleSelectChange}>
-        <SelectTrigger className="h-9 w-20 border-border/60 bg-muted/30 py-3 transition-all duration-200 hover:border-border/80 hover:bg-muted/40 dark:border-white/10 dark:bg-muted/20 dark:hover:border-white/20 dark:hover:bg-muted/30">
+        <SelectTrigger className="border-border/60 bg-muted/30 hover:border-border/80 hover:bg-muted/40 dark:bg-muted/20 dark:hover:bg-muted/30 h-9 w-20 py-3 transition-all duration-200 dark:border-white/10 dark:hover:border-white/20">
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="max-h-[300px]">
-          {Array.from({ length: max - min + 1 }, (_, i) => i + min).map((qty) => (
-            <SelectItem key={qty} value={qty.toString()}>
-              {qty}
-            </SelectItem>
-          ))}
+          {Array.from({ length: max - min + 1 }, (_, i) => i + min).map(
+            (qty) => (
+              <SelectItem key={qty} value={qty.toString()}>
+                {qty}
+              </SelectItem>
+            ),
+          )}
         </SelectContent>
       </Select>
     </div>

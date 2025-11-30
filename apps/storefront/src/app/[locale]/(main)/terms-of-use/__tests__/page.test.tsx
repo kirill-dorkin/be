@@ -9,8 +9,8 @@ vi.mock("next-intl/server", () => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
     (t as any).raw = (key: string) => key;
-    
-return t;
+
+    return t;
   },
 }));
 

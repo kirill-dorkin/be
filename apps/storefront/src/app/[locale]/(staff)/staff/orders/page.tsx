@@ -6,8 +6,11 @@ import { serverEnvs } from "@/envs/server";
 import { localePrefixes } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import { REPAIR_STAGE_FLOW } from "@/lib/repair/stages";
-import { DEFAULT_LOCALE,type SupportedLocale } from "@/regions/types";
-import { fetchRepairOrders, type StaffRepairOrder } from "@/services/repair-orders-dashboard";
+import { DEFAULT_LOCALE, type SupportedLocale } from "@/regions/types";
+import {
+  fetchRepairOrders,
+  type StaffRepairOrder,
+} from "@/services/repair-orders-dashboard";
 
 import { StaffOrdersBoard } from "./staff-orders-board";
 
@@ -20,9 +23,8 @@ const buildLocalizedPath = (locale: SupportedLocale, path: string) => {
     return path;
   }
 
-  const prefix = localePrefixes[
-    locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
-  ];
+  const prefix =
+    localePrefixes[locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>];
 
   return `${prefix}${path}`;
 };
@@ -33,9 +35,12 @@ export default async function StaffOrdersPage({ params }: PageProps) {
 
   if (!session?.user) {
     nextRedirect(
-      buildLocalizedPath(locale, paths.signIn.asPath({
-        query: { redirectUrl: paths.staff.orders.asPath() },
-      })),
+      buildLocalizedPath(
+        locale,
+        paths.signIn.asPath({
+          query: { redirectUrl: paths.staff.orders.asPath() },
+        }),
+      ),
     );
   }
 
@@ -50,9 +55,12 @@ export default async function StaffOrdersPage({ params }: PageProps) {
 
   if (!accessToken) {
     nextRedirect(
-      buildLocalizedPath(locale, paths.signIn.asPath({
-        query: { redirectUrl: paths.staff.orders.asPath() },
-      })),
+      buildLocalizedPath(
+        locale,
+        paths.signIn.asPath({
+          query: { redirectUrl: paths.staff.orders.asPath() },
+        }),
+      ),
     );
   }
 
@@ -68,10 +76,12 @@ export default async function StaffOrdersPage({ params }: PageProps) {
     label: t(`stages.${stage}` as const),
   }));
 
-  const annotatedOrders: Array<StaffRepairOrder & {
-    isMine: boolean;
-    isUnassigned: boolean;
-  }> = orders.map((order) => ({
+  const annotatedOrders: Array<
+    StaffRepairOrder & {
+      isMine: boolean;
+      isUnassigned: boolean;
+    }
+  > = orders.map((order) => ({
     ...order,
     isMine: order.workerId === user.id,
     isUnassigned: !order.workerId,

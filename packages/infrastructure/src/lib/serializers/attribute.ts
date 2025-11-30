@@ -1,10 +1,15 @@
 import type { DeepNonNullable, DeepRequired } from "ts-essentials";
 
-import type { Attribute, AttributeType } from "@nimara/domain/objects/Attribute";
+import type {
+  Attribute,
+  AttributeType,
+} from "@nimara/domain/objects/Attribute";
 import type { AttributeInputTypeEnum } from "@nimara/codegen/schema";
 
 import type { SelectionAttributeFragment } from "../../store/saleor/graphql/fragments/generated.ts";
-const mapInputTypeToAttributeType = (inputType: AttributeInputTypeEnum): AttributeType => {
+const mapInputTypeToAttributeType = (
+  inputType: AttributeInputTypeEnum,
+): AttributeType => {
   switch (inputType) {
     case "BOOLEAN":
     case "DATE":
@@ -24,7 +29,6 @@ const mapInputTypeToAttributeType = (inputType: AttributeInputTypeEnum): Attribu
       return "PLAIN_TEXT";
   }
 };
-
 
 import { getTranslation } from "../saleor";
 

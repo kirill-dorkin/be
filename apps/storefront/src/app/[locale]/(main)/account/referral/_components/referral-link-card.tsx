@@ -5,7 +5,12 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@nimara/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@nimara/ui/components/card";
 import { useToast } from "@nimara/ui/hooks";
 
 import { ShareButtons } from "@/components/referral/share-buttons";
@@ -15,7 +20,10 @@ interface ReferralLinkCardProps {
   referralLink: string;
 }
 
-export function ReferralLinkCard({ referralLink, referralCode }: ReferralLinkCardProps) {
+export function ReferralLinkCard({
+  referralLink,
+  referralCode,
+}: ReferralLinkCardProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
@@ -72,16 +80,16 @@ export function ReferralLinkCard({ referralLink, referralCode }: ReferralLinkCar
             variant="outline"
             size="icon"
             onClick={handleCopy}
-            className={copied ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400" : ""}
+            className={
+              copied
+                ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400"
+                : ""
+            }
           >
             <Copy className="h-4 w-4" />
           </Button>
           {canShare && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleShare}
-            >
+            <Button variant="outline" size="icon" onClick={handleShare}>
               <Share2 className="h-4 w-4" />
             </Button>
           )}

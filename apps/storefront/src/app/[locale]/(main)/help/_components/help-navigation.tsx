@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { memo, type ReactNode,useMemo } from "react";
+import { memo, type ReactNode, useMemo } from "react";
 
 import { LocalizedLink } from "@/i18n/routing";
 
@@ -44,17 +44,19 @@ const HelpNavigationComponent = ({
   return (
     <nav
       aria-label="Help navigation"
-      className="space-y-4 rounded-xl border border-border/60 bg-card p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:sticky lg:top-24 lg:self-start lg:p-6"
+      className="border-border/60 bg-card space-y-4 rounded-xl border p-4 shadow-sm sm:rounded-2xl sm:p-5 lg:sticky lg:top-24 lg:self-start lg:p-6"
     >
       <div className="space-y-1.5 sm:space-y-2">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:text-xs">
+        <p className="text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.2em] sm:text-xs">
           {heading.overline}
         </p>
         <h2 className="text-foreground text-lg font-semibold leading-tight sm:text-xl">
           {heading.title}
         </h2>
         {heading.subtitle ? (
-          <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">{heading.subtitle}</p>
+          <p className="text-muted-foreground text-xs leading-relaxed sm:text-sm">
+            {heading.subtitle}
+          </p>
         ) : null}
       </div>
       <ul className="space-y-1.5 sm:space-y-2">
@@ -69,7 +71,7 @@ const HelpNavigationComponent = ({
                   "block rounded-lg border px-3 py-2.5 transition-all duration-200 sm:rounded-xl sm:px-4 sm:py-3",
                   isActive
                     ? "border-primary text-primary shadow-sm focus:outline-none"
-                    : "border-border/40 bg-card hover:border-primary/40 hover:bg-muted focus:outline-none focus-visible:border-primary/60 focus-visible:shadow-sm",
+                    : "border-border/40 bg-card hover:border-primary/40 hover:bg-muted focus-visible:border-primary/60 focus:outline-none focus-visible:shadow-sm",
                 ].join(" ")}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -91,9 +93,12 @@ const HelpNavigationComponent = ({
 };
 
 // Мемоизация - навигация help страниц
-export const HelpNavigation = memo(HelpNavigationComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.heading.title === nextProps.heading.title &&
-    prevProps.links.length === nextProps.links.length
-  );
-});
+export const HelpNavigation = memo(
+  HelpNavigationComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.heading.title === nextProps.heading.title &&
+      prevProps.links.length === nextProps.links.length
+    );
+  },
+);

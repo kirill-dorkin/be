@@ -54,7 +54,9 @@ export const useAddressAutocomplete = (
           ...(locale && { locale }),
         });
 
-        const response = await fetch(`/api/address/autocomplete?${params.toString()}`);
+        const response = await fetch(
+          `/api/address/autocomplete?${params.toString()}`,
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch address suggestions");

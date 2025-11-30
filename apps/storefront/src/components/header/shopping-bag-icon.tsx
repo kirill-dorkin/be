@@ -33,6 +33,9 @@ const ShoppingBagIconComponent = ({
 };
 
 // Мемоизация - используется в header на каждой странице
-export const ShoppingBagIcon = memo(ShoppingBagIconComponent, (prevProps, nextProps) => {
-  return prevProps.count === nextProps.count;
-});
+export const ShoppingBagIcon = memo(
+  ShoppingBagIconComponent,
+  (prevProps, nextProps) => {
+    return prevProps.count === nextProps.count;
+  },
+);

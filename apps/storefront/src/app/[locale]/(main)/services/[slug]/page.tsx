@@ -27,7 +27,7 @@ import { getUserService } from "@/services/user";
 import { ServicesEstimator } from "../_components/services-estimator";
 
 type PageProps = {
-  params: Promise<{ locale: SupportedLocale, slug: string; }>;
+  params: Promise<{ locale: SupportedLocale; slug: string }>;
 };
 
 function findCategoryByService(slug: string) {
@@ -42,7 +42,7 @@ function formatSiblingPrice({
 }: {
   locale: SupportedLocale;
   service: RepairService;
-}): { isFree: boolean, label: string; } {
+}): { isFree: boolean; label: string } {
   const formatPrice = (amount: number) =>
     formatAsPrice({
       amount,
@@ -124,8 +124,7 @@ const formatPriceLabel = ({
       locale,
     });
 
-  const isFree =
-    price.min === 0 && (price.max === null || price.max === 0);
+  const isFree = price.min === 0 && (price.max === null || price.max === 0);
 
   const buildLabel = (min: number, max: number | null) => {
     if (price.kind === "from" || max === null) {
@@ -154,15 +153,11 @@ const formatPriceLabel = ({
 
   const discountedMin = applyRepairDiscount(price.min, discountRate);
   const discountedMax =
-    price.max !== null
-      ? applyRepairDiscount(price.max, discountRate)
-      : null;
+    price.max !== null ? applyRepairDiscount(price.max, discountRate) : null;
 
   const minSavings = calculateRepairSavings(price.min, discountRate);
   const maxSavings =
-    price.max !== null
-      ? calculateRepairSavings(price.max, discountRate)
-      : 0;
+    price.max !== null ? calculateRepairSavings(price.max, discountRate) : 0;
 
   const hasDiscount = minSavings > 0 || maxSavings > 0;
 
@@ -286,9 +281,9 @@ export default async function ServiceDetails({ params }: PageProps) {
           ]}
         />
 
-        <section className="relative overflow-hidden rounded-3xl border border-primary/10 bg-gradient-to-br from-primary/10 via-background to-background px-6 py-10 sm:px-10">
-          <div className="pointer-events-none absolute -left-20 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl" />
-          <div className="pointer-events-none absolute -right-16 bottom-0 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+        <section className="border-primary/10 from-primary/10 via-background to-background relative overflow-hidden rounded-3xl border bg-gradient-to-br px-6 py-10 sm:px-10">
+          <div className="bg-primary/20 pointer-events-none absolute -left-20 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full blur-3xl" />
+          <div className="bg-primary/10 pointer-events-none absolute -right-16 bottom-0 h-48 w-48 rounded-full blur-3xl" />
 
           <div className="relative space-y-4">
             <Badge variant="outline" className="bg-background/80">
@@ -303,8 +298,8 @@ export default async function ServiceDetails({ params }: PageProps) {
               </p>
             )}
             {formattedPrice.label && (
-              <div className="space-y-2 rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+              <div className="border-primary/20 bg-primary/5 space-y-2 rounded-2xl border p-5 shadow-sm">
+                <p className="text-primary text-xs font-semibold uppercase tracking-widest">
                   {t("detail.priceLabel")}
                 </p>
                 {formattedPrice.isFree ? (
@@ -312,7 +307,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                     <span className="text-muted-foreground text-sm line-through">
                       {formattedPrice.label}
                     </span>
-                    <span className="text-emerald-600 text-3xl font-semibold">
+                    <span className="text-3xl font-semibold text-emerald-600">
                       {t("catalog.freeLabel")}
                     </span>
                   </div>
@@ -322,7 +317,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                       {formattedPrice.label}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-emerald-600 text-3xl font-semibold">
+                      <span className="text-3xl font-semibold text-emerald-600">
                         {formattedPrice.discountedLabel}
                       </span>
                       <div className="flex items-center gap-1">
@@ -337,7 +332,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                       </div>
                     </div>
                     {savingsLabel && (
-                      <span className="text-emerald-700 text-sm font-medium">
+                      <span className="text-sm font-medium text-emerald-700">
                         {savingsLabel}
                       </span>
                     )}
@@ -348,7 +343,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                   </p>
                 )}
                 {formattedPrice.isDiscounted && discountStrings && (
-                  <p className="text-emerald-700 text-sm font-medium">
+                  <p className="text-sm font-medium text-emerald-700">
                     {discountStrings.caption}
                   </p>
                 )}
@@ -405,7 +400,7 @@ export default async function ServiceDetails({ params }: PageProps) {
                           <span className="text-muted-foreground mr-2 line-through">
                             {siblingPrice.label}
                           </span>
-                          <span className="text-emerald-600 font-semibold">
+                          <span className="font-semibold text-emerald-600">
                             {t("catalog.freeLabel")}
                           </span>
                         </span>

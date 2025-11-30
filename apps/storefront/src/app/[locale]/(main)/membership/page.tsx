@@ -1,4 +1,13 @@
-import { Check, Crown, Headset, Sparkles, Star,TrendingDown, Truck, Wrench } from "lucide-react";
+import {
+  Check,
+  Crown,
+  Headset,
+  Sparkles,
+  Star,
+  TrendingDown,
+  Truck,
+  Wrench,
+} from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -97,14 +106,14 @@ export default async function MembershipPage() {
       {/* Hero секция */}
       <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 py-16 dark:from-amber-950/20 dark:via-yellow-950/20 dark:to-orange-950/20">
         {/* Fades smooth out the background transitions with surrounding sections */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background via-background/90 to-transparent dark:from-background dark:via-background/80" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-background via-background/90 to-transparent dark:from-background dark:via-background/80" />
+        <div className="from-background via-background/90 dark:from-background dark:via-background/80 pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b to-transparent" />
+        <div className="from-background via-background/90 dark:from-background dark:via-background/80 pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t to-transparent" />
 
         <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.15),transparent_50%)]" />
         <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.15),transparent_50%)]" />
 
         <div className="container relative z-20 mx-auto max-w-6xl px-4">
-          <div className="text-center space-y-6">
+          <div className="space-y-6 text-center">
             <div className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 px-6 py-2 text-white">
               <Crown className="mr-2 h-5 w-5" />
               <span className="font-semibold">{t("hero.badge")}</span>
@@ -114,22 +123,31 @@ export default async function MembershipPage() {
               {t("hero.title")}
             </h1>
 
-            <p className="mx-auto max-w-2xl text-lg text-muted-foreground sm:text-xl">
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg sm:text-xl">
               {t("hero.subtitle")}
             </p>
 
             <div className="flex flex-col items-center gap-4 pt-4">
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-amber-600">199 сом</span>
-                <span className="text-xl text-muted-foreground">/ {t("hero.per-month")}</span>
+                <span className="text-5xl font-bold text-amber-600">
+                  199 сом
+                </span>
+                <span className="text-muted-foreground text-xl">
+                  / {t("hero.per-month")}
+                </span>
               </div>
 
-              <Button size="lg" className="bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-lg px-8 py-6">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-amber-500 to-yellow-600 px-8 py-6 text-lg hover:from-amber-600 hover:to-yellow-700"
+              >
                 <Crown className="mr-2 h-5 w-5" />
                 {user ? t("hero.activate-cta") : t("hero.join-cta")}
               </Button>
 
-              <p className="text-sm text-muted-foreground">{t("hero.cancel-anytime")}</p>
+              <p className="text-muted-foreground text-sm">
+                {t("hero.cancel-anytime")}
+              </p>
             </div>
           </div>
         </div>
@@ -138,11 +156,11 @@ export default async function MembershipPage() {
       {/* Преимущества */}
       <section className="py-16">
         <div className="container mx-auto max-w-6xl px-4">
-          <div className="text-center space-y-4 mb-12">
+          <div className="mb-12 space-y-4 text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {t("benefits.title")}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
               {t("benefits.subtitle")}
             </p>
           </div>
@@ -166,8 +184,8 @@ export default async function MembershipPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <h3 className="font-semibold text-lg">{benefit.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <h3 className="text-lg font-semibold">{benefit.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       {benefit.description}
                     </p>
                   </div>
@@ -179,32 +197,36 @@ export default async function MembershipPage() {
       </section>
 
       {/* Сравнение */}
-      <section className="py-16 bg-muted/30">
+      <section className="bg-muted/30 py-16">
         <div className="container mx-auto max-w-4xl px-4">
-          <div className="text-center space-y-4 mb-12">
+          <div className="mb-12 space-y-4 text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {t("comparison.title")}
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               {t("comparison.subtitle")}
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
             {/* Гость */}
-            <Card className="p-6 space-y-6">
+            <Card className="space-y-6 p-6">
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold">{t("comparison.guest.title")}</h3>
-                <p className="text-sm text-muted-foreground">{t("comparison.guest.subtitle")}</p>
+                <h3 className="text-xl font-semibold">
+                  {t("comparison.guest.title")}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {t("comparison.guest.subtitle")}
+                </p>
               </div>
 
               <ul className="space-y-3">
                 {guestFeatureKeys.map((key) => (
                   <li key={key} className="flex items-start gap-3">
-                    <div className="mt-0.5 rounded-full bg-muted p-1">
-                      <Check className="h-4 w-4 text-muted-foreground" />
+                    <div className="bg-muted mt-0.5 rounded-full p-1">
+                      <Check className="text-muted-foreground h-4 w-4" />
                     </div>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground text-sm">
                       {t(key)}
                     </span>
                   </li>
@@ -213,7 +235,7 @@ export default async function MembershipPage() {
             </Card>
 
             {/* Член сообщества */}
-            <Card className="relative overflow-hidden border-2 border-amber-300 bg-gradient-to-br from-amber-50/50 to-yellow-50/50 p-6 space-y-6 dark:border-amber-700 dark:from-amber-950/20 dark:to-yellow-950/20">
+            <Card className="relative space-y-6 overflow-hidden border-2 border-amber-300 bg-gradient-to-br from-amber-50/50 to-yellow-50/50 p-6 dark:border-amber-700 dark:from-amber-950/20 dark:to-yellow-950/20">
               <div className="absolute -right-4 -top-4">
                 <Crown className="h-16 w-16 text-amber-300 opacity-20" />
               </div>
@@ -223,8 +245,12 @@ export default async function MembershipPage() {
                   <Crown className="h-4 w-4" />
                   {t("comparison.member.badge")}
                 </div>
-                <h3 className="text-xl font-semibold">{t("comparison.member.title")}</h3>
-                <p className="text-sm text-muted-foreground">{t("comparison.member.subtitle")}</p>
+                <h3 className="text-xl font-semibold">
+                  {t("comparison.member.title")}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {t("comparison.member.subtitle")}
+                </p>
               </div>
 
               <ul className="space-y-3">
@@ -233,9 +259,7 @@ export default async function MembershipPage() {
                     <div className="mt-0.5 rounded-full bg-amber-500 p-1">
                       <Check className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium">
-                      {t(key)}
-                    </span>
+                    <span className="text-sm font-medium">{t(key)}</span>
                   </li>
                 ))}
               </ul>
@@ -250,11 +274,19 @@ export default async function MembershipPage() {
           <Card className="bg-gradient-to-br from-amber-500 to-yellow-600 p-8 text-center text-white sm:p-12">
             <div className="space-y-6">
               <Crown className="mx-auto h-16 w-16" />
-              <h2 className="text-3xl font-bold sm:text-4xl">{t("cta.title")}</h2>
-              <p className="text-lg opacity-90 max-w-2xl mx-auto">{t("cta.subtitle")}</p>
+              <h2 className="text-3xl font-bold sm:text-4xl">
+                {t("cta.title")}
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg opacity-90">
+                {t("cta.subtitle")}
+              </p>
 
               <div className="flex flex-col items-center gap-4 pt-4">
-                <Button size="lg" variant="secondary" className="bg-white text-amber-600 hover:bg-gray-100 text-lg px-8 py-6">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="bg-white px-8 py-6 text-lg text-amber-600 hover:bg-gray-100"
+                >
                   {user ? t("cta.activate") : t("cta.join")}
                 </Button>
                 <p className="text-sm opacity-75">{t("cta.trial-info")}</p>
@@ -265,9 +297,9 @@ export default async function MembershipPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 bg-muted/30">
+      <section className="bg-muted/30 py-16">
         <div className="container mx-auto max-w-3xl px-4">
-          <div className="text-center space-y-4 mb-12">
+          <div className="mb-12 space-y-4 text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {t("faq.title")}
             </h2>
@@ -276,8 +308,10 @@ export default async function MembershipPage() {
           <div className="space-y-4">
             {faqKeys.map((key) => (
               <Card key={key} className="p-6">
-                <h3 className="font-semibold mb-2">{t(`faq.questions.${key}.question`)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <h3 className="mb-2 font-semibold">
+                  {t(`faq.questions.${key}.question`)}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   {t(`faq.questions.${key}.answer`)}
                 </p>
               </Card>
@@ -285,7 +319,9 @@ export default async function MembershipPage() {
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">{t("faq.more-questions")}</p>
+            <p className="text-muted-foreground mb-4">
+              {t("faq.more-questions")}
+            </p>
             <Button variant="outline" asChild>
               <LocalizedLink href={paths.staticPages.contact.asPath()}>
                 {t("faq.contact-us")}

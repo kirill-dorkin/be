@@ -9,7 +9,7 @@ if (!API_URL || !APP_TOKEN) {
 }
 
 const CATALOG = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "..", "catalog_curated.json"), "utf8")
+  fs.readFileSync(path.join(__dirname, "..", "catalog_curated.json"), "utf8"),
 );
 
 const LOCALE_TO_ENUM = {
@@ -37,8 +37,11 @@ async function graphqlRequest(query, variables = {}) {
   if (json.errors) {
     throw new Error(
       json.errors
-        .map((e) => `${e.message}${e.extensions ? ` (${JSON.stringify(e.extensions)})` : ""}`)
-        .join("\n")
+        .map(
+          (e) =>
+            `${e.message}${e.extensions ? ` (${JSON.stringify(e.extensions)})` : ""}`,
+        )
+        .join("\n"),
     );
   }
   return json.data;
@@ -133,8 +136,8 @@ async function applyTranslations(slugToId, translationsMap) {
       if (errors.length) {
         throw new Error(
           `Ошибка перевода категории ${slug} (${languageCode}): ${JSON.stringify(
-            errors
-          )}`
+            errors,
+          )}`,
         );
       }
     }

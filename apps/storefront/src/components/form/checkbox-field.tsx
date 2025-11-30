@@ -1,4 +1,4 @@
-import { type ComponentProps,memo } from "react";
+import { type ComponentProps, memo } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { Checkbox } from "@nimara/ui/components/checkbox";
@@ -60,12 +60,15 @@ const CheckboxFieldComponent = ({
 };
 
 // Мемоизация - используется в формах (адрес, чекаут)
-export const CheckboxField = memo(CheckboxFieldComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.name === nextProps.name &&
-    prevProps.label === nextProps.label &&
-    prevProps.isRequired === nextProps.isRequired &&
-    prevProps.className === nextProps.className &&
-    prevProps.disabled === nextProps.disabled
-  );
-});
+export const CheckboxField = memo(
+  CheckboxFieldComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.name === nextProps.name &&
+      prevProps.label === nextProps.label &&
+      prevProps.isRequired === nextProps.isRequired &&
+      prevProps.className === nextProps.className &&
+      prevProps.disabled === nextProps.disabled
+    );
+  },
+);

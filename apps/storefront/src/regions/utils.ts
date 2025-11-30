@@ -21,10 +21,7 @@ type ParseRegionOptions = {
   currency?: SupportedCurrency;
 };
 
-export const parseRegion = (
-  locale: string,
-  options?: ParseRegionOptions,
-) => {
+export const parseRegion = (locale: string, options?: ParseRegionOptions) => {
   if (!SUPPORTED_LOCALES.includes(locale)) {
     throw new Error(`Locale ${locale} is not supported`);
   }

@@ -27,9 +27,7 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
 
-export async function generateMetadata(
-  _props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(_props: PageProps): Promise<Metadata> {
   const t = await getTranslations("services.meta");
 
   return {
@@ -39,18 +37,21 @@ export async function generateMetadata(
 }
 
 const ServicesEstimator = dynamic(
-  () => import("./_components/services-estimator").then((mod) => mod.ServicesEstimator),
+  () =>
+    import("./_components/services-estimator").then(
+      (mod) => mod.ServicesEstimator,
+    ),
   {
     loading: () => (
       <div
-        className="rounded-2xl border border-border/50 bg-muted/30 p-6"
+        className="border-border/50 bg-muted/30 rounded-2xl border p-6"
         aria-busy="true"
         aria-live="polite"
       >
-        <div className="h-4 w-32 rounded bg-muted-foreground/20" />
+        <div className="bg-muted-foreground/20 h-4 w-32 rounded" />
         <div className="mt-4 space-y-2">
-          <div className="h-3 w-full rounded bg-muted-foreground/15" />
-          <div className="h-3 w-3/4 rounded bg-muted-foreground/15" />
+          <div className="bg-muted-foreground/15 h-3 w-full rounded" />
+          <div className="bg-muted-foreground/15 h-3 w-3/4 rounded" />
         </div>
       </div>
     ),
@@ -90,7 +91,7 @@ export default async function ServicesPage() {
     <div className="bg-background overflow-x-hidden">
       <div className="container space-y-12 py-12 lg:py-16">
         <section className="bg-muted/60 border-muted mx-auto w-full max-w-5xl rounded-3xl border px-6 py-12 text-center sm:px-10">
-          <span className="text-primary inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest">
+          <span className="text-primary bg-primary/10 inline-flex items-center justify-center rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-widest">
             {t("hero.overline")}
           </span>
           <h1 className="text-foreground mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
@@ -142,7 +143,10 @@ export default async function ServicesPage() {
           />
         </section>
 
-        <section id="service-request" className="w-full max-w-full overflow-hidden">
+        <section
+          id="service-request"
+          className="w-full max-w-full overflow-hidden"
+        >
           <ServicesEstimator
             catalog={catalog}
             currency={region.market.currency}

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import {
   loadMarketplaceListings,
-  MarketplaceListing,
+  type MarketplaceListing,
   saveMarketplaceListings,
 } from "@/lib/marketplace-storage";
 import { paths } from "@/lib/paths";

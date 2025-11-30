@@ -32,7 +32,14 @@ export const ProductProvider = async ({
   ) => React.ReactNode;
   slug: string;
 }) => {
-  const [region, storeService, checkoutId, cartService, accessToken, userService] = await Promise.all([
+  const [
+    region,
+    storeService,
+    checkoutId,
+    cartService,
+    accessToken,
+    userService,
+  ] = await Promise.all([
     getCurrentRegion(),
     getStoreService(),
     getCheckoutId(),

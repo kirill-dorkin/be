@@ -17,7 +17,7 @@ export const OrderDocuments = async ({ order }: { order: Order }) => {
 
   if (invoices.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border/70 bg-muted/40 p-6 text-sm text-muted-foreground">
+      <div className="border-border/70 bg-muted/40 text-muted-foreground rounded-xl border border-dashed p-6 text-sm">
         {t("order.documents.empty")}
       </div>
     );
@@ -40,10 +40,10 @@ export const OrderDocuments = async ({ order }: { order: Order }) => {
         return (
           <div
             key={invoice.id}
-            className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border/70 bg-background p-4 shadow-sm"
+            className="border-border/70 bg-background flex flex-wrap items-center justify-between gap-4 rounded-xl border p-4 shadow-sm"
           >
             <div className="space-y-1">
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-foreground text-sm font-semibold">
                 {invoice.number ?? t("order.documents.fallback")}
               </p>
               <p className="text-muted-foreground text-xs">
@@ -51,7 +51,10 @@ export const OrderDocuments = async ({ order }: { order: Order }) => {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline" className="text-xs uppercase tracking-wide">
+              <Badge
+                variant="outline"
+                className="text-xs uppercase tracking-wide"
+              >
                 {t(`order.documents.status.${invoice.status}`)}
               </Badge>
               {invoice.url ? (

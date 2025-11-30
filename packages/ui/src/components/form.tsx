@@ -153,7 +153,7 @@ const FormMessage = ({
     <p
       id={formMessageId}
       className={cn(
-        "text-destructive text-sm font-medium animate-in fade-in-0 slide-in-from-top-2 duration-500 ease-in-out",
+        "text-destructive animate-in fade-in-0 slide-in-from-top-2 text-sm font-medium duration-500 ease-in-out",
         className,
       )}
       {...props}

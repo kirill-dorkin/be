@@ -19,7 +19,7 @@ const RelatedProductsComponent = ({
   title: string;
 }) => {
   return (
-    <div className="border-border/30 dark:border-white/10 relative mt-16 overflow-hidden border-t pt-12">
+    <div className="border-border/30 relative mt-16 overflow-hidden border-t pt-12 dark:border-white/10">
       <h2 className="text-foreground mb-8 text-2xl font-bold leading-tight tracking-tight md:text-3xl">
         {title}
       </h2>
@@ -45,9 +45,16 @@ const RelatedProductsComponent = ({
 };
 
 // Мемоизация для предотвращения лишних ре-рендеров карусели
-export const RelatedProducts = memo(RelatedProductsComponent, (prevProps, nextProps) => {
-  // Пересоздаем только если изменился список товаров и заголовок
-  return prevProps.products.length === nextProps.products.length &&
-    prevProps.products.every((product, index) => product.id === nextProps.products[index]?.id) &&
-    prevProps.title === nextProps.title;
-});
+export const RelatedProducts = memo(
+  RelatedProductsComponent,
+  (prevProps, nextProps) => {
+    // Пересоздаем только если изменился список товаров и заголовок
+    return (
+      prevProps.products.length === nextProps.products.length &&
+      prevProps.products.every(
+        (product, index) => product.id === nextProps.products[index]?.id,
+      ) &&
+      prevProps.title === nextProps.title
+    );
+  },
+);

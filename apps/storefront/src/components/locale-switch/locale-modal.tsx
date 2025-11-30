@@ -3,13 +3,7 @@
 import { X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 
 import { Button } from "@nimara/ui/components/button";
@@ -44,9 +38,10 @@ export function LocaleSwitchModal({
   const { setLocale } = useRegionContext();
 
   const [isPending, startTransition] = useTransition();
-  const [pendingLocale, setPendingLocale] = useState<
-    { label: string, locale: SupportedLocale; } | null
-  >(null);
+  const [pendingLocale, setPendingLocale] = useState<{
+    label: string;
+    locale: SupportedLocale;
+  } | null>(null);
 
   const markets = useMemo(() => Object.values(MARKETS), []);
   const defaultMarket = region.market.id.toUpperCase() as Uppercase<MarketId>;
@@ -83,8 +78,8 @@ export function LocaleSwitchModal({
   useEffect(() => {
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
-      
-return;
+
+      return;
     }
 
     if (!open) {
@@ -139,12 +134,12 @@ return;
       />
       <div
         className={cn(
-          "relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl bg-background px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
+          "bg-background relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
           open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
         )}
       >
         <div className="flex items-center justify-between">
-          <Label className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
+          <Label className="dark:text-primary text-lg font-semibold leading-7 text-slate-700">
             {t("locale.region-settings")}
           </Label>
           <Button variant="ghost" onClick={onClose} size="icon">
@@ -171,10 +166,10 @@ return;
           />
         )}
         {pendingLocale && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-3xl bg-background/85">
+          <div className="bg-background/85 absolute inset-0 flex items-center justify-center rounded-3xl">
             <div className="flex w-full max-w-sm flex-col items-center gap-3 px-6 text-center">
               <Spinner size={24} className="text-foreground" />
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-muted-foreground text-sm font-medium">
                 {SWITCH_MESSAGES[pendingLocale.locale].replace(
                   "{language}",
                   pendingLocale.label,

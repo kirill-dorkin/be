@@ -9,9 +9,12 @@ import { getNavigationMenu } from "@/services/navigation-menu";
 
 import { Navigation } from "./_components/navigation";
 
-const Footer = dynamic(() => import("@/components/footer").then(mod => ({ default: mod.Footer })), {
-  ssr: true,
-});
+const Footer = dynamic(
+  () => import("@/components/footer").then((mod) => ({ default: mod.Footer })),
+  {
+    ssr: true,
+  },
+);
 
 async function NavigationWithData() {
   const [region, locale] = await Promise.all([
@@ -38,17 +41,19 @@ export default async function Layout({ children }: LayoutProps<"/[locale]">) {
   return (
     <>
       <div
-        className="bg-background sticky top-0 isolate z-50 pt-safe md:relative md:top-auto"
-        style={{ boxShadow: '0 -100vh 0 100vh hsl(var(--background))' } as React.CSSProperties}
+        className="bg-background pt-safe sticky top-0 isolate z-50 md:relative md:top-auto"
+        style={
+          {
+            boxShadow: "0 -100vh 0 100vh hsl(var(--background))",
+          } as React.CSSProperties
+        }
       >
         <Header />
         <Suspense fallback={<div className="h-12" />}>
           <NavigationWithData />
         </Suspense>
       </div>
-      <main className="flex min-h-screen flex-1 flex-col">
-        {children}
-      </main>
+      <main className="flex min-h-screen flex-1 flex-col">{children}</main>
       <Footer />
     </>
   );

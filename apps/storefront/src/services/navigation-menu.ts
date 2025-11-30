@@ -88,9 +88,7 @@ const mapCategoryToMenuItemChild = (category: CategoryNode): MenuItemChild => ({
   label: category.translation?.name?.trim() || category.name || category.id,
   url: categorySearchUrl(category.slug),
   description:
-    category.translation?.description ||
-    category.description ||
-    null,
+    category.translation?.description || category.description || null,
   collectionImageUrl: null,
 });
 
@@ -196,10 +194,7 @@ export const getNavigationMenu = async ({
     return fallbackResult;
   }
 
-  const menu = buildMenuFromCategories(
-    fallbackResult.data,
-    languageCode,
-  );
+  const menu = buildMenuFromCategories(fallbackResult.data, languageCode);
 
   storefrontLogger.debug("[Navigation] Built menu from category fallback.", {
     topLevelCount: menu.items.length,

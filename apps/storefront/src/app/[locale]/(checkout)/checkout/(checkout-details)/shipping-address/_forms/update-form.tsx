@@ -58,25 +58,26 @@ const UpdateShippingAddressFormComponent = ({
   // Мемоизация флага canProceed
   const canProceed = useMemo(
     () => !form.formState.isSubmitting && !isCountryChanging,
-    [form.formState.isSubmitting, isCountryChanging]
+    [form.formState.isSubmitting, isCountryChanging],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit: SubmitHandler<UpdateShippingAddressSchema> = useCallback(async (
-    data,
-  ) => {
-    const result = await accountAddressUpdateAction({
-      id: address.id,
-      input: data,
-    });
+  const handleSubmit: SubmitHandler<UpdateShippingAddressSchema> = useCallback(
+    async (data) => {
+      const result = await accountAddressUpdateAction({
+        id: address.id,
+        input: data,
+      });
 
-    if (!result.ok) {
-      storefrontLogger.error("Shipping address update failed", { result });
-    }
+      if (!result.ok) {
+        storefrontLogger.error("Shipping address update failed", { result });
+      }
 
-    setEditedAddress(null);
-    router.push(paths.checkout.shippingAddress.asPath());
-  }, [address.id, setEditedAddress, router]);
+      setEditedAddress(null);
+      router.push(paths.checkout.shippingAddress.asPath());
+    },
+    [address.id, setEditedAddress, router],
+  );
 
   // Мемоизация обработчика отмены
   const handleFormCancel = useCallback(() => {
@@ -119,9 +120,12 @@ const UpdateShippingAddressFormComponent = ({
 };
 
 // Мемоизация - форма обновления адреса доставки в checkout
-export const UpdateShippingAddressForm = memo(UpdateShippingAddressFormComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.address.id === nextProps.address.id &&
-    prevProps.addressFormRows === nextProps.addressFormRows
-  );
-});
+export const UpdateShippingAddressForm = memo(
+  UpdateShippingAddressFormComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.address.id === nextProps.address.id &&
+      prevProps.addressFormRows === nextProps.addressFormRows
+    );
+  },
+);

@@ -2,7 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  memo,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Checkbox } from "@nimara/ui/components/checkbox";
@@ -49,17 +56,20 @@ const PaymentMethodAddModalComponent = ({
   // Мемоизация флага загрузки
   const isLoading = useMemo(
     () => !isMounted || isProcessing,
-    [isMounted, isProcessing]
+    [isMounted, isProcessing],
   );
 
   // Мемоизация темы и appearance
   const isDark = useMemo(() => resolvedTheme === "dark", [resolvedTheme]);
-  const appearance = useMemo(() => ({
-    theme: (isDark ? "night" : "stripe") as "night" | "stripe",
-    variables: {
-      colorBackground: isDark ? "#1C1917" : "#fff",
-    },
-  }), [isDark]);
+  const appearance = useMemo(
+    () => ({
+      theme: (isDark ? "night" : "stripe") as "night" | "stripe",
+      variables: {
+        colorBackground: isDark ? "#1C1917" : "#fff",
+      },
+    }),
+    [isDark],
+  );
 
   // Мемоизация обработчика сохранения платежа
   const handlePaymentSave = useCallback(async () => {
@@ -157,9 +167,12 @@ const PaymentMethodAddModalComponent = ({
 };
 
 // Мемоизация - модальное окно добавления метода оплаты
-export const PaymentMethodAddModal = memo(PaymentMethodAddModalComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.secret === nextProps.secret &&
-    prevProps.storeUrl === nextProps.storeUrl
-  );
-});
+export const PaymentMethodAddModal = memo(
+  PaymentMethodAddModalComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.secret === nextProps.secret &&
+      prevProps.storeUrl === nextProps.storeUrl
+    );
+  },
+);

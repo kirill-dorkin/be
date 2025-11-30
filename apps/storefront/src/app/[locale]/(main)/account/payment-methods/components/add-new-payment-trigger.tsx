@@ -61,7 +61,7 @@ const AddNewPaymentTriggerComponent = ({
         disabled={!!secret}
         className={cn(
           "flex gap-1.5",
-          variant === "outline" && "text-slate-700 dark:text-primary",
+          variant === "outline" && "dark:text-primary text-slate-700",
         )}
       >
         {secret ? (
@@ -84,10 +84,13 @@ const AddNewPaymentTriggerComponent = ({
 };
 
 // Мемоизация - триггер добавления метода оплаты
-export const AddNewPaymentTrigger = memo(AddNewPaymentTriggerComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.customerId === nextProps.customerId &&
-    prevProps.variant === nextProps.variant &&
-    prevProps.storeUrl === nextProps.storeUrl
-  );
-});
+export const AddNewPaymentTrigger = memo(
+  AddNewPaymentTriggerComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.customerId === nextProps.customerId &&
+      prevProps.variant === nextProps.variant &&
+      prevProps.storeUrl === nextProps.storeUrl
+    );
+  },
+);

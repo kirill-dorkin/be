@@ -8,7 +8,10 @@ import { useFormContext } from "react-hook-form";
 import { Input } from "@nimara/ui/components/input";
 import { cn } from "@nimara/ui/lib/utils";
 
-import { type AddressSuggestion, useAddressAutocomplete } from "@/lib/hooks/use-address-autocomplete";
+import {
+  type AddressSuggestion,
+  useAddressAutocomplete,
+} from "@/lib/hooks/use-address-autocomplete";
 
 type AddressAutocompleteInputProps = {
   countryCode?: string;
@@ -73,36 +76,42 @@ export const AddressAutocompleteInput = ({
     }
   }, [debouncedValue, searchAddress]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
 
-    setInputValue(value);
-    setValue(name, value);
+      setInputValue(value);
+      setValue(name, value);
 
-    // Вызываем внешний onChange если он есть
-    externalOnChange?.(e);
+      // Вызываем внешний onChange если он есть
+      externalOnChange?.(e);
 
-    // Плавно убираем ошибку через небольшую задержку для плавности анимации
-    if (error && value) {
-      setTimeout(() => {
-        clearErrors(name);
-      }, 100);
-    }
-  }, [name, setValue, error, clearErrors, externalOnChange]);
+      // Плавно убираем ошибку через небольшую задержку для плавности анимации
+      if (error && value) {
+        setTimeout(() => {
+          clearErrors(name);
+        }, 100);
+      }
+    },
+    [name, setValue, error, clearErrors, externalOnChange],
+  );
 
-  const handleSelectSuggestion = useCallback((suggestion: AddressSuggestion) => {
-    // Формируем адрес только из улицы и номера дома
-    const streetAddress = [suggestion.street, suggestion.houseNumber]
-      .filter(Boolean)
-      .join(", ");
+  const handleSelectSuggestion = useCallback(
+    (suggestion: AddressSuggestion) => {
+      // Формируем адрес только из улицы и номера дома
+      const streetAddress = [suggestion.street, suggestion.houseNumber]
+        .filter(Boolean)
+        .join(", ");
 
-    const displayValue = streetAddress || suggestion.displayName;
+      const displayValue = streetAddress || suggestion.displayName;
 
-    setInputValue(displayValue);
-    setValue(name, displayValue);
-    setShowSuggestions(false);
-    onAddressSelect?.(suggestion);
-  }, [name, setValue, onAddressSelect]);
+      setInputValue(displayValue);
+      setValue(name, displayValue);
+      setShowSuggestions(false);
+      onAddressSelect?.(suggestion);
+    },
+    [name, setValue, onAddressSelect],
+  );
 
   const handleBlur = useCallback(() => {
     // Задержка чтобы клик по подсказке успел сработать
@@ -127,13 +136,13 @@ export const AddressAutocompleteInput = ({
         />
         {isLoading && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
           </div>
         )}
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-in fade-in-0 slide-in-from-top-2 duration-200">
+        <div className="border-border bg-popover animate-in fade-in-0 slide-in-from-top-2 absolute z-50 mt-1 w-full overflow-hidden rounded-md border shadow-lg duration-200">
           <div className="max-h-60 overflow-y-auto p-1">
             {suggestions.map((suggestion, index) => {
               // Формируем красивое отображение адреса
@@ -155,13 +164,13 @@ export const AddressAutocompleteInput = ({
                     "focus:bg-accent focus:text-accent-foreground focus:outline-none",
                   )}
                 >
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                  <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
                   <div className="flex-1 break-words">
                     <div className="text-sm font-medium">
                       {mainAddress || suggestion.displayName}
                     </div>
                     {secondaryAddress && (
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         {secondaryAddress}
                       </div>
                     )}

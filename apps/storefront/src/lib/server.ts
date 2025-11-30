@@ -23,7 +23,9 @@ const resolveBaseUrl = async () => {
     return `${proto}://${host}`.replace(/\/$/, "");
   }
 
-  throw new Error("Unable to resolve storefront base URL. Set NEXT_PUBLIC_STOREFRONT_URL.");
+  throw new Error(
+    "Unable to resolve storefront base URL. Set NEXT_PUBLIC_STOREFRONT_URL.",
+  );
 };
 
 export const getStoreUrl = async () => {
@@ -34,9 +36,8 @@ export const getStoreUrl = async () => {
     return baseUrl;
   }
 
-  const prefix = localePrefixes[
-    locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
-  ];
+  const prefix =
+    localePrefixes[locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>];
 
   return `${baseUrl}${prefix}`;
 };

@@ -1,6 +1,5 @@
 "use client";
 
-
 import {
   createContext,
   type PropsWithChildren,
@@ -90,7 +89,9 @@ export const RegionProvider = ({
     [region, setCurrency, setLocale],
   );
 
-  return <RegionContext.Provider value={value}>{children}</RegionContext.Provider>;
+  return (
+    <RegionContext.Provider value={value}>{children}</RegionContext.Provider>
+  );
 };
 
 export const useRegionContext = () => {

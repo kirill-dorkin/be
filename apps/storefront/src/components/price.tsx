@@ -53,7 +53,7 @@ const PriceComponent = ({
   // Мемоизация discount info для предотвращения лишних вычислений
   const discountInfo = useMemo(
     () => getDiscountInfo(price, undiscountedPrice),
-    [price, undiscountedPrice]
+    [price, undiscountedPrice],
   );
 
   const renderPrice = (priceToFormat?: TaxedPrice) => {
@@ -65,17 +65,18 @@ const PriceComponent = ({
   };
 
   // Size classes
-  const sizeClasses = size === "small"
-    ? {
-        free: "text-lg",
-        price: "text-base md:text-lg lg:text-xl",
-        oldPrice: "mr-2 text-xs md:mr-3 md:text-sm",
-      }
-    : {
-        free: "text-3xl",
-        price: "text-2xl md:text-3xl lg:text-4xl",
-        oldPrice: "mr-2 text-base md:mr-3 md:text-lg",
-      };
+  const sizeClasses =
+    size === "small"
+      ? {
+          free: "text-lg",
+          price: "text-base md:text-lg lg:text-xl",
+          oldPrice: "mr-2 text-xs md:mr-3 md:text-sm",
+        }
+      : {
+          free: "text-3xl",
+          price: "text-2xl md:text-3xl lg:text-4xl",
+          oldPrice: "mr-2 text-base md:mr-3 md:text-lg",
+        };
 
   // A specific variant is selected (price is defined).
   if (price) {
@@ -92,11 +93,15 @@ const PriceComponent = ({
     return (
       <span className={className}>
         {hasDiscount && oldPrice && (
-          <span className={`${sizeClasses.oldPrice} text-gray-500 line-through dark:text-gray-400`}>
+          <span
+            className={`${sizeClasses.oldPrice} text-gray-500 line-through dark:text-gray-400`}
+          >
             {renderPrice(oldPrice)}
           </span>
         )}
-        <span className={`${sizeClasses.price} font-bold`}>{renderPrice(price)}</span>
+        <span className={`${sizeClasses.price} font-bold`}>
+          {renderPrice(price)}
+        </span>
       </span>
     );
   }
@@ -128,7 +133,8 @@ const PriceComponent = ({
 export const Price = memo(PriceComponent, (prevProps, nextProps) => {
   return (
     prevProps.price?.amount === nextProps.price?.amount &&
-    prevProps.undiscountedPrice?.amount === nextProps.undiscountedPrice?.amount &&
+    prevProps.undiscountedPrice?.amount ===
+      nextProps.undiscountedPrice?.amount &&
     prevProps.startPrice?.amount === nextProps.startPrice?.amount &&
     prevProps.hasFreeVariants === nextProps.hasFreeVariants &&
     prevProps.size === nextProps.size &&

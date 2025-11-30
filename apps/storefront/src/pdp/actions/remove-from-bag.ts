@@ -1,10 +1,7 @@
 "use server";
 
 import { CACHE_TTL } from "@/config";
-import {
-  getCheckoutId,
-  revalidateCart,
-} from "@/lib/actions/cart";
+import { getCheckoutId, revalidateCart } from "@/lib/actions/cart";
 import { getCurrentRegion } from "@/regions/server";
 import { getCartService } from "@/services/cart";
 import { storefrontLogger } from "@/services/logging";

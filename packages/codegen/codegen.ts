@@ -49,10 +49,7 @@ const config: IGraphQLConfig = {
   projects: {
     saleor: {
       schema: process.env.NEXT_PUBLIC_SALEOR_API_URL,
-      documents: [
-        "../../packages/**/*.graphql",
-        "../../apps/**/*.graphql",
-      ],
+      documents: ["../../packages/**/*.graphql", "../../apps/**/*.graphql"],
       extensions: {
         codegen: {
           overwrite: true,

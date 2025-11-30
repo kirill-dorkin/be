@@ -48,7 +48,16 @@ export function ReferralWelcomeWrapper({
 
       return () => clearTimeout(timer);
     }
-  }, [clearQueryParam, delayMs, forceShow, isNewUser, pathname, referralCode, router, searchParams]);
+  }, [
+    clearQueryParam,
+    delayMs,
+    forceShow,
+    isNewUser,
+    pathname,
+    referralCode,
+    router,
+    searchParams,
+  ]);
 
   const handleClose = () => {
     setShowModal(false);

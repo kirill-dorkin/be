@@ -50,7 +50,7 @@ const TextareaFieldComponent = ({
               className={cn(
                 "border-input bg-background placeholder:text-muted-foreground flex min-h-[160px] w-full rounded-md border px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
                 fieldState.invalid &&
-                  "border-red-500 bg-red-50 dark:border-red-500 dark:bg-red-900/30"
+                  "border-red-500 bg-red-50 dark:border-red-500 dark:bg-red-900/30",
               )}
               placeholder={placeholder}
               rows={rows}
@@ -65,14 +65,17 @@ const TextareaFieldComponent = ({
 };
 
 // Мемоизация - используется в формах обратной связи, комментариев
-export const TextareaField = memo(TextareaFieldComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.name === nextProps.name &&
-    prevProps.label === nextProps.label &&
-    prevProps.isRequired === nextProps.isRequired &&
-    prevProps.placeholder === nextProps.placeholder &&
-    prevProps.maxLength === nextProps.maxLength &&
-    prevProps.rows === nextProps.rows &&
-    prevProps.className === nextProps.className
-  );
-});
+export const TextareaField = memo(
+  TextareaFieldComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.name === nextProps.name &&
+      prevProps.label === nextProps.label &&
+      prevProps.isRequired === nextProps.isRequired &&
+      prevProps.placeholder === nextProps.placeholder &&
+      prevProps.maxLength === nextProps.maxLength &&
+      prevProps.rows === nextProps.rows &&
+      prevProps.className === nextProps.className
+    );
+  },
+);

@@ -27,10 +27,7 @@ import {
   getRepairServiceDescription,
   getRepairServiceLabel,
 } from "@/lib/repair-services/translations";
-import type {
-  SupportedCurrency,
-  SupportedLocale,
-} from "@/regions/types";
+import type { SupportedCurrency, SupportedLocale } from "@/regions/types";
 
 type PriceLabels = {
   fixed: string;
@@ -121,19 +118,13 @@ const formatPriceLabel = ({
     };
   }
 
-  const discountedMin = applyRepairDiscount(
-    service.price.min,
-    discountRate,
-  );
+  const discountedMin = applyRepairDiscount(service.price.min, discountRate);
   const discountedMax =
     service.price.max !== null
       ? applyRepairDiscount(service.price.max, discountRate)
       : null;
 
-  const minSavings = calculateRepairSavings(
-    service.price.min,
-    discountRate,
-  );
+  const minSavings = calculateRepairSavings(service.price.min, discountRate);
   const maxSavings =
     service.price.max !== null
       ? calculateRepairSavings(service.price.max, discountRate)
@@ -292,8 +283,8 @@ export const ServicesSections = ({
                         formattedMax &&
                         priceInfo.originalMax !== null &&
                         priceInfo.discountedMax !== null &&
-                        (priceInfo.originalMax - priceInfo.discountedMax) >
-                          (priceInfo.originalMin - priceInfo.discountedMin)
+                        priceInfo.originalMax - priceInfo.discountedMax >
+                          priceInfo.originalMin - priceInfo.discountedMin
                           ? `${formattedMin} – ${formattedMax}`
                           : formattedMin;
 
@@ -305,12 +296,15 @@ export const ServicesSections = ({
                 <Card key={service.id}>
                   <CardHeader className="pb-2">
                     <div className="flex flex-wrap items-start justify-between gap-2">
-                      <CardTitle className="text-xl break-words">
+                      <CardTitle className="break-words text-xl">
                         {getRepairServiceLabel(service.name, locale)}
                       </CardTitle>
                       <div className="flex items-center gap-2">
                         {service.price.kind !== "from" && (
-                          <Badge variant="outline" className="whitespace-nowrap">
+                          <Badge
+                            variant="outline"
+                            className="whitespace-nowrap"
+                          >
                             {formatBadgeLabel(
                               service.price.kind,
                               strings.price.badge,
@@ -347,7 +341,7 @@ export const ServicesSections = ({
                           <span className="text-muted-foreground text-sm font-normal line-through">
                             {priceInfo.label}
                           </span>
-                          <span className="text-emerald-600 text-lg font-semibold">
+                          <span className="text-lg font-semibold text-emerald-600">
                             {strings.freeLabel}
                           </span>
                         </div>
@@ -358,11 +352,11 @@ export const ServicesSections = ({
                           <span className="text-muted-foreground text-sm font-normal line-through">
                             {priceInfo.label}
                           </span>
-                          <span className="text-emerald-600 text-lg font-semibold">
+                          <span className="text-lg font-semibold text-emerald-600">
                             {priceInfo.discountedLabel}
                           </span>
                           {savingsLabel && (
-                            <span className="text-emerald-700 text-xs font-medium">
+                            <span className="text-xs font-medium text-emerald-700">
                               {savingsLabel}
                             </span>
                           )}
@@ -372,7 +366,7 @@ export const ServicesSections = ({
                       )}
                     </div>
                     {priceInfo.isDiscounted && discountStrings && (
-                      <p className="text-emerald-700 mt-2 text-xs font-medium">
+                      <p className="mt-2 text-xs font-medium text-emerald-700">
                         {discountStrings.caption}
                       </p>
                     )}

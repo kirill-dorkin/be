@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-const API_URL = 'https://bestelectronics.saleor.cloud/graphql/';
-const APP_TOKEN = 'k87Z0cVj0OG95NelkWTz12XvyZfnyp';
-const CHANNEL = 'default-channel';
+const API_URL = "https://bestelectronics.saleor.cloud/graphql/";
+const APP_TOKEN = "k87Z0cVj0OG95NelkWTz12XvyZfnyp";
+const CHANNEL = "default-channel";
 
 async function graphqlRequest(query, variables = {}) {
   const response = await fetch(API_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${APP_TOKEN}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${APP_TOKEN}`,
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -17,15 +17,15 @@ async function graphqlRequest(query, variables = {}) {
   const result = await response.json();
 
   if (result.errors) {
-    console.error('❌ GraphQL Errors:', JSON.stringify(result.errors, null, 2));
-    throw new Error('GraphQL request failed');
+    console.error("❌ GraphQL Errors:", JSON.stringify(result.errors, null, 2));
+    throw new Error("GraphQL request failed");
   }
 
   return result.data;
 }
 
 async function getChannelId() {
-  console.log('🔍 Получаю ID канала...');
+  console.log("🔍 Получаю ID канала...");
 
   const query = `
     query {
@@ -47,7 +47,7 @@ async function getChannelId() {
 }
 
 async function getOrCreateWarehouse() {
-  console.log('🔍 Проверяю существующие склады...');
+  console.log("🔍 Проверяю существующие склады...");
 
   const query = `
     query {
@@ -71,7 +71,7 @@ async function getOrCreateWarehouse() {
     return warehouses[0].node.id;
   }
 
-  console.log('📦 Создаю новый склад...');
+  console.log("📦 Создаю новый склад...");
 
   const createMutation = `
     mutation CreateWarehouse($input: WarehouseCreateInput!) {
@@ -90,28 +90,33 @@ async function getOrCreateWarehouse() {
 
   const createData = await graphqlRequest(createMutation, {
     input: {
-      name: 'Основной склад',
-      slug: 'main-warehouse',
+      name: "Основной склад",
+      slug: "main-warehouse",
       address: {
-        country: 'KG',
-        city: 'Бишкек',
-        streetAddress1: 'Чингиза Айтматова',
-        postalCode: '720000',
+        country: "KG",
+        city: "Бишкек",
+        streetAddress1: "Чингиза Айтматова",
+        postalCode: "720000",
       },
     },
   });
 
   if (createData.warehouseCreate.errors.length > 0) {
-    console.error('❌ Ошибки при создании склада:', createData.warehouseCreate.errors);
+    console.error(
+      "❌ Ошибки при создании склада:",
+      createData.warehouseCreate.errors,
+    );
   } else {
-    console.log(`✅ Склад создан: ${createData.warehouseCreate.warehouse.name}`);
+    console.log(
+      `✅ Склад создан: ${createData.warehouseCreate.warehouse.name}`,
+    );
   }
 
   return createData.warehouseCreate.warehouse.id;
 }
 
 async function createShippingZone(warehouseId, channelId) {
-  console.log('\n🌍 Создаю зону доставки для Кыргызстана...');
+  console.log("\n🌍 Создаю зону доставки для Кыргызстана...");
 
   const mutation = `
     mutation CreateShippingZone($input: ShippingZoneCreateInput!) {
@@ -134,19 +139,24 @@ async function createShippingZone(warehouseId, channelId) {
 
   const data = await graphqlRequest(mutation, {
     input: {
-      name: 'Кыргызстан',
-      countries: ['KG'],
+      name: "Кыргызстан",
+      countries: ["KG"],
       addWarehouses: [warehouseId],
       addChannels: [channelId],
     },
   });
 
   if (data.shippingZoneCreate.errors.length > 0) {
-    console.error('❌ Ошибки при создании зоны:', data.shippingZoneCreate.errors);
+    console.error(
+      "❌ Ошибки при создании зоны:",
+      data.shippingZoneCreate.errors,
+    );
     return null;
   }
 
-  console.log(`✅ Зона доставки создана: ${data.shippingZoneCreate.shippingZone.name}`);
+  console.log(
+    `✅ Зона доставки создана: ${data.shippingZoneCreate.shippingZone.name}`,
+  );
   return data.shippingZoneCreate.shippingZone.id;
 }
 
@@ -174,12 +184,15 @@ async function createShippingMethod(zoneId, methodData, channelId) {
     input: {
       name: methodData.name,
       shippingZone: zoneId,
-      type: 'PRICE',
+      type: "PRICE",
     },
   });
 
   if (createData.shippingPriceCreate.errors.length > 0) {
-    console.error(`❌ Ошибки при создании метода "${methodData.name}":`, createData.shippingPriceCreate.errors);
+    console.error(
+      `❌ Ошибки при создании метода "${methodData.name}":`,
+      createData.shippingPriceCreate.errors,
+    );
     return null;
   }
 
@@ -206,12 +219,15 @@ async function createShippingMethod(zoneId, methodData, channelId) {
     id: methodId,
     input: {
       name: methodData.name,
-      type: 'PRICE',
+      type: "PRICE",
     },
   });
 
   if (updateData.shippingPriceUpdate.errors.length > 0) {
-    console.error(`❌ Ошибки при обновлении метода "${methodData.name}":`, updateData.shippingPriceUpdate.errors);
+    console.error(
+      `❌ Ошибки при обновлении метода "${methodData.name}":`,
+      updateData.shippingPriceUpdate.errors,
+    );
   }
 
   // Добавляем канал отдельно
@@ -234,15 +250,20 @@ async function createShippingMethod(zoneId, methodData, channelId) {
   const channelData = await graphqlRequest(channelMutation, {
     id: methodId,
     input: {
-      addChannels: [{
-        channelId: channelId,
-        price: methodData.price,
-      }],
+      addChannels: [
+        {
+          channelId: channelId,
+          price: methodData.price,
+        },
+      ],
     },
   });
 
   if (channelData.shippingMethodChannelListingUpdate.errors.length > 0) {
-    console.error(`❌ Ошибки при добавлении канала:`, channelData.shippingMethodChannelListingUpdate.errors);
+    console.error(
+      `❌ Ошибки при добавлении канала:`,
+      channelData.shippingMethodChannelListingUpdate.errors,
+    );
     return null;
   }
 
@@ -251,7 +272,7 @@ async function createShippingMethod(zoneId, methodData, channelId) {
 }
 
 async function getExistingShippingZones() {
-  console.log('🔍 Проверяю существующие зоны доставки...');
+  console.log("🔍 Проверяю существующие зоны доставки...");
 
   const query = `
     query {
@@ -274,7 +295,7 @@ async function getExistingShippingZones() {
 }
 
 async function main() {
-  console.log('🚀 Начинаю настройку методов доставки...\n');
+  console.log("🚀 Начинаю настройку методов доставки...\n");
 
   try {
     // Получаем ID канала
@@ -285,8 +306,8 @@ async function main() {
     let zoneId = null;
 
     // Ищем зону для Кыргызстана
-    const kgZone = existingZones.find(edge =>
-      edge.node.countries.some(c => c.code === 'KG')
+    const kgZone = existingZones.find((edge) =>
+      edge.node.countries.some((c) => c.code === "KG"),
     );
 
     if (kgZone) {
@@ -299,21 +320,21 @@ async function main() {
     }
 
     if (!zoneId) {
-      throw new Error('Не удалось создать или найти зону доставки');
+      throw new Error("Не удалось создать или найти зону доставки");
     }
 
     // Создаем методы доставки
     const shippingMethods = [
       {
-        name: 'Стандартная доставка',
+        name: "Стандартная доставка",
         price: 250,
       },
       {
-        name: 'Экспресс доставка',
+        name: "Экспресс доставка",
         price: 500,
       },
       {
-        name: 'Самовывоз из офиса',
+        name: "Самовывоз из офиса",
         price: 0,
       },
     ];
@@ -322,14 +343,13 @@ async function main() {
       await createShippingMethod(zoneId, method, channelId);
     }
 
-    console.log('\n✅ Все методы доставки успешно добавлены!');
-    console.log('\n📋 Добавлены следующие методы:');
-    console.log('  • Стандартная доставка - 250 сом');
-    console.log('  • Экспресс доставка - 500 сом');
-    console.log('  • Самовывоз из офиса - 0 сом (бесплатно)');
-
+    console.log("\n✅ Все методы доставки успешно добавлены!");
+    console.log("\n📋 Добавлены следующие методы:");
+    console.log("  • Стандартная доставка - 250 сом");
+    console.log("  • Экспресс доставка - 500 сом");
+    console.log("  • Самовывоз из офиса - 0 сом (бесплатно)");
   } catch (error) {
-    console.error('\n❌ Ошибка:', error.message);
+    console.error("\n❌ Ошибка:", error.message);
     process.exit(1);
   }
 }

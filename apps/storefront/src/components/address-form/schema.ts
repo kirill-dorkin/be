@@ -1,4 +1,4 @@
-import { type CountryCode,isValidPhoneNumber } from "libphonenumber-js";
+import { type CountryCode, isValidPhoneNumber } from "libphonenumber-js";
 import * as z from "zod";
 
 import { ALLOWED_COUNTRY_CODES } from "@nimara/domain/consts";
@@ -59,8 +59,8 @@ export const addressSchema = ({
             expected: "string",
             received: typeof arg,
           });
-          
-return;
+
+          return;
         }
 
         // Если номер введен, проверяем его валидность

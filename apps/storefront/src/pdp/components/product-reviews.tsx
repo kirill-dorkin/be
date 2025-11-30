@@ -77,13 +77,15 @@ export const ProductReviews = async () => {
   return (
     <div className="bg-background">
       <div className="flex justify-between">
-        <h2 className="text-slate-700 dark:text-primary mb-4 text-xl">Reviews</h2>
+        <h2 className="dark:text-primary mb-4 text-xl text-slate-700">
+          Reviews
+        </h2>
         <p className="text-muted-foreground mb-6">{REVIEWS.length} reviews</p>
       </div>
       <ul className="space-y-4">
         {REVIEWS.map((review) => (
           <li key={review.id} className="rounded-lg border p-4">
-            <p className="text-slate-700 dark:text-primary">{review.content}</p>
+            <p className="dark:text-primary text-slate-700">{review.content}</p>
             <div className="mt-2 flex items-center gap-2">
               <span className="flex items-center text-yellow-500">
                 {[...Array(review.rating)].map((_, index) => (
@@ -110,7 +112,7 @@ export const ProductReviews = async () => {
 export const ProductReviewsSkeleton = () => {
   return (
     <div className="bg-background mt-8">
-      <h2 className="text-slate-700 dark:text-primary mb-4 text-xl">Reviews</h2>
+      <h2 className="dark:text-primary mb-4 text-xl text-slate-700">Reviews</h2>
       <ul className="space-y-4">
         {[...Array(4)].map((_, index) => (
           <li key={index} className="rounded-lg border p-4">

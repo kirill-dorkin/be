@@ -21,14 +21,15 @@ import { ErrorDialog } from "../error-dialog";
 import { Summary } from "./summary";
 
 export const SideSummary = async () => {
-  const [t, region, locale, checkoutId, accessToken, userService] = await Promise.all([
-    getTranslations("common"),
-    getCurrentRegion(),
-    getLocale(),
-    getCheckoutId(),
-    getAccessToken(),
-    getUserService(),
-  ]);
+  const [t, region, locale, checkoutId, accessToken, userService] =
+    await Promise.all([
+      getTranslations("common"),
+      getCurrentRegion(),
+      getLocale(),
+      getCheckoutId(),
+      getAccessToken(),
+      getUserService(),
+    ]);
 
   if (!checkoutId) {
     redirect({ href: paths.cart.asPath(), locale });

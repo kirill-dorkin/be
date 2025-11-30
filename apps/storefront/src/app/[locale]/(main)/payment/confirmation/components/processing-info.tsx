@@ -51,6 +51,9 @@ const ProcessingInfoComponent = ({
 };
 
 // Мемоизация - индикатор обработки платежа
-export const ProcessingInfo = memo(ProcessingInfoComponent, (prevProps, nextProps) => {
-  return prevProps.errors.length === nextProps.errors.length;
-});
+export const ProcessingInfo = memo(
+  ProcessingInfoComponent,
+  (prevProps, nextProps) => {
+    return prevProps.errors.length === nextProps.errors.length;
+  },
+);

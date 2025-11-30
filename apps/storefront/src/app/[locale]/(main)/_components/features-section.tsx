@@ -1,11 +1,4 @@
-import {
-  Crown,
-  Package,
-  Shield,
-  Sparkles,
-  Truck,
-  Wrench,
-} from "lucide-react";
+import { Crown, Package, Shield, Sparkles, Truck, Wrench } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { LocalizedLink } from "@/i18n/routing";
@@ -60,13 +53,13 @@ export async function FeaturesSection() {
   const t = await getTranslations("home");
 
   return (
-    <section className="relative w-full bg-background py-16 sm:py-20">
+    <section className="bg-background relative w-full py-16 sm:py-20">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-12 max-w-3xl text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h2 className="text-foreground mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
             {t("features.heading")}
           </h2>
-          <p className="text-base text-muted-foreground">
+          <p className="text-muted-foreground text-base">
             {t("features.subheading")}
           </p>
         </div>
@@ -76,18 +69,20 @@ export async function FeaturesSection() {
             <LocalizedLink
               key={feature.titleKey}
               href={feature.href}
-              className="group relative rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="border-border/60 bg-card/70 group relative rounded-2xl border p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
             >
               <div className="space-y-4">
                 <div className="inline-flex">
-                  <feature.icon className={`h-7 w-7 ${feature.iconColor} transition-transform group-hover:scale-110`} />
+                  <feature.icon
+                    className={`h-7 w-7 ${feature.iconColor} transition-transform group-hover:scale-110`}
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                  <h3 className="text-foreground text-lg font-semibold tracking-tight">
                     {t(feature.titleKey)}
                   </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-muted-foreground text-sm leading-relaxed">
                     {t(feature.descriptionKey)}
                   </p>
                 </div>
@@ -95,7 +90,7 @@ export async function FeaturesSection() {
 
               <div className="absolute bottom-6 right-6 opacity-0 transition-opacity group-hover:opacity-100">
                 <svg
-                  className="h-5 w-5 text-muted-foreground"
+                  className="text-muted-foreground h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

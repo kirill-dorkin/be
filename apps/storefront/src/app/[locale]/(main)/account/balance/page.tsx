@@ -1,8 +1,4 @@
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  Clock,
-} from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Clock } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
@@ -87,26 +83,26 @@ export default async function BalancePage() {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                 {t("balance.available-balance")}
               </p>
-              <p className="text-4xl font-bold text-slate-900 dark:text-primary">
+              <p className="dark:text-primary text-4xl font-bold text-slate-900">
                 {formatAmount(currentBalance)} {balanceData.currency}
               </p>
-              <p className="text-sm text-slate-500 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-sm text-slate-500">
                 {t("balance.subtitle")}
               </p>
             </div>
-            <div className="grid w-full gap-4 rounded-2xl border border-slate-100 bg-white/80 p-4 text-xs uppercase tracking-[0.2em] text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-900/40 sm:w-auto sm:grid-cols-2">
+            <div className="grid w-full gap-4 rounded-2xl border border-slate-100 bg-white/80 p-4 text-xs uppercase tracking-[0.2em] text-slate-500 shadow-sm sm:w-auto sm:grid-cols-2 dark:border-slate-700 dark:bg-slate-900/40">
               <div>
                 <p>{t("balance.transaction-history")}</p>
-                <p className="text-2xl font-semibold text-slate-900 dark:text-primary">
+                <p className="dark:text-primary text-2xl font-semibold text-slate-900">
                   {balanceData.transactions.length}
                 </p>
               </div>
               <div>
                 <p>{t("balance.transaction-status-pending")}</p>
-                <p className="text-2xl font-semibold text-slate-900 dark:text-primary">
+                <p className="dark:text-primary text-2xl font-semibold text-slate-900">
                   {formatAmount(pendingAmount)} {balanceData.currency}
                 </p>
               </div>
@@ -145,10 +141,10 @@ export default async function BalancePage() {
       <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-6 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-primary">
+            <h2 className="dark:text-primary text-lg font-semibold text-slate-900">
               {t("balance.withdrawal-request")}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-muted-foreground">
+            <p className="dark:text-muted-foreground text-sm text-slate-500">
               {t("balance.min-withdrawal", {
                 amount: MIN_WITHDRAWAL_AMOUNT,
                 currency: balanceData.currency,
@@ -169,19 +165,19 @@ export default async function BalancePage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-4 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5 sm:p-6">
+      <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-4 shadow-sm ring-1 ring-black/5 sm:p-6 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-primary">
+            <h2 className="dark:text-primary text-lg font-semibold text-slate-900">
               {t("balance.transaction-history")}
             </h2>
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-muted-foreground">
+            <p className="dark:text-muted-foreground text-xs uppercase tracking-[0.2em] text-slate-400">
               {t("balance.title")}
             </p>
           </div>
         </div>
         {balanceData.transactions.length === 0 ? (
-          <p className="text-center text-slate-500 dark:text-muted-foreground">
+          <p className="dark:text-muted-foreground text-center text-slate-500">
             {t("balance.no-transactions")}
           </p>
         ) : (
@@ -196,8 +192,7 @@ export default async function BalancePage() {
               .map((transaction) => {
                 const isDebit = isDebitTransaction(transaction.type);
                 const typeLabel = typeTranslationMap[transaction.type];
-                const statusLabel =
-                  statusTranslationMap[transaction.status];
+                const statusLabel = statusTranslationMap[transaction.status];
 
                 return (
                   <div
@@ -215,13 +210,13 @@ export default async function BalancePage() {
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-slate-900 dark:text-primary">
+                        <p className="dark:text-primary font-medium text-slate-900">
                           {t(typeLabel)}
                         </p>
-                        <p className="text-sm text-slate-500 dark:text-muted-foreground">
+                        <p className="dark:text-muted-foreground text-sm text-slate-500">
                           {transaction.description}
                         </p>
-                        <p className="text-xs text-slate-400 dark:text-muted-foreground">
+                        <p className="dark:text-muted-foreground text-xs text-slate-400">
                           {new Date(transaction.createdAt).toLocaleString()}
                         </p>
                       </div>
@@ -234,7 +229,7 @@ export default async function BalancePage() {
                         {formatAmount(transaction.amount)}{" "}
                         {balanceData.currency}
                       </p>
-                      <div className="flex items-center gap-1 text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-muted-foreground">
+                      <div className="dark:text-muted-foreground flex items-center gap-1 text-xs uppercase tracking-[0.2em] text-slate-400">
                         {transaction.status === "PENDING" && (
                           <Clock className="h-3 w-3" />
                         )}

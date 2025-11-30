@@ -25,18 +25,19 @@ const steps = [
 
 export const RepairProcess = () => {
   return (
-    <section className="w-full bg-muted/8 py-14 sm:py-18">
+    <section className="bg-muted/8 sm:py-18 w-full py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-amber-600">
               Как мы работаем
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
               Прозрачный процесс ремонта
             </h2>
-            <p className="mt-2 max-w-2xl text-base text-muted-foreground">
-              От заявки до выдачи: вы знаете, на каком этапе находится устройство, и сколько это стоит.
+            <p className="text-muted-foreground mt-2 max-w-2xl text-base">
+              От заявки до выдачи: вы знаете, на каком этапе находится
+              устройство, и сколько это стоит.
             </p>
           </div>
         </div>
@@ -45,13 +46,17 @@ export const RepairProcess = () => {
           {steps.map((step) => (
             <div
               key={step.title}
-              className="group rounded-2xl border border-border/60 bg-card/70 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="border-border/60 bg-card/70 group rounded-2xl border p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
             >
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
+              <div className="bg-primary/10 text-primary ring-primary/15 mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl ring-1">
                 <step.icon className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground">{step.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+              <h3 className="text-foreground text-lg font-semibold">
+                {step.title}
+              </h3>
+              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                {step.desc}
+              </p>
             </div>
           ))}
         </div>

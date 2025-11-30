@@ -43,7 +43,7 @@ export default async function SignUpPage(props: {
         </>
       ) : (
         <>
-          <h2 className="text-slate-700 dark:text-primary text-2xl font-normal leading-8">
+          <h2 className="dark:text-primary text-2xl font-normal leading-8 text-slate-700">
             {t("auth.create-account")}
           </h2>
 
@@ -52,7 +52,7 @@ export default async function SignUpPage(props: {
           <hr />
 
           <div className="mb-4">
-            <h2 className="text-slate-700 dark:text-primary mb-12 text-2xl font-normal leading-8">
+            <h2 className="dark:text-primary mb-12 text-2xl font-normal leading-8 text-slate-700">
               {t("auth.already-have-an-account")}
             </h2>
             <Button asChild className="w-full" variant="outline">

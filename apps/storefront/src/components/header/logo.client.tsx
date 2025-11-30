@@ -8,9 +8,7 @@ import { LogoBase } from "./logo-base";
 const LogoClientComponent = () => {
   const t = useTranslations("common");
 
-  return (
-    <LogoBase ariaLabel={t("logo")} title={t("go-to-homepage")} />
-  );
+  return <LogoBase ariaLabel={t("logo")} title={t("go-to-homepage")} />;
 };
 
 // Мемоизация - статичный логотип

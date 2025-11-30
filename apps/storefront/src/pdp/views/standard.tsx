@@ -17,10 +17,10 @@ import { ProductBreadcrumbs } from "../components/product-breadcrumbs";
 import { ProductHighlights } from "../components/product-highlights";
 import { ProductMediaWrapper } from "../components/product-media-wrapper";
 import { ProductTitle } from "../components/product-title";
-import { VariantSelectorWrapper } from "../components/variant-selector-wrapper";
-import { ProductProvider } from "../providers/product-provider";
 import { ProductReviewsPanel } from "../components/reviews/product-reviews-panel";
+import { VariantSelectorWrapper } from "../components/variant-selector-wrapper";
 import { fetchProductReviews } from "../lib/reviews";
+import { ProductProvider } from "../providers/product-provider";
 
 /**
  * Standard view for the product details page.
@@ -39,14 +39,14 @@ export const StandardPDPView = async ({ params }: PDPViewProps) => {
         const reviews = await fetchProductReviews(product.id);
 
         return (
-          <div className="relative grid w-full max-w-6xl gap-6 overflow-hidden px-4 pt-8 md:gap-10 md:px-6 lg:gap-14 lg:px-10 xl:px-12 mx-auto">
+          <div className="relative mx-auto grid w-full max-w-6xl gap-6 overflow-hidden px-4 pt-8 md:gap-10 md:px-6 lg:gap-14 lg:px-10 xl:px-12">
             <ProductBreadcrumbs
               category={product.category}
               productName={product.name}
             />
 
             <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
-              <div className="md:col-span-1 lg:max-w-2xl md:mx-auto">
+              <div className="md:col-span-1 md:mx-auto lg:max-w-2xl">
                 <ProductMediaWrapper
                   product={product}
                   availability={availability}

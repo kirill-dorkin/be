@@ -24,8 +24,8 @@ export function ScrollToEstimatorButton() {
           setHasAnimated(true);
         }
         setIsVisible(shouldShow);
-        
-return;
+
+        return;
       }
 
       const rect = estimatorSection.getBoundingClientRect();
@@ -72,7 +72,7 @@ return;
         "transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
         isVisible
           ? "translate-y-0 scale-100 opacity-100"
-          : "translate-y-16 scale-90 opacity-0 pointer-events-none"
+          : "pointer-events-none translate-y-16 scale-90 opacity-0",
       )}
       style={{
         transitionProperty: "transform, opacity, scale",
@@ -82,24 +82,26 @@ return;
         onClick={scrollToEstimator}
         size="lg"
         className={cn(
-          "group relative overflow-hidden h-14 w-14 rounded-full p-0 transition-all duration-300 ease-out sm:h-auto sm:w-auto sm:rounded-xl sm:px-6 sm:py-3",
-          "bg-gradient-to-br from-primary via-primary to-primary/80",
+          "group relative h-14 w-14 overflow-hidden rounded-full p-0 transition-all duration-300 ease-out sm:h-auto sm:w-auto sm:rounded-xl sm:px-6 sm:py-3",
+          "from-primary via-primary to-primary/80 bg-gradient-to-br",
           "shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.16)]",
           "hover:scale-110 active:scale-95",
-          "border border-primary/20"
+          "border-primary/20 border",
         )}
         aria-label={t("hero.primaryCta")}
       >
         {/* Анимированный градиентный фон при hover */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-white/10 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="from-primary/0 to-primary/0 absolute inset-0 bg-gradient-to-br via-white/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
         {/* Пульсирующее кольцо */}
-        <div className="absolute inset-0 rounded-full sm:rounded-xl animate-ping opacity-20 bg-primary" />
+        <div className="bg-primary absolute inset-0 animate-ping rounded-full opacity-20 sm:rounded-xl" />
 
         {/* Контент кнопки */}
         <div className="relative flex items-center justify-center gap-2">
-          <Calculator className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-          <span className="hidden sm:inline font-semibold">{t("hero.primaryCta")}</span>
+          <Calculator className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+          <span className="hidden font-semibold sm:inline">
+            {t("hero.primaryCta")}
+          </span>
         </div>
       </Button>
     </div>

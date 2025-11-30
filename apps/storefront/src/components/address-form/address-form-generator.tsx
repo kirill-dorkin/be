@@ -43,7 +43,8 @@ const renderInput = ({
 
   // Используем специальный компонент для телефона
   if (field.name === "phone") {
-    const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
+    const placeholderKey =
+      `${field.name}-placeholder` as TranslationMessage<"address">;
     const placeholder = t(placeholderKey);
 
     return (
@@ -57,7 +58,8 @@ const renderInput = ({
 
   // Используем автокомплит для поля адреса
   if (field.name === "streetAddress1") {
-    const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
+    const placeholderKey =
+      `${field.name}-placeholder` as TranslationMessage<"address">;
     const placeholder = t(placeholderKey);
 
     return (
@@ -76,7 +78,8 @@ const renderInput = ({
       return <SelectFormField {...localField} />;
     case "text": {
       // Добавляем placeholder только для текстовых полей
-      const placeholderKey = `${field.name}-placeholder` as TranslationMessage<"address">;
+      const placeholderKey =
+        `${field.name}-placeholder` as TranslationMessage<"address">;
       const placeholder = t(placeholderKey);
 
       return <TextFormField {...localField} placeholder={placeholder} />;

@@ -1,4 +1,7 @@
-import { REPAIR_STAGES,type RepairStage } from "@nimara/domain/objects/RepairWorkflow";
+import {
+  REPAIR_STAGES,
+  type RepairStage,
+} from "@nimara/domain/objects/RepairWorkflow";
 import { graphqlClient } from "@nimara/infrastructure/graphql/client";
 import { SERVICE_METADATA_KEYS } from "@nimara/infrastructure/service-request/metadata";
 import { ServiceRequestOrdersQueryDocument } from "@nimara/infrastructure/service-request/saleor/graphql/queries/generated";

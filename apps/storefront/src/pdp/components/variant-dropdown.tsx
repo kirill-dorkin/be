@@ -46,10 +46,13 @@ const VariantDropdownComponent = ({
   }, [width, isSheetOpen, isSmDown]);
 
   // Мемоизация обработчика выбора варианта из sheet
-  const handleSheetItemClick = useCallback((id: string) => {
-    onVariantSelect(id);
-    setIsSheetOpen(false);
-  }, [onVariantSelect]);
+  const handleSheetItemClick = useCallback(
+    (id: string) => {
+      onVariantSelect(id);
+      setIsSheetOpen(false);
+    },
+    [onVariantSelect],
+  );
 
   return (
     <>
@@ -104,10 +107,13 @@ const VariantDropdownComponent = ({
 };
 
 // Мемоизация - используется в VariantSelector при множественных вариантах
-export const VariantDropdown = memo(VariantDropdownComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.selectedVariantId === nextProps.selectedVariantId &&
-    prevProps.variants.length === nextProps.variants.length &&
-    prevProps.variants.every((v, i) => v.id === nextProps.variants[i]?.id)
-  );
-});
+export const VariantDropdown = memo(
+  VariantDropdownComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.selectedVariantId === nextProps.selectedVariantId &&
+      prevProps.variants.length === nextProps.variants.length &&
+      prevProps.variants.every((v, i) => v.id === nextProps.variants[i]?.id)
+    );
+  },
+);

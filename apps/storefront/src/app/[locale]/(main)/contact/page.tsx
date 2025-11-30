@@ -18,9 +18,7 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
 
-export async function generateMetadata(
-  _props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(_props: PageProps): Promise<Metadata> {
   const t = await getTranslations("contact.meta");
 
   return {
@@ -44,7 +42,7 @@ export default async function ContactPage() {
     <div className="bg-background">
       <div className="container space-y-12 pb-16 pt-12 lg:space-y-16 lg:pb-24 lg:pt-16">
         <section className="mx-auto max-w-4xl space-y-6 text-center">
-          <span className="inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+          <span className="bg-primary/10 text-primary inline-flex items-center justify-center rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em]">
             {t("hero.badge")}
           </span>
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
@@ -68,7 +66,7 @@ export default async function ContactPage() {
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)]">
-          <Card className="h-full border-border/70 bg-card/80 shadow-sm">
+          <Card className="border-border/70 bg-card/80 h-full shadow-sm">
             <CardHeader className="space-y-2">
               <CardTitle className="text-2xl font-semibold">
                 {t("visit.title")}
@@ -93,11 +91,19 @@ export default async function ContactPage() {
                   </div>
                 </div>
               </div>
-              <Card className="border border-border/60 bg-card shadow-sm">
+              <Card className="border-border/60 bg-card border shadow-sm">
                 <CardContent className="space-y-4 p-5">
                   <ContactMap />
-                  <Button asChild variant="outline" className="w-full sm:w-auto">
-                    <a href="https://go.2gis.com/eNlWq" rel="noreferrer" target="_blank">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                  >
+                    <a
+                      href="https://go.2gis.com/eNlWq"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       Открыть в 2ГИС
                     </a>
                   </Button>

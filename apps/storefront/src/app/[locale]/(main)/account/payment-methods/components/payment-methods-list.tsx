@@ -46,17 +46,17 @@ export const PaymentMethodsList = ({
     <div className="grid gap-8">
       {Object.entries(groupedMethods).map(([type, methods]) => (
         <div key={type} className="w-full space-y-3">
-          <p className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
+          <p className="dark:text-primary text-lg font-semibold leading-7 text-slate-700">
             {t(`payment.${type}` as TranslationMessage)}
           </p>
           <div className="grid gap-4">
             {methods.map((method) => (
               <div
                 key={method.id}
-                className="flex flex-col gap-3 rounded-2xl border border-slate-100/80 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/40 sm:flex-row sm:items-center sm:gap-4"
+                className="flex flex-col gap-3 rounded-2xl border border-slate-100/80 bg-white/90 p-4 shadow-sm sm:flex-row sm:items-center sm:gap-4 dark:border-slate-800 dark:bg-slate-900/40"
               >
                 <div
-                  className="flex-1 text-sm text-slate-700 dark:text-primary"
+                  className="dark:text-primary flex-1 text-sm text-slate-700"
                   dangerouslySetInnerHTML={{
                     __html: formatPaymentMethod({ t, method }),
                   }}

@@ -6,7 +6,7 @@ const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
 
 if (!API_URL || !APP_TOKEN) {
   throw new Error(
-    "Требуются переменные окружения NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN"
+    "Требуются переменные окружения NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN",
   );
 }
 
@@ -75,7 +75,7 @@ catalog.metadata.root_categories = catalog.categories.map((cat) => ({
 
 fs.writeFileSync(CATALOG_PATH, JSON.stringify(catalog, null, 2));
 console.log(
-  `Обновлены slugs в catalog_curated.json. Всего категорий: ${slugMapping.size}`
+  `Обновлены slugs в catalog_curated.json. Всего категорий: ${slugMapping.size}`,
 );
 
 async function graphqlRequest(query, variables = {}) {
@@ -164,7 +164,7 @@ async function updateSlugs() {
       throw new Error(
         `Ошибка обновления категории ${oldSlug}: ${errors
           .map((e) => e.message)
-          .join(", ")}`
+          .join(", ")}`,
       );
     }
     console.log(`Категория "${oldSlug}" → "${newSlug}" обновлена.`);

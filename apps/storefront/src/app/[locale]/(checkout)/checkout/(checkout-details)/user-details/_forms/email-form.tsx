@@ -30,58 +30,68 @@ const UserEmailFormComponent = ({
   // Мемоизация флага disabled
   const isDisabled = useMemo(
     () => isRedirecting || form.formState?.isSubmitting,
-    [isRedirecting, form.formState?.isSubmitting]
+    [isRedirecting, form.formState?.isSubmitting],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit = useCallback(async ({ email }: EmailFormSchema) => {
-    console.log("🔵 Form submitted with email:", email);
+  const handleSubmit = useCallback(
+    async ({ email }: EmailFormSchema) => {
+      console.log("🔵 Form submitted with email:", email);
 
-    try {
-      // Сразу обновляем checkout с email, без проверки существования пользователя
-      // Проверка пользователя нужна только если хотим предложить вход
-      console.log("🔵 Updating checkout email...");
-      const result = await updateUserDetails({
-        checkout,
-        email,
-      });
+      try {
+        // Сразу обновляем checkout с email, без проверки существования пользователя
+        // Проверка пользователя нужна только если хотим предложить вход
+        console.log("🔵 Updating checkout email...");
+        const result = await updateUserDetails({
+          checkout,
+          email,
+        });
 
-      console.log("🔵 Update result:", result);
+        console.log("🔵 Update result:", result);
 
-      if (result.ok) {
-        console.log("🔵 Redirecting to:", result.data.redirectUrl);
-        push(result.data.redirectUrl);
+        if (result.ok) {
+          console.log("🔵 Redirecting to:", result.data.redirectUrl);
+          push(result.data.redirectUrl);
 
-        return;
-      }
-
-      console.log("🔴 Update failed with errors:", result.errors);
-      result.errors.map((error) => {
-        if (error.field) {
-          form.setError(error.field as keyof EmailFormSchema, {
-            message: t(`errors.${error.code}`),
-          });
-        } else {
-          form.setError("root", {
-            message: t(`errors.${error.code}`),
-          });
+          return;
         }
-      });
-    } catch (error) {
-      console.error("🔴 Email form submission error:", error);
-      form.setError("root", {
-        message: t("errors.UNKNOWN_ERROR"),
-      });
-    }
-  }, [checkout, push, form, t]);
+
+        console.log("🔴 Update failed with errors:", result.errors);
+        result.errors.map((error) => {
+          if (error.field) {
+            form.setError(error.field as keyof EmailFormSchema, {
+              message: t(`errors.${error.code}`),
+            });
+          } else {
+            form.setError("root", {
+              message: t(`errors.${error.code}`),
+            });
+          }
+        });
+      } catch (error) {
+        console.error("🔴 Email form submission error:", error);
+        form.setError("root", {
+          message: t("errors.UNKNOWN_ERROR"),
+        });
+      }
+    },
+    [checkout, push, form, t],
+  );
 
   // Мемоизация кода ошибки сервера
   const serverErrorCode = useMemo(
     () => form.formState.errors.root?.message,
-    [form.formState.errors.root?.message]
+    [form.formState.errors.root?.message],
   );
 
-  console.log("🟡 Email form render - isDisabled:", isDisabled, "isRedirecting:", isRedirecting, "isSubmitting:", form.formState.isSubmitting);
+  console.log(
+    "🟡 Email form render - isDisabled:",
+    isDisabled,
+    "isRedirecting:",
+    isRedirecting,
+    "isSubmitting:",
+    form.formState.isSubmitting,
+  );
 
   return (
     <Form {...form}>
@@ -127,6 +137,9 @@ const UserEmailFormComponent = ({
 };
 
 // Мемоизация - форма email пользователя в checkout
-export const UserEmailForm = memo(UserEmailFormComponent, (prevProps, nextProps) => {
-  return prevProps.checkout.id === nextProps.checkout.id;
-});
+export const UserEmailForm = memo(
+  UserEmailFormComponent,
+  (prevProps, nextProps) => {
+    return prevProps.checkout.id === nextProps.checkout.id;
+  },
+);

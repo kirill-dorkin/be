@@ -13,8 +13,11 @@ export async function POST() {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error revalidating", message: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
+      {
+        error: "Error revalidating",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }
@@ -31,8 +34,11 @@ export async function GET() {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error revalidating", message: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
+      {
+        error: "Error revalidating",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

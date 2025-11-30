@@ -15,12 +15,14 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="w-full bg-muted/5 py-12 sm:py-16">
+    <section className="bg-muted/5 w-full py-12 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-2 pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-amber-600">Отзывы</p>
-            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-amber-600">
+              Отзывы
+            </p>
+            <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
               Клиенты о нашем сервисе
             </h2>
           </div>
@@ -30,10 +32,14 @@ export const Testimonials = () => {
           {testimonials.map((item) => (
             <div
               key={item.name}
-              className="rounded-2xl border border-border/60 bg-card/70 p-4 shadow-sm"
+              className="border-border/60 bg-card/70 rounded-2xl border p-4 shadow-sm"
             >
-              <p className="text-sm text-muted-foreground leading-relaxed">{item.text}</p>
-              <p className="mt-3 text-sm font-semibold text-foreground">{item.name}</p>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {item.text}
+              </p>
+              <p className="text-foreground mt-3 text-sm font-semibold">
+                {item.name}
+              </p>
             </div>
           ))}
         </div>

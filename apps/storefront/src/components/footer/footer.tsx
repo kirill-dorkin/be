@@ -72,14 +72,14 @@ export const Footer = async () => {
   const productMenuItems = resultCategories.data?.menu?.items ?? [];
 
   return (
-    <footer className="mt-10 bg-gradient-to-b from-background to-muted/50 text-sm text-slate-700 dark:text-slate-200">
+    <footer className="from-background to-muted/50 mt-10 bg-gradient-to-b text-sm text-slate-700 dark:text-slate-200">
       <div className="container">
-        <div className="grid gap-8 border-t border-border/60 py-10 lg:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="border-border/60 grid gap-8 border-t py-10 lg:grid-cols-[1.2fr_1fr_1fr]">
           <div className="space-y-4">
             <LocalizedLink
               href={paths.home.asPath()}
               title={t("common.go-to-homepage")}
-              className="inline-flex items-center text-xl font-semibold tracking-tight text-slate-800 transition-colors hover:text-primary dark:text-white dark:hover:text-primary"
+              className="hover:text-primary dark:hover:text-primary inline-flex items-center text-xl font-semibold tracking-tight text-slate-800 transition-colors dark:text-white"
             >
               BestElectronics
             </LocalizedLink>
@@ -98,7 +98,7 @@ export const Footer = async () => {
                 ),
               })}
             </p>
-            <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+            <div className="text-muted-foreground flex flex-wrap gap-3 text-xs">
               <LocalizedLink
                 href={paths.privacyPolicy.asPath()}
                 className="hover:text-primary"

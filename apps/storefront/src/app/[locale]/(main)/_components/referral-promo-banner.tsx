@@ -26,7 +26,9 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
 
   // Get user's referral data
   const referralResult = await getReferralData();
-  const referralData = referralResult.ok ? referralResult.data?.referralData : null;
+  const referralData = referralResult.ok
+    ? referralResult.data?.referralData
+    : null;
 
   // Don't show if no referral data
   if (!referralData) {
@@ -37,7 +39,7 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
   const hasReferrals = (referralData.referralCount || 0) > 0;
 
   return (
-    <div className="rounded-3xl border border-border/60 bg-card/70 p-8 shadow-sm sm:p-10">
+    <div className="border-border/60 bg-card/70 rounded-3xl border p-8 shadow-sm sm:p-10">
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700">
@@ -46,12 +48,12 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
           </div>
 
           <div>
-            <h2 className="mb-3 text-2xl font-bold text-foreground sm:text-3xl">
+            <h2 className="text-foreground mb-3 text-2xl font-bold sm:text-3xl">
               {hasReferrals
                 ? referralT("promo-title-active")
                 : referralT("promo-title")}
             </h2>
-            <p className="text-base text-muted-foreground">
+            <p className="text-muted-foreground text-base">
               {hasReferrals
                 ? referralT("promo-description-active", {
                     count: referralData.vipReferralCount || 0,
@@ -66,7 +68,11 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button asChild size="lg" className="gap-2 bg-amber-500 text-white hover:bg-amber-600 shadow-sm">
+            <Button
+              asChild
+              size="lg"
+              className="gap-2 bg-amber-500 text-white shadow-sm hover:bg-amber-600"
+            >
               <LocalizedLink href={paths.account.referral.asPath()}>
                 {hasReferrals
                   ? referralT("view-my-stats")
@@ -85,26 +91,26 @@ export async function ReferralPromoBanner({ user }: ReferralPromoBannerProps) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-          <div className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm">
+          <div className="border-border/60 bg-card/70 rounded-2xl border p-6 shadow-sm">
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
               <Users className="h-6 w-6 text-amber-600" />
             </div>
-            <div className="text-3xl font-bold text-foreground">
+            <div className="text-foreground text-3xl font-bold">
               {referralData.vipReferralCount || 0}
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               {referralT("vip-referrals")}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm">
+          <div className="border-border/60 bg-card/70 rounded-2xl border p-6 shadow-sm">
             <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
               <Wallet className="h-6 w-6 text-emerald-600" />
             </div>
-            <div className="text-3xl font-bold text-foreground">
+            <div className="text-foreground text-3xl font-bold">
               {referralData.totalEarned || 0} {commonT("currency")}
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               {referralT("total-earned")}
             </div>
           </div>

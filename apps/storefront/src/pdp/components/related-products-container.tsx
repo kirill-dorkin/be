@@ -33,5 +33,10 @@ export const RelatedProductsContainer = async ({ slug }: Props) => {
     return null;
   }
 
-  return <RelatedProducts products={result.data.products} title={t("you-may-also-like")} />;
+  return (
+    <RelatedProducts
+      products={result.data.products}
+      title={t("you-may-also-like")}
+    />
+  );
 };

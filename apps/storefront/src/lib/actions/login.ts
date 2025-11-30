@@ -51,9 +51,7 @@ export async function login({
 
     if (!signInResult) {
       storefrontLogger.error("[Login] SignIn returned null/undefined");
-      errorService.logError(
-        new Error(`Sign in returned null for ${email}`),
-      );
+      errorService.logError(new Error(`Sign in returned null for ${email}`));
 
       return { error: true };
     }
@@ -64,9 +62,7 @@ export async function login({
         email,
       });
       errorService.logError(
-        new Error(
-          `Sign in failed for ${email}: ${signInResult.error}`,
-        ),
+        new Error(`Sign in failed for ${email}: ${signInResult.error}`),
       );
 
       return { error: true };

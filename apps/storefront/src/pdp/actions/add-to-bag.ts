@@ -70,7 +70,7 @@ export const addToBagAction = async ({
 
     storefrontLogger.debug("Item added to cart successfully", {
       variantId,
-      cartId: finalCartId
+      cartId: finalCartId,
     });
   }
 

@@ -13,7 +13,10 @@ interface ShareButtonsProps {
   referralLink: string;
 }
 
-export function ShareButtons({ referralLink, referralCode }: ShareButtonsProps) {
+export function ShareButtons({
+  referralLink,
+  referralCode,
+}: ShareButtonsProps) {
   const t = useTranslations();
   const [canShare, setCanShare] = useState(false);
 
@@ -56,7 +59,7 @@ export function ShareButtons({ referralLink, referralCode }: ShareButtonsProps) 
 
   return (
     <div className="space-y-3">
-      <p className="text-sm font-medium text-slate-700 dark:text-muted-foreground">
+      <p className="dark:text-muted-foreground text-sm font-medium text-slate-700">
         {t("referral.quick-share")}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -98,11 +101,7 @@ export function ShareButtons({ referralLink, referralCode }: ShareButtonsProps) 
           asChild
           className="flex items-center gap-2 rounded-full border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:border-purple-900 dark:bg-purple-950/30 dark:text-purple-400"
         >
-          <a
-            href={shareLinks.viber}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={shareLinks.viber} target="_blank" rel="noopener noreferrer">
             <MessageCircle className="h-4 w-4" />
             Viber
           </a>

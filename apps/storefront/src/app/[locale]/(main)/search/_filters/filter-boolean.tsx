@@ -23,14 +23,17 @@ const FilterBooleanComponent = ({
   // Мемоизация текста и ID
   const labelText = useMemo(
     () => name ?? t(messageKey as TranslationMessage) ?? slug,
-    [name, messageKey, slug, t]
+    [name, messageKey, slug, t],
   );
   const checkboxId = useMemo(() => `boolean-${slug}`, [slug]);
 
   // Мемоизация обработчика
-  const handleCheckedChange = useCallback((checked: boolean | "indeterminate") => {
-    setIsChecked(checked === true);
-  }, []);
+  const handleCheckedChange = useCallback(
+    (checked: boolean | "indeterminate") => {
+      setIsChecked(checked === true);
+    },
+    [],
+  );
 
   return (
     <div className="flex items-center space-x-2">
@@ -44,7 +47,7 @@ const FilterBooleanComponent = ({
       />
 
       <Label
-        className="text-slate-700 dark:text-primary text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="dark:text-primary text-sm font-medium leading-none text-slate-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         htmlFor={checkboxId}
       >
         {labelText}
@@ -54,9 +57,13 @@ const FilterBooleanComponent = ({
 };
 
 // Мемоизация - используется в фильтрах поиска
-export const FilterBoolean = memo(FilterBooleanComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.facet.slug === nextProps.facet.slug &&
-    prevProps.searchParams[prevProps.facet.slug] === nextProps.searchParams[nextProps.facet.slug]
-  );
-});
+export const FilterBoolean = memo(
+  FilterBooleanComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.facet.slug === nextProps.facet.slug &&
+      prevProps.searchParams[prevProps.facet.slug] ===
+        nextProps.searchParams[nextProps.facet.slug]
+    );
+  },
+);

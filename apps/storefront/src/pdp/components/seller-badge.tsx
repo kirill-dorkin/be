@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 type SellerBadgeProps = {
   className?: string;
-  name?: string;
   href?: string;
+  name?: string;
 };
 
 export const SellerBadge = ({
@@ -18,15 +18,15 @@ export const SellerBadge = ({
   const content = (
     <div
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-3 py-2 text-sm font-medium text-foreground shadow-sm",
+        "border-border/60 bg-muted/40 text-foreground inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium shadow-sm",
         className,
       )}
     >
-      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+      <span className="bg-primary/10 text-primary flex h-7 w-7 items-center justify-center rounded-full">
         <User className="h-4 w-4" />
       </span>
       <div className="flex flex-col leading-none">
-        <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+        <span className="text-muted-foreground text-[11px] uppercase tracking-wide">
           Продавец
         </span>
         <span>{name}</span>

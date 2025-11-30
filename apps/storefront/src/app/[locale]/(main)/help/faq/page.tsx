@@ -19,9 +19,7 @@ type PageProps = {
   params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata(
-  props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: "help" });
 
@@ -37,13 +35,13 @@ export default async function HelpFAQPage({ params }: PageProps) {
 
   const faq = (key: string) => t(`faq.${key}`);
 
-  const faqGroups = (t.raw("faq.sections") as Array<{
+  const faqGroups = t.raw("faq.sections") as Array<{
     id: string;
-    items: Array<{ answer: string, question: string; }>;
+    items: Array<{ answer: string; question: string }>;
     title: string;
-  }>) satisfies Array<{
+  }> satisfies Array<{
     id: string;
-    items: Array<{ answer: string, question: string; }>;
+    items: Array<{ answer: string; question: string }>;
     title: string;
   }>;
 
@@ -51,7 +49,7 @@ export default async function HelpFAQPage({ params }: PageProps) {
     <>
       <section className="space-y-4">
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary">
+          <span className="border-primary/30 bg-primary/10 text-primary inline-flex items-center gap-2 rounded-full border px-3 py-1">
             <HelpCircle className="h-4 w-4" />
             {faq("hero.badge")}
           </span>
@@ -67,10 +65,10 @@ export default async function HelpFAQPage({ params }: PageProps) {
 
       <section className="space-y-6">
         {faqGroups.map((group) => (
-          <Card key={group.id} className="border border-border/70">
+          <Card key={group.id} className="border-border/70 border">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
-                <MessageCircleQuestion className="h-5 w-5 text-primary" />
+                <MessageCircleQuestion className="text-primary h-5 w-5" />
                 {group.title}
               </CardTitle>
             </CardHeader>
@@ -80,7 +78,7 @@ export default async function HelpFAQPage({ params }: PageProps) {
                   <AccordionItem
                     key={item.question}
                     value={item.question}
-                    className="border border-border/60 rounded-xl px-4"
+                    className="border-border/60 rounded-xl border px-4"
                   >
                     <AccordionTrigger className="text-left text-base font-semibold">
                       {item.question}

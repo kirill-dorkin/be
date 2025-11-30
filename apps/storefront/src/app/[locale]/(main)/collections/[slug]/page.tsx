@@ -15,7 +15,10 @@ import { getCollectionService } from "@/services/collection";
 
 import { SearchPagination } from "../../_components/search-pagination";
 import { ProductsListWithMode } from "../../search/_components/products-list-with-mode";
-import { ViewModeProvider, ViewToggleControl } from "../../search/_components/search-header";
+import {
+  ViewModeProvider,
+  ViewToggleControl,
+} from "../../search/_components/search-header";
 
 type PageProps = {
   params: Promise<{
@@ -123,16 +126,16 @@ export default async function Page(props: PageProps) {
 
   return (
     <ViewModeProvider>
-      <div className="mb-8 w-full max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+      <div className="mx-auto mb-8 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <Breadcrumbs pageName={collection.name} />
 
         <div className="mt-8 grid basis-full items-center justify-center gap-4 md:flex">
-          <h1 className="text-slate-700 dark:text-primary text-center text-2xl">
+          <h1 className="dark:text-primary text-center text-2xl text-slate-700">
             {collection?.name}
           </h1>
         </div>
 
-        <div className="relative mx-auto mt-8 aspect-[4/3] w-full max-w-2xl rounded-2xl border border-border/60 bg-muted/30 p-6 dark:border-white/10 dark:bg-muted/20">
+        <div className="border-border/60 bg-muted/30 dark:bg-muted/20 relative mx-auto mt-8 aspect-[4/3] w-full max-w-2xl rounded-2xl border p-6 dark:border-white/10">
           {collection?.thumbnail ? (
             <Image
               src={collection.thumbnail.url}
@@ -151,7 +154,7 @@ export default async function Page(props: PageProps) {
 
         <hr className="my-8" />
 
-        <div className="flex items-center justify-between border-b border-border/40 pb-4">
+        <div className="border-border/40 flex items-center justify-between border-b pb-4">
           <h2 className="text-foreground text-2xl font-semibold leading-tight tracking-tight">
             {t("associated-products")}
           </h2>

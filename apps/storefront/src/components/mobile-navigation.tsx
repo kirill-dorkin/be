@@ -60,99 +60,99 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   // Main categories (Russian)
   "Сервисный центр": Wrench,
   "Сервис борбору": Wrench,
-  "Комплектующие": Cpu,
-  "Периферия": Plug,
-  "Переферия": Plug,
-  "Ноутбуки": Laptop,
-  "Планшеты": Tablet,
-  "Смартфоны": Smartphone,
-  "Игровое": Gamepad2,
-  "Сеть": Network,
-  "Мобильность": Smartphone,
-  "Дом": Home,
-  "Сервис": ShieldCheck,
-  "Уценка": BadgePercent,
+  Комплектующие: Cpu,
+  Периферия: Plug,
+  Переферия: Plug,
+  Ноутбуки: Laptop,
+  Планшеты: Tablet,
+  Смартфоны: Smartphone,
+  Игровое: Gamepad2,
+  Сеть: Network,
+  Мобильность: Smartphone,
+  Дом: Home,
+  Сервис: ShieldCheck,
+  Уценка: BadgePercent,
 
   // Main categories (English)
   "Service centre": Wrench,
-  "Components": Cpu,
-  "Peripherals": Plug,
-  "Laptops": Laptop,
-  "Tablets": Tablet,
-  "Smartphones": Smartphone,
-  "Gaming": Gamepad2,
-  "Network": Network,
-  "Mobility": Smartphone,
-  "Home": Home,
-  "Service": ShieldCheck,
-  "Sale": BadgePercent,
-  "Outlet": BadgePercent,
+  Components: Cpu,
+  Peripherals: Plug,
+  Laptops: Laptop,
+  Tablets: Tablet,
+  Smartphones: Smartphone,
+  Gaming: Gamepad2,
+  Network: Network,
+  Mobility: Smartphone,
+  Home: Home,
+  Service: ShieldCheck,
+  Sale: BadgePercent,
+  Outlet: BadgePercent,
 
   // Main categories (Kyrgyz)
-  "Компоненттер": Cpu,
-  "Мобилдүүлүк": Smartphone,
-  "Үй": Home,
+  Компоненттер: Cpu,
+  Мобилдүүлүк: Smartphone,
+  Үй: Home,
   // Уценка намеренно без иконки для уникальности и избегания дублей
 
   // Subcategories - Components (Russian)
   "Материнские платы": CircuitBoard,
-  "Охлаждение": Fan,
-  "Графика": Monitor,
-  "Серверное": Server,
-  "Процессоры": Cpu,
-  "Питание": Zap,
-  "Корпуса": Box,
-  "Память": MemoryStick,
-  "Накопители": Database,
-  "Видеокарты": Monitor,
+  Охлаждение: Fan,
+  Графика: Monitor,
+  Серверное: Server,
+  Процессоры: Cpu,
+  Питание: Zap,
+  Корпуса: Box,
+  Память: MemoryStick,
+  Накопители: Database,
+  Видеокарты: Monitor,
   "Блоки питания": Battery,
-  "SSD": HardDrive,
-  "HDD": Database,
+  SSD: HardDrive,
+  HDD: Database,
 
   // Subcategories - Peripherals (Russian)
-  "Наушники": Headphones,
-  "Мониторы": Monitor,
-  "Проекторы": Projector,
-  "Акустика": Speaker,
-  "Микрофоны": Mic,
-  "Мыши": Mouse,
-  "Клавиатуры": Keyboard,
+  Наушники: Headphones,
+  Мониторы: Monitor,
+  Проекторы: Projector,
+  Акустика: Speaker,
+  Микрофоны: Mic,
+  Мыши: Mouse,
+  Клавиатуры: Keyboard,
   "Веб-камеры": Webcam,
-  "Принтеры": Printer,
-  "Печать": Printer,
-  "Сканеры": ScanLine,
-  "Хранение": Database,
-  "Кабели": Cable,
-  "Разное": Package,
+  Принтеры: Printer,
+  Печать: Printer,
+  Сканеры: ScanLine,
+  Хранение: Database,
+  Кабели: Cable,
+  Разное: Package,
   "USB устройства": Usb,
   "Wi-Fi оборудование": Wifi,
-  "Bluetooth": Bluetooth,
+  Bluetooth: Bluetooth,
 
   // Network categories (Russian)
-  "UPS": Battery,
-  "Оборудование": Server,
-  "Кабельная": Cable,
-  "Видеонаблюдение": Camera,
-  "Доступ": Lock,
-  "Оповещение": Bell,
+  UPS: Battery,
+  Оборудование: Server,
+  Кабельная: Cable,
+  Видеонаблюдение: Camera,
+  Доступ: Lock,
+  Оповещение: Bell,
 
   // Mobility subcategories (Russian)
-  "Аксессуары": Watch,
+  Аксессуары: Watch,
   "Питание мобильных": Battery,
-  "Устройства": Smartphone,
+  Устройства: Smartphone,
 
   // Home subcategories (Russian)
-  "Ремонт": Wrench,
-  "Развлечения": Clapperboard,
-  "Кухня": Utensils,
-  "Уход": Sparkles,
+  Ремонт: Wrench,
+  Развлечения: Clapperboard,
+  Кухня: Utensils,
+  Уход: Sparkles,
 
   // Service subcategories (Russian)
-  "Маркировка": Tag,
-  "Инструменты": Hammer,
+  Маркировка: Tag,
+  Инструменты: Hammer,
   "Программное обеспечение": Code,
-  "Расходники": Package,
-  "Запчасти": Settings,
+  Расходники: Package,
+  Запчасти: Settings,
 
   // Sale subcategories (Russian)
   "Комплектующие (уценка)": Cpu,
@@ -163,74 +163,74 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Прочее (уценка)": Package,
 
   // Subcategories (English)
-  "Motherboards": CircuitBoard,
-  "Cooling": Fan,
-  "Graphics": Monitor,
-  "Server": Server,
-  "Processors": Cpu,
-  "Power": Zap,
-  "Cases": Box,
-  "Memory": MemoryStick,
-  "Storage": Database,
+  Motherboards: CircuitBoard,
+  Cooling: Fan,
+  Graphics: Monitor,
+  Server: Server,
+  Processors: Cpu,
+  Power: Zap,
+  Cases: Box,
+  Memory: MemoryStick,
+  Storage: Database,
   "Video Cards": Monitor,
   "Power Supplies": Battery,
-  "Headphones": Headphones,
-  "Monitors": Monitor,
-  "Projectors": Projector,
-  "Audio": Speaker,
-  "Speakers": Speaker,
-  "Microphones": Mic,
-  "Mice": Mouse,
-  "Keyboards": Keyboard,
-  "Webcams": Webcam,
-  "Printers": Printer,
-  "Print": Printer,
-  "Scanners": ScanLine,
-  "Misc": Package,
-  "Miscellaneous": Package,
-  "Various": Package,
-  "Cables": Cable,
+  Headphones: Headphones,
+  Monitors: Monitor,
+  Projectors: Projector,
+  Audio: Speaker,
+  Speakers: Speaker,
+  Microphones: Mic,
+  Mice: Mouse,
+  Keyboards: Keyboard,
+  Webcams: Webcam,
+  Printers: Printer,
+  Print: Printer,
+  Scanners: ScanLine,
+  Misc: Package,
+  Miscellaneous: Package,
+  Various: Package,
+  Cables: Cable,
   "USB Devices": Usb,
   "Wi-Fi": Wifi,
-  "WiFi": Wifi,
+  WiFi: Wifi,
 
   // Network categories (English)
-  "Equipment": Server,
-  "Cabling": Cable,
+  Equipment: Server,
+  Cabling: Cable,
   "Video Surveillance": Camera,
-  "CCTV": Camera,
-  "Access": Lock,
+  CCTV: Camera,
+  Access: Lock,
   "Access Control": Lock,
-  "Notification": Bell,
-  "Notifications": Bell,
-  "Alert": Bell,
-  "Alerting": Bell,
-  "Alarm": Bell,
+  Notification: Bell,
+  Notifications: Bell,
+  Alert: Bell,
+  Alerting: Bell,
+  Alarm: Bell,
 
   // Mobility subcategories (English)
-  "Accessories": Watch,
+  Accessories: Watch,
   "Mobile Power": Battery,
-  "Devices": Smartphone,
+  Devices: Smartphone,
 
   // Home subcategories (English)
-  "Repair": Wrench,
-  "Entertainment": Clapperboard,
-  "Kitchen": Utensils,
-  "Care": Sparkles,
+  Repair: Wrench,
+  Entertainment: Clapperboard,
+  Kitchen: Utensils,
+  Care: Sparkles,
 
   // Service subcategories (English)
-  "Labeling": Tag,
-  "Marking": Tag,
+  Labeling: Tag,
+  Marking: Tag,
   "Security Labels": Tag,
-  "Tools": Hammer,
-  "Software": Code,
-  "Consumables": Package,
-  "Supplies": Package,
-  "Parts": Settings,
+  Tools: Hammer,
+  Software: Code,
+  Consumables: Package,
+  Supplies: Package,
+  Parts: Settings,
   "Spare Parts": Settings,
-  "Куралдар": Hammer,
-  "Программа": Code,
-  "Сарпталуучулар": Package,
+  Куралдар: Hammer,
+  Программа: Code,
+  Сарпталуучулар: Package,
   "Запастык бөлүктөр": Settings,
 
   // Sale subcategories (English)
@@ -251,62 +251,62 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   "Outlet Misc": Package,
 
   // Subcategories (Kyrgyz transliterations/labels)
-  "Кулакчындар": Headphones,
-  "Мониторлор": Monitor,
-  "Проекторлор": Projector,
-  "Үнду": Speaker,
-  "Үндү": Speaker,
-  "Унду": Speaker,
-  "Клавиатуралар": Keyboard,
-  "Чычкандар": Mouse,
-  "Оюн": Gamepad2,
-  "Басма": Printer,
-  "Сканерлер": ScanLine,
+  Кулакчындар: Headphones,
+  Мониторлор: Monitor,
+  Проекторлор: Projector,
+  Үнду: Speaker,
+  Үндү: Speaker,
+  Унду: Speaker,
+  Клавиатуралар: Keyboard,
+  Чычкандар: Mouse,
+  Оюн: Gamepad2,
+  Басма: Printer,
+  Сканерлер: ScanLine,
   "Портативдүү сактоо": Database,
   "Портативдуу сактоо": Database,
-  "Кабелдер": Cable,
+  Кабелдер: Cable,
   "Ар кандай": Package,
   "Ар кандай (уценка)": Package,
   "Ар кошумча": Package,
   // Mobility (Kyrgyz)
-  "Аксессуарлар": Watch,
-  "Ноутбуктар": Laptop,
+  Аксессуарлар: Watch,
+  Ноутбуктар: Laptop,
   "Мобилдик кубат": Battery,
-  "Аппараттар": Smartphone,
+  Аппараттар: Smartphone,
   // Home (Kyrgyz)
-  "Ашкана": Utensils,
+  Ашкана: Utensils,
   "Көңүл ачуу": Clapperboard,
   "Кам көрүү": Sparkles,
   // Components (Kyrgyz)
   "Материндик платалар": CircuitBoard,
-  "Муздатуу": Fan,
+  Муздатуу: Fan,
   "Сервер жабдыктары": Server,
-  "Процессорлор": Cpu,
-  "Энергия": Battery,
-  "Корпустар": Box,
+  Процессорлор: Cpu,
+  Энергия: Battery,
+  Корпустар: Box,
   "Эс тутум": MemoryStick,
-  "Сактагычтар": Database,
+  Сактагычтар: Database,
 };
 
 // Mapping by slug/path to avoid missing icons on translated labels
 const MENU_ICON_SLUG_MAP: Record<string, LucideIcon> = {
-  "services": Wrench,
-  "service": ShieldCheck,
+  services: Wrench,
+  service: ShieldCheck,
   "service-centre": Wrench,
   "service-center": Wrench,
   "repair-services": Wrench,
-  "repair": Wrench,
-  "components": Cpu,
-  "component": Cpu,
-  "peripherals": Plug,
-  "peripheral": Plug,
-  "network": Network,
-  "networking": Network,
-  "mobility": Smartphone,
-  "mobile": Smartphone,
-  "home": Home,
-  "outlet": BadgePercent,
-  "sale": BadgePercent,
+  repair: Wrench,
+  components: Cpu,
+  component: Cpu,
+  peripherals: Plug,
+  peripheral: Plug,
+  network: Network,
+  networking: Network,
+  mobility: Smartphone,
+  mobile: Smartphone,
+  home: Home,
+  outlet: BadgePercent,
+  sale: BadgePercent,
   "outlet-components": Cpu,
   "components-outlet": Cpu,
   "components-sale": Cpu,
@@ -326,76 +326,76 @@ const MENU_ICON_SLUG_MAP: Record<string, LucideIcon> = {
   "outlet-misc": Package,
   "misc-sale": Package,
   "security-labels": Tag,
-  "labels": Tag,
-  "consumables": Package,
-  "supplies": Package,
+  labels: Tag,
+  consumables: Package,
+  supplies: Package,
   "spare-parts": Settings,
-  "parts": Settings,
+  parts: Settings,
   // Peripherals & subcategories
-  "headphones": Headphones,
-  "headsets": Headphones,
-  "monitors": Monitor,
-  "monitor": Monitor,
-  "projectors": Projector,
-  "projector": Projector,
-  "audio": Speaker,
-  "speakers": Speaker,
-  "microphones": Mic,
-  "microphone": Mic,
-  "mice": Mouse,
-  "mouse": Mouse,
-  "keyboards": Keyboard,
-  "keyboard": Keyboard,
-  "webcams": Webcam,
-  "webcam": Webcam,
-  "printers": Printer,
-  "printer": Printer,
-  "print": Printer,
-  "scanners": ScanLine,
-  "scanner": ScanLine,
-  "storage": Database,
-  "ssd": HardDrive,
-  "hdd": Database,
-  "cables": Cable,
-  "cable": Cable,
+  headphones: Headphones,
+  headsets: Headphones,
+  monitors: Monitor,
+  monitor: Monitor,
+  projectors: Projector,
+  projector: Projector,
+  audio: Speaker,
+  speakers: Speaker,
+  microphones: Mic,
+  microphone: Mic,
+  mice: Mouse,
+  mouse: Mouse,
+  keyboards: Keyboard,
+  keyboard: Keyboard,
+  webcams: Webcam,
+  webcam: Webcam,
+  printers: Printer,
+  printer: Printer,
+  print: Printer,
+  scanners: ScanLine,
+  scanner: ScanLine,
+  storage: Database,
+  ssd: HardDrive,
+  hdd: Database,
+  cables: Cable,
+  cable: Cable,
   "usb-devices": Usb,
-  "usb": Usb,
-  "accessories": Watch,
+  usb: Usb,
+  accessories: Watch,
   "mobile-power": Battery,
-  "devices": Smartphone,
+  devices: Smartphone,
   // Home subcategories
-  "entertainment": Clapperboard,
-  "care": Sparkles,
-  "kitchen": Utensils,
+  entertainment: Clapperboard,
+  care: Sparkles,
+  kitchen: Utensils,
   // Components subcategories
-  "motherboards": CircuitBoard,
-  "cpu": Cpu,
-  "processors": Cpu,
-  "processor": Cpu,
+  motherboards: CircuitBoard,
+  cpu: Cpu,
+  processors: Cpu,
+  processor: Cpu,
   "power-supplies": Battery,
-  "psu": Battery,
-  "cases": Box,
-  "case": Box,
-  "memory": MemoryStick,
-  "ram": MemoryStick,
-  "graphics": Monitor,
-  "gpu": Monitor,
-  "cooling": Fan,
-  "energy": Battery,
+  psu: Battery,
+  cases: Box,
+  case: Box,
+  memory: MemoryStick,
+  ram: MemoryStick,
+  graphics: Monitor,
+  gpu: Monitor,
+  cooling: Fan,
+  energy: Battery,
   // Components subcategories
   // Networking subcategories
-  "ups": Battery,
-  "equipment": Server,
-  "cabling": Cable,
+  ups: Battery,
+  equipment: Server,
+  cabling: Cable,
   "video-surveillance": Camera,
-  "cctv": Camera,
-  "access": Lock,
+  cctv: Camera,
+  access: Lock,
   "access-control": Lock,
-  "notification": Bell,
-  "notifications": Bell,
-  "alert": Bell,
-  "alerting": Bell,
-  "alarm": Bell,
+  notification: Bell,
+  notifications: Bell,
+  alert: Bell,
+  alerting: Bell,
+  alarm: Bell,
 };
 
 const DEFAULT_ICON: LucideIcon = Package;
@@ -432,7 +432,9 @@ const KEYWORD_ICON_RULES: Array<{
 ];
 
 const extractSlug = (url?: string | null): string | null => {
-  if (!url) {return null;}
+  if (!url) {
+    return null;
+  }
 
   try {
     const parsed = new URL(url, "http://example.com");
@@ -477,7 +479,9 @@ const getIconForItem = (
   const normalizedBase = normalizeLabelForMatch(normalizedLabel);
 
   const foundInsensitive = Object.entries(MENU_ICON_MAP).find(
-    ([key]) => key.toLowerCase() === normalizedLower || key.toLowerCase() === normalizedBase,
+    ([key]) =>
+      key.toLowerCase() === normalizedLower ||
+      key.toLowerCase() === normalizedBase,
   );
 
   if (foundInsensitive) {
@@ -518,7 +522,9 @@ export const MobileNavigation = ({
   }
 
   const toggleCategory = (categoryId: string, hasChildren: boolean) => {
-    if (!hasChildren) {return;}
+    if (!hasChildren) {
+      return;
+    }
     setOpenCategoryId(openCategoryId === categoryId ? null : categoryId);
   };
 
@@ -532,7 +538,7 @@ export const MobileNavigation = ({
         return (
           <li
             key={item.id}
-            className="group animate-menu-item-enter"
+            className="animate-menu-item-enter group"
             style={{ animationDelay: `${index * 50}ms` }}
           >
             {hasChildren ? (
@@ -543,12 +549,16 @@ export const MobileNavigation = ({
                 {Icon && (
                   <Icon className="h-5 w-5 flex-shrink-0 text-stone-600 dark:text-stone-400" />
                 )}
-                <span className="flex-1 text-left text-[15px] leading-tight">{item.label}</span>
+                <span className="flex-1 text-left text-[15px] leading-tight">
+                  {item.label}
+                </span>
                 <ChevronDown
                   className="h-4 w-4 flex-shrink-0 text-stone-500 dark:text-stone-400"
                   style={{
-                    transform: isOpen ? 'rotate(180deg) scale(1.1)' : 'rotate(0deg) scale(1)',
-                    transition: 'all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    transform: isOpen
+                      ? "rotate(180deg) scale(1.1)"
+                      : "rotate(0deg) scale(1)",
+                    transition: "all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)",
                   }}
                 />
               </button>
@@ -567,29 +577,37 @@ export const MobileNavigation = ({
             {hasChildren && (
               <div
                 style={{
-                  display: 'grid',
-                  gridTemplateRows: isOpen ? '1fr' : '0fr',
-                  transition: 'grid-template-rows 600ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  display: "grid",
+                  gridTemplateRows: isOpen ? "1fr" : "0fr",
+                  transition:
+                    "grid-template-rows 600ms cubic-bezier(0.34, 1.56, 0.64, 1)",
                 }}
               >
                 <ul
                   className="overflow-hidden"
                   style={{
                     opacity: isOpen ? 1 : 0,
-                    transform: isOpen ? 'translateY(0)' : 'translateY(-8px)',
-                    transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1)',
+                    transform: isOpen ? "translateY(0)" : "translateY(-8px)",
+                    transition:
+                      "opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1)",
                   }}
                 >
-                  <div className="mt-1 space-y-0.5 pl-6 pb-1">
+                  <div className="mt-1 space-y-0.5 pb-1 pl-6">
                     {item.children?.map((child, childIndex) => {
-                      const ChildIcon = getIconForItem(child.label, child.url, Icon);
+                      const ChildIcon = getIconForItem(
+                        child.label,
+                        child.url,
+                        Icon,
+                      );
 
                       return (
                         <li
                           key={child.id}
                           style={{
                             opacity: isOpen ? 1 : 0,
-                            transform: isOpen ? 'translateX(0)' : 'translateX(-12px)',
+                            transform: isOpen
+                              ? "translateX(0)"
+                              : "translateX(-12px)",
                             transition: `opacity 400ms cubic-bezier(0.16, 1, 0.3, 1) ${childIndex * 40 + 100}ms, transform 400ms cubic-bezier(0.16, 1, 0.3, 1) ${childIndex * 40 + 100}ms`,
                           }}
                         >

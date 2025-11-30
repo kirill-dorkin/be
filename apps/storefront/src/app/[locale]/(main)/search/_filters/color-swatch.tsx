@@ -66,7 +66,7 @@ export const ColorSwatch = async ({
             <Toggle
               asChild
               defaultPressed={defaultValue.includes(choice.value)}
-              className="text-slate-700 dark:text-primary flex items-center justify-center gap-2 rounded-sm"
+              className="dark:text-primary flex items-center justify-center gap-2 rounded-sm text-slate-700"
               variant="outline"
             >
               <label

@@ -98,9 +98,7 @@ async function graphqlRequest(query, variables = {}, attempt = 0) {
 
   if (json.errors?.length) {
     throw new Error(
-      json.errors
-        .map((error) => error.message || "GraphQL error")
-        .join("\n"),
+      json.errors.map((error) => error.message || "GraphQL error").join("\n"),
     );
   }
 
@@ -181,7 +179,7 @@ async function updateVariantChannels(variantId, updates) {
     return;
   }
 
-const mutation = /* GraphQL */ `
+  const mutation = /* GraphQL */ `
     mutation VariantChannelListingUpdate(
       $id: ID!
       $input: [ProductVariantChannelListingAddInput!]!
@@ -209,7 +207,10 @@ const mutation = /* GraphQL */ `
 
   if (errors.length) {
     const message = errors
-      .map((err) => `${err.code}${err.field ? ` (${err.field})` : ""}: ${err.message}`)
+      .map(
+        (err) =>
+          `${err.code}${err.field ? ` (${err.field})` : ""}: ${err.message}`,
+      )
       .join("; ");
     throw new Error(
       `Не удалось обновить цены вариации ${variantId}: ${message}`,

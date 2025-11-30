@@ -26,6 +26,12 @@ const DiscountBadgeComponent = ({
 };
 
 // Мемоизация - используется на каждой карточке товара
-export const DiscountBadge = memo(DiscountBadgeComponent, (prevProps, nextProps) => {
-  return prevProps.discount === nextProps.discount && prevProps.className === nextProps.className;
-});
+export const DiscountBadge = memo(
+  DiscountBadgeComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.discount === nextProps.discount &&
+      prevProps.className === nextProps.className
+    );
+  },
+);

@@ -7,9 +7,9 @@ export const IMAGE_SIZES = {
 };
 
 export const IMAGE_QUALITY = {
-  high: 100,     // Main product images, hero banners - максимальное качество
-  medium: 95,    // Navigation, collections
-  low: 90,       // Thumbnails in cart/orders
+  high: 100, // Main product images, hero banners - максимальное качество
+  medium: 95, // Navigation, collections
+  low: 90, // Thumbnails in cart/orders
 } as const;
 
 const MINUTE = 60;

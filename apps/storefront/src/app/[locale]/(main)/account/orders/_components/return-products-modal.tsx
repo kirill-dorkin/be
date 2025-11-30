@@ -33,7 +33,7 @@ const ReturnProductsModalComponent = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-slate-700 dark:text-primary">
+        <Button variant="outline" className="dark:text-primary text-slate-700">
           {t("order.return-products")}
         </Button>
       </DialogTrigger>
@@ -56,9 +56,12 @@ const ReturnProductsModalComponent = ({
 };
 
 // Мемоизация - модальное окно возврата товаров
-export const ReturnProductsModal = memo(ReturnProductsModalComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.order.id === nextProps.order.id &&
-    prevProps.orderLines.length === nextProps.orderLines.length
-  );
-});
+export const ReturnProductsModal = memo(
+  ReturnProductsModalComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.order.id === nextProps.order.id &&
+      prevProps.orderLines.length === nextProps.orderLines.length
+    );
+  },
+);

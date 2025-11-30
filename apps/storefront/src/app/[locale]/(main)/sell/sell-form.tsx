@@ -1,7 +1,13 @@
 "use client";
 
+import {
+  Check,
+  Image as ImageIcon,
+  Send,
+  Tag,
+  UploadCloud,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { Check, Image as ImageIcon, Send, Tag, UploadCloud } from "lucide-react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Input } from "@nimara/ui/components/input";
@@ -47,7 +53,10 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
 
   const getDraftFromForm = (): ListingDraft | null => {
     const form = formRef.current;
-    if (!form) return null;
+
+    if (!form) {
+      return null;
+    }
 
     const formData = new FormData(form);
     const draft: ListingDraft = {
@@ -65,9 +74,15 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
   const persistLocalListing = (draft: ListingDraft) => {
     try {
       const existing = localStorage.getItem("be-seller-listings");
-      const parsed: ListingDraft[] = existing ? JSON.parse(existing) : [];
+      const parsed: ListingDraft[] = existing
+        ? (JSON.parse(existing) as ListingDraft[])
+        : [];
+
       parsed.unshift({ ...draft });
-      localStorage.setItem("be-seller-listings", JSON.stringify(parsed.slice(0, 15)));
+      localStorage.setItem(
+        "be-seller-listings",
+        JSON.stringify(parsed.slice(0, 15)),
+      );
     } catch {
       // ignore localStorage errors silently
     }
@@ -75,7 +90,6 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
 
   const handleSubmit = (formData: FormData) => {
     const photoFile = (formData.get("photoFile") as File | null) ?? null;
-    const photoUrlInput = (formData.get("photoUrl") as string) || "";
 
     // If file is provided, drop the URL so we store only one of them
     if (photoFile && photoFile.size > 0) {
@@ -91,6 +105,7 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
       if (!result.ok) {
         setSuccess(false);
         setError(result.error ?? "Не удалось отправить заявку");
+
         return;
       }
 
@@ -102,7 +117,7 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
   };
 
   return (
-    <div className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-sm backdrop-blur">
+    <div className="border-border/60 bg-card/70 rounded-2xl border p-6 shadow-sm backdrop-blur">
       {success && (
         <div className="mb-6 flex items-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 text-emerald-800 ring-1 ring-emerald-100">
           <Check className="h-5 w-5" />
@@ -163,7 +178,7 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
                   onValueChange={(value) => setSelectedCategory(value)}
                   disabled={isPending || success}
                 >
-                  <SelectTrigger className="h-11 rounded-lg border border-border/60 bg-card/70 shadow-sm">
+                  <SelectTrigger className="border-border/60 bg-card/70 h-11 rounded-lg border shadow-sm">
                     <SelectValue placeholder="Выберите категорию" />
                   </SelectTrigger>
                   <SelectContent>
@@ -198,7 +213,7 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
             rows={4}
             placeholder="Расскажите об особенностях, комплектации и состоянии"
             disabled={isPending || success}
-            className="min-h-[120px] rounded-lg border border-border/60 bg-card/70 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none disabled:opacity-50"
+            className="border-border/60 bg-card/70 focus:border-primary min-h-[120px] rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none disabled:opacity-50"
           />
         </div>
 
@@ -216,18 +231,19 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
                 disabled={isPending || success}
               />
             </div>
-            <p className="text-xs text-muted-foreground">
-              Можно вставить ссылку или загрузить файл. При загрузке файла ссылка не отправится.
+            <p className="text-muted-foreground text-xs">
+              Можно вставить ссылку или загрузить файл. При загрузке файла
+              ссылка не отправится.
             </p>
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="photoFile">Загрузить файл</Label>
-            <label
-              className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border/60 bg-card/70 px-3 py-3 text-sm shadow-sm transition hover:border-primary/60 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <UploadCloud className="h-4 w-4 text-muted-foreground" />
-              <span className="flex-1 text-muted-foreground">Прикрепить изображение</span>
+            <label className="border-border/60 bg-card/70 hover:border-primary/60 flex cursor-pointer items-center gap-3 rounded-lg border border-dashed px-3 py-3 text-sm shadow-sm transition disabled:cursor-not-allowed disabled:opacity-60">
+              <UploadCloud className="text-muted-foreground h-4 w-4" />
+              <span className="text-muted-foreground flex-1">
+                Прикрепить изображение
+              </span>
               <input
                 id="photoFile"
                 name="photoFile"
@@ -237,8 +253,9 @@ export const SellForm = ({ categories = [] }: { categories?: string[] }) => {
                 disabled={isPending || success}
               />
             </label>
-            <p className="text-xs text-muted-foreground">
-              JPEG/PNG, до 5 МБ. В текущей версии файл сохраняется как часть заявки (требует доработки для Saleor).
+            <p className="text-muted-foreground text-xs">
+              JPEG/PNG, до 5 МБ. В текущей версии файл сохраняется как часть
+              заявки (требует доработки для Saleor).
             </p>
           </div>
         </div>

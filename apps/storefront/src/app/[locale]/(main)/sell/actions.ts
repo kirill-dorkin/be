@@ -1,8 +1,8 @@
 "use server";
 
-import { z } from "zod";
 import { randomUUID } from "crypto";
 import { revalidateTag } from "next/cache";
+import { z } from "zod";
 
 import { auth } from "@/auth";
 import { saveMarketplaceListing } from "@/lib/marketplace-storage";
@@ -14,7 +14,11 @@ const listingSchema = z.object({
   price: z.coerce.number().min(0, "Цена не может быть отрицательной"),
   category: z.string().min(2, "Укажите категорию"),
   description: z.string().min(10, "Опишите товар"),
-  photoUrl: z.string().url("Некорректная ссылка на фото").optional().or(z.literal("")),
+  photoUrl: z
+    .string()
+    .url("Некорректная ссылка на фото")
+    .optional()
+    .or(z.literal("")),
   contact: z.string().min(5, "Укажите контакт для связи"),
 });
 
@@ -52,6 +56,7 @@ export const submitListingAction = async (formData: FormData) => {
     try {
       const arrayBuffer = await photoFile.arrayBuffer();
       const base64 = Buffer.from(arrayBuffer).toString("base64");
+
       photoUrlToStore = `data:${photoFile.type};base64,${base64}`;
     } catch {
       // ignore file read errors
@@ -69,7 +74,10 @@ export const submitListingAction = async (formData: FormData) => {
       photoUrl: photoUrlToStore,
       contact: payload.contact,
       userId: (session.user as { id?: string })?.id,
-      userName: session.user?.name ?? session.user?.email ?? "Пользователь",
+      userName:
+        session.user?.firstName && session.user?.lastName
+          ? `${session.user.firstName} ${session.user.lastName}`
+          : (session.user?.email ?? "Пользователь"),
       status: "pending",
       createdAt: new Date().toISOString(),
     });
@@ -82,6 +90,7 @@ export const submitListingAction = async (formData: FormData) => {
     const region = await getCurrentRegion();
     const searchService = await getSearchService();
     // light-weight query to warm cache (no errors if fails)
+
     await searchService.search(
       {
         query: "",

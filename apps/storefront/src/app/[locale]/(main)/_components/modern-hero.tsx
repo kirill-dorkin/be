@@ -18,7 +18,7 @@ export async function ModernHero({ user }: ModernHeroProps) {
   const t = await getTranslations("home");
 
   return (
-    <section className="relative w-full overflow-hidden bg-muted/10">
+    <section className="bg-muted/10 relative w-full overflow-hidden">
       <ClubInviteModal isAuthenticated={Boolean(user)} />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16 lg:px-8 lg:pb-28 lg:pt-20">
@@ -28,7 +28,7 @@ export async function ModernHero({ user }: ModernHeroProps) {
             {t("hero.badge")}
           </div>
 
-          <h1 className="mx-auto mb-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="text-foreground mx-auto mb-6 max-w-4xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             {t("hero.title.part1")}{" "}
             <span className="bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
               {t("hero.title.highlight")}
@@ -36,9 +36,11 @@ export async function ModernHero({ user }: ModernHeroProps) {
             {t("hero.title.part2")}
           </h1>
 
-          <p className="mx-auto mb-10 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="text-muted-foreground mx-auto mb-10 max-w-2xl text-base leading-relaxed sm:text-lg">
             <span className="hidden sm:inline">{t("hero.subtitle")}</span>
-            <span className="sm:hidden">Качественная техника и профессиональный сервис</span>
+            <span className="sm:hidden">
+              Качественная техника и профессиональный сервис
+            </span>
           </p>
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -56,7 +58,7 @@ export async function ModernHero({ user }: ModernHeroProps) {
               asChild
               variant="outline"
               size="lg"
-              className="min-w-[200px] border-2 bg-background/70 text-base font-semibold backdrop-blur-sm transition-all hover:scale-105 hover:bg-muted"
+              className="bg-background/70 hover:bg-muted min-w-[200px] border-2 text-base font-semibold backdrop-blur-sm transition-all hover:scale-105"
             >
               <LocalizedLink href={paths.search.asPath()}>
                 Каталог товаров
@@ -68,9 +70,9 @@ export async function ModernHero({ user }: ModernHeroProps) {
             <div className="space-y-2">
               <AnimatedCounter
                 value={500}
-                className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl"
+                className="from-foreground to-foreground/70 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl"
               />
-              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              <div className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
                 {t("hero.stats.customers")}
               </div>
             </div>
@@ -78,9 +80,9 @@ export async function ModernHero({ user }: ModernHeroProps) {
             <div className="space-y-2">
               <AnimatedCounter
                 value={3000}
-                className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl"
+                className="from-foreground to-foreground/70 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl"
               />
-              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              <div className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
                 {t("hero.stats.products")}
               </div>
             </div>
@@ -89,18 +91,18 @@ export async function ModernHero({ user }: ModernHeroProps) {
               <AnimatedCounter
                 value={98}
                 suffix="%"
-                className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl"
+                className="from-foreground to-foreground/70 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl"
               />
-              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              <div className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
                 {t("hero.stats.satisfaction")}
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl">
+              <div className="from-foreground to-foreground/70 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl">
                 24/7
               </div>
-              <div className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              <div className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
                 {t("hero.stats.support")}
               </div>
             </div>

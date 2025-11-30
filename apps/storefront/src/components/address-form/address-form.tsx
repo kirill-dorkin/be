@@ -92,42 +92,55 @@ const AddressFormComponent = ({
   }, [addressFormRows]);
 
   // Мемоизация обработчика изменения страны
-  const handleChangeCountry = useCallback((countryCode: AllCountryCode) => {
-    setIsChangingCountry(true);
-    onCountryChange?.(true);
-    dynamicFields.forEach((fieldName) =>
-      form.resetField(fieldName, { defaultValue: "", keepError: false }),
-    );
-    router.push(`${pathname}?country=${countryCode}`, { scroll: false });
-  }, [form, router, pathname, onCountryChange]);
+  const handleChangeCountry = useCallback(
+    (countryCode: AllCountryCode) => {
+      setIsChangingCountry(true);
+      onCountryChange?.(true);
+      dynamicFields.forEach((fieldName) =>
+        form.resetField(fieldName, { defaultValue: "", keepError: false }),
+      );
+      router.push(`${pathname}?country=${countryCode}`, { scroll: false });
+    },
+    [form, router, pathname, onCountryChange],
+  );
 
   // Обработчик выбора адреса из автокомплита
-  const handleAddressSelect = useCallback((suggestion: AddressSuggestion) => {
-    // Автозаполнение полей адреса
-    if (suggestion.city) {
-      form.setValue("city", suggestion.city, { shouldValidate: true });
-    }
-    if (suggestion.postalCode) {
-      form.setValue("postalCode", suggestion.postalCode, { shouldValidate: true });
-    }
-    if (suggestion.state) {
-      form.setValue("countryArea", suggestion.state, { shouldValidate: true });
-    }
-  }, [form]);
+  const handleAddressSelect = useCallback(
+    (suggestion: AddressSuggestion) => {
+      // Автозаполнение полей адреса
+      if (suggestion.city) {
+        form.setValue("city", suggestion.city, { shouldValidate: true });
+      }
+      if (suggestion.postalCode) {
+        form.setValue("postalCode", suggestion.postalCode, {
+          shouldValidate: true,
+        });
+      }
+      if (suggestion.state) {
+        form.setValue("countryArea", suggestion.state, {
+          shouldValidate: true,
+        });
+      }
+    },
+    [form],
+  );
 
   // Мемоизация селектора стран
-  const countrySelectorFormRow = useMemo(() => [
-    {
-      name: "country",
-      type: "select" as FieldType,
-      isRequired: true,
-      onChange: handleChangeCountry,
-      options: countries.map((country) => ({
-        value: country.value,
-        label: country.label ?? country.value,
-      })),
-    },
-  ], [countries, handleChangeCountry]);
+  const countrySelectorFormRow = useMemo(
+    () => [
+      {
+        name: "country",
+        type: "select" as FieldType,
+        isRequired: true,
+        onChange: handleChangeCountry,
+        options: countries.map((country) => ({
+          value: country.value,
+          label: country.label ?? country.value,
+        })),
+      },
+    ],
+    [countries, handleChangeCountry],
+  );
 
   // Мемоизация отформатированных рядов формы
   const formattedAddressFormRows = useMemo(() => {
@@ -179,11 +192,7 @@ const AddressFormComponent = ({
       <AddressFormGenerator
         isDisabled={isChangingCountry || isDisabled}
         schemaPrefix={schemaPrefix}
-        addressFormRows={[
-          nameFormRow,
-          countrySelectorFormRow,
-          phoneCodeRow,
-        ]}
+        addressFormRows={[nameFormRow, countrySelectorFormRow, phoneCodeRow]}
         countryCode={currentCountry}
         locale={locale}
         onAddressSelect={handleAddressSelect}
@@ -205,11 +214,14 @@ const AddressFormComponent = ({
 };
 
 // Мемоизация - форма адреса
-export const AddressForm = memo(AddressFormComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.addressFormRows === nextProps.addressFormRows &&
-    prevProps.countries.length === nextProps.countries.length &&
-    prevProps.isDisabled === nextProps.isDisabled &&
-    prevProps.schemaPrefix === nextProps.schemaPrefix
-  );
-});
+export const AddressForm = memo(
+  AddressFormComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.addressFormRows === nextProps.addressFormRows &&
+      prevProps.countries.length === nextProps.countries.length &&
+      prevProps.isDisabled === nextProps.isDisabled &&
+      prevProps.schemaPrefix === nextProps.schemaPrefix
+    );
+  },
+);

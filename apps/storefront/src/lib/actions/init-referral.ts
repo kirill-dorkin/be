@@ -3,7 +3,10 @@
 import { ok } from "@nimara/domain/objects/Result";
 
 import { getAccessToken } from "@/auth";
-import { generateReferralCode, serializeTransactions } from "@/lib/referral/utils";
+import {
+  generateReferralCode,
+  serializeTransactions,
+} from "@/lib/referral/utils";
 import { storefrontLogger } from "@/services/logging";
 import { getUserService } from "@/services/user";
 
@@ -61,7 +64,9 @@ export async function initializeReferralData(referredByCode?: string) {
     return ok({ success: false });
   }
 
-  storefrontLogger.info("[InitReferral] Successfully initialized referral data");
+  storefrontLogger.info(
+    "[InitReferral] Successfully initialized referral data",
+  );
 
   return ok({ success: true, referralCode });
 }

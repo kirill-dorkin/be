@@ -1,4 +1,7 @@
-import { type DeliveryStage, type RepairStage } from "@nimara/domain/objects/RepairWorkflow";
+import {
+  type DeliveryStage,
+  type RepairStage,
+} from "@nimara/domain/objects/RepairWorkflow";
 import { err, ok } from "@nimara/domain/objects/Result";
 
 import { graphqlClient } from "#root/graphql/client";
@@ -49,7 +52,10 @@ const buildMetadata = ({
   service,
   worker,
 }: ServiceRequestCreateInput & {
-  config: Pick<SaleorServiceRequestConfig, "courierGroupName" | "workerGroupName">;
+  config: Pick<
+    SaleorServiceRequestConfig,
+    "courierGroupName" | "workerGroupName"
+  >;
   deliveryStage: DeliveryStage;
   repairStage: RepairStage;
   worker?: ServiceWorker;
@@ -64,7 +70,10 @@ const buildMetadata = ({
     { key: "repair:customer_phone", value: request.phone },
     { key: "repair:device_type", value: request.deviceType },
     { key: "repair:is_urgent", value: serializeBoolean(request.urgent) },
-    { key: "repair:needs_pickup", value: serializeBoolean(request.needsPickup) },
+    {
+      key: "repair:needs_pickup",
+      value: serializeBoolean(request.needsPickup),
+    },
     { key: "repair:consent", value: serializeBoolean(request.consent) },
     { key: "repair:stage", value: repairStage },
     { key: "repair:stage_updated_at", value: createdAt },
@@ -91,7 +100,10 @@ const buildMetadata = ({
 
   if (request.priceEstimate) {
     metadata.push(
-      { key: "repair:estimate_currency", value: request.priceEstimate.currency },
+      {
+        key: "repair:estimate_currency",
+        value: request.priceEstimate.currency,
+      },
       {
         key: "repair:estimate_min",
         value:
@@ -154,7 +166,11 @@ const buildMetadata = ({
   return metadata;
 };
 
-const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput & {
+const buildOrderNote = ({
+  request,
+  service,
+  worker,
+}: ServiceRequestCreateInput & {
   worker?: ServiceWorker;
 }): string => {
   const noteLines: string[] = [
@@ -184,7 +200,8 @@ const buildOrderNote = ({ request, service, worker }: ServiceRequestCreateInput 
   if (worker) {
     noteLines.push(
       `Назначенный мастер: ${
-        `${worker.firstName ?? ""} ${worker.lastName ?? ""}`.trim() || worker.email
+        `${worker.firstName ?? ""} ${worker.lastName ?? ""}`.trim() ||
+        worker.email
       } (${worker.email}).`,
     );
   } else {
@@ -303,9 +320,8 @@ export const saleorServiceRequestCreateInfra = (
       ?.map(
         (edge: WorkerGroupEdge): WorkerGroupNode | null => edge.node ?? null,
       )
-      .find(
-        (group: WorkerGroupNode | null): group is WorkerGroupNode =>
-          Boolean(group && group.name === config.workerGroupName),
+      .find((group: WorkerGroupNode | null): group is WorkerGroupNode =>
+        Boolean(group && group.name === config.workerGroupName),
       );
 
     if (!matchedGroup) {
@@ -420,7 +436,10 @@ export const saleorServiceRequestCreateInfra = (
       },
     );
 
-    if (!metadataResult.ok || metadataResult.data.updateMetadata?.errors.length) {
+    if (
+      !metadataResult.ok ||
+      metadataResult.data.updateMetadata?.errors.length
+    ) {
       logger.error("[ServiceRequest] Failed to update order metadata.", {
         errors: metadataResult.ok
           ? metadataResult.data.updateMetadata?.errors

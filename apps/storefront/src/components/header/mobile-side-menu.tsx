@@ -2,7 +2,7 @@
 
 import { User as UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef,useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { Menu } from "@nimara/domain/objects/Menu";
 import type { User } from "@nimara/domain/objects/User";
@@ -22,45 +22,45 @@ const BurgerIcon = ({ isOpen }: { isOpen: boolean }) => {
       {/* Верхняя линия */}
       <span
         style={{
-          position: 'absolute',
+          position: "absolute",
           left: 0,
-          height: '2px',
-          width: '24px',
-          borderRadius: '9999px',
-          backgroundColor: 'currentColor',
-          transition: 'all 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+          height: "2px",
+          width: "24px",
+          borderRadius: "9999px",
+          backgroundColor: "currentColor",
+          transition: "all 400ms cubic-bezier(0.4, 0, 0.2, 1)",
           transform: isOpen
-            ? 'translateY(0) rotate(45deg) scale(1.1)'
-            : 'translateY(-8px) rotate(0deg) scale(1)',
+            ? "translateY(0) rotate(45deg) scale(1.1)"
+            : "translateY(-8px) rotate(0deg) scale(1)",
         }}
       />
       {/* Средняя линия */}
       <span
         style={{
-          position: 'absolute',
+          position: "absolute",
           left: 0,
-          height: '2px',
-          width: '24px',
-          borderRadius: '9999px',
-          backgroundColor: 'currentColor',
-          transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+          height: "2px",
+          width: "24px",
+          borderRadius: "9999px",
+          backgroundColor: "currentColor",
+          transition: "all 300ms cubic-bezier(0.4, 0, 0.2, 1)",
           opacity: isOpen ? 0 : 1,
-          transform: isOpen ? 'scale(0.8)' : 'scale(1)',
+          transform: isOpen ? "scale(0.8)" : "scale(1)",
         }}
       />
       {/* Нижняя линия */}
       <span
         style={{
-          position: 'absolute',
+          position: "absolute",
           left: 0,
-          height: '2px',
-          width: '24px',
-          borderRadius: '9999px',
-          backgroundColor: 'currentColor',
-          transition: 'all 400ms cubic-bezier(0.4, 0, 0.2, 1)',
+          height: "2px",
+          width: "24px",
+          borderRadius: "9999px",
+          backgroundColor: "currentColor",
+          transition: "all 400ms cubic-bezier(0.4, 0, 0.2, 1)",
           transform: isOpen
-            ? 'translateY(0) rotate(-45deg) scale(1.1)'
-            : 'translateY(8px) rotate(0deg) scale(1)',
+            ? "translateY(0) rotate(-45deg) scale(1.1)"
+            : "translateY(8px) rotate(0deg) scale(1)",
         }}
       />
     </span>
@@ -85,10 +85,11 @@ export const MobileSideMenu = ({
 
   // Мемоизация menu label
   const menuLabel = useMemo(
-    () => isOpen
-      ? t("navigation.close-menu", { defaultMessage: "Close menu" })
-      : t("navigation.open-menu", { defaultMessage: "Open menu" }),
-    [isOpen, t]
+    () =>
+      isOpen
+        ? t("navigation.close-menu", { defaultMessage: "Close menu" })
+        : t("navigation.open-menu", { defaultMessage: "Open menu" }),
+    [isOpen, t],
   );
 
   useEffect(() => {
@@ -121,7 +122,7 @@ export const MobileSideMenu = ({
   }, []);
 
   const toggleMenu = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const closeMenu = useCallback(() => {
@@ -134,7 +135,9 @@ export const MobileSideMenu = ({
   useEffect(() => {
     const container = scrollContainerRef.current;
 
-    if (!container || !isOpen) {return;}
+    if (!container || !isOpen) {
+      return;
+    }
 
     let isScrolling = false;
     let scrollTimeout: NodeJS.Timeout;
@@ -184,7 +187,7 @@ export const MobileSideMenu = ({
       const isAtTop = scrollTop <= 5;
 
       const touch = e.touches[0];
-      const startY = parseFloat(container.dataset.touchStartY || '0');
+      const startY = parseFloat(container.dataset.touchStartY || "0");
       const deltaY = startY - touch.clientY;
 
       if ((isAtBottom && deltaY < 0) || (isAtTop && deltaY > 0)) {
@@ -199,18 +202,18 @@ export const MobileSideMenu = ({
       delete container.dataset.touchStartY;
     };
 
-    container.addEventListener('scroll', handleScroll);
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchmove', handleTouchMove);
-    container.addEventListener('touchend', handleTouchEnd);
+    container.addEventListener("scroll", handleScroll);
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    container.addEventListener("touchstart", handleTouchStart);
+    container.addEventListener("touchmove", handleTouchMove);
+    container.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      container.removeEventListener('scroll', handleScroll);
-      container.removeEventListener('wheel', handleWheel);
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      container.removeEventListener('touchend', handleTouchEnd);
+      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("wheel", handleWheel);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handleTouchEnd);
       clearTimeout(scrollTimeout);
     };
   }, [isOpen]);
@@ -229,16 +232,18 @@ export const MobileSideMenu = ({
 
   // Мемоизация panel style
   const panelStyle = useMemo(
-    () => headerHeight
-      ? { top: headerHeight, height: `calc(100vh - ${headerHeight}px)` }
-      : { top: 64, height: "calc(100vh - 64px)" },
-    [headerHeight]
+    () =>
+      headerHeight
+        ? { top: headerHeight, height: `calc(100vh - ${headerHeight}px)` }
+        : { top: 64, height: "calc(100vh - 64px)" },
+    [headerHeight],
   );
 
   // Мемоизация overlay style
   const overlayStyle = useMemo(
-    () => headerHeight ? { top: headerHeight, bottom: 0 } : { top: 64, bottom: 0 },
-    [headerHeight]
+    () =>
+      headerHeight ? { top: headerHeight, bottom: 0 } : { top: 64, bottom: 0 },
+    [headerHeight],
   );
 
   return (
@@ -246,7 +251,7 @@ export const MobileSideMenu = ({
       <Button
         variant="ghost"
         size="icon"
-        className="gap-1 transition-all duration-300 hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-95"
+        className="gap-1 transition-all duration-300 hover:bg-stone-100 active:scale-95 dark:hover:bg-stone-800"
         onClick={toggleMenu}
         title={menuLabel}
         aria-label={menuLabel}
@@ -267,20 +272,25 @@ export const MobileSideMenu = ({
         aria-label={menuLabel}
         style={{
           ...panelStyle,
-          transform: isOpen ? 'translateX(0) scale(1)' : 'translateX(-100%) scale(0.95)',
+          transform: isOpen
+            ? "translateX(0) scale(1)"
+            : "translateX(-100%) scale(0.95)",
           opacity: isOpen ? 1 : 0,
-          transition: 'all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+          transition: "all 500ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
-        className="fixed left-0 z-50 w-[min(88vw,18rem)] bg-background shadow-xl"
+        className="bg-background fixed left-0 z-50 w-[min(88vw,18rem)] shadow-xl"
       >
-        <div className="flex h-full flex-col gap-6 px-6 pb-safe pt-6">
-          <span className="pointer-events-none absolute inset-y-0 right-[-1px] w-8 bg-gradient-to-r from-background via-background/40 to-transparent" />
+        <div className="pb-safe flex h-full flex-col gap-6 px-6 pt-6">
+          <span className="from-background via-background/40 pointer-events-none absolute inset-y-0 right-[-1px] w-8 bg-gradient-to-r to-transparent" />
           <div
             ref={scrollContainerRef}
             className="no-scrollbar flex-1 overflow-y-auto pr-1"
             style={{
               transform: `translateY(${overscrollOffset}px)`,
-              transition: overscrollOffset === 0 ? 'transform 300ms cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+              transition:
+                overscrollOffset === 0
+                  ? "transform 300ms cubic-bezier(0.16, 1, 0.3, 1)"
+                  : "none",
             }}
           >
             <MobileNavigation
@@ -297,9 +307,7 @@ export const MobileSideMenu = ({
             <Button asChild variant="ghost" className="inline-flex gap-1.5">
               <LocalizedLink
                 href={
-                  !user
-                    ? paths.signIn.asPath()
-                    : paths.account.profile.asPath()
+                  !user ? paths.signIn.asPath() : paths.account.profile.asPath()
                 }
               >
                 <UserIcon className="h-4 w-4" />

@@ -51,7 +51,7 @@ export function NewPasswordForm() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-slate-700 dark:text-primary text-2xl font-normal leading-8">
+      <h1 className="dark:text-primary text-2xl font-normal leading-8 text-slate-700">
         {t("auth.set-up-new-password")}
       </h1>
 

@@ -32,8 +32,7 @@ export const CheckoutMembershipSavings = ({
   const { actualSavings, potentialSavings, isVip } = useMemo(() => {
     const productTotal = checkout.subtotalPrice.gross.amount;
 
-    
-return getVipSavingsSummary(productTotal, user);
+    return getVipSavingsSummary(productTotal, user);
   }, [checkout.subtotalPrice.gross.amount, user]);
 
   if (actualSavings === 0 && (!potentialSavings || potentialSavings === 0)) {

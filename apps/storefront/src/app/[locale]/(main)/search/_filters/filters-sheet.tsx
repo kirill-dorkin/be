@@ -85,23 +85,27 @@ const renderFilterComponent = (
   }
 };
 
-const FiltersSheetComponent = ({ facets, searchParams, sortByOptions }: Props) => {
+const FiltersSheetComponent = ({
+  facets,
+  searchParams,
+  sortByOptions,
+}: Props) => {
   const t = useTranslations();
 
   // Мемоизация обработчика формы
   const updateFiltersWithSearchParams = useCallback(
     handleFiltersFormSubmit.bind(null, searchParams),
-    [searchParams]
+    [searchParams],
   );
 
   // Мемоизация отфильтрованных фасетов
   const booleanFacets = useMemo(
     () => facets.filter((facet) => facet.type === "BOOLEAN"),
-    [facets]
+    [facets],
   );
   const swatchFacets = useMemo(
     () => facets.filter((facet) => facet.type === "SWATCH"),
-    [facets]
+    [facets],
   );
 
   return (
@@ -134,7 +138,7 @@ const FiltersSheetComponent = ({ facets, searchParams, sortByOptions }: Props) =
                   className="grid gap-4 md:hidden"
                   defaultValue={searchParams["sortBy"] ?? DEFAULT_SORT_BY}
                 >
-                  <p className="text-slate-700 dark:text-primary text-base">
+                  <p className="dark:text-primary text-base text-slate-700">
                     {t("search.sort-by")}
                   </p>
                   {sortByOptions.map((option) => (
@@ -197,10 +201,14 @@ const FiltersSheetComponent = ({ facets, searchParams, sortByOptions }: Props) =
 };
 
 // Мемоизация - sheet фильтров используется на всех страницах поиска
-export const FiltersSheet = memo(FiltersSheetComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.facets.length === nextProps.facets.length &&
-    prevProps.sortByOptions.length === nextProps.sortByOptions.length &&
-    JSON.stringify(prevProps.searchParams) === JSON.stringify(nextProps.searchParams)
-  );
-});
+export const FiltersSheet = memo(
+  FiltersSheetComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.facets.length === nextProps.facets.length &&
+      prevProps.sortByOptions.length === nextProps.sortByOptions.length &&
+      JSON.stringify(prevProps.searchParams) ===
+        JSON.stringify(nextProps.searchParams)
+    );
+  },
+);

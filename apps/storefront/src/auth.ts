@@ -122,7 +122,9 @@ export const config = {
           const user = resultUserGet.data;
 
           if (!user) {
-            console.error("[NextAuth] User data is null after successful fetch");
+            console.error(
+              "[NextAuth] User data is null after successful fetch",
+            );
 
             return null;
           }

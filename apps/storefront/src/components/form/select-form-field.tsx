@@ -40,17 +40,20 @@ const SelectFormFieldComponent = ({
   const { control, clearErrors } = useFormContext();
 
   // Мемоизация обработчика изменения
-  const handleValueChange = useCallback((value: string, fieldOnChange: (...event: any[]) => void) => {
-    fieldOnChange(value);
-    onChange?.(value);
+  const handleValueChange = useCallback(
+    (value: string, fieldOnChange: (...event: any[]) => void) => {
+      fieldOnChange(value);
+      onChange?.(value);
 
-    // Плавно убираем ошибку через небольшую задержку для плавности анимации
-    if (value) {
-      setTimeout(() => {
-        clearErrors(name);
-      }, 100);
-    }
-  }, [onChange, clearErrors, name]);
+      // Плавно убираем ошибку через небольшую задержку для плавности анимации
+      if (value) {
+        setTimeout(() => {
+          clearErrors(name);
+        }, 100);
+      }
+    },
+    [onChange, clearErrors, name],
+  );
 
   return (
     <FormField
@@ -89,12 +92,15 @@ const SelectFormFieldComponent = ({
 };
 
 // Мемоизация - используется в формах адресов, чекаута
-export const SelectFormField = memo(SelectFormFieldComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.name === nextProps.name &&
-    prevProps.label === nextProps.label &&
-    prevProps.isRequired === nextProps.isRequired &&
-    prevProps.placeholder === nextProps.placeholder &&
-    prevProps.options?.length === nextProps.options?.length
-  );
-});
+export const SelectFormField = memo(
+  SelectFormFieldComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.name === nextProps.name &&
+      prevProps.label === nextProps.label &&
+      prevProps.isRequired === nextProps.isRequired &&
+      prevProps.placeholder === nextProps.placeholder &&
+      prevProps.options?.length === nextProps.options?.length
+    );
+  },
+);

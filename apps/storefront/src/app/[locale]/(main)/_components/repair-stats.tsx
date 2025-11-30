@@ -14,7 +14,10 @@ export const RepairStats = () => {
 
   useEffect(() => {
     const node = containerRef.current;
-    if (!node) return;
+
+    if (!node) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -28,20 +31,26 @@ export const RepairStats = () => {
     );
 
     observer.observe(node);
+
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="w-full bg-background py-12 sm:py-16">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8" ref={containerRef}>
-        <div className="grid gap-4 rounded-2xl border border-border/60 bg-card/70 p-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+    <section className="bg-background w-full py-12 sm:py-16">
+      <div
+        className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"
+        ref={containerRef}
+      >
+        <div className="border-border/60 bg-card/70 grid gap-4 rounded-2xl border p-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {stats.map((item) => (
             <div
               key={item.label}
-              className="rounded-xl bg-card/70 px-4 py-3 text-center shadow-sm"
+              className="bg-card/70 rounded-xl px-4 py-3 text-center shadow-sm"
             >
-              <div className="text-2xl font-bold text-foreground sm:text-3xl">{item.value}</div>
-              <div className="text-sm text-muted-foreground">{item.label}</div>
+              <div className="text-foreground text-2xl font-bold sm:text-3xl">
+                {item.value}
+              </div>
+              <div className="text-muted-foreground text-sm">{item.label}</div>
             </div>
           ))}
         </div>

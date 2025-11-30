@@ -19,29 +19,41 @@ import { ModernHero } from "./_components/modern-hero";
 import { ProductsGridSkeleton } from "./_components/products-grid";
 import { RepairFocus } from "./_components/repair-focus";
 import { RepairProcess } from "./_components/repair-process";
-import { ServiceCta } from "./_components/service-cta";
 import { RepairStats } from "./_components/repair-stats";
+import { ServiceCta } from "./_components/service-cta";
 import { Testimonials } from "./_components/testimonials";
 
 // Dynamic imports для оптимизации
 const ProductsGrid = dynamic(
-  () => import("./_components/products-grid").then((mod) => ({ default: mod.ProductsGrid })),
-  { ssr: true, loading: () => <ProductsGridSkeleton /> }
+  () =>
+    import("./_components/products-grid").then((mod) => ({
+      default: mod.ProductsGrid,
+    })),
+  { ssr: true, loading: () => <ProductsGridSkeleton /> },
 );
 
 const MembershipBanner = dynamic(
-  () => import("./_components/membership-banner").then((mod) => ({ default: mod.MembershipBanner })),
-  { ssr: true }
+  () =>
+    import("./_components/membership-banner").then((mod) => ({
+      default: mod.MembershipBanner,
+    })),
+  { ssr: true },
 );
 
 const AccountNotifications = dynamic(
-  () => import("./_components/account-notifications").then((mod) => ({ default: mod.AccountNotifications })),
-  { ssr: true }
+  () =>
+    import("./_components/account-notifications").then((mod) => ({
+      default: mod.AccountNotifications,
+    })),
+  { ssr: true },
 );
 
 const ReferralPromoBanner = dynamic(
-  () => import("./_components/referral-promo-banner").then((mod) => ({ default: mod.ReferralPromoBanner })),
-  { ssr: true }
+  () =>
+    import("./_components/referral-promo-banner").then((mod) => ({
+      default: mod.ReferralPromoBanner,
+    })),
+  { ssr: true },
 );
 
 type PageProps = {
@@ -122,20 +134,20 @@ export default async function Page() {
       <ServiceCta />
 
       {/* Membership Banner */}
-      <div className="w-full bg-background py-16 sm:py-20">
+      <div className="bg-background w-full py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <MembershipBanner user={user} />
         </div>
       </div>
 
       {/* Products Section */}
-      <section className="relative w-full overflow-hidden bg-muted/20 py-24 sm:py-32">
+      <section className="bg-muted/20 relative w-full overflow-hidden py-24 sm:py-32">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <h2 className="mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            <h2 className="text-foreground mb-6 text-4xl font-bold tracking-tight sm:text-5xl">
               Популярные товары
             </h2>
-            <p className="text-base text-muted-foreground sm:text-lg">
+            <p className="text-muted-foreground text-base sm:text-lg">
               Лучшие предложения для вашей техники
             </p>
           </div>
@@ -147,7 +159,7 @@ export default async function Page() {
 
       {/* Referral Promo Banner */}
       {user && (
-        <div className="w-full bg-background py-16">
+        <div className="bg-background w-full py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <Suspense fallback={null}>
               <ReferralPromoBanner user={user} />
@@ -157,7 +169,7 @@ export default async function Page() {
       )}
 
       {/* Account Notifications */}
-      <div className="w-full bg-background py-16">
+      <div className="bg-background w-full py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AccountNotifications user={user} />
         </div>

@@ -34,7 +34,7 @@ export function AccountQuickLinks() {
               className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wide transition ${
                 isActive
                   ? "border-primary/60 bg-primary/10 text-primary"
-                  : "border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 dark:text-muted-foreground dark:hover:border-slate-700"
+                  : "dark:text-muted-foreground border-transparent text-slate-500 hover:border-slate-200 hover:bg-slate-50 dark:hover:border-slate-700"
               }`}
             >
               <LocalizedLink href={link.href}>{t(link.title)}</LocalizedLink>

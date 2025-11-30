@@ -18,12 +18,9 @@ type PageProps = {
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const [accessToken, t, userService, resolvedSearchParams] = await Promise.all([
-    getAccessToken(),
-    getTranslations(),
-    getUserService(),
-    searchParams,
-  ]);
+  const [accessToken, t, userService, resolvedSearchParams] = await Promise.all(
+    [getAccessToken(), getTranslations(), getUserService(), searchParams],
+  );
 
   const resultUserGet = await userService.userGet(accessToken);
 
@@ -78,30 +75,30 @@ export default async function Page({ searchParams }: PageProps) {
       <section className="rounded-3xl border border-slate-100/80 bg-white/80 p-6 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white text-xl font-semibold uppercase text-slate-700 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900 dark:text-primary">
+            <div className="dark:text-primary flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white text-xl font-semibold uppercase text-slate-700 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900">
               {initials}
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-widest text-slate-400">
                 {t("account.personal-data")}
               </p>
-              <h2 className="text-2xl font-semibold text-slate-900 dark:text-primary">
+              <h2 className="dark:text-primary text-2xl font-semibold text-slate-900">
                 {fullName}
               </h2>
               {user?.email && (
-                <p className="text-sm text-slate-500 dark:text-muted-foreground">
+                <p className="dark:text-muted-foreground text-sm text-slate-500">
                   {user.email}
                 </p>
               )}
             </div>
           </div>
-          <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:border-slate-700 dark:text-muted-foreground">
+          <div className="dark:text-muted-foreground rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:border-slate-700">
             {t("account.hello", { username: defaultUsername })}
           </div>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-4 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5 sm:p-6">
+      <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-4 shadow-sm ring-1 ring-black/5 sm:p-6 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
         <div className="divide-y divide-slate-100 dark:divide-slate-800">
           {profileFields.map((field) => (
             <div
@@ -109,10 +106,10 @@ export default async function Page({ searchParams }: PageProps) {
               className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0 md:flex-row md:items-center md:gap-8"
             >
               <div className="flex-1">
-                <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-muted-foreground">
+                <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-widest text-slate-400">
                   {field.label}
                 </p>
-                <p className="text-base font-medium text-slate-700 dark:text-primary">
+                <p className="dark:text-primary text-base font-medium text-slate-700">
                   {field.value}
                 </p>
               </div>
@@ -136,10 +133,10 @@ export default async function Page({ searchParams }: PageProps) {
               <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/30">
                 <Wallet className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
                 {t("balance.title")}
               </p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-primary">
+              <p className="dark:text-primary text-3xl font-bold text-slate-900">
                 {currentBalance} {t("common.currency")}
               </p>
             </div>
@@ -155,13 +152,13 @@ export default async function Page({ searchParams }: PageProps) {
               <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900/30">
                 <Users className="h-6 w-6 text-violet-600 dark:text-violet-400" />
               </div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground mb-1 text-xs font-semibold uppercase tracking-widest text-slate-400">
                 {t("referral.title")}
               </p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-primary">
+              <p className="dark:text-primary text-3xl font-bold text-slate-900">
                 {referralStats?.vipReferralCount ?? 0}
               </p>
-              <p className="mt-1 text-xs text-slate-500 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground mt-1 text-xs text-slate-500">
                 {t("referral.vip-referrals")}
               </p>
             </div>

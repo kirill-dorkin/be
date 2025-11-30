@@ -10,10 +10,14 @@ import {
 } from "@nimara/domain/objects/Product";
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
-const ProductMedia = dynamic(() => import("./product-media").then(mod => ({ default: mod.ProductMedia })), {
-  ssr: false,
-  loading: () => <Skeleton className="aspect-square w-full rounded-lg" />,
-});
+const ProductMedia = dynamic(
+  () =>
+    import("./product-media").then((mod) => ({ default: mod.ProductMedia })),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="aspect-square w-full rounded-lg" />,
+  },
+);
 
 type ProductMediaWrapperProps = {
   availability: ProductAvailability;
@@ -41,11 +45,14 @@ const ProductMediaWrapperComponent = ({
 };
 
 // Мемоизация - wrapper для медиа галереи товара
-export const ProductMediaWrapper = memo(ProductMediaWrapperComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.product.id === nextProps.product.id &&
-    prevProps.cart?.id === nextProps.cart?.id &&
-    prevProps.showAs === nextProps.showAs &&
-    prevProps.availability === nextProps.availability
-  );
-});
+export const ProductMediaWrapper = memo(
+  ProductMediaWrapperComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.product.id === nextProps.product.id &&
+      prevProps.cart?.id === nextProps.cart?.id &&
+      prevProps.showAs === nextProps.showAs &&
+      prevProps.availability === nextProps.availability
+    );
+  },
+);

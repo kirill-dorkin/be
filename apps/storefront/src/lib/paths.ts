@@ -101,6 +101,8 @@ export const paths = {
   home: url("/"),
   search: url("/search"),
   cart: url("/cart"),
+  contact: url("/contact"),
+  marketplace: url("/market"),
   services: {
     ...url("/services"),
     detail: url<"slug">("/services/[slug]"),

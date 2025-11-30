@@ -17,9 +17,7 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
 
-export async function generateMetadata(
-  _props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(_props: PageProps): Promise<Metadata> {
   const { locale } = await _props.params;
   const t = await getTranslations({
     locale,
@@ -76,7 +74,7 @@ export default async function HelpDeliveryPage(props: PageProps) {
           const Icon = option.icon;
 
           return (
-            <Card key={option.title} className="h-full border-border/70">
+            <Card key={option.title} className="border-border/70 h-full">
               <CardHeader className="space-y-4">
                 <span className="bg-primary/10 text-primary inline-flex h-12 w-12 items-center justify-center rounded-full">
                   <Icon className="h-6 w-6" aria-hidden />
@@ -86,7 +84,7 @@ export default async function HelpDeliveryPage(props: PageProps) {
                   {option.description}
                 </p>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <CardContent className="text-muted-foreground space-y-2 text-sm">
                 {option.bullets.map((bullet) => (
                   <p key={bullet}>• {bullet}</p>
                 ))}
@@ -97,11 +95,11 @@ export default async function HelpDeliveryPage(props: PageProps) {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-        <Card className="border border-border/70">
+        <Card className="border-border/70 border">
           <CardHeader>
             <CardTitle className="text-xl">{t("preparation.title")}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground space-y-3 text-sm">
             <p>{t("preparation.description")}</p>
             <ul className="space-y-2">
               {preparationList.map((item) => (
@@ -110,11 +108,11 @@ export default async function HelpDeliveryPage(props: PageProps) {
             </ul>
           </CardContent>
         </Card>
-        <Card className="border border-border/70">
+        <Card className="border-border/70 border">
           <CardHeader>
             <CardTitle className="text-xl">{t("faq.title")}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <CardContent className="text-muted-foreground space-y-3 text-sm">
             <ul className="space-y-2">
               {faqList.map((item) => (
                 <li key={item}>• {item}</li>

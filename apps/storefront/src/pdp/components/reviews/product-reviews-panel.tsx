@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
 import { AlertCircle, Star } from "lucide-react";
+import { useMemo, useState, useTransition } from "react";
 
 import { Button } from "@nimara/ui/components/button";
 import { Label } from "@nimara/ui/components/label";
@@ -10,10 +10,10 @@ import { addProductReviewAction } from "@/pdp/actions/add-review";
 import { type ProductReview } from "@/pdp/lib/reviews";
 
 type Props = {
-  productId: string;
-  productSlug: string;
   initialReviews: ProductReview[];
   isAuthenticated: boolean;
+  productId: string;
+  productSlug: string;
 };
 
 const Stars = ({ value }: { value: number }) => (
@@ -40,10 +40,15 @@ export const ProductReviewsPanel = ({
   const [isPending, startTransition] = useTransition();
 
   const average = useMemo(() => {
-    if (!reviews.length) return 0;
-    return Math.round(
-      (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length) * 10,
-    ) / 10;
+    if (!reviews.length) {
+      return 0;
+    }
+
+    return (
+      Math.round(
+        (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length) * 10,
+      ) / 10
+    );
   }, [reviews]);
 
   const handleSubmit = () => {
@@ -59,6 +64,7 @@ export const ProductReviewsPanel = ({
 
       if (!result.ok) {
         setError(result.error);
+
         return;
       }
 
@@ -69,15 +75,15 @@ export const ProductReviewsPanel = ({
   };
 
   return (
-    <div className="rounded-2xl border border-border/60 bg-muted/20 p-4 shadow-inner">
+    <div className="border-border/60 bg-muted/20 rounded-2xl border p-4 shadow-inner">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold text-foreground">Отзывы</h3>
+          <h3 className="text-foreground text-lg font-semibold">Отзывы</h3>
           <p className="text-muted-foreground text-sm">
             Оставьте отзыв о товаре. Отзывы отображаются сразу.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-full bg-card/70 px-3 py-1 text-sm text-foreground ring-1 ring-border/60">
+        <div className="bg-card/70 text-foreground ring-border/60 flex items-center gap-2 rounded-full px-3 py-1 text-sm ring-1">
           <Stars value={Math.round(average)} />
           <span className="font-semibold">
             {reviews.length ? `${average} / 5` : "—"}
@@ -104,7 +110,7 @@ export const ProductReviewsPanel = ({
               value={rating}
               onChange={(e) => setRating(Number(e.target.value))}
               disabled={!isAuthenticated || isPending}
-              className="h-10 w-28 rounded-lg border border-border/60 bg-card/70 px-3 text-sm shadow-sm focus:border-primary focus:outline-none"
+              className="border-border/60 bg-card/70 focus:border-primary h-10 w-28 rounded-lg border px-3 text-sm shadow-sm focus:outline-none"
             >
               {[5, 4, 3, 2, 1].map((value) => (
                 <option key={value} value={value}>
@@ -123,7 +129,7 @@ export const ProductReviewsPanel = ({
               placeholder="Поделитесь опытом использования товара"
               disabled={!isAuthenticated || isPending}
               rows={3}
-              className="min-h-[110px] w-full rounded-lg border border-border/60 bg-card/70 px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none disabled:opacity-50"
+              className="border-border/60 bg-card/70 focus:border-primary min-h-[110px] w-full rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none disabled:opacity-50"
             />
           </div>
         </div>
@@ -141,7 +147,7 @@ export const ProductReviewsPanel = ({
 
       <div className="mt-6 space-y-3">
         {reviews.length === 0 && (
-          <div className="rounded-xl border border-dashed border-border/70 bg-card/60 p-3 text-sm text-muted-foreground">
+          <div className="border-border/70 bg-card/60 text-muted-foreground rounded-xl border border-dashed p-3 text-sm">
             Пока нет отзывов. Станьте первым!
           </div>
         )}
@@ -149,16 +155,20 @@ export const ProductReviewsPanel = ({
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="rounded-xl border border-border/60 bg-card/70 p-3 shadow-sm"
+            className="border-border/60 bg-card/70 rounded-xl border p-3 shadow-sm"
           >
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <div className="font-semibold text-foreground">{review.authorName}</div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="text-foreground font-semibold">
+                {review.authorName}
+              </div>
+              <div className="text-muted-foreground flex items-center gap-2 text-sm">
                 <Stars value={review.rating} />
                 <span>{new Date(review.createdAt).toLocaleDateString()}</span>
               </div>
             </div>
-            <p className="mt-2 text-sm text-foreground leading-relaxed">{review.comment}</p>
+            <p className="text-foreground mt-2 text-sm leading-relaxed">
+              {review.comment}
+            </p>
           </div>
         ))}
       </div>

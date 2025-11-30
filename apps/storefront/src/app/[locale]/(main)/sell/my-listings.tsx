@@ -4,7 +4,12 @@ import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@nimara/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@nimara/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@nimara/ui/components/card";
 
 type LocalListing = {
   category: string;
@@ -23,8 +28,9 @@ export const MyListings = () => {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
+
       if (stored) {
-        setListings(JSON.parse(stored));
+        setListings(JSON.parse(stored) as LocalListing[]);
       }
     } catch {
       setListings([]);
@@ -42,8 +48,9 @@ export const MyListings = () => {
         <CardHeader>
           <CardTitle className="text-base">Черновики товаров</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          Здесь появятся последние заявки, которые вы отправили. Список хранится только локально в браузере.
+        <CardContent className="text-muted-foreground text-sm">
+          Здесь появятся последние заявки, которые вы отправили. Список хранится
+          только локально в браузере.
         </CardContent>
       </Card>
     );
@@ -52,8 +59,15 @@ export const MyListings = () => {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">Мои последние заявки</h2>
-        <Button size="sm" variant="ghost" className="gap-2" onClick={handleClear}>
+        <h2 className="text-foreground text-lg font-semibold">
+          Мои последние заявки
+        </h2>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="gap-2"
+          onClick={handleClear}
+        >
           <Trash2 className="h-4 w-4" /> Очистить
         </Button>
       </div>
@@ -62,14 +76,20 @@ export const MyListings = () => {
         {listings.map((listing, index) => (
           <Card key={`${listing.title}-${index}`} className="h-full">
             <CardHeader className="pb-2">
-              <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-muted-foreground">
-                <span className="rounded-full bg-primary/10 px-2 py-1 text-primary">{listing.category}</span>
-                <span className="rounded-full bg-muted px-2 py-1">Цена: {listing.price}</span>
+              <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide">
+                <span className="bg-primary/10 text-primary rounded-full px-2 py-1">
+                  {listing.category}
+                </span>
+                <span className="bg-muted rounded-full px-2 py-1">
+                  Цена: {listing.price}
+                </span>
               </div>
               <CardTitle className="text-base">{listing.title}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p className="line-clamp-3 leading-relaxed">{listing.description}</p>
+            <CardContent className="text-muted-foreground space-y-2 text-sm">
+              <p className="line-clamp-3 leading-relaxed">
+                {listing.description}
+              </p>
               {listing.photoUrl && (
                 <a
                   href={listing.photoUrl}
@@ -80,7 +100,9 @@ export const MyListings = () => {
                   Фото
                 </a>
               )}
-              <p className="text-xs text-foreground">Контакт: {listing.contact}</p>
+              <p className="text-foreground text-xs">
+                Контакт: {listing.contact}
+              </p>
             </CardContent>
           </Card>
         ))}

@@ -68,7 +68,11 @@ const NavigationComponent = ({ menu }: { menu: Maybe<Menu> }) => {
 
   const attemptPrefetch = useCallback(
     (href: string | null | undefined) => {
-      if (!href || !isInternalHref(href) || typeof router.prefetch !== "function") {
+      if (
+        !href ||
+        !isInternalHref(href) ||
+        typeof router.prefetch !== "function"
+      ) {
         return;
       }
 
@@ -100,7 +104,12 @@ const NavigationComponent = ({ menu }: { menu: Maybe<Menu> }) => {
   );
 
   const topMenuUrls = useMemo(() => {
-    return menu?.items?.slice(0, 4).map(item => item?.url).filter(Boolean) ?? [];
+    return (
+      menu?.items
+        ?.slice(0, 4)
+        .map((item) => item?.url)
+        .filter(Boolean) ?? []
+    );
   }, [menu]);
 
   useEffect(() => {
@@ -245,10 +254,7 @@ const NavigationComponent = ({ menu }: { menu: Maybe<Menu> }) => {
 
                   {hasImageChildren && (
                     <div
-                      className={cn(
-                        "grid grid-cols-3 gap-3",
-                        rightColumnClass,
-                      )}
+                      className={cn("grid grid-cols-3 gap-3", rightColumnClass)}
                     >
                       {childrenWithImage.slice(0, 3).map((child) => (
                         <LocalizedLink
@@ -258,7 +264,7 @@ const NavigationComponent = ({ menu }: { menu: Maybe<Menu> }) => {
                           onClick={() => setCurrentMenuItem("")}
                           onPointerEnter={() => prefetchOnIntent(child.url)}
                         >
-                          <div className="relative h-1/2 p-4 bg-muted/30 dark:bg-muted/20">
+                          <div className="bg-muted/30 dark:bg-muted/20 relative h-1/2 p-4">
                             {child.collectionImageUrl && (
                               <Image
                                 src={child.collectionImageUrl}

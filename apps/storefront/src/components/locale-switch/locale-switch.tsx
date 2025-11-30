@@ -9,7 +9,9 @@ import { Button } from "@nimara/ui/components/button";
 import { useCurrentRegion } from "@/regions/client";
 
 // Lazy loading модального окна для уменьшения initial bundle size
-const LocaleSwitchModal = lazy(() => import("./locale-modal").then((mod) => ({ default: mod.LocaleSwitchModal })));
+const LocaleSwitchModal = lazy(() =>
+  import("./locale-modal").then((mod) => ({ default: mod.LocaleSwitchModal })),
+);
 
 const LocaleSwitchComponent = () => {
   const [isMounted, setIsMounted] = useState(false);

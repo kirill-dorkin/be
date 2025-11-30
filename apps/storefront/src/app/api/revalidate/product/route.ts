@@ -3,13 +3,13 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as { slug?: string };
+    const body = (await request.json()) as { slug?: string };
     const { slug } = body;
 
     if (!slug || typeof slug !== "string") {
       return NextResponse.json(
         { error: "Product slug is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,8 +26,11 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error revalidating", message: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
+      {
+        error: "Error revalidating",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }
@@ -38,8 +41,11 @@ export async function GET(request: NextRequest) {
 
   if (!slug) {
     return NextResponse.json(
-      { error: "Product slug is required as query parameter: ?slug=your-product-slug" },
-      { status: 400 }
+      {
+        error:
+          "Product slug is required as query parameter: ?slug=your-product-slug",
+      },
+      { status: 400 },
     );
   }
 
@@ -55,8 +61,11 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: "Error revalidating", message: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 }
+      {
+        error: "Error revalidating",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

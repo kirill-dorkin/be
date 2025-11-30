@@ -17,12 +17,8 @@ export const RepairDiscountBanner = async ({
   const t = await getTranslations("home.repairBanner");
 
   const title = user ? t("titleMember") : t("titleGuest");
-  const description = user
-    ? t("descriptionMember")
-    : t("descriptionGuest");
-  const secondaryLabel = user
-    ? t("secondaryMember")
-    : t("secondaryGuest");
+  const description = user ? t("descriptionMember") : t("descriptionGuest");
+  const secondaryLabel = user ? t("secondaryMember") : t("secondaryGuest");
   const secondaryHref = user
     ? paths.account.orders.asPath()
     : paths.createAccount.asPath();
@@ -31,16 +27,16 @@ export const RepairDiscountBanner = async ({
     <section className="mb-4 mt-8 w-full px-4 text-neutral-900 sm:px-6 lg:px-8 dark:text-white">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-neutral-950 dark:shadow-[0_48px_120px_rgba(0,0,0,0.45)]">
         <div className="absolute -left-24 top-24 h-64 w-64 rounded-full bg-amber-400/20 blur-3xl dark:bg-amber-500/20" />
-        <div className="absolute -right-32 -top-12 hidden h-80 w-80 rounded-full bg-orange-300/15 blur-3xl dark:bg-orange-400/10 lg:block" />
+        <div className="absolute -right-32 -top-12 hidden h-80 w-80 rounded-full bg-orange-300/15 blur-3xl lg:block dark:bg-orange-400/10" />
         <div className="relative grid gap-10 p-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:p-16">
           <div className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-neutral-600 dark:border-white/15 dark:text-white/70">
               {t("badge")}
             </span>
-            <h2 className="text-3xl font-semibold leading-tight tracking-tight hyphens-auto break-words sm:text-4xl lg:text-5xl">
+            <h2 className="hyphens-auto break-words text-3xl font-semibold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
               {title}
             </h2>
-            <p className="text-base text-neutral-600 hyphens-auto break-words sm:text-lg dark:text-white/75">
+            <p className="hyphens-auto break-words text-base text-neutral-600 sm:text-lg dark:text-white/75">
               {description}
             </p>
             <div className="flex flex-wrap gap-3">
@@ -70,10 +66,10 @@ export const RepairDiscountBanner = async ({
                   <Wrench className="h-7 w-7 text-amber-500 dark:text-amber-200" />
                 </div>
                 <div>
-                  <p className="text-lg font-semibold hyphens-auto break-words">
+                  <p className="hyphens-auto break-words text-lg font-semibold">
                     {t("card.title")}
                   </p>
-                  <p className="text-sm text-neutral-500 hyphens-auto break-words dark:text-white/70">
+                  <p className="hyphens-auto break-words text-sm text-neutral-500 dark:text-white/70">
                     {t("card.subtitle")}
                   </p>
                 </div>

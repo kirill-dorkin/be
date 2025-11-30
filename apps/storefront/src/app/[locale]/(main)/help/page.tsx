@@ -24,9 +24,7 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
 
-export async function generateMetadata(
-  _props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(_props: PageProps): Promise<Metadata> {
   const { locale } = await _props.params;
   const t = await getTranslations({ locale, namespace: "help.meta" });
 
@@ -68,8 +66,8 @@ export default async function HelpOverviewPage(props: PageProps) {
 
   return (
     <>
-      <section className="space-y-5 rounded-2xl border border-border/60 bg-card p-6 text-center shadow-sm sm:space-y-6 sm:rounded-3xl sm:p-10 lg:p-12">
-        <span className="text-primary inline-flex items-center justify-center rounded-full bg-primary/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] sm:px-4 sm:text-xs sm:tracking-[0.35em]">
+      <section className="border-border/60 bg-card space-y-5 rounded-2xl border p-6 text-center shadow-sm sm:space-y-6 sm:rounded-3xl sm:p-10 lg:p-12">
+        <span className="text-primary bg-primary/10 inline-flex items-center justify-center rounded-full px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] sm:px-4 sm:text-xs sm:tracking-[0.35em]">
           {t("hero.badge")}
         </span>
 
@@ -89,7 +87,12 @@ export default async function HelpOverviewPage(props: PageProps) {
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
             </LocalizedLink>
           </Button>
-          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             <LocalizedLink href={paths.staticPages.contact.asPath()}>
               {t("hero.secondaryCta")}
             </LocalizedLink>
@@ -113,14 +116,14 @@ export default async function HelpOverviewPage(props: PageProps) {
             return (
               <Card
                 key={link.href}
-                className="group border border-border/60 bg-card shadow-sm transition-colors duration-200 hover:border-primary/40 hover:shadow-md focus-within:border-primary/50 focus-within:shadow-md"
+                className="border-border/60 bg-card hover:border-primary/40 focus-within:border-primary/50 group border shadow-sm transition-colors duration-200 focus-within:shadow-md hover:shadow-md"
               >
                 <LocalizedLink
                   href={link.href}
-                  className="flex h-full flex-col gap-2 p-5 text-left sm:p-6 focus:outline-none"
+                  className="flex h-full flex-col gap-2 p-5 text-left focus:outline-none sm:p-6"
                   aria-label={link.title}
                 >
-                  <span className="bg-primary/10 text-primary inline-flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground sm:h-12 sm:w-12">
+                  <span className="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground inline-flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 sm:h-12 sm:w-12">
                     <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
                   </span>
                   <CardHeader className="px-0 pb-1 pt-3 sm:pt-4">
@@ -128,7 +131,7 @@ export default async function HelpOverviewPage(props: PageProps) {
                       {link.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="px-0 pb-0 text-muted-foreground text-sm leading-relaxed">
+                  <CardContent className="text-muted-foreground px-0 pb-0 text-sm leading-relaxed">
                     {link.description}
                   </CardContent>
                 </LocalizedLink>
@@ -139,25 +142,30 @@ export default async function HelpOverviewPage(props: PageProps) {
       </section>
 
       <section className="grid gap-4 sm:gap-5 lg:grid-cols-2 lg:gap-6">
-        <Card className="border border-border/70 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+        <Card className="border-border/70 bg-card border shadow-sm transition-shadow duration-200 hover:shadow-md">
           <CardHeader className="space-y-1 pb-3">
             <CardTitle className="flex items-center gap-2.5 text-lg font-semibold sm:text-xl">
-              <LifeBuoy className="h-5 w-5 flex-shrink-0 text-primary" />
+              <LifeBuoy className="text-primary h-5 w-5 flex-shrink-0" />
               {t("support.title")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground text-sm leading-relaxed">
+          <CardContent className="text-muted-foreground space-y-4 text-sm leading-relaxed">
             <div className="grid gap-3 sm:grid-cols-2">
               {supportItems.slice(0, 2).map((item) => (
                 <div
                   key={item}
-                  className="rounded-lg border border-border/60 bg-muted/40 px-3 py-2 text-foreground"
+                  className="border-border/60 bg-muted/40 text-foreground rounded-lg border px-3 py-2"
                 >
                   {item}
                 </div>
               ))}
             </div>
-            <Button asChild variant="secondary" size="default" className="w-full sm:w-auto">
+            <Button
+              asChild
+              variant="secondary"
+              size="default"
+              className="w-full sm:w-auto"
+            >
               <LocalizedLink href={paths.help.faq.asPath()}>
                 {t("support.cta")}
               </LocalizedLink>
@@ -165,22 +173,27 @@ export default async function HelpOverviewPage(props: PageProps) {
           </CardContent>
         </Card>
 
-        <Card className="border border-border/70 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+        <Card className="border-border/70 bg-card border shadow-sm transition-shadow duration-200 hover:shadow-md">
           <CardHeader className="space-y-1 pb-3">
             <CardTitle className="flex items-center gap-2.5 text-lg font-semibold sm:text-xl">
-              <MapPin className="h-5 w-5 flex-shrink-0 text-primary" />
+              <MapPin className="text-primary h-5 w-5 flex-shrink-0" />
               {t("visit.title")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-muted-foreground text-sm leading-relaxed">
-            <div className="space-y-1 rounded-lg bg-muted/50 p-3 text-foreground text-sm font-medium">
+          <CardContent className="text-muted-foreground space-y-3 text-sm leading-relaxed">
+            <div className="bg-muted/50 text-foreground space-y-1 rounded-lg p-3 text-sm font-medium">
               {t("visit.address")
                 .split("\n")
                 .map((line) => (
                   <div key={line}>{line}</div>
                 ))}
             </div>
-            <Button asChild variant="outline" size="default" className="w-full sm:w-auto">
+            <Button
+              asChild
+              variant="outline"
+              size="default"
+              className="w-full sm:w-auto"
+            >
               <a
                 href="https://maps.google.com/maps?q=Кулатова%208%2F1%20Бишкек&output=classic"
                 target="_blank"

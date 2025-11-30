@@ -363,7 +363,8 @@ export const repairServiceCatalog: RepairServiceCategory[] = [
         id: "desktop-keyboard-issue",
         slug: "ne-rabotaet-klaviatura-usb-audio",
         name: "Не работает клавиатура, USB порты, Audio, Internet",
-        shortDescription: "Диагностика и ремонт интерфейсных портов и контроллеров",
+        shortDescription:
+          "Диагностика и ремонт интерфейсных портов и контроллеров",
         deviceType: "computer",
         category: "Порты и периферия",
         group: "Компьютеры",
@@ -450,7 +451,7 @@ export const repairServiceCatalog: RepairServiceCategory[] = [
       {
         id: "monitor-backlight-17-21",
         slug: "zamena-podsvetki-17-21",
-        name: "Замена ламп подсветки от 17\" до 21\"",
+        name: 'Замена ламп подсветки от 17" до 21"',
         deviceType: "monitor",
         category: "Мониторы",
         group: "Мониторы",
@@ -460,7 +461,7 @@ export const repairServiceCatalog: RepairServiceCategory[] = [
       {
         id: "monitor-backlight-22-24",
         slug: "zamena-podsvetki-22-24",
-        name: "Замена ламп подсветки от 22\" до 24\"",
+        name: 'Замена ламп подсветки от 22" до 24"',
         deviceType: "monitor",
         category: "Мониторы",
         group: "Мониторы",
@@ -470,7 +471,7 @@ export const repairServiceCatalog: RepairServiceCategory[] = [
       {
         id: "monitor-backlight-27-plus",
         slug: "zamena-podsvetki-27-plus",
-        name: "Замена ламп подсветки от 27\" и выше",
+        name: 'Замена ламп подсветки от 27" и выше',
         deviceType: "monitor",
         category: "Мониторы",
         group: "Мониторы",
@@ -686,8 +687,7 @@ export const repairServiceCatalog: RepairServiceCategory[] = [
       {
         id: "laptop-fan-replacement",
         slug: "zamena-kulera-noutbuk",
-        name:
-          "Замена кулера (чистка, смазка, замена термопасты без учета стоимости кулера)",
+        name: "Замена кулера (чистка, смазка, замена термопасты без учета стоимости кулера)",
         deviceType: "laptop",
         category: "Перегрев ноутбука",
         group: "Ноутбуки",

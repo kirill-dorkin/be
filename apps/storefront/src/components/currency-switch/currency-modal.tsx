@@ -61,8 +61,8 @@ export function CurrencySwitchModal({
   useEffect(() => {
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
-      
-return;
+
+      return;
     }
 
     if (!open) {
@@ -87,14 +87,12 @@ return;
       />
       <div
         className={cn(
-          "relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl bg-background px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
-          open
-            ? "translate-y-0 opacity-100"
-            : "translate-y-6 opacity-0",
+          "bg-background relative z-[61] mx-auto flex w-full max-w-[620px] flex-col gap-4 rounded-3xl px-5 pb-6 pt-5 shadow-[0_32px_120px_-60px_rgba(15,23,42,0.45)] transition-all duration-300 ease-out md:max-w-[700px]",
+          open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
         )}
       >
         <div className="flex items-center justify-between">
-          <Label className="text-slate-700 dark:text-primary text-lg font-semibold leading-7">
+          <Label className="dark:text-primary text-lg font-semibold leading-7 text-slate-700">
             {t("currency-settings")}
           </Label>
           <Button variant="ghost" onClick={onClose} size="icon">
@@ -132,10 +130,10 @@ return;
                     {symbol}
                   </span>
                   <div className="flex flex-col items-start gap-1">
-                    <span className="text-xs uppercase tracking-wide text-muted-foreground">
+                    <span className="text-muted-foreground text-xs uppercase tracking-wide">
                       {option.marketName}
                     </span>
-                    <span className="text-base font-semibold text-foreground">
+                    <span className="text-foreground text-base font-semibold">
                       {option.currency}
                     </span>
                   </div>

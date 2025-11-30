@@ -51,8 +51,8 @@ export const saleorUserGetInfra =
       metadata: serializeMetadata(user.metadata),
       permissionGroups:
         user.permissionGroups
-          ?.filter(
-            (group): group is NonNullable<typeof group> => Boolean(group?.id),
+          ?.filter((group): group is NonNullable<typeof group> =>
+            Boolean(group?.id),
           )
           .map((group) => ({
             id: group.id,

@@ -22,7 +22,10 @@ const normalizeLocalePrefix = (locale?: string) => {
 const stripLocalePrefix = (pathname: string, locale?: string) => {
   let normalizedPath = pathname;
 
-  if (normalizedPath.startsWith("http://") || normalizedPath.startsWith("https://")) {
+  if (
+    normalizedPath.startsWith("http://") ||
+    normalizedPath.startsWith("https://")
+  ) {
     try {
       const parsed = new URL(normalizedPath);
       normalizedPath = `${parsed.pathname}${parsed.search}${parsed.hash}`;
@@ -68,9 +71,7 @@ const createMenuItemUrl = (
   _locale?: string,
 ): string => {
   const withLocalePrefix = (pathname: string) => {
-    const normalizedPath = pathname.startsWith("/")
-      ? pathname
-      : `/${pathname}`;
+    const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
 
     // Consumers use next-intl's `LocalizedLink`, which handles prefixing.
     // Returning raw paths avoids double locale segments like `/ru/ru/...`.
@@ -93,9 +94,7 @@ const createMenuItemUrl = (
 
   const queryString = queryParams.toString();
 
-  return withLocalePrefix(
-    queryString ? `/search?${queryString}` : "/search",
-  );
+  return withLocalePrefix(queryString ? `/search?${queryString}` : "/search");
 };
 
 const removeStorefrontOrigin = (url: string): string => {
@@ -164,8 +163,7 @@ const serializeSaleorMenuItemChild = (
         name,
         category?.name,
       ) ?? id,
-    url:
-      sanitizedUrl ?? createMenuItemUrl(category, collection, page, locale),
+    url: sanitizedUrl ?? createMenuItemUrl(category, collection, page, locale),
     description:
       collection?.translation?.description ||
       collection?.description ||
@@ -197,8 +195,7 @@ const serializeSaleorMenuItem = (
         category?.name,
         collection?.name,
       ) ?? id,
-    url:
-      sanitizedUrl ?? createMenuItemUrl(category, collection, page, locale),
+    url: sanitizedUrl ?? createMenuItemUrl(category, collection, page, locale),
     children:
       children
         ?.filter((child) => child.collection || child.category || child.page)

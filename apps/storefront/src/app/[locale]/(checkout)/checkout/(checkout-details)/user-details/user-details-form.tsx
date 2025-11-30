@@ -46,20 +46,22 @@ export const UserDetailsForm = ({ checkout }: { checkout: Checkout }) => {
   };
 
   return (
-    <section className="rounded-xl border border-border/60 bg-card p-5 shadow-sm">
+    <section className="border-border/60 bg-card rounded-xl border p-5 shadow-sm">
       <h2 className="sr-only">{t("user-details.title")}</h2>
       {userAccountEmail ? (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+          <h3 className="text-foreground text-lg font-semibold sm:text-xl">
             {t("checkout.hello-again")}
           </h3>
-          <p className="text-sm font-medium text-foreground">
+          <p className="text-foreground text-sm font-medium">
             {emailName.length <= 3
               ? "*********"
               : emailName.replace(/(.{2}).*(.{2})/, "*********")}
             {emailName.slice(-2)}@{domain}
           </p>
-          <p className="text-sm text-muted-foreground">{t("checkout.sign-in-to-finalize-order")}</p>
+          <p className="text-muted-foreground text-sm">
+            {t("checkout.sign-in-to-finalize-order")}
+          </p>
           <UserPasswordForm userAccountEmail={userAccountEmail} />
           <div className="flex flex-col items-center gap-1">
             <Button
@@ -69,17 +71,16 @@ export const UserDetailsForm = ({ checkout }: { checkout: Checkout }) => {
             >
               {t("auth.continue-as-guest")}
             </Button>
-            <span className="cursor-default text-sm text-muted-foreground">{t("common.or")}</span>
+            <span className="text-muted-foreground cursor-default text-sm">
+              {t("common.or")}
+            </span>
             <Button variant="link" onClick={handleDifferentEmail}>
               {t("checkout.use-different-email")}
             </Button>
           </div>
         </div>
       ) : (
-        <UserEmailForm
-          form={emailForm}
-          checkout={checkout}
-        />
+        <UserEmailForm form={emailForm} checkout={checkout} />
       )}
     </section>
   );

@@ -137,8 +137,8 @@ export const sendWorkerApplicationToTelegram = async (
           email: payload.email,
           phone: payload.phone,
         });
-        
-return { ok: true };
+
+        return { ok: true };
       }
 
       if (response.status === 429) {
@@ -215,10 +215,13 @@ export const sendSellerListingToTelegram = async (
   const chatId = serverEnvs.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
-    storefrontLogger.error("[Telegram] Missing bot token or chat id for listing", {
-      title: payload.title,
-      contact: payload.contact,
-    });
+    storefrontLogger.error(
+      "[Telegram] Missing bot token or chat id for listing",
+      {
+        title: payload.title,
+        contact: payload.contact,
+      },
+    );
 
     return {
       ok: false,
@@ -250,6 +253,7 @@ export const sendSellerListingToTelegram = async (
 
     if (!response.ok) {
       const message = await response.text();
+
       storefrontLogger.error("[Telegram] Listing send failed", {
         status: response.status,
         title: payload.title,
@@ -268,10 +272,13 @@ export const sendSellerListingToTelegram = async (
     }
 
     storefrontLogger.info("[Telegram] Listing sent", { title: payload.title });
+
     return { ok: true };
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Unexpected error while sending Telegram notification.";
+      error instanceof Error
+        ? error.message
+        : "Unexpected error while sending Telegram notification.";
 
     storefrontLogger.error("[Telegram] Listing request error", {
       title: payload.title,

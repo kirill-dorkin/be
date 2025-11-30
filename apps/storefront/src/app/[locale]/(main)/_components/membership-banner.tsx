@@ -1,4 +1,4 @@
-import { Crown, ShieldCheck, Star, TrendingDown, Truck } from "lucide-react";
+import { Crown, ShieldCheck, TrendingDown, Truck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import type { User } from "@nimara/domain/objects/User";
@@ -11,9 +11,7 @@ type MembershipBannerProps = {
   user: User | null;
 };
 
-export const MembershipBanner = async ({
-  user,
-}: MembershipBannerProps) => {
+export const MembershipBanner = async ({ user }: MembershipBannerProps) => {
   const t = await getTranslations("home.membershipBanner");
 
   const title = user ? t("titleMember") : t("titleGuest");
@@ -35,10 +33,10 @@ export const MembershipBanner = async ({
               <Crown className="h-3.5 w-3.5 text-amber-600" />
               VIP сервис
             </span>
-            <h2 className="text-3xl font-semibold leading-tight tracking-tight hyphens-auto break-words sm:text-4xl">
+            <h2 className="hyphens-auto break-words text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               {title}
             </h2>
-            <p className="text-sm text-neutral-700 hyphens-auto break-words sm:text-base">
+            <p className="hyphens-auto break-words text-sm text-neutral-700 sm:text-base">
               {description}
             </p>
             <div className="flex flex-wrap gap-3">
@@ -69,10 +67,10 @@ export const MembershipBanner = async ({
                   <Crown className="h-7 w-7 text-white" />
                 </div>
                 <div>
-                  <p className="text-lg font-semibold hyphens-auto break-words text-foreground">
+                  <p className="text-foreground hyphens-auto break-words text-lg font-semibold">
                     VIP-клиент нашего сервиса
                   </p>
-                  <p className="text-sm text-neutral-600 hyphens-auto break-words">
+                  <p className="hyphens-auto break-words text-sm text-neutral-600">
                     Приезжаем, чиним, предоставляем льготные условия.
                   </p>
                 </div>

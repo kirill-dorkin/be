@@ -3,7 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { memo, useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { useForm } from "react-hook-form";
 
 import type { Checkout } from "@nimara/domain/objects/Checkout";
@@ -33,13 +40,20 @@ const DiscountCodeComponent = ({ checkout }: { checkout: Checkout }) => {
   // Мемоизация promoCode и isCodeApplied
   const promoCode = checkout?.voucherCode;
   const isCodeApplied = useMemo(
-    () => !!checkout?.discount?.amount && !form.formState.isSubmitting && !form.formState.isLoading,
-    [checkout?.discount?.amount, form.formState.isSubmitting, form.formState.isLoading]
+    () =>
+      !!checkout?.discount?.amount &&
+      !form.formState.isSubmitting &&
+      !form.formState.isLoading,
+    [
+      checkout?.discount?.amount,
+      form.formState.isSubmitting,
+      form.formState.isLoading,
+    ],
   );
 
   // Мемоизация обработчиков
   const toggleOpen = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const handleSubmit = async (values: FormSchema) => {
@@ -184,7 +198,7 @@ const DiscountCodeComponent = ({ checkout }: { checkout: Checkout }) => {
                 />
               </div>
               <Button
-                className="text-slate-700 dark:text-primary mt-2 rounded-sm"
+                className="dark:text-primary mt-2 rounded-sm text-slate-700"
                 variant="outline"
                 type="submit"
                 disabled={form.formState.isSubmitting}
@@ -201,10 +215,14 @@ const DiscountCodeComponent = ({ checkout }: { checkout: Checkout }) => {
 };
 
 // Мемоизация - критичный компонент корзины
-export const DiscountCode = memo(DiscountCodeComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.checkout.id === nextProps.checkout.id &&
-    prevProps.checkout.voucherCode === nextProps.checkout.voucherCode &&
-    prevProps.checkout.discount?.amount === nextProps.checkout.discount?.amount
-  );
-});
+export const DiscountCode = memo(
+  DiscountCodeComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.checkout.id === nextProps.checkout.id &&
+      prevProps.checkout.voucherCode === nextProps.checkout.voucherCode &&
+      prevProps.checkout.discount?.amount ===
+        nextProps.checkout.discount?.amount
+    );
+  },
+);

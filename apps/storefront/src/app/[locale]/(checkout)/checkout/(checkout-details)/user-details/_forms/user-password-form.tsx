@@ -35,25 +35,28 @@ const UserPasswordFormComponent = ({
   // Мемоизация флага disabled
   const isDisabled = useMemo(
     () => isRedirecting || form.formState?.isSubmitting,
-    [isRedirecting, form.formState?.isSubmitting]
+    [isRedirecting, form.formState?.isSubmitting],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit = useCallback(async ({ password }: PasswordFormSchema) => {
-    const data = await login({
-      email: userAccountEmail,
-      password,
-      redirectUrl: paths.checkout.shippingAddress.asPath(),
-    });
+  const handleSubmit = useCallback(
+    async ({ password }: PasswordFormSchema) => {
+      const data = await login({
+        email: userAccountEmail,
+        password,
+        redirectUrl: paths.checkout.shippingAddress.asPath(),
+      });
 
-    if (data.redirectUrl) {
-      push(data.redirectUrl);
-    }
+      if (data.redirectUrl) {
+        push(data.redirectUrl);
+      }
 
-    if (data?.error) {
-      form.setError("password", { message: t("auth.sign-in-error") });
-    }
-  }, [userAccountEmail, push, form, t]);
+      if (data?.error) {
+        form.setError("password", { message: t("auth.sign-in-error") });
+      }
+    },
+    [userAccountEmail, push, form, t],
+  );
 
   return (
     <Form {...form}>
@@ -87,6 +90,9 @@ const UserPasswordFormComponent = ({
 };
 
 // Мемоизация - форма пароля пользователя в checkout
-export const UserPasswordForm = memo(UserPasswordFormComponent, (prevProps, nextProps) => {
-  return prevProps.userAccountEmail === nextProps.userAccountEmail;
-});
+export const UserPasswordForm = memo(
+  UserPasswordFormComponent,
+  (prevProps, nextProps) => {
+    return prevProps.userAccountEmail === nextProps.userAccountEmail;
+  },
+);

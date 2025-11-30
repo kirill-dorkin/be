@@ -43,7 +43,7 @@ export const CustomPDPView = async (props: PDPViewProps) => {
               />
             </div>
 
-            <div className="flex w-full flex-col place-content-start gap-4 md:w-1/2 overflow-hidden">
+            <div className="flex w-full flex-col place-content-start gap-4 overflow-hidden md:w-1/2">
               <ProductTitle title={product.name} />
               {/* Поиск фото в интернете - временно отключено */}
               {/* <Suspense fallback={null}>

@@ -42,20 +42,23 @@ const ResetPasswordFormComponent = () => {
   });
 
   // Мемоизация обработчика submit
-  const handleSubmit = useCallback(async ({ email }: FormSchema) => {
-    setIsSuccess(true);
+  const handleSubmit = useCallback(
+    async ({ email }: FormSchema) => {
+      setIsSuccess(true);
 
-    await requestPasswordResetAction({
-      channel: region.market.channel,
-      email,
-    });
-  }, [region.market.channel]);
+      await requestPasswordResetAction({
+        channel: region.market.channel,
+        email,
+      });
+    },
+    [region.market.channel],
+  );
 
   return (
     <div className="flex flex-col gap-8">
       {isSuccess ? (
         <>
-          <h1 className="text-slate-700 dark:text-primary text-2xl font-normal leading-8">
+          <h1 className="dark:text-primary text-2xl font-normal leading-8 text-slate-700">
             {t("auth.reset-password-link-sent")}
           </h1>
           <div>
@@ -77,7 +80,7 @@ const ResetPasswordFormComponent = () => {
                 <ArrowLeft className="h-4 w-4" />
               </LocalizedLink>
             </Button>
-            <h1 className="text-slate-700 dark:text-primary text-2xl font-normal leading-8">
+            <h1 className="dark:text-primary text-2xl font-normal leading-8 text-slate-700">
               {t("auth.reset-password")}
             </h1>
           </div>

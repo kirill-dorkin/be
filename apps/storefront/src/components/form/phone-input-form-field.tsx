@@ -39,27 +39,30 @@ function PhoneInputFormFieldComponent({
   const [prefix] = useState(() => COUNTRY_CODES[countryCode] || "+996");
 
   // Форматируем только номер БЕЗ кода страны
-  const formatPhoneNumber = useCallback((value: string): string => {
-    if (!value) {
-      return "";
-    }
+  const formatPhoneNumber = useCallback(
+    (value: string): string => {
+      if (!value) {
+        return "";
+      }
 
-    // Убираем все кроме цифр
-    const cleaned = value.replace(/\D/g, "");
+      // Убираем все кроме цифр
+      const cleaned = value.replace(/\D/g, "");
 
-    // Форматируем с пробелами (для кыргызстана: XXX XX XX XX)
-    if (countryCode === "KG") {
+      // Форматируем с пробелами (для кыргызстана: XXX XX XX XX)
+      if (countryCode === "KG") {
+        return cleaned
+          .replace(/^(\d{3})(\d)/, "$1 $2")
+          .replace(/^(\d{3}) (\d{2})(\d)/, "$1 $2 $3")
+          .replace(/^(\d{3}) (\d{2}) (\d{2})(\d)/, "$1 $2 $3 $4");
+      }
+
+      // Для других стран - простое форматирование
       return cleaned
-        .replace(/^(\d{3})(\d)/, "$1 $2")
-        .replace(/^(\d{3}) (\d{2})(\d)/, "$1 $2 $3")
-        .replace(/^(\d{3}) (\d{2}) (\d{2})(\d)/, "$1 $2 $3 $4");
-    }
-
-    // Для других стран - простое форматирование
-    return cleaned
-      .replace(/(\d{3})(\d)/, "$1 $2")
-      .replace(/(\d{3}) (\d{3})(\d)/, "$1 $2 $3");
-  }, [countryCode]);
+        .replace(/(\d{3})(\d)/, "$1 $2")
+        .replace(/(\d{3}) (\d{3})(\d)/, "$1 $2 $3");
+    },
+    [countryCode],
+  );
 
   return (
     <FormField
@@ -114,15 +117,21 @@ function PhoneInputFormFieldComponent({
             </FormLabel>
             <FormControl>
               <div className="relative">
-                <div className={cn(
-                  "absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none select-none transition-all duration-500 ease-in-out z-10",
-                  hasError ? "text-red-600 dark:text-red-400" : "text-muted-foreground"
-                )}>
+                <div
+                  className={cn(
+                    "pointer-events-none absolute left-3 top-1/2 z-10 flex -translate-y-1/2 select-none items-center gap-2 transition-all duration-500 ease-in-out",
+                    hasError
+                      ? "text-red-600 dark:text-red-400"
+                      : "text-muted-foreground",
+                  )}
+                >
                   <span className="text-sm font-medium">{prefix}</span>
-                  <div className={cn(
-                    "h-4 w-px transition-all duration-500 ease-in-out mx-0.5",
-                    hasError ? "bg-red-400 dark:bg-red-600" : "bg-border"
-                  )} />
+                  <div
+                    className={cn(
+                      "mx-0.5 h-4 w-px transition-all duration-500 ease-in-out",
+                      hasError ? "bg-red-400 dark:bg-red-600" : "bg-border",
+                    )}
+                  />
                 </div>
                 <input
                   aria-label={label}
@@ -131,11 +140,11 @@ function PhoneInputFormFieldComponent({
                   onChange={handleChange}
                   type="tel"
                   className={cn(
-                    "flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-500 ease-in-out",
+                    "flex h-10 w-full rounded-md border px-3 py-2 text-sm transition-all duration-500 ease-in-out file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
                     "placeholder:text-muted-foreground pl-[4rem]",
                     hasError
                       ? "border-red-500 bg-red-50 autofill:!bg-red-50 dark:border-red-500 dark:bg-red-900/30 dark:autofill:!bg-red-900/30"
-                      : "border-input bg-background"
+                      : "border-input bg-background",
                   )}
                   inputMode="tel"
                 />

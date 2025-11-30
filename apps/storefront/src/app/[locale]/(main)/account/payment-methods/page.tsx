@@ -103,7 +103,7 @@ export default async function Page(props: PageProps) {
   return (
     <div className="flex flex-col gap-8 text-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-slate-700 dark:text-primary text-2xl">
+        <h2 className="dark:text-primary text-2xl text-slate-700">
           {t("payment.payment-methods")}
         </h2>
 

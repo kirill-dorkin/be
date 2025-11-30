@@ -39,7 +39,7 @@ export default async function ReferralPage() {
 
   if (!referralData || !referralData.referralCode) {
     return (
-      <div className="rounded-3xl border border-slate-100/80 bg-white/90 p-6 text-center text-sm text-slate-500 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:text-muted-foreground dark:ring-white/5">
+      <div className="dark:text-muted-foreground rounded-3xl border border-slate-100/80 bg-white/90 p-6 text-center text-sm text-slate-500 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
         {t("referral.no-data-description")}
       </div>
     );
@@ -79,31 +79,39 @@ export default async function ReferralPage() {
     <div className="flex flex-col gap-6 text-sm md:gap-8">
       <section className="rounded-3xl border border-slate-100/80 bg-gradient-to-br from-white to-slate-50/60 p-6 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900/60 dark:ring-white/5">
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-muted-foreground">
+          <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
             {t("referral.title")}
           </p>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-primary">
+          <h1 className="dark:text-primary text-3xl font-bold text-slate-900">
             {t("referral.subtitle")}
           </h1>
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatsCard
-            icon={<Users className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />}
+            icon={
+              <Users className="h-5 w-5 text-indigo-600 dark:text-indigo-300" />
+            }
             label={t("referral.total-referrals")}
             value={totalReferrals}
           />
           <StatsCard
-            icon={<Gift className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />}
+            icon={
+              <Gift className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />
+            }
             label={t("referral.vip-referrals")}
             value={vipReferrals}
           />
           <StatsCard
-            icon={<TrendingUp className="h-5 w-5 text-orange-600 dark:text-orange-300" />}
+            icon={
+              <TrendingUp className="h-5 w-5 text-orange-600 dark:text-orange-300" />
+            }
             label={t("referral.total-earned")}
             value={`${lifetimeEarned} ${balance.currency}`}
           />
           <StatsCard
-            icon={<LinkIcon className="h-5 w-5 text-violet-600 dark:text-violet-300" />}
+            icon={
+              <LinkIcon className="h-5 w-5 text-violet-600 dark:text-violet-300" />
+            }
             label={t("balance.available-balance")}
             value={`${availableBalance.toFixed(2)} ${balance.currency}`}
           />
@@ -121,10 +129,10 @@ export default async function ReferralPage() {
         <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-6 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-primary">
+              <h2 className="dark:text-primary text-lg font-semibold text-slate-900">
                 {t("referral.promo-title-active")}
               </h2>
-              <p className="text-sm text-slate-500 dark:text-muted-foreground">
+              <p className="dark:text-muted-foreground text-sm text-slate-500">
                 {t("referral.promo-description-active", {
                   count: vipReferrals,
                   amount: lifetimeEarned,
@@ -142,7 +150,7 @@ export default async function ReferralPage() {
       )}
 
       <section className="rounded-3xl border border-slate-100/80 bg-white/90 p-6 shadow-sm ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900/40 dark:ring-white/5">
-        <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-primary">
+        <h2 className="dark:text-primary mb-4 text-lg font-semibold text-slate-900">
           {t("referral.how-it-works")}
         </h2>
         <ol className="space-y-3">
@@ -176,10 +184,10 @@ function StatsCard({
       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-900/80">
         {icon}
       </div>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-muted-foreground">
+      <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
         {label}
       </p>
-      <p className="mt-1 text-2xl font-semibold text-slate-900 dark:text-primary">
+      <p className="dark:text-primary mt-1 text-2xl font-semibold text-slate-900">
         {value}
       </p>
     </div>
@@ -201,17 +209,19 @@ function Step({
 }) {
   return (
     <li className="flex items-center gap-3 rounded-[28px] border border-slate-100/80 bg-white/80 p-4 shadow-inner dark:border-slate-800/70 dark:bg-slate-900/30">
-      <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${badgeClass}`}>
+      <div
+        className={`flex h-12 w-12 items-center justify-center rounded-2xl ${badgeClass}`}
+      >
         {icon}
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-muted-foreground">
+        <p className="dark:text-muted-foreground text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
           {index.toString().padStart(2, "0")}
         </p>
-        <p className="text-base font-semibold text-slate-900 dark:text-primary">
+        <p className="dark:text-primary text-base font-semibold text-slate-900">
           {title}
         </p>
-        <p className="text-sm text-slate-500 dark:text-muted-foreground">
+        <p className="dark:text-muted-foreground text-sm text-slate-500">
           {description}
         </p>
       </div>

@@ -24,7 +24,7 @@ const APP_TOKEN = process.env.SALEOR_APP_TOKEN;
 
 if (!API_URL || !APP_TOKEN) {
   throw new Error(
-    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения."
+    "NEXT_PUBLIC_SALEOR_API_URL и SALEOR_APP_TOKEN должны быть заданы в переменных окружения.",
   );
 }
 
@@ -103,7 +103,9 @@ async function checkImageAccessibility(url) {
 
 // Основная функция
 async function main() {
-  console.log("🔍 Проверка продуктов с автоматически добавленными изображениями...\n");
+  console.log(
+    "🔍 Проверка продуктов с автоматически добавленными изображениями...\n",
+  );
 
   try {
     const products = await fetchProductsWithAutoImages(5);
@@ -114,7 +116,9 @@ async function main() {
       return;
     }
 
-    console.log(`✅ Найдено ${products.length} продуктов с автоматическими изображениями\n`);
+    console.log(
+      `✅ Найдено ${products.length} продуктов с автоматическими изображениями\n`,
+    );
     console.log("=".repeat(80) + "\n");
 
     for (let i = 0; i < products.length; i++) {
@@ -145,7 +149,9 @@ async function main() {
             console.log(`      ✅ Изображение ДОСТУПНО!`);
             console.log(`         Status: ${check.status}`);
             console.log(`         Content-Type: ${check.contentType}`);
-            console.log(`         Размер: ${(check.contentLength / 1024).toFixed(2)} KB`);
+            console.log(
+              `         Размер: ${(check.contentLength / 1024).toFixed(2)} KB`,
+            );
           } else {
             console.log(`      ❌ Изображение НЕДОСТУПНО!`);
             console.log(`         Status: ${check.status || "Ошибка"}`);

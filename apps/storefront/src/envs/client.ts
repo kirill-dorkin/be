@@ -19,7 +19,10 @@ const resolveDefaultStorefrontUrl = () => {
   const fallbackHost =
     vercelProductionHost ?? vercelBranchHost ?? "localhost:3000";
 
-  if (fallbackHost.startsWith("http://") || fallbackHost.startsWith("https://")) {
+  if (
+    fallbackHost.startsWith("http://") ||
+    fallbackHost.startsWith("https://")
+  ) {
     return fallbackHost;
   }
 

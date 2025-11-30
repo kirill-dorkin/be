@@ -1,4 +1,4 @@
-import { type NextRequest , NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     if (!query || query.length < 3) {
       return NextResponse.json(
         { error: "Query must be at least 3 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -32,13 +32,13 @@ export async function GET(request: NextRequest) {
           "User-Agent": "BestElectronics/1.0",
           "Accept-Language": language,
         },
-      }
+      },
     );
 
     if (!response.ok) {
       return NextResponse.json(
         { error: "Failed to fetch address suggestions" },
-        { status: response.status }
+        { status: response.status },
       );
     }
 

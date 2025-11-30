@@ -22,11 +22,14 @@ function AccountNotificationsComponent({ user }: { user: User | null }) {
   const searchParams = useSearchParams();
 
   // Мемоизация флагов
-  const flags = useMemo(() => ({
-    isLoginSuccessful: searchParams.get("loggedIn") === "true",
-    isLogoutSuccessful: searchParams.get("loggedOut") === "true",
-    isAccountDeleted: searchParams.get("accountDeleted") === "true",
-  }), [searchParams]);
+  const flags = useMemo(
+    () => ({
+      isLoginSuccessful: searchParams.get("loggedIn") === "true",
+      isLogoutSuccessful: searchParams.get("loggedOut") === "true",
+      isAccountDeleted: searchParams.get("accountDeleted") === "true",
+    }),
+    [searchParams],
+  );
 
   const { isLoginSuccessful, isLogoutSuccessful, isAccountDeleted } = flags;
 
@@ -49,6 +52,9 @@ function AccountNotificationsComponent({ user }: { user: User | null }) {
 }
 
 // Мемоизация - notifications компонент
-export const AccountNotifications = memo(AccountNotificationsComponent, (prevProps, nextProps) => {
-  return prevProps.user?.id === nextProps.user?.id;
-});
+export const AccountNotifications = memo(
+  AccountNotificationsComponent,
+  (prevProps, nextProps) => {
+    return prevProps.user?.id === nextProps.user?.id;
+  },
+);

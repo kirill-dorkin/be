@@ -13,10 +13,7 @@ const priceEstimateSchema = z.object({
   currency: z.string().min(3).max(3),
 });
 
-const modifiersSchema = z
-  .record(z.string(), z.number())
-  .optional()
-  .default({});
+const modifiersSchema = z.record(z.string(), z.number()).optional().default({});
 
 const serviceSelectionSchema = z.object({
   deviceType: z.string().min(2).max(40),
@@ -29,12 +26,7 @@ const serviceSelectionSchema = z.object({
 const baseSchema = z.object({
   fullName: z.string().min(2).max(120),
   phone: z.string().min(5).max(40),
-  email: z
-    .string()
-    .email()
-    .max(120)
-    .optional()
-    .or(z.literal("").optional()),
+  email: z.string().email().max(120).optional().or(z.literal("").optional()),
   message: z.string().max(2000).optional(),
   urgent: z.boolean().optional().default(false),
   needsPickup: z.boolean().optional().default(false),
@@ -66,8 +58,8 @@ const webhookHeaders = {
 };
 
 const formatLogContext = (
-  payload: { needsPickup?: boolean, urgent?: boolean; },
-  selection: { deviceType: string, serviceSlug: string; },
+  payload: { needsPickup?: boolean; urgent?: boolean },
+  selection: { deviceType: string; serviceSlug: string },
 ) => ({
   serviceSlug: selection.serviceSlug,
   deviceType: selection.deviceType,

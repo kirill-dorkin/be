@@ -49,9 +49,9 @@ const OrderSection = ({
   renderOrder: (order: DashboardOrder) => ReactNode;
   title: string;
 }) => (
-  <div className="space-y-3 rounded-2xl border border-border/40 bg-background p-4 shadow-sm">
+  <div className="border-border/40 bg-background space-y-3 rounded-2xl border p-4 shadow-sm">
     <div className="flex flex-col gap-1">
-      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+      <h2 className="text-foreground text-lg font-semibold">{title}</h2>
       <p className="text-muted-foreground text-sm">{description}</p>
     </div>
     <div className="space-y-3">
@@ -96,9 +96,14 @@ export function StaffOrdersBoard({ locale, orders, stageOptions }: Props) {
   const { unassigned, myActive, completed } = useMemo(() => {
     const unassignedOrders = orders.filter((order) => order.isUnassigned);
     const myOrders = orders.filter(
-      (order) => order.isMine && order.stage !== "completed" && order.stage !== "cancelled",
+      (order) =>
+        order.isMine &&
+        order.stage !== "completed" &&
+        order.stage !== "cancelled",
     );
-    const completedOrders = orders.filter((order) => order.isMine && order.stage === "completed");
+    const completedOrders = orders.filter(
+      (order) => order.isMine && order.stage === "completed",
+    );
 
     return {
       unassigned: unassignedOrders,
@@ -146,38 +151,39 @@ export function StaffOrdersBoard({ locale, orders, stageOptions }: Props) {
     const stageUpdatedAt = order.stageUpdatedAt ?? order.created;
 
     return (
-      <div className="rounded-xl border border-border/50 bg-background p-4 shadow-sm">
+      <div className="border-border/50 bg-background rounded-xl border p-4 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Badge variant="outline" className="text-xs uppercase tracking-wide">
             {stageLabel(order.stage)}
           </Badge>
 
-          <span className="text-xs text-muted-foreground">
-            {t("orderCard.stageUpdated")}: {formatBadgeDate(locale, stageUpdatedAt) ?? "—"}
+          <span className="text-muted-foreground text-xs">
+            {t("orderCard.stageUpdated")}:{" "}
+            {formatBadgeDate(locale, stageUpdatedAt) ?? "—"}
           </span>
         </div>
 
         <div className="mt-3 space-y-2 text-sm">
           <div className="flex flex-col">
-            <span className="text-xs uppercase text-muted-foreground">
+            <span className="text-muted-foreground text-xs uppercase">
               {t("orderCard.created")}
             </span>
-            <span className="font-medium text-foreground">
+            <span className="text-foreground font-medium">
               {formatBadgeDate(locale, order.created)}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-xs uppercase text-muted-foreground">
+            <span className="text-muted-foreground text-xs uppercase">
               {t("orderCard.customer")}
             </span>
-            <span className="font-medium text-foreground">
+            <span className="text-foreground font-medium">
               {order.customerName ?? "—"}
             </span>
           </div>
 
           <div className="flex flex-col">
-            <span className="text-xs uppercase text-muted-foreground">
+            <span className="text-muted-foreground text-xs uppercase">
               {t("orderCard.phone")}
             </span>
             <span className="text-foreground">
@@ -186,16 +192,14 @@ export function StaffOrdersBoard({ locale, orders, stageOptions }: Props) {
           </div>
 
           <div className="flex flex-col">
-            <span className="text-xs uppercase text-muted-foreground">
+            <span className="text-muted-foreground text-xs uppercase">
               {t("orderCard.service")}
             </span>
-            <span className="text-foreground">
-              {order.serviceName ?? "—"}
-            </span>
+            <span className="text-foreground">{order.serviceName ?? "—"}</span>
           </div>
 
           {order.customerMessage && (
-            <div className="rounded-lg bg-muted/60 p-3 text-xs text-muted-foreground">
+            <div className="bg-muted/60 text-muted-foreground rounded-lg p-3 text-xs">
               {order.customerMessage}
             </div>
           )}
@@ -215,10 +219,10 @@ export function StaffOrdersBoard({ locale, orders, stageOptions }: Props) {
 
           {order.totalAmount != null && order.totalCurrency && (
             <div className="flex flex-col">
-              <span className="text-xs uppercase text-muted-foreground">
+              <span className="text-muted-foreground text-xs uppercase">
                 {t("orderCard.total")}
               </span>
-              <span className="font-medium text-foreground">
+              <span className="text-foreground font-medium">
                 {new Intl.NumberFormat(locale, {
                   style: "currency",
                   currency: order.totalCurrency,
@@ -234,7 +238,7 @@ export function StaffOrdersBoard({ locale, orders, stageOptions }: Props) {
               onClick={() => onClaim(order.id)}
               disabled={isPending && pendingOrderId === order.id}
             >
-            {isPending && pendingOrderId === order.id
+              {isPending && pendingOrderId === order.id
                 ? tc("please-wait")
                 : t("actions.claim")}
             </Button>

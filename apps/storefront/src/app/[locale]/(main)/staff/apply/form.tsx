@@ -76,10 +76,7 @@ export const WorkerApplyForm = () => {
         setShowSuccess(true);
         setIsLocked(true);
         if (typeof window !== "undefined") {
-          window.localStorage.setItem(
-            SUBMISSION_LOCK_KEY,
-            String(Date.now()),
-          );
+          window.localStorage.setItem(SUBMISSION_LOCK_KEY, String(Date.now()));
         }
 
         const currentRole = form.getValues("role");
@@ -96,7 +93,11 @@ export const WorkerApplyForm = () => {
         return;
       }
 
-      if (result.error && typeof result.error === "object" && "fieldErrors" in result.error) {
+      if (
+        result.error &&
+        typeof result.error === "object" &&
+        "fieldErrors" in result.error
+      ) {
         const { fieldErrors = {}, formErrors = [] } = result.error as {
           fieldErrors?: Record<string, string[]>;
           formErrors?: string[];
@@ -162,12 +163,10 @@ export const WorkerApplyForm = () => {
         noValidate
       >
         <div className="space-y-2">
-          <p className="text-sm font-semibold text-foreground">
+          <p className="text-foreground text-sm font-semibold">
             {t("role.label")}
           </p>
-          <p className="text-muted-foreground text-sm">
-            {t("role.hint")}
-          </p>
+          <p className="text-muted-foreground text-sm">{t("role.hint")}</p>
           <div className="grid gap-3 sm:grid-cols-2">
             {[
               {
@@ -189,9 +188,11 @@ export const WorkerApplyForm = () => {
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => form.setValue("role", option.value, { shouldDirty: true })}
+                  onClick={() =>
+                    form.setValue("role", option.value, { shouldDirty: true })
+                  }
                   className={cn(
-                    "flex h-full flex-col gap-2 rounded-2xl border p-4 text-left transition hover:border-primary/50 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    "hover:border-primary/50 focus-visible:ring-primary flex h-full flex-col gap-2 rounded-2xl border p-4 text-left transition hover:shadow-sm focus-visible:outline-none focus-visible:ring-2",
                     isActive
                       ? "border-primary bg-primary/5 shadow-sm"
                       : "border-border/70 bg-background",
@@ -202,14 +203,20 @@ export const WorkerApplyForm = () => {
                     <span
                       className={cn(
                         "inline-flex h-9 w-9 items-center justify-center rounded-full",
-                        isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground",
                       )}
                     >
                       {option.icon}
                     </span>
-                    <span className="font-semibold text-foreground">{option.title}</span>
+                    <span className="text-foreground font-semibold">
+                      {option.title}
+                    </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{option.description}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {option.description}
+                  </p>
                 </button>
               );
             })}
@@ -231,7 +238,9 @@ export const WorkerApplyForm = () => {
               </span>
               {t("success-title")}
             </span>
-            <p className="text-muted-foreground text-sm">{t("success-description")}</p>
+            <p className="text-muted-foreground text-sm">
+              {t("success-description")}
+            </p>
           </div>
         )}
         {statusMessage && (
@@ -240,9 +249,7 @@ export const WorkerApplyForm = () => {
           </div>
         )}
         {!isLocked && (
-          <p className="text-xs text-muted-foreground">
-            {t("cooldown-note")}
-          </p>
+          <p className="text-muted-foreground text-xs">{t("cooldown-note")}</p>
         )}
         <fieldset
           className="flex flex-col gap-4"
@@ -269,11 +276,7 @@ export const WorkerApplyForm = () => {
             type="email"
             autoComplete="email"
           />
-          <TextFormField
-            name="phone"
-            label={tc("phone")}
-            autoComplete="tel"
-          />
+          <TextFormField name="phone" label={tc("phone")} autoComplete="tel" />
           <TextFormField
             name="password"
             label={t("password-label")}

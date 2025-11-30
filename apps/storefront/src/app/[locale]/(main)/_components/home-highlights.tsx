@@ -1,9 +1,4 @@
-import {
-  Headset,
-  PiggyBank,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import { Headset, PiggyBank, ShieldCheck, Truck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import type { TranslationMessage } from "@/types";
@@ -30,17 +25,17 @@ export const HomeHighlights = async () => {
     <section className="relative mb-14 w-full px-4 sm:px-6 lg:px-8">
       <div
         aria-hidden
-        className="absolute inset-x-6 top-6 hidden h-40 rounded-full bg-gradient-to-r from-amber-200/40 via-orange-100/30 to-sky-200/40 blur-3xl dark:from-amber-500/15 dark:via-amber-400/10 dark:to-sky-500/15 sm:block"
+        className="absolute inset-x-6 top-6 hidden h-40 rounded-full bg-gradient-to-r from-amber-200/40 via-orange-100/30 to-sky-200/40 blur-3xl sm:block dark:from-amber-500/15 dark:via-amber-400/10 dark:to-sky-500/15"
       />
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-neutral-200 bg-gradient-to-br from-orange-50 via-white to-sky-50 p-8 shadow-[0_28px_80px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-neutral-950 dark:from-neutral-950 dark:via-neutral-950/95 dark:to-neutral-900 lg:p-12">
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl border border-neutral-200 bg-gradient-to-br from-orange-50 via-white to-sky-50 p-8 shadow-[0_28px_80px_rgba(15,23,42,0.08)] lg:p-12 dark:border-white/10 dark:bg-neutral-950 dark:from-neutral-950 dark:via-neutral-950/95 dark:to-neutral-900">
         <div className="max-w-2xl space-y-4">
           <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-600 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 dark:text-white/70">
             {t("eyebrow")}
           </span>
-          <h2 className="text-3xl font-semibold leading-tight hyphens-auto break-words text-neutral-900 dark:text-white sm:text-4xl">
+          <h2 className="hyphens-auto break-words text-3xl font-semibold leading-tight text-neutral-900 sm:text-4xl dark:text-white">
             {t("title")}
           </h2>
-          <p className="text-base text-neutral-600 hyphens-auto break-words dark:text-white/70">
+          <p className="hyphens-auto break-words text-base text-neutral-600 dark:text-white/70">
             {t("subtitle")}
           </p>
         </div>
@@ -55,10 +50,10 @@ export const HomeHighlights = async () => {
                   <Icon className="h-6 w-6" />
                 </span>
                 <div>
-                  <h3 className="text-lg font-semibold hyphens-auto break-words text-neutral-900 dark:text-white">
+                  <h3 className="hyphens-auto break-words text-lg font-semibold text-neutral-900 dark:text-white">
                     {t(getItemMessageKey(key, "title") as any)}
                   </h3>
-                  <p className="mt-2 text-sm text-neutral-600 hyphens-auto break-words dark:text-white/70">
+                  <p className="mt-2 hyphens-auto break-words text-sm text-neutral-600 dark:text-white/70">
                     {t(getItemMessageKey(key, "description") as any)}
                   </p>
                 </div>

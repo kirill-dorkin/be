@@ -1,4 +1,4 @@
-import { type ComponentProps,memo } from "react";
+import { type ComponentProps, memo } from "react";
 
 import ProductPlaceholder from "@/assets/product_placeholder.svg";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,9 @@ const ProductImagePlaceholderComponent = ({
 );
 
 // Мемоизация - используется в галереях и карточках товаров
-export const ProductImagePlaceholder = memo(ProductImagePlaceholderComponent, (prevProps, nextProps) => {
-  return prevProps.className === nextProps.className;
-});
+export const ProductImagePlaceholder = memo(
+  ProductImagePlaceholderComponent,
+  (prevProps, nextProps) => {
+    return prevProps.className === nextProps.className;
+  },
+);

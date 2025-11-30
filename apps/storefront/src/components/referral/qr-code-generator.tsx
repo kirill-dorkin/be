@@ -90,7 +90,7 @@ export function QRCodeGenerator({ referralLink }: QRCodeGeneratorProps) {
             <Download className="h-4 w-4" />
             {t("referral.download-qr")}
           </Button>
-          <p className="text-center text-xs text-slate-600 dark:text-muted-foreground">
+          <p className="dark:text-muted-foreground text-center text-xs text-slate-600">
             {t("referral.qr-code-hint")}
           </p>
         </div>

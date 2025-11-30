@@ -66,6 +66,9 @@ const AccountDeletedModalComponent = ({ open }: { open: boolean }) => {
 };
 
 // Мемоизация - модальное окно удаления аккаунта
-export const AccountDeletedModal = memo(AccountDeletedModalComponent, (prevProps, nextProps) => {
-  return prevProps.open === nextProps.open;
-});
+export const AccountDeletedModal = memo(
+  AccountDeletedModalComponent,
+  (prevProps, nextProps) => {
+    return prevProps.open === nextProps.open;
+  },
+);

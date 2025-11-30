@@ -5,8 +5,8 @@ const mockAlgoliaSearchService = vi.fn();
 vi.mock("@nimara/infrastructure/search/algolia/provider", () => ({
   algoliaSearchService: (config: unknown) => {
     mockAlgoliaSearchService(config);
-    
-return {
+
+    return {
       getFacets: vi.fn(),
       getSortByOptions: vi.fn(),
       search: vi.fn(),
@@ -31,7 +31,8 @@ describe("getSearchService (ALGOLIA)", () => {
     mockAlgoliaSearchService.mockClear();
     process.env.NEXT_PUBLIC_SEARCH_SERVICE = "ALGOLIA";
     process.env.NEXT_PUBLIC_DEFAULT_CHANNEL = "default-channel";
-    process.env.NEXT_PUBLIC_SALEOR_API_URL = "https://example.saleor.test/graphql/";
+    process.env.NEXT_PUBLIC_SALEOR_API_URL =
+      "https://example.saleor.test/graphql/";
     process.env.NEXT_PUBLIC_STOREFRONT_URL = "https://example.store.test";
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID = "app";
     process.env.NEXT_PUBLIC_ALGOLIA_API_KEY = "key";

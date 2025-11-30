@@ -31,7 +31,11 @@ export const updateUserDetails = async ({
   checkout: Checkout;
   email: EmailFormSchema["email"];
 }): AsyncResult<{ redirectUrl: string }> => {
-  console.log("🔵 [Server Action] updateUserDetails called with:", { email, checkoutId: checkout.id, isShippingRequired: checkout.isShippingRequired });
+  console.log("🔵 [Server Action] updateUserDetails called with:", {
+    email,
+    checkoutId: checkout.id,
+    isShippingRequired: checkout.isShippingRequired,
+  });
 
   try {
     const checkoutService = await getCheckoutService();

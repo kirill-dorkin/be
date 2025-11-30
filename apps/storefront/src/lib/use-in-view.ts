@@ -34,8 +34,8 @@ export const useInView = <T extends Element>(options?: UseInViewOptions) => {
 
       if (!node) {
         setIsIntersecting(false);
-        
-return;
+
+        return;
       }
 
       const parsedOptions = JSON.parse(serializedOptions) as {

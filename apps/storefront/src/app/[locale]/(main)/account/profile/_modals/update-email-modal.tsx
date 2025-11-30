@@ -21,15 +21,12 @@ export async function UpdateEmailModal({ user }: { user: User }) {
         <Button
           variant="outline"
           size="sm"
-          className="w-full rounded-2xl border-slate-200 text-center text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:text-primary dark:hover:border-slate-600 md:w-auto"
+          className="dark:text-primary w-full rounded-2xl border-slate-200 text-center text-slate-600 transition-all hover:border-slate-300 hover:bg-slate-50 md:w-auto dark:border-slate-700 dark:hover:border-slate-600"
         >
           {t("common.edit")}
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        aria-describedby={undefined}
-      >
+      <DialogContent className="sm:max-w-[425px]" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>{t("account.change-email")}</DialogTitle>
         </DialogHeader>

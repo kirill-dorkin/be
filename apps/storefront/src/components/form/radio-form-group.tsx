@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Children, memo, type ReactNode,useCallback } from "react";
+import { Children, memo, type ReactNode, useCallback } from "react";
 
 import {
   FormControl,
@@ -44,10 +44,13 @@ const RadioFormGroupComponent = ({
   const { error } = control.getFieldState(name);
 
   // Мемоизация обработчика изменения
-  const handleValueChange = useCallback((value: string, fieldOnChange: (...event: any[]) => void) => {
-    fieldOnChange(value);
-    onChange?.(value);
-  }, [onChange]);
+  const handleValueChange = useCallback(
+    (value: string, fieldOnChange: (...event: any[]) => void) => {
+      fieldOnChange(value);
+      onChange?.(value);
+    },
+    [onChange],
+  );
 
   return (
     <FormField
@@ -65,7 +68,9 @@ const RadioFormGroupComponent = ({
           <FormControl>
             <RadioGroup
               disabled={isDisabled}
-              onValueChange={(value) => handleValueChange(value, field.onChange)}
+              onValueChange={(value) =>
+                handleValueChange(value, field.onChange)
+              }
               defaultValue={
                 typeof field.value === "object"
                   ? JSON.stringify(field.value)
@@ -99,7 +104,7 @@ const RadioFormGroupComponent = ({
                     />
                   </FormControl>
                   <FormLabel
-                    className="text-slate-700 flex w-full items-center font-normal"
+                    className="flex w-full items-center font-normal text-slate-700"
                     htmlFor={`${name}_${index}`}
                   >
                     {child}
@@ -116,14 +121,17 @@ const RadioFormGroupComponent = ({
 };
 
 // Мемоизация - используется для выбора способа оплаты, доставки
-export const RadioFormGroup = memo(RadioFormGroupComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.name === nextProps.name &&
-    prevProps.label === nextProps.label &&
-    prevProps.isRequired === nextProps.isRequired &&
-    prevProps.isDisabled === nextProps.isDisabled &&
-    prevProps.isSrOnlyLabel === nextProps.isSrOnlyLabel &&
-    prevProps.options.length === nextProps.options.length &&
-    prevProps.className === nextProps.className
-  );
-});
+export const RadioFormGroup = memo(
+  RadioFormGroupComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.name === nextProps.name &&
+      prevProps.label === nextProps.label &&
+      prevProps.isRequired === nextProps.isRequired &&
+      prevProps.isDisabled === nextProps.isDisabled &&
+      prevProps.isSrOnlyLabel === nextProps.isSrOnlyLabel &&
+      prevProps.options.length === nextProps.options.length &&
+      prevProps.className === nextProps.className
+    );
+  },
+);

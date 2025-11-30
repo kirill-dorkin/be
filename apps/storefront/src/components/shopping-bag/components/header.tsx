@@ -20,24 +20,25 @@ const HeaderComponent = ({
 
   // Мемоизация форматированной цены
   const formattedPrice = useMemo(
-    () => totalPrice ? formatter.price({ amount: totalPrice.amount }) : null,
-    [totalPrice, formatter]
+    () => (totalPrice ? formatter.price({ amount: totalPrice.amount }) : null),
+    [totalPrice, formatter],
   );
 
   return (
     <div
-      className={cn("flex items-center justify-between border-b border-border/60 pb-4", {
-        "justify-start gap-2 md:justify-between": totalPrice,
-      })}
+      className={cn(
+        "border-border/60 flex items-center justify-between border-b pb-4",
+        {
+          "justify-start gap-2 md:justify-between": totalPrice,
+        },
+      )}
     >
       <h1 className={headerTextClass}>{header}</h1>
       {totalPrice && (
         <p className={cn("text-muted-foreground", "block md:hidden")}>•</p>
       )}
       {totalPrice && (
-        <p className={cn(headerTextClass, "text-primary")}>
-          {formattedPrice}
-        </p>
+        <p className={cn(headerTextClass, "text-primary")}>{formattedPrice}</p>
       )}
     </div>
   );

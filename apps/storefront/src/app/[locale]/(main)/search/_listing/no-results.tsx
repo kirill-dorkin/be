@@ -4,7 +4,7 @@ export const NoResults = async () => {
   const t = await getTranslations();
 
   return (
-    <h2 className="text-slate-700 dark:text-primary text-xl">
+    <h2 className="dark:text-primary text-xl text-slate-700">
       {t("search.no-results")}
     </h2>
   );

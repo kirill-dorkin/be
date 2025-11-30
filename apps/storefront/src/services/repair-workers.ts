@@ -106,7 +106,7 @@ export const fetchRepairWorkers = async () => {
     };
   };
 
-  const edges = (data.customers?.edges ?? []);
+  const edges = data.customers?.edges ?? [];
 
   return edges
     .filter((edge): edge is WorkerEdge => Boolean(edge?.node))

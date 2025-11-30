@@ -30,46 +30,54 @@ const SearchSortByComponent = ({
 
   // Мемоизация defaultValue
   const defaultValue = useMemo(
-    () => options.find(
-      (option) =>
-        option.value === searchParams["sortBy"] ||
-        option.value === DEFAULT_SORT_BY,
-    )?.value,
-    [options, searchParams]
+    () =>
+      options.find(
+        (option) =>
+          option.value === searchParams["sortBy"] ||
+          option.value === DEFAULT_SORT_BY,
+      )?.value,
+    [options, searchParams],
   );
 
   // Мемоизация обработчика изменения
-  const handleValueChange = useCallback((value: string) => {
-    const params = new URLSearchParams(searchParams);
+  const handleValueChange = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(searchParams);
 
-    // Clear the pagination
-    params.delete("after");
-    params.delete("before");
-    params.delete("page");
+      // Clear the pagination
+      params.delete("after");
+      params.delete("before");
+      params.delete("page");
 
-    if (value === DEFAULT_SORT_BY) {
-      params.delete("sortBy");
-    } else {
-      params.set("sortBy", value);
-    }
+      if (value === DEFAULT_SORT_BY) {
+        params.delete("sortBy");
+      } else {
+        params.set("sortBy", value);
+      }
 
-    const queryString = params.toString();
-    const targetPath = queryString
-      ? `${paths.search.asPath()}?${queryString}`
-      : paths.search.asPath();
+      const queryString = params.toString();
+      const targetPath = queryString
+        ? `${paths.search.asPath()}?${queryString}`
+        : paths.search.asPath();
 
-    router.push(targetPath);
-  }, [router, searchParams]);
+      router.push(targetPath);
+    },
+    [router, searchParams],
+  );
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-slate-700 dark:text-primary text-sm font-medium">
+      <span className="dark:text-primary text-sm font-medium text-slate-700">
         {t("search.sort-by")}
       </span>
 
       <div suppressHydrationWarning>
         <Select defaultValue={defaultValue} onValueChange={handleValueChange}>
-          <SelectTrigger className="min-w-40" aria-label={t("search.sort-by")} suppressHydrationWarning>
+          <SelectTrigger
+            className="min-w-40"
+            aria-label={t("search.sort-by")}
+            suppressHydrationWarning
+          >
             <SelectValue placeholder={t("search.sort-by")} />
           </SelectTrigger>
           <SelectContent>
@@ -88,9 +96,12 @@ const SearchSortByComponent = ({
 };
 
 // Мемоизация - используется на всех страницах поиска
-export const SearchSortBy = memo(SearchSortByComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.searchParams["sortBy"] === nextProps.searchParams["sortBy"] &&
-    prevProps.options.length === nextProps.options.length
-  );
-});
+export const SearchSortBy = memo(
+  SearchSortByComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.searchParams["sortBy"] === nextProps.searchParams["sortBy"] &&
+      prevProps.options.length === nextProps.options.length
+    );
+  },
+);

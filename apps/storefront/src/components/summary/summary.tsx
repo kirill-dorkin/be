@@ -17,7 +17,10 @@ export const Summary = async ({
 
   return (
     <ShoppingBag>
-      <ShoppingBag.Header header={t("your-bag")} totalPrice={checkout.totalPrice.gross} />
+      <ShoppingBag.Header
+        header={t("your-bag")}
+        totalPrice={checkout.totalPrice.gross}
+      />
       <ShoppingBag.Lines
         lines={checkout.lines}
         isLinesEditable={false}

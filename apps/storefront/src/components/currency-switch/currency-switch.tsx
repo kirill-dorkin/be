@@ -10,7 +10,11 @@ import { cn } from "@/lib/utils";
 import { useCurrentRegion } from "@/regions/client";
 
 // Lazy loading модального окна для уменьшения initial bundle size
-const CurrencySwitchModal = lazy(() => import("./currency-modal").then((mod) => ({ default: mod.CurrencySwitchModal })));
+const CurrencySwitchModal = lazy(() =>
+  import("./currency-modal").then((mod) => ({
+    default: mod.CurrencySwitchModal,
+  })),
+);
 
 const CurrencySwitchComponent = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -19,17 +23,21 @@ const CurrencySwitchComponent = () => {
   const region = useCurrentRegion();
 
   // Мемоизация флагов и значений
-  const isSom = useMemo(() => region.market.currency === "KGS", [region.market.currency]);
+  const isSom = useMemo(
+    () => region.market.currency === "KGS",
+    [region.market.currency],
+  );
   const currencySymbol = useMemo(
-    () => isSom ? null : getCurrencySymbol(region.market.currency),
-    [isSom, region.market.currency]
+    () => (isSom ? null : getCurrencySymbol(region.market.currency)),
+    [isSom, region.market.currency],
   );
   const symbolClassName = useMemo(
-    () => cn(
-      "text-xl font-bold leading-none",
-      currencySymbol === "с" && "text-[1.55rem]",
-    ),
-    [currencySymbol]
+    () =>
+      cn(
+        "text-xl font-bold leading-none",
+        currencySymbol === "с" && "text-[1.55rem]",
+      ),
+    [currencySymbol],
   );
 
   // Мемоизация обработчиков

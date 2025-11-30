@@ -36,57 +36,63 @@ const DeliveryMethodFormComponent = ({ checkout }: { checkout: Checkout }) => {
   // Мемоизация флага disabled
   const isDisabled = useMemo(
     () => isRedirecting || form.formState?.isSubmitting,
-    [isRedirecting, form.formState?.isSubmitting]
+    [isRedirecting, form.formState?.isSubmitting],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit = useCallback(async (deliveryMethod: FormSchema) => {
-    const result = await updateDeliveryMethod({
-      checkout,
-      deliveryMethodId: deliveryMethod.deliveryMethodId,
-    });
-
-    if (result.ok) {
-      push(result.data.redirectUrl);
-
-      return;
-    }
-
-    result.errors.forEach(({ field, code }) => {
-      if (field) {
-        form.setError(field as keyof FormSchema, {
-          message: t(`errors.${code}`),
-        });
-      } else if (isGlobalError(field)) {
-        form.setError("root.serverError", {
-          message: t(`errors.${code}`),
-        });
-      }
-    });
-  }, [checkout, push, form, t]);
-
-  // Мемоизация поля формы
-  const deliveryMethodFormField = useMemo(() => ({
-    label: t("delivery-method.delivery-method"),
-    name: DELIVERY_METHOD_ID,
-    isSrOnlyLabel: true,
-    options: checkout.shippingMethods.map((method) => {
-      const shippingMethodPrice = formatter.price({
-        amount: method.price.amount,
+  const handleSubmit = useCallback(
+    async (deliveryMethod: FormSchema) => {
+      const result = await updateDeliveryMethod({
+        checkout,
+        deliveryMethodId: deliveryMethod.deliveryMethodId,
       });
 
-      return {
-        label: method.name,
-        value: method.id,
-        description: shippingMethodPrice,
-      };
+      if (result.ok) {
+        push(result.data.redirectUrl);
+
+        return;
+      }
+
+      result.errors.forEach(({ field, code }) => {
+        if (field) {
+          form.setError(field as keyof FormSchema, {
+            message: t(`errors.${code}`),
+          });
+        } else if (isGlobalError(field)) {
+          form.setError("root.serverError", {
+            message: t(`errors.${code}`),
+          });
+        }
+      });
+    },
+    [checkout, push, form, t],
+  );
+
+  // Мемоизация поля формы
+  const deliveryMethodFormField = useMemo(
+    () => ({
+      label: t("delivery-method.delivery-method"),
+      name: DELIVERY_METHOD_ID,
+      isSrOnlyLabel: true,
+      options: checkout.shippingMethods.map((method) => {
+        const shippingMethodPrice = formatter.price({
+          amount: method.price.amount,
+        });
+
+        return {
+          label: method.name,
+          value: method.id,
+          description: shippingMethodPrice,
+        };
+      }),
     }),
-  }), [checkout.shippingMethods, formatter, t]);
+    [checkout.shippingMethods, formatter, t],
+  );
 
   // Мемоизация кода ошибки сервера
   const serverErrorCode = useMemo(
     () => form.formState.errors.root?.serverError?.message,
-    [form.formState.errors.root?.serverError?.message]
+    [form.formState.errors.root?.serverError?.message],
   );
 
   // Проверка: если нет методов доставки
@@ -155,6 +161,9 @@ const DeliveryMethodFormComponent = ({ checkout }: { checkout: Checkout }) => {
 };
 
 // Мемоизация - форма выбора метода доставки
-export const DeliveryMethodForm = memo(DeliveryMethodFormComponent, (prevProps, nextProps) => {
-  return prevProps.checkout.id === nextProps.checkout.id;
-});
+export const DeliveryMethodForm = memo(
+  DeliveryMethodFormComponent,
+  (prevProps, nextProps) => {
+    return prevProps.checkout.id === nextProps.checkout.id;
+  },
+);

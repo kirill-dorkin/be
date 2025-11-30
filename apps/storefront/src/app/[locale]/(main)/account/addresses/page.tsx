@@ -116,7 +116,7 @@ export default async function Page(props: PageProps) {
   return (
     <div className="flex flex-col gap-8 text-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-slate-700 dark:text-primary text-2xl">
+        <h2 className="dark:text-primary text-2xl text-slate-700">
           {t("account.addresses")}
         </h2>
         {!noAddresses && (
@@ -166,9 +166,12 @@ export default async function Page(props: PageProps) {
       )}
       {sortedAddresses.map(
         ({ isDefaultBillingAddress, isDefaultShippingAddress, ...address }) => (
-          <div key={address.id} className="text-slate-700 dark:text-primary space-y-6">
+          <div
+            key={address.id}
+            className="dark:text-primary space-y-6 text-slate-700"
+          >
             <hr />
-            <div className="grid grid-cols-1 gap-4 rounded-2xl border border-slate-100/80 bg-white/90 p-4 dark:border-slate-800 dark:bg-slate-900/40 sm:grid-cols-12 sm:gap-2 sm:border-0 sm:bg-transparent sm:p-0">
+            <div className="grid grid-cols-1 gap-4 rounded-2xl border border-slate-100/80 bg-white/90 p-4 sm:grid-cols-12 sm:gap-2 sm:border-0 sm:bg-transparent sm:p-0 dark:border-slate-800 dark:bg-slate-900/40">
               <div className="sm:col-span-7 lg:col-span-6">
                 {displayFormattedAddressLines({
                   addressId: address.id,

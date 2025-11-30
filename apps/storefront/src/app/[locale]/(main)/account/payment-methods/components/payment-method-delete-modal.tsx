@@ -79,7 +79,7 @@ const PaymentMethodDeleteModalComponent = ({
     <Dialog open onOpenChange={handleClose}>
       <DialogContent className="gap-6" withCloseButton={!isProcessing}>
         <DialogHeader>
-          <DialogTitle className="text-slate-700 dark:text-primary mb-2">
+          <DialogTitle className="dark:text-primary mb-2 text-slate-700">
             {t("common.delete")} {t(TYPE_MESSAGE_MAPPING[type])}
           </DialogTitle>
 
@@ -89,7 +89,7 @@ const PaymentMethodDeleteModalComponent = ({
         </DialogHeader>
 
         <p
-          className="text-slate-700 dark:text-primary whitespace-pre-wrap text-sm leading-5"
+          className="dark:text-primary whitespace-pre-wrap text-sm leading-5 text-slate-700"
           dangerouslySetInnerHTML={{
             __html: formatPaymentMethod({ t, method }),
           }}
@@ -117,9 +117,12 @@ const PaymentMethodDeleteModalComponent = ({
 };
 
 // Мемоизация - модальное окно удаления метода оплаты
-export const PaymentMethodDeleteModal = memo(PaymentMethodDeleteModalComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.method.id === nextProps.method.id &&
-    prevProps.customerId === nextProps.customerId
-  );
-});
+export const PaymentMethodDeleteModal = memo(
+  PaymentMethodDeleteModalComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.method.id === nextProps.method.id &&
+      prevProps.customerId === nextProps.customerId
+    );
+  },
+);

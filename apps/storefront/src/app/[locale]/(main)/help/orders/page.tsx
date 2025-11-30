@@ -17,9 +17,7 @@ type PageProps = {
   params: Promise<{ locale: SupportedLocale }>;
 };
 
-export async function generateMetadata(
-  _props: PageProps,
-): Promise<Metadata> {
+export async function generateMetadata(_props: PageProps): Promise<Metadata> {
   const { locale } = await _props.params;
   const t = await getTranslations({
     locale,
@@ -75,7 +73,7 @@ export default async function HelpOrdersPage(props: PageProps) {
           const Icon = section.icon;
 
           return (
-            <Card key={section.title} className="h-full border-border/70">
+            <Card key={section.title} className="border-border/70 h-full">
               <CardHeader className="space-y-4">
                 <span className="bg-primary/10 text-primary inline-flex h-12 w-12 items-center justify-center rounded-full">
                   <Icon className="h-6 w-6" aria-hidden />
@@ -85,7 +83,7 @@ export default async function HelpOrdersPage(props: PageProps) {
                   {section.description}
                 </p>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
+              <CardContent className="text-muted-foreground space-y-3 text-sm">
                 <ul className="space-y-2">
                   {section.items.map((item) => (
                     <li key={item} className="leading-relaxed">
@@ -99,14 +97,14 @@ export default async function HelpOrdersPage(props: PageProps) {
         })}
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+      <section className="border-primary/20 bg-primary/5 space-y-4 rounded-2xl border p-6">
         <h2 className="text-primary text-xl font-semibold">
           {t("nextSteps.title")}
         </h2>
         <p className="text-muted-foreground text-sm">
           {t("nextSteps.description")}
         </p>
-        <ul className="space-y-2 text-sm text-muted-foreground">
+        <ul className="text-muted-foreground space-y-2 text-sm">
           {nextSteps.map((item) => (
             <li key={item}>• {item}</li>
           ))}

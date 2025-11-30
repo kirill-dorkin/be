@@ -12,10 +12,7 @@ export const applyFormSchema = z.object({
     .min(2, "errors.lastName.min")
     .max(120, "errors.lastName.max"),
   email: z.string().email("errors.email.invalid"),
-  phone: z
-    .string()
-    .min(5, "errors.phone.min")
-    .max(40, "errors.phone.max"),
+  phone: z.string().min(5, "errors.phone.min").max(40, "errors.phone.max"),
   password: z
     .string()
     .min(6, "errors.password.min")

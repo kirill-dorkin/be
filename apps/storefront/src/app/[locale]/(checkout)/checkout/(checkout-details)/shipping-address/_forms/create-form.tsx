@@ -66,34 +66,35 @@ const CreateShippingAddressFormComponent = ({
   // Мемоизация флага canProceed
   const canProceed = useMemo(
     () => !form.formState.isSubmitting && !isCountryChanging && !isRedirecting,
-    [form.formState.isSubmitting, isCountryChanging, isRedirecting]
+    [form.formState.isSubmitting, isCountryChanging, isRedirecting],
   );
 
   // Мемоизация обработчика submit
-  const handleSubmit: SubmitHandler<CreateShippingAddressSchema> = useCallback(async (
-    data,
-  ) => {
-    const result = await createCheckoutShippingAddress({
-      checkoutId: checkout.id,
-      input: data,
-    });
+  const handleSubmit: SubmitHandler<CreateShippingAddressSchema> = useCallback(
+    async (data) => {
+      const result = await createCheckoutShippingAddress({
+        checkoutId: checkout.id,
+        input: data,
+      });
 
-    if (result.ok) {
-      push(paths.checkout.deliveryMethod.asPath());
+      if (result.ok) {
+        push(paths.checkout.deliveryMethod.asPath());
 
-      return;
-    }
-
-    result.errors.map(({ field, code }) => {
-      if (isGlobalError(field)) {
-        toast({ variant: "destructive", description: t(`errors.${code}`) });
-      } else {
-        form.setError(field as keyof UpdateShippingAddressSchema, {
-          message: t(`errors.${code}`),
-        });
+        return;
       }
-    });
-  }, [checkout.id, push, toast, t, form]);
+
+      result.errors.map(({ field, code }) => {
+        if (isGlobalError(field)) {
+          toast({ variant: "destructive", description: t(`errors.${code}`) });
+        } else {
+          form.setError(field as keyof UpdateShippingAddressSchema, {
+            message: t(`errors.${code}`),
+          });
+        }
+      });
+    },
+    [checkout.id, push, toast, t, form],
+  );
 
   return (
     <Form {...form}>
@@ -133,11 +134,14 @@ const CreateShippingAddressFormComponent = ({
 };
 
 // Мемоизация - форма создания адреса доставки в checkout
-export const CreateShippingAddressForm = memo(CreateShippingAddressFormComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.checkout.id === nextProps.checkout.id &&
-    prevProps.addressFormRows === nextProps.addressFormRows &&
-    prevProps.countryCode === nextProps.countryCode &&
-    prevProps.shouldSaveForFuture === nextProps.shouldSaveForFuture
-  );
-});
+export const CreateShippingAddressForm = memo(
+  CreateShippingAddressFormComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.checkout.id === nextProps.checkout.id &&
+      prevProps.addressFormRows === nextProps.addressFormRows &&
+      prevProps.countryCode === nextProps.countryCode &&
+      prevProps.shouldSaveForFuture === nextProps.shouldSaveForFuture
+    );
+  },
+);

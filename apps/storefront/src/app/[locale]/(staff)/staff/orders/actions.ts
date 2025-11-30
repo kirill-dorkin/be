@@ -25,9 +25,8 @@ const buildLocalizedPath = (locale: SupportedLocale, path: string) => {
     return path;
   }
 
-  const prefix = localePrefixes[
-    locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
-  ];
+  const prefix =
+    localePrefixes[locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>];
 
   return `${prefix}${path}`;
 };
@@ -65,8 +64,7 @@ const assertRepairStaff = async () => {
   return {
     id: user.id,
     email: user.email,
-    name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() ||
-      user.email,
+    name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email,
   };
 };
 
@@ -121,9 +119,7 @@ const addOrderNote = async (
 };
 
 const revalidateStaffPath = (locale: SupportedLocale) => {
-  revalidatePath(
-    buildLocalizedPath(locale, paths.staff.orders.asPath()),
-  );
+  revalidatePath(buildLocalizedPath(locale, paths.staff.orders.asPath()));
 };
 
 export const claimRepairOrder = async (
@@ -134,9 +130,12 @@ export const claimRepairOrder = async (
 
   if (!staffUser) {
     nextRedirect(
-      buildLocalizedPath(locale, paths.signIn.asPath({
-        query: { redirectUrl: paths.staff.orders.asPath() },
-      })),
+      buildLocalizedPath(
+        locale,
+        paths.signIn.asPath({
+          query: { redirectUrl: paths.staff.orders.asPath() },
+        }),
+      ),
     );
   }
 
@@ -190,9 +189,12 @@ export const updateRepairStage = async (
 
   if (!staffUser) {
     nextRedirect(
-      buildLocalizedPath(locale, paths.signIn.asPath({
-        query: { redirectUrl: paths.staff.orders.asPath() },
-      })),
+      buildLocalizedPath(
+        locale,
+        paths.signIn.asPath({
+          query: { redirectUrl: paths.staff.orders.asPath() },
+        }),
+      ),
     );
   }
 
@@ -231,11 +233,7 @@ export const updateRepairStage = async (
     return { ok: false };
   }
 
-  await addOrderNote(
-    accessToken,
-    orderId,
-    `Этап ремонта обновлён: ${stage}.`,
-  );
+  await addOrderNote(accessToken, orderId, `Этап ремонта обновлён: ${stage}.`);
 
   revalidateStaffPath(locale);
 

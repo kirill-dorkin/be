@@ -3,7 +3,14 @@
 import type { ImageProps } from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { memo, type PropsWithChildren, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  memo,
+  type PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 
 import type { SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
@@ -19,14 +26,14 @@ export const ProductName = ({ children }: PropsWithChildren) => {
   const name = typeof children === "string" ? children : String(children);
 
   return (
-    <h2 className="line-clamp-1 overflow-hidden text-ellipsis text-left text-slate-700 dark:text-primary break-words">
+    <h2 className="dark:text-primary line-clamp-1 overflow-hidden text-ellipsis break-words text-left text-slate-700">
       {formatProductName(name)}
     </h2>
   );
 };
 
 export const ProductThumbnail = ({ alt, ...props }: ImageProps) => (
-  <div className="relative aspect-square overflow-hidden rounded-2xl border border-border/60 bg-muted/30 p-3 shadow-sm transition-all dark:border-white/10 dark:bg-muted/20 dark:shadow-[0_12px_32px_rgba(15,23,42,0.28)] group-hover:border-border/80 dark:group-hover:border-white/20">
+  <div className="border-border/60 bg-muted/30 dark:bg-muted/20 group-hover:border-border/80 relative aspect-square overflow-hidden rounded-2xl border p-3 shadow-sm transition-all dark:border-white/10 dark:shadow-[0_12px_32px_rgba(15,23,42,0.28)] dark:group-hover:border-white/20">
     <div className="relative h-full w-full">
       <OptimizedImage
         alt={alt}
@@ -49,7 +56,14 @@ type Props = {
 } & Partial<Pick<ImageProps, "height" | "width" | "sizes">>;
 
 const SearchProductCardComponent = ({
-  product: { slug, thumbnail, name, price, undiscountedPrice, metadata: _metadata },
+  product: {
+    slug,
+    thumbnail,
+    name,
+    price,
+    undiscountedPrice,
+    metadata: _metadata,
+  },
   sizes,
 }: Props) => {
   const t = useTranslations();
@@ -114,9 +128,19 @@ const SearchProductCardComponent = ({
                   "(max-width: 720px) 100vw, (max-width: 1024px) 50vw, (max-width: 1294px) 33vw, 25vw"
                 }
               />
-              <div className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/90 px-2.5 py-1 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur dark:border-white/20 dark:bg-muted/80">
-                <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <div className="border-border/60 bg-muted/90 text-muted-foreground dark:bg-muted/80 absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-medium shadow-sm backdrop-blur dark:border-white/20">
+                <svg
+                  className="h-2.5 w-2.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {t("products.internet-image-label")}
               </div>
@@ -135,7 +159,7 @@ const SearchProductCardComponent = ({
         <div>
           <ProductName>{name}</ProductName>
           <Price
-            className="text-slate-700 dark:text-primary"
+            className="dark:text-primary text-slate-700"
             price={price}
             undiscountedPrice={undiscountedPrice}
           />
@@ -146,15 +170,19 @@ const SearchProductCardComponent = ({
 };
 
 // Мемоизация компонента для оптимизации ре-рендеров
-export const SearchProductCard = memo(SearchProductCardComponent, (prevProps, nextProps) => {
-  // Пересоздаем только если изменились ключевые данные продукта
-  return (
-    prevProps.product.slug === nextProps.product.slug &&
-    prevProps.product.price.amount === nextProps.product.price.amount &&
-    prevProps.product.undiscountedPrice?.amount === nextProps.product.undiscountedPrice?.amount &&
-    prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
-  );
-});
+export const SearchProductCard = memo(
+  SearchProductCardComponent,
+  (prevProps, nextProps) => {
+    // Пересоздаем только если изменились ключевые данные продукта
+    return (
+      prevProps.product.slug === nextProps.product.slug &&
+      prevProps.product.price.amount === nextProps.product.price.amount &&
+      prevProps.product.undiscountedPrice?.amount ===
+        nextProps.product.undiscountedPrice?.amount &&
+      prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
+    );
+  },
+);
 
 SearchProductCard.displayName = "SearchProductCard";
 
@@ -214,7 +242,7 @@ const CompactProductCardComponent = ({
       >
         <div className="relative">
           {thumbnail ? (
-            <div className="relative aspect-square overflow-hidden rounded-xl border border-border/60 bg-muted/30 p-2 shadow-sm transition-all dark:border-white/10 dark:bg-muted/20 dark:shadow-[0_8px_24px_rgba(15,23,42,0.22)] group-hover:border-border/80 dark:group-hover:border-white/20">
+            <div className="border-border/60 bg-muted/30 dark:bg-muted/20 group-hover:border-border/80 relative aspect-square overflow-hidden rounded-xl border p-2 shadow-sm transition-all dark:border-white/10 dark:shadow-[0_8px_24px_rgba(15,23,42,0.22)] dark:group-hover:border-white/20">
               <div className="relative h-full w-full">
                 <OptimizedImage
                   alt={t("products.image-alt", { productName: name })}
@@ -245,11 +273,11 @@ const CompactProductCardComponent = ({
         </div>
 
         <div className="px-0.5">
-          <h3 className="line-clamp-2 text-sm text-slate-700 dark:text-primary break-words">
+          <h3 className="dark:text-primary line-clamp-2 break-words text-sm text-slate-700">
             {formatProductName(name)}
           </h3>
           <Price
-            className="text-sm text-slate-700 dark:text-primary"
+            className="dark:text-primary text-sm text-slate-700"
             price={price}
             undiscountedPrice={undiscountedPrice}
           />
@@ -259,14 +287,18 @@ const CompactProductCardComponent = ({
   );
 };
 
-export const CompactProductCard = memo(CompactProductCardComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.product.slug === nextProps.product.slug &&
-    prevProps.product.price.amount === nextProps.product.price.amount &&
-    prevProps.product.undiscountedPrice?.amount === nextProps.product.undiscountedPrice?.amount &&
-    prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
-  );
-});
+export const CompactProductCard = memo(
+  CompactProductCardComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.product.slug === nextProps.product.slug &&
+      prevProps.product.price.amount === nextProps.product.price.amount &&
+      prevProps.product.undiscountedPrice?.amount ===
+        nextProps.product.undiscountedPrice?.amount &&
+      prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
+    );
+  },
+);
 
 CompactProductCard.displayName = "CompactProductCard";
 
@@ -318,14 +350,14 @@ const ListProductCardComponent = ({
   return (
     <article ref={cardRef}>
       <LocalizedLink
-        className="group flex gap-4 rounded-xl border border-border/60 bg-card p-3 shadow-sm transition-all hover:border-border/80 hover:shadow-md dark:border-white/10 dark:bg-card/80 dark:shadow-[0_8px_24px_rgba(15,23,42,0.22)] dark:hover:border-white/20 md:gap-6 md:p-4"
+        className="border-border/60 bg-card hover:border-border/80 dark:bg-card/80 group flex gap-4 rounded-xl border p-3 shadow-sm transition-all hover:shadow-md md:gap-6 md:p-4 dark:border-white/10 dark:shadow-[0_8px_24px_rgba(15,23,42,0.22)] dark:hover:border-white/20"
         title={t(`search.go-to-product`, { name })}
         href={productHref}
         onPointerEnter={prefetchProduct}
       >
         <div className="relative w-24 shrink-0 md:w-32">
           {thumbnail ? (
-            <div className="relative aspect-square overflow-hidden rounded-lg border border-border/60 bg-muted/30 p-2 dark:border-white/10 dark:bg-muted/20">
+            <div className="border-border/60 bg-muted/30 dark:bg-muted/20 relative aspect-square overflow-hidden rounded-lg border p-2 dark:border-white/10">
               <OptimizedImage
                 alt={t("products.image-alt", { productName: name })}
                 aria-hidden={true}
@@ -351,13 +383,13 @@ const ListProductCardComponent = ({
 
         <div className="flex flex-1 flex-col justify-between gap-2 py-1">
           <div>
-            <h3 className="line-clamp-2 text-base font-medium text-slate-700 dark:text-primary break-words md:text-lg">
+            <h3 className="dark:text-primary line-clamp-2 break-words text-base font-medium text-slate-700 md:text-lg">
               {formatProductName(name)}
             </h3>
           </div>
           <div className="flex items-center justify-between">
             <Price
-              className="text-base text-slate-700 dark:text-primary md:text-lg"
+              className="dark:text-primary text-base text-slate-700 md:text-lg"
               price={price}
               undiscountedPrice={undiscountedPrice}
             />
@@ -368,14 +400,18 @@ const ListProductCardComponent = ({
   );
 };
 
-export const ListProductCard = memo(ListProductCardComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.product.slug === nextProps.product.slug &&
-    prevProps.product.price.amount === nextProps.product.price.amount &&
-    prevProps.product.undiscountedPrice?.amount === nextProps.product.undiscountedPrice?.amount &&
-    prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
-  );
-});
+export const ListProductCard = memo(
+  ListProductCardComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.product.slug === nextProps.product.slug &&
+      prevProps.product.price.amount === nextProps.product.price.amount &&
+      prevProps.product.undiscountedPrice?.amount ===
+        nextProps.product.undiscountedPrice?.amount &&
+      prevProps.product.thumbnail?.url === nextProps.product.thumbnail?.url
+    );
+  },
+);
 
 ListProductCard.displayName = "ListProductCard";
 
@@ -386,7 +422,7 @@ const ListProductThumbnailFallback = ({
   const initial = productName?.trim().charAt(0)?.toUpperCase() ?? "•";
 
   return (
-    <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border border-border/60 bg-card dark:border-white/10 dark:bg-card/80">
+    <div className="border-border/60 bg-card dark:bg-card/80 relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border dark:border-white/10">
       <span
         className={`${palette.accentText} inline-flex h-12 w-12 items-center justify-center rounded-full ${palette.circleBg} text-lg font-semibold`}
         aria-hidden
@@ -405,10 +441,10 @@ const CompactProductThumbnailFallback = ({
   const initial = productName?.trim().charAt(0)?.toUpperCase() ?? "•";
 
   return (
-    <div className="relative flex aspect-square flex-col justify-between overflow-hidden rounded-xl border border-border/60 bg-card p-3 shadow-sm dark:border-white/10 dark:bg-card/80 dark:shadow-[0_8px_24px_rgba(15,23,42,0.26)]">
+    <div className="border-border/60 bg-card dark:bg-card/80 relative flex aspect-square flex-col justify-between overflow-hidden rounded-xl border p-3 shadow-sm dark:border-white/10 dark:shadow-[0_8px_24px_rgba(15,23,42,0.26)]">
       <div className="relative flex h-full flex-col justify-between">
         <div className="flex items-start justify-between">
-          <span className="inline-flex items-center rounded-full border border-border/60 bg-muted px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.2em] text-muted-foreground shadow-sm backdrop-blur dark:border-white/10 dark:bg-muted/70 dark:text-slate-200">
+          <span className="border-border/60 bg-muted text-muted-foreground dark:bg-muted/70 inline-flex items-center rounded-full border px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.2em] shadow-sm backdrop-blur dark:border-white/10 dark:text-slate-200">
             {title}
           </span>
         </div>
@@ -459,9 +495,7 @@ const getCardPalette = (seed: string | undefined) => {
     };
   }
 
-  const sum = seed
-    .split("")
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const sum = seed.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const index = sum % badgePalette.length;
 
   return {
@@ -486,14 +520,10 @@ const ProductThumbnailFallback = ({
   const initial = productName?.trim().charAt(0)?.toUpperCase() ?? "•";
 
   return (
-    <div
-      className="relative flex aspect-square flex-col justify-between overflow-hidden rounded-2xl border border-border/60 bg-card p-6 shadow-sm dark:border-white/10 dark:bg-card/80 dark:shadow-[0_12px_32px_rgba(15,23,42,0.32)]"
-    >
+    <div className="border-border/60 bg-card dark:bg-card/80 relative flex aspect-square flex-col justify-between overflow-hidden rounded-2xl border p-6 shadow-sm dark:border-white/10 dark:shadow-[0_12px_32px_rgba(15,23,42,0.32)]">
       <div className="relative flex h-full flex-col justify-between">
         <div className="flex items-start justify-between">
-          <span
-            className="inline-flex items-center rounded-full border border-border/60 bg-muted px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground shadow-sm backdrop-blur dark:border-white/10 dark:bg-muted/70 dark:text-slate-200"
-          >
+          <span className="border-border/60 bg-muted text-muted-foreground dark:bg-muted/70 inline-flex items-center rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] shadow-sm backdrop-blur dark:border-white/10 dark:text-slate-200">
             {title}
           </span>
         </div>
@@ -505,7 +535,7 @@ const ProductThumbnailFallback = ({
           >
             {initial}
           </span>
-          <p className="text-sm text-muted-foreground dark:text-slate-300">
+          <p className="text-muted-foreground text-sm dark:text-slate-300">
             {subtitle}
           </p>
         </div>

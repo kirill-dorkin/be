@@ -13,9 +13,8 @@ const buildLocalizedPath = (locale: SupportedLocale, path: string) => {
     return path;
   }
 
-  const prefix = localePrefixes[
-    locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>
-  ];
+  const prefix =
+    localePrefixes[locale as Exclude<SupportedLocale, typeof DEFAULT_LOCALE>];
 
   return `${prefix}${path}`;
 };

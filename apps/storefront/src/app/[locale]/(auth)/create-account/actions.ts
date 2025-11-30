@@ -121,7 +121,8 @@ export async function registerAccount(values: FormSchema) {
       {
         code: "LOGIN_AFTER_REGISTER_ERROR",
         field: "email",
-        message: "Account created successfully, but automatic login failed. Please try logging in manually.",
+        message:
+          "Account created successfully, but automatic login failed. Please try logging in manually.",
       },
     ]);
   }
@@ -131,7 +132,8 @@ export async function registerAccount(values: FormSchema) {
       {
         code: "LOGIN_AFTER_REGISTER_ERROR",
         field: "email",
-        message: "Account created successfully, but redirect failed. Please try logging in.",
+        message:
+          "Account created successfully, but redirect failed. Please try logging in.",
       },
     ]);
   }

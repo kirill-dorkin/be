@@ -39,9 +39,19 @@ const InternetImageBadge = () => {
   const t = useTranslations();
 
   return (
-    <div className="absolute bottom-2 right-2 z-10 inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/90 px-2.5 py-1 text-[10px] font-medium text-muted-foreground shadow-sm backdrop-blur dark:border-white/20 dark:bg-muted/80">
-      <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <div className="border-border/60 bg-muted/90 text-muted-foreground dark:bg-muted/80 absolute bottom-2 right-2 z-10 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-medium shadow-sm backdrop-blur dark:border-white/20">
+      <svg
+        className="h-2.5 w-2.5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
       </svg>
       {t("products.internet-image-label")}
     </div>
@@ -95,7 +105,7 @@ export const ProductMedia = ({
             {activeVariantImages.map(({ url, alt }, i) => (
               <div
                 key={url}
-                className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-6 dark:border-white/10"
+                className="bg-muted/30 dark:bg-muted/20 border-border/40 relative flex aspect-square items-center justify-center rounded-lg border p-6 dark:border-white/10"
               >
                 <OptimizedImage
                   src={url}
@@ -145,7 +155,7 @@ const ProductMediaCarouselComponent = ({
 
   return (
     <div className="hidden flex-col items-center gap-4 md:flex">
-      <div className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-4 dark:border-white/10">
+      <div className="bg-muted/30 dark:bg-muted/20 border-border/40 relative flex aspect-square items-center justify-center rounded-lg border p-4 dark:border-white/10">
         {discountPercent > 0 && <DiscountBadge discount={discountPercent} />}
         {previewImage ? (
           <>
@@ -172,10 +182,11 @@ const ProductMediaCarouselComponent = ({
           <div
             key={image.url}
             className={cn(
-              "bg-muted/30 dark:bg-muted/20 square flex aspect-square w-1/6 min-w-20 items-center justify-center rounded-lg border p-2 transition-all hover:border-foreground/40",
+              "bg-muted/30 dark:bg-muted/20 square hover:border-foreground/40 flex aspect-square w-1/6 min-w-20 items-center justify-center rounded-lg border p-2 transition-all",
               {
                 "border-foreground border-2": previewImage?.url === image.url,
-                "border-border/40 dark:border-white/10": previewImage?.url !== image.url,
+                "border-border/40 dark:border-white/10":
+                  previewImage?.url !== image.url,
               },
             )}
           >
@@ -198,14 +209,17 @@ const ProductMediaCarouselComponent = ({
 };
 
 // Мемоизация карусели - предотвращает ре-рендер при изменении родителя
-const ProductMediaCarousel = memo(ProductMediaCarouselComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.discountPercent === nextProps.discountPercent &&
-    prevProps.altTextFallback === nextProps.altTextFallback &&
-    prevProps.images.length === nextProps.images.length &&
-    prevProps.images.every((img, i) => img.url === nextProps.images[i]?.url)
-  );
-});
+const ProductMediaCarousel = memo(
+  ProductMediaCarouselComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.discountPercent === nextProps.discountPercent &&
+      prevProps.altTextFallback === nextProps.altTextFallback &&
+      prevProps.images.length === nextProps.images.length &&
+      prevProps.images.every((img, i) => img.url === nextProps.images[i]?.url)
+    );
+  },
+);
 
 const MobileOnlyCarouselComponent = (props: {
   altTextFallback?: string;
@@ -217,7 +231,7 @@ const MobileOnlyCarouselComponent = (props: {
       <CarouselContent>
         {props.images?.map(({ url, alt }, i) => (
           <CarouselItem key={url}>
-            <div className="bg-muted/30 dark:bg-muted/20 relative flex aspect-square items-center justify-center rounded-lg border border-border/40 p-4 dark:border-white/10">
+            <div className="bg-muted/30 dark:bg-muted/20 border-border/40 relative flex aspect-square items-center justify-center rounded-lg border p-4 dark:border-white/10">
               {props.discountPercent > 0 && (
                 <DiscountBadge discount={props.discountPercent} />
               )}
@@ -244,11 +258,14 @@ const MobileOnlyCarouselComponent = (props: {
 );
 
 // Мемоизация мобильной карусели для оптимизации
-const MobileOnlyCarousel = memo(MobileOnlyCarouselComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.discountPercent === nextProps.discountPercent &&
-    prevProps.altTextFallback === nextProps.altTextFallback &&
-    prevProps.images.length === nextProps.images.length &&
-    prevProps.images.every((img, i) => img.url === nextProps.images[i]?.url)
-  );
-});
+const MobileOnlyCarousel = memo(
+  MobileOnlyCarouselComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.discountPercent === nextProps.discountPercent &&
+      prevProps.altTextFallback === nextProps.altTextFallback &&
+      prevProps.images.length === nextProps.images.length &&
+      prevProps.images.every((img, i) => img.url === nextProps.images[i]?.url)
+    );
+  },
+);

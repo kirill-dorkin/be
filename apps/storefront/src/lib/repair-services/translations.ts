@@ -144,9 +144,10 @@ const serviceTranslations: TranslationMap = {
   "Замена кулера": {
     en: "Fan replacement",
   },
-  "Замена кулера (чистка, смазка, замена термопасты без учета стоимости кулера)": {
-    en: "Fan replacement (cleaning, lubrication, thermal paste without fan cost)",
-  },
+  "Замена кулера (чистка, смазка, замена термопасты без учета стоимости кулера)":
+    {
+      en: "Fan replacement (cleaning, lubrication, thermal paste without fan cost)",
+    },
   "Поиск и удаление вирусов": {
     en: "Virus removal",
   },
@@ -189,13 +190,13 @@ const serviceTranslations: TranslationMap = {
   "Ремонт платы инвертора": {
     en: "Inverter board repair",
   },
-  "Замена ламп подсветки от 17\" до 21\"": {
+  'Замена ламп подсветки от 17" до 21"': {
     en: 'Backlight lamp replacement 17"–21"',
   },
-  "Замена ламп подсветки от 22\" до 24\"": {
+  'Замена ламп подсветки от 22" до 24"': {
     en: 'Backlight lamp replacement 22"–24"',
   },
-  "Замена ламп подсветки от 27\" и выше": {
+  'Замена ламп подсветки от 27" и выше': {
     en: 'Backlight lamp replacement 27" and up',
   },
   "Прошивка монитора": {
@@ -348,10 +349,8 @@ export const getRepairCategoryLabel = (
   locale: SupportedLocale,
 ) => translateFromMap(categoryTranslations, value, locale);
 
-export const getRepairServiceLabel = (
-  value: string,
-  locale: SupportedLocale,
-) => translateFromMap(serviceTranslations, value, locale);
+export const getRepairServiceLabel = (value: string, locale: SupportedLocale) =>
+  translateFromMap(serviceTranslations, value, locale);
 
 export const getRepairServiceDescription = (
   value: string | undefined,

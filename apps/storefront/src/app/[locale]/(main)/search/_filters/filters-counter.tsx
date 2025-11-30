@@ -12,7 +12,7 @@ export const FiltersCounter = ({
   const activeFiltersCount = getActiveFiltersCount(searchParams, facets);
 
   return (
-    <span className="text-slate-700 dark:text-primary">
+    <span className="dark:text-primary text-slate-700">
       ({activeFiltersCount})
     </span>
   );

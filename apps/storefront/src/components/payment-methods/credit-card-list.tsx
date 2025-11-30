@@ -32,9 +32,12 @@ const CreditCardListComponent = ({ items }: { items: CardPaymentMethod[] }) => {
 };
 
 // Мемоизация - используется на странице оплаты
-export const CreditCardList = memo(CreditCardListComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.items.length === nextProps.items.length &&
-    prevProps.items.every((item, i) => item.id === nextProps.items[i]?.id)
-  );
-});
+export const CreditCardList = memo(
+  CreditCardListComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.items.length === nextProps.items.length &&
+      prevProps.items.every((item, i) => item.id === nextProps.items[i]?.id)
+    );
+  },
+);

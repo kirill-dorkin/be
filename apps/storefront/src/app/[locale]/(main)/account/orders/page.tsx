@@ -34,7 +34,7 @@ export default async function Page() {
 
   return (
     <div className="flex flex-col gap-6 text-sm">
-      <h2 className="text-slate-700 dark:text-primary text-2xl">
+      <h2 className="dark:text-primary text-2xl text-slate-700">
         {t("account.order-history")}
       </h2>
       {orders.length === 0 && (
@@ -59,7 +59,7 @@ export default async function Page() {
           <div className="space-y-6" key={order?.id}>
             <hr />
             <Tabs defaultValue="details" className="space-y-6">
-              <TabsList className="flex w-full flex-wrap gap-2 rounded-2xl bg-muted/40 p-1">
+              <TabsList className="bg-muted/40 flex w-full flex-wrap gap-2 rounded-2xl p-1">
                 <TabsTrigger value="details" className="flex-1 sm:flex-none">
                   {t("order.tabs.details")}
                 </TabsTrigger>

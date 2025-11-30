@@ -1,14 +1,14 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
 import { randomUUID } from "crypto";
+import { revalidateTag } from "next/cache";
 
 import { auth } from "@/auth";
 import { appendProductReview, type ProductReview } from "@/pdp/lib/reviews";
 
 type AddReviewResult =
   | { ok: true; reviews: ProductReview[] }
-  | { ok: false; error: string };
+  | { error: string; ok: false };
 
 export const addProductReviewAction = async ({
   productId,
@@ -28,9 +28,9 @@ export const addProductReviewAction = async ({
   }
 
   const user = session.user as {
+    email?: string | null;
     id?: string;
     name?: string | null;
-    email?: string | null;
   };
 
   const safeRating = Math.min(5, Math.max(1, Math.round(rating)));
@@ -55,6 +55,7 @@ export const addProductReviewAction = async ({
 
   try {
     const reviews = await appendProductReview(productId, review);
+
     revalidateTag(`PRODUCT:${productSlug}`);
 
     return { ok: true, reviews };

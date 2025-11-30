@@ -26,7 +26,7 @@ class AntiCaptchaClient {
 
       if (response.data.errorId > 0) {
         throw new Error(
-          `Anti-Captcha ошибка: ${response.data.errorCode} - ${response.data.errorDescription}`
+          `Anti-Captcha ошибка: ${response.data.errorCode} - ${response.data.errorDescription}`,
         );
       }
 
@@ -34,7 +34,7 @@ class AntiCaptchaClient {
     } catch (error) {
       if (error.response) {
         throw new Error(
-          `Anti-Captcha API ошибка: ${JSON.stringify(error.response.data)}`
+          `Anti-Captcha API ошибка: ${JSON.stringify(error.response.data)}`,
         );
       }
       throw error;
@@ -50,7 +50,7 @@ class AntiCaptchaClient {
   async createRecaptchaV2Task(websiteURL, websiteKey) {
     try {
       console.log(
-        `    🔧 Создаю задачу Anti-Captcha для ${websiteURL.substring(0, 50)}...`
+        `    🔧 Создаю задачу Anti-Captcha для ${websiteURL.substring(0, 50)}...`,
       );
       console.log(`    🔑 Site key: ${websiteKey}`);
 
@@ -66,7 +66,7 @@ class AntiCaptchaClient {
 
       if (response.data.errorId > 0) {
         throw new Error(
-          `Anti-Captcha ошибка: ${response.data.errorCode} - ${response.data.errorDescription}`
+          `Anti-Captcha ошибка: ${response.data.errorCode} - ${response.data.errorDescription}`,
         );
       }
 
@@ -77,7 +77,7 @@ class AntiCaptchaClient {
     } catch (error) {
       if (error.response) {
         throw new Error(
-          `Anti-Captcha API ошибка: ${JSON.stringify(error.response.data)}`
+          `Anti-Captcha API ошибка: ${JSON.stringify(error.response.data)}`,
         );
       }
       throw error;
@@ -98,7 +98,7 @@ class AntiCaptchaClient {
 
       if (response.data.errorId > 0) {
         throw new Error(
-          `Anti-Captcha ошибка: ${response.data.errorCode} - ${response.data.errorDescription}`
+          `Anti-Captcha ошибка: ${response.data.errorCode} - ${response.data.errorDescription}`,
         );
       }
 
@@ -106,7 +106,7 @@ class AntiCaptchaClient {
     } catch (error) {
       if (error.response) {
         throw new Error(
-          `Anti-Captcha API ошибка: ${JSON.stringify(error.response.data)}`
+          `Anti-Captcha API ошибка: ${JSON.stringify(error.response.data)}`,
         );
       }
       throw error;
@@ -125,7 +125,7 @@ class AntiCaptchaClient {
     const checkInterval = 3000; // Проверяем каждые 3 секунды
 
     console.log(
-      `    ⏳ Ожидаю решения капчи (макс. ${maxWaitSeconds} секунд)...`
+      `    ⏳ Ожидаю решения капчи (макс. ${maxWaitSeconds} секунд)...`,
     );
 
     while (Date.now() - startTime < maxWaitMs) {
@@ -140,18 +140,14 @@ class AntiCaptchaClient {
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
         if (elapsed % 10 === 0) {
           // Показываем прогресс каждые 10 секунд
-          console.log(
-            `    ⏳ Прошло ${elapsed}с, всё еще обрабатывается...`
-          );
+          console.log(`    ⏳ Прошло ${elapsed}с, всё еще обрабатывается...`);
         }
       } else {
         throw new Error(`Anti-Captcha неизвестный статус: ${result.status}`);
       }
     }
 
-    throw new Error(
-      `Anti-Captcha не решил капчу за ${maxWaitSeconds} секунд`
-    );
+    throw new Error(`Anti-Captcha не решил капчу за ${maxWaitSeconds} секунд`);
   }
 
   /**
@@ -167,7 +163,7 @@ class AntiCaptchaClient {
 
     if (balance < 0.001) {
       throw new Error(
-        "Недостаточно средств на балансе Anti-Captcha. Пополните баланс на https://anti-captcha.com"
+        "Недостаточно средств на балансе Anti-Captcha. Пополните баланс на https://anti-captcha.com",
       );
     }
 

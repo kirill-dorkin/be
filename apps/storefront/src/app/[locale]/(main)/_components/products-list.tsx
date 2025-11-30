@@ -5,7 +5,11 @@ import { memo, useEffect, useMemo, useState } from "react";
 
 import { type SearchProduct } from "@nimara/domain/objects/SearchProduct";
 
-import { CompactProductCard, ListProductCard, SearchProductCard } from "@/components/search-product-card";
+import {
+  CompactProductCard,
+  ListProductCard,
+  SearchProductCard,
+} from "@/components/search-product-card";
 import { type ViewMode } from "@/components/view-toggle";
 import { useInView } from "@/lib/use-in-view";
 
@@ -113,16 +117,22 @@ export const ProductsList = ({ products, viewMode = "compact" }: Props) => {
 };
 
 const MemoizedProductCard = memo(SearchProductCard, (prev, next) => {
-  return prev.product.id === next.product.id &&
-         prev.product.price.amount === next.product.price.amount;
+  return (
+    prev.product.id === next.product.id &&
+    prev.product.price.amount === next.product.price.amount
+  );
 });
 
 const MemoizedCompactProductCard = memo(CompactProductCard, (prev, next) => {
-  return prev.product.id === next.product.id &&
-         prev.product.price.amount === next.product.price.amount;
+  return (
+    prev.product.id === next.product.id &&
+    prev.product.price.amount === next.product.price.amount
+  );
 });
 
 const MemoizedListProductCard = memo(ListProductCard, (prev, next) => {
-  return prev.product.id === next.product.id &&
-         prev.product.price.amount === next.product.price.amount;
+  return (
+    prev.product.id === next.product.id &&
+    prev.product.price.amount === next.product.price.amount
+  );
 });

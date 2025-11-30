@@ -137,7 +137,7 @@ const LineComponent = ({
   }, [width]);
 
   return (
-    <div className="group relative flex flex-col gap-3 rounded-xl border border-border/50 bg-card p-4 pr-12 transition-all duration-200 hover:border-border/80 hover:shadow-md md:flex-row md:items-center md:gap-4 md:p-5 md:pr-5">
+    <div className="border-border/50 bg-card hover:border-border/80 group relative flex flex-col gap-3 rounded-xl border p-4 pr-12 transition-all duration-200 hover:shadow-md md:flex-row md:items-center md:gap-4 md:p-5 md:pr-5">
       <div className="flex gap-3 md:gap-4">
         <LocalizedLink title={name} href={href} className="block shrink-0">
           {thumbnail ? (
@@ -149,15 +149,18 @@ const LineComponent = ({
               height={IMAGE_SIZES.thumbnail}
               quality={IMAGE_QUALITY.low}
               className={cn(
-                "h-20 w-20 object-cover rounded-lg border border-border/40 bg-muted/30 transition-all duration-200 hover:scale-105 sm:h-24 sm:w-24",
-                isOutOfStock && "grayscale opacity-50",
+                "border-border/40 bg-muted/30 h-20 w-20 rounded-lg border object-cover transition-all duration-200 hover:scale-105 sm:h-24 sm:w-24",
+                isOutOfStock && "opacity-50 grayscale",
               )}
             />
           ) : (
             <ProductImagePlaceholder
               height={96}
               width={96}
-              className={cn("rounded-lg", isOutOfStock && "grayscale opacity-50")}
+              className={cn(
+                "rounded-lg",
+                isOutOfStock && "opacity-50 grayscale",
+              )}
             />
           )}
         </LocalizedLink>
@@ -165,9 +168,12 @@ const LineComponent = ({
         <div className="flex flex-1 flex-col gap-2">
           <LocalizedLink title={name} href={href} className="group/title">
             <h3
-              className={cn("text-sm font-semibold leading-tight transition-colors group-hover/title:text-primary sm:text-base", {
-                "text-muted-foreground opacity-60": isOutOfStock,
-              })}
+              className={cn(
+                "group-hover/title:text-primary text-sm font-semibold leading-tight transition-colors sm:text-base",
+                {
+                  "text-muted-foreground opacity-60": isOutOfStock,
+                },
+              )}
             >
               {formatProductName(name)}
             </h3>
@@ -189,7 +195,9 @@ const LineComponent = ({
                   <Input
                     name={`${id}:qty`}
                     className={cn(
-                      isOutOfStock ? "text-stone-400" : "text-stone-700 dark:text-stone-300",
+                      isOutOfStock
+                        ? "text-stone-400"
+                        : "text-stone-700 dark:text-stone-300",
                       "h-8 w-16 px-2 text-center text-sm",
                     )}
                     type="number appearance-none"
@@ -203,12 +211,18 @@ const LineComponent = ({
                 </div>
                 <div className="block sm:hidden">
                   <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                    <SheetContent side="bottom" className="max-h-[60vh] overflow-y-auto">
+                    <SheetContent
+                      side="bottom"
+                      className="max-h-[60vh] overflow-y-auto"
+                    >
                       <SheetHeader className="sr-only">
                         <SheetTitle>{t("common.qty")}</SheetTitle>
                       </SheetHeader>
                       <ul>
-                        {Array.from({ length: variant.maxQuantity }, (_, i) => i + 1).map((qty) => (
+                        {Array.from(
+                          { length: variant.maxQuantity },
+                          (_, i) => i + 1,
+                        ).map((qty) => (
                           <li
                             key={`${id}-${qty}`}
                             className="flex cursor-pointer"
@@ -217,11 +231,17 @@ const LineComponent = ({
                               setIsOpen(false);
                             }}
                           >
-                            <Button variant="ghost" className="w-full justify-start p-1.5">
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start p-1.5"
+                            >
                               <CheckIcon
-                                className={cn("invisible mr-2 h-auto w-[20px]", {
-                                  visible: qty === quantity,
-                                })}
+                                className={cn(
+                                  "invisible mr-2 h-auto w-[20px]",
+                                  {
+                                    visible: qty === quantity,
+                                  },
+                                )}
                               />
                               {qty}
                             </Button>
@@ -239,11 +259,17 @@ const LineComponent = ({
                     aria-expanded={isOpen}
                     aria-controls="qty-select-options"
                   >
-                    <SelectTrigger className="h-8 w-auto min-w-[64px] gap-1 px-2 text-sm" aria-labelledby={`${id}:qty`}>
+                    <SelectTrigger
+                      className="h-8 w-auto min-w-[64px] gap-1 px-2 text-sm"
+                      aria-labelledby={`${id}:qty`}
+                    >
                       <SelectValue placeholder={t("common.qty")} />
                     </SelectTrigger>
                     <SelectContent className="overflow-y-auto">
-                      {Array.from({ length: variant.maxQuantity }, (_, i) => i + 1).map((qty) => (
+                      {Array.from(
+                        { length: variant.maxQuantity },
+                        (_, i) => i + 1,
+                      ).map((qty) => (
                         <SelectItem key={qty} value={qty.toString()}>
                           {qty}
                         </SelectItem>
@@ -253,7 +279,10 @@ const LineComponent = ({
                 </div>
               </div>
             ) : (
-              <p className="text-muted-foreground text-xs" data-testid="product-qty">
+              <p
+                className="text-muted-foreground text-xs"
+                data-testid="product-qty"
+              >
                 {t("common.qty")}: {value}
               </p>
             )}
@@ -264,7 +293,11 @@ const LineComponent = ({
               })}
               data-testid="shopping-bag-product-line-price"
             >
-              <Price price={finalLineTotal} undiscountedPrice={undiscountedLineTotal} size="small" />
+              <Price
+                price={finalLineTotal}
+                undiscountedPrice={undiscountedLineTotal}
+                size="small"
+              />
             </div>
           </div>
         </div>
@@ -277,7 +310,7 @@ const LineComponent = ({
           disabled={isDisabled}
           onClick={handleLineDelete}
           aria-label={t("cart.remove-button")}
-          className="absolute right-3 top-3 hover:bg-destructive/10 hover:text-destructive md:relative md:right-0 md:top-0 md:ml-auto"
+          className="hover:bg-destructive/10 hover:text-destructive absolute right-3 top-3 md:relative md:right-0 md:top-0 md:ml-auto"
         >
           <X height={18} width={18} />
         </Button>
@@ -301,7 +334,8 @@ export const Line = memo(LineComponent, (prevProps, nextProps) => {
     prevProps.line.id === nextProps.line.id &&
     prevProps.line.quantity === nextProps.line.quantity &&
     prevProps.line.total.amount === nextProps.line.total.amount &&
-    prevProps.line.undiscountedTotalPrice.amount === nextProps.line.undiscountedTotalPrice.amount &&
+    prevProps.line.undiscountedTotalPrice.amount ===
+      nextProps.line.undiscountedTotalPrice.amount &&
     prevProps.line.thumbnail?.url === nextProps.line.thumbnail?.url &&
     prevProps.isDisabled === nextProps.isDisabled &&
     prevProps.isLineEditable === nextProps.isLineEditable &&

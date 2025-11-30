@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image, { type ImageProps } from "next/image";
 import React, { memo } from "react";
@@ -23,7 +23,7 @@ const OptimizedImageComponent = ({
   ...props
 }: OptimizedImageProps) => {
   const imageClassName = disableGoogleLens
-    ? `${className || ''} disable-image-search`.trim()
+    ? `${className || ""} disable-image-search`.trim()
     : className;
 
   const imageProps = disableGoogleLens
@@ -56,15 +56,18 @@ const OptimizedImageComponent = ({
 };
 
 // Мемоизация компонента - используется повсеместно на каждой странице
-export const OptimizedImage = memo(OptimizedImageComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.src === nextProps.src &&
-    prevProps.alt === nextProps.alt &&
-    prevProps.width === nextProps.width &&
-    prevProps.height === nextProps.height &&
-    prevProps.priority === nextProps.priority &&
-    prevProps.highQuality === nextProps.highQuality &&
-    prevProps.disableGoogleLens === nextProps.disableGoogleLens &&
-    prevProps.className === nextProps.className
-  );
-});
+export const OptimizedImage = memo(
+  OptimizedImageComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.src === nextProps.src &&
+      prevProps.alt === nextProps.alt &&
+      prevProps.width === nextProps.width &&
+      prevProps.height === nextProps.height &&
+      prevProps.priority === nextProps.priority &&
+      prevProps.highQuality === nextProps.highQuality &&
+      prevProps.disableGoogleLens === nextProps.disableGoogleLens &&
+      prevProps.className === nextProps.className
+    );
+  },
+);

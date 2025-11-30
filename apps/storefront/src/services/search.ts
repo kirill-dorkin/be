@@ -143,7 +143,6 @@ export const ALGOLIA_SEARCH_SERVICE_CONFIG = (logger: Logger) =>
     logger: logger,
     settings: {
       indices: marketIndices,
-      tags: ["search:results", "search:facets"],
     },
   }) as const satisfies AlgoliaSearchServiceConfig;
 

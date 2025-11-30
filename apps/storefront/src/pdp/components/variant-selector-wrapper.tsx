@@ -11,10 +11,16 @@ import {
 import { type User } from "@nimara/domain/objects/User";
 import { Skeleton } from "@nimara/ui/components/skeleton";
 
-const VariantSelector = dynamic(() => import("@/pdp/components/variant-selector").then(mod => ({ default: mod.VariantSelector })), {
-  ssr: false,
-  loading: () => <Skeleton className="h-24 w-full rounded-lg" />,
-});
+const VariantSelector = dynamic(
+  () =>
+    import("@/pdp/components/variant-selector").then((mod) => ({
+      default: mod.VariantSelector,
+    })),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-24 w-full rounded-lg" />,
+  },
+);
 
 type VariantPickerProps = {
   availability: ProductAvailability;
@@ -44,11 +50,14 @@ const VariantSelectorWrapperComponent = ({
 };
 
 // Мемоизация - wrapper для селектора вариантов
-export const VariantSelectorWrapper = memo(VariantSelectorWrapperComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.product.id === nextProps.product.id &&
-    prevProps.cart?.id === nextProps.cart?.id &&
-    prevProps.availability === nextProps.availability &&
-    prevProps.user?.id === nextProps.user?.id
-  );
-});
+export const VariantSelectorWrapper = memo(
+  VariantSelectorWrapperComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.product.id === nextProps.product.id &&
+      prevProps.cart?.id === nextProps.cart?.id &&
+      prevProps.availability === nextProps.availability &&
+      prevProps.user?.id === nextProps.user?.id
+    );
+  },
+);

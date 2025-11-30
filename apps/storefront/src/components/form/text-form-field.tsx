@@ -31,17 +31,23 @@ function TextFormFieldComponent({
   const { error } = control.getFieldState(name);
 
   // Мемоизация обработчика изменения
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>, fieldOnChange: (...event: any[]) => void) => {
-    fieldOnChange(e);
-    onChange?.(e.target.value);
+  const handleChange = useCallback(
+    (
+      e: React.ChangeEvent<HTMLInputElement>,
+      fieldOnChange: (...event: any[]) => void,
+    ) => {
+      fieldOnChange(e);
+      onChange?.(e.target.value);
 
-    // Плавно убираем ошибку через небольшую задержку для плавности анимации
-    if (error && e.target.value) {
-      setTimeout(() => {
-        clearErrors(name);
-      }, 100);
-    }
-  }, [onChange, error, clearErrors, name]);
+      // Плавно убираем ошибку через небольшую задержку для плавности анимации
+      if (error && e.target.value) {
+        setTimeout(() => {
+          clearErrors(name);
+        }, 100);
+      }
+    },
+    [onChange, error, clearErrors, name],
+  );
 
   return (
     <FormField
@@ -78,13 +84,16 @@ function TextFormFieldComponent({
 }
 
 // Мемоизация - используется в формах адресов, чекаута
-export const TextFormField = memo(TextFormFieldComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.name === nextProps.name &&
-    prevProps.label === nextProps.label &&
-    prevProps.isRequired === nextProps.isRequired &&
-    prevProps.placeholder === nextProps.placeholder &&
-    prevProps.type === nextProps.type &&
-    prevProps.disabled === nextProps.disabled
-  );
-});
+export const TextFormField = memo(
+  TextFormFieldComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.name === nextProps.name &&
+      prevProps.label === nextProps.label &&
+      prevProps.isRequired === nextProps.isRequired &&
+      prevProps.placeholder === nextProps.placeholder &&
+      prevProps.type === nextProps.type &&
+      prevProps.disabled === nextProps.disabled
+    );
+  },
+);

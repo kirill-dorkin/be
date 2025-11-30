@@ -10,11 +10,7 @@ const DEFAULT_CATEGORY_SLUG =
 export function GET() {
   const seed = repairServiceCatalog.flatMap((category) =>
     category.services.map((service) =>
-      mapServiceToSaleorSeed(
-        service,
-        DEFAULT_CHANNEL,
-        DEFAULT_CATEGORY_SLUG,
-      ),
+      mapServiceToSaleorSeed(service, DEFAULT_CHANNEL, DEFAULT_CATEGORY_SLUG),
     ),
   );
 

@@ -29,7 +29,7 @@ const NewsletterComponent = () => {
   // Мемоизация isPending
   const isPending = useMemo(
     () => form.formState.isSubmitting,
-    [form.formState.isSubmitting]
+    [form.formState.isSubmitting],
   );
 
   const handleSubmit: SubmitHandler<FormSchema> = async (values) => {

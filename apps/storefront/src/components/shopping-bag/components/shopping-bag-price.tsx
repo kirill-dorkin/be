@@ -30,18 +30,22 @@ const ShoppingBagPriceComponent = ({
 
   // Мемоизация форматированной цены
   const formattedPrice = useMemo(() => {
-    if (!price?.amount) {return null;}
-    
-return price.amount === 0
+    if (!price?.amount) {
+      return null;
+    }
+
+    return price.amount === 0
       ? t("free")
       : formatter.price({ amount: price.amount });
   }, [price, formatter, t]);
 
   // Мемоизация форматированной скидки
   const formattedDiscount = useMemo(() => {
-    if (!discount?.amount) {return null;}
-    
-return `-${formatter.price({ amount: discount.amount })}`;
+    if (!discount?.amount) {
+      return null;
+    }
+
+    return `-${formatter.price({ amount: discount.amount })}`;
   }, [discount, formatter]);
 
   return (
@@ -52,14 +56,16 @@ return `-${formatter.price({ amount: discount.amount })}`;
         className={cn(
           "text-content text-foreground flex justify-between text-sm sm:text-base",
           {
-            "[&>*]:font-semibold [&>*]:text-base sm:[&>*]:text-lg": isPrimary,
+            "[&>*]:text-base [&>*]:font-semibold sm:[&>*]:text-lg": isPrimary,
             "text-muted-foreground": !isPrimary,
           },
         )}
         data-testid={`shopping-bag-price-${dataTestId}`}
       >
         <p>{heading}</p>
-        {formattedPrice && <p className={cn(isPrimary && "text-primary")}>{formattedPrice}</p>}
+        {formattedPrice && (
+          <p className={cn(isPrimary && "text-primary")}>{formattedPrice}</p>
+        )}
         {formattedDiscount && (
           <p className="text-primary font-medium">{formattedDiscount}</p>
         )}
@@ -69,12 +75,15 @@ return `-${formatter.price({ amount: discount.amount })}`;
 };
 
 // Мемоизация - используется в корзине и чекауте (Subtotal, Total, Discount)
-export const ShoppingBagPrice = memo(ShoppingBagPriceComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.variant === nextProps.variant &&
-    prevProps.heading === nextProps.heading &&
-    prevProps.price?.amount === nextProps.price?.amount &&
-    prevProps.discount?.amount === nextProps.discount?.amount &&
-    prevProps.dataTestId === nextProps.dataTestId
-  );
-});
+export const ShoppingBagPrice = memo(
+  ShoppingBagPriceComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.variant === nextProps.variant &&
+      prevProps.heading === nextProps.heading &&
+      prevProps.price?.amount === nextProps.price?.amount &&
+      prevProps.discount?.amount === nextProps.discount?.amount &&
+      prevProps.dataTestId === nextProps.dataTestId
+    );
+  },
+);
