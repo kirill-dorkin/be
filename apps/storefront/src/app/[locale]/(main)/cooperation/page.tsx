@@ -1,11 +1,4 @@
-import {
-  CheckCircle2,
-  Gift,
-  FileDown,
-  ShieldCheck,
-  Sparkles,
-  Gauge,
-} from "lucide-react";
+import { CheckCircle2, FileDown, Gauge, ShieldCheck, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -50,11 +43,11 @@ type DownloadCopy = {
 };
 
 export async function generateMetadata(_props: PageProps): Promise<Metadata> {
-  const t = await getTranslations("cooperation.meta");
+  const t = await getTranslations("cooperation");
 
   return {
-    title: t("title"),
-    description: t("description"),
+    title: t("meta.title"),
+    description: t("meta.description"),
   };
 }
 
@@ -66,16 +59,10 @@ export default async function CooperationPage() {
   const features = t.raw("features.items") as Feature[];
   const economics = t.raw("economics.items") as string[];
   const timeline = t.raw("timeline.items") as TimelineStep[];
-  const specialOffers = t.raw("offer.special") as string[];
   const downloadCopy = t.raw("download") as DownloadCopy;
 
-  const primaryPhoneDisplay = "+996 557 313 114";
-  const primaryPhoneHref = "+996557313114";
-  const secondaryPhoneDisplay = "+996 708 804 070";
   const whatsappMessage = encodeURIComponent(t("whatsappMessage"));
   const whatsappLink = `https://wa.me/996501313114?text=${whatsappMessage}`;
-  const email = "bestelectronicskg@gmail.com";
-  const siteLink = "https://be-kg.vercel.app/";
   const contractUrl = "/best-electronics-cooperation.docx";
 
   const highlightIcons = [ShieldCheck, Sparkles, Gauge] as const;
