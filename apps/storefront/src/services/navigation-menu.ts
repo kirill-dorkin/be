@@ -116,6 +116,43 @@ const SERVICE_LINK_LABELS: Partial<Record<string, string>> = {
 
 const SERVICE_LINK_DEFAULT = "Service centre";
 
+const COOPERATION_LINK_LABELS: Partial<Record<string, string>> = {
+  EN_GB: "Partnership",
+  EN_US: "Partnership",
+  RU_RU: "Сотрудничество",
+  KY_KG: "Кызматташтык",
+};
+
+const COOPERATION_LINK_DEFAULT = "Cooperation";
+
+const staticLinksForLocale = (languageCode: string): MenuItem[] => {
+  const cooperationItem: MenuItem = {
+    id: "cooperation",
+    label:
+      COOPERATION_LINK_LABELS[languageCode] ?? COOPERATION_LINK_DEFAULT,
+    url: "/cooperation",
+    children: [],
+  };
+
+  const serviceItem: MenuItem = {
+    id: "repair-services",
+    label: SERVICE_LINK_LABELS[languageCode] ?? SERVICE_LINK_DEFAULT,
+    url: "/services",
+    children: [],
+  };
+
+  return [cooperationItem, serviceItem];
+};
+
+const mergeStaticLinks = (items: MenuItem[], languageCode: string) => {
+  const urls = new Set(items.map((item) => item.url));
+  const extras = staticLinksForLocale(languageCode).filter(
+    (item) => !urls.has(item.url),
+  );
+
+  return [...extras, ...items];
+};
+
 const buildMenuFromCategories = (
   data: CategoriesNavigationQuery,
   languageCode: string,
@@ -127,19 +164,8 @@ const buildMenuFromCategories = (
       .filter((node) => Boolean(node.slug && node.id))
       .map(mapCategoryToMenuItem) ?? [];
 
-  const serviceItem: MenuItem = {
-    id: "repair-services",
-    label: SERVICE_LINK_LABELS[languageCode] ?? SERVICE_LINK_DEFAULT,
-    url: "/services",
-    children: [],
-  };
-
-  const hasExistingServiceLink = items.some(
-    (item) => item.url === serviceItem.url,
-  );
-
   return {
-    items: hasExistingServiceLink ? items : [serviceItem, ...items],
+    items: mergeStaticLinks(items, languageCode),
   };
 };
 
@@ -163,7 +189,11 @@ export const getNavigationMenu = async ({
       : [];
 
   if (cmsMenuResult.ok && cmsMenuItems.length > 0) {
-    return cmsMenuResult;
+    return ok({
+      menu: {
+        items: mergeStaticLinks(cmsMenuItems, languageCode),
+      },
+    });
   }
 
   if (!cmsMenuResult.ok) {

@@ -15,6 +15,7 @@ import {
   Fan,
   Gamepad2,
   Hammer,
+  Handshake,
   HardDrive,
   Headphones,
   Home,
@@ -60,6 +61,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   // Main categories (Russian)
   "Сервисный центр": Wrench,
   "Сервис борбору": Wrench,
+  Сотрудничество: Handshake,
   Комплектующие: Cpu,
   Периферия: Plug,
   Переферия: Plug,
@@ -75,6 +77,8 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
 
   // Main categories (English)
   "Service centre": Wrench,
+  Partnership: Handshake,
+  Cooperation: Handshake,
   Components: Cpu,
   Peripherals: Plug,
   Laptops: Laptop,
@@ -92,6 +96,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   Компоненттер: Cpu,
   Мобилдүүлүк: Smartphone,
   Үй: Home,
+  Кызматташтык: Handshake,
   // Уценка намеренно без иконки для уникальности и избегания дублей
 
   // Subcategories - Components (Russian)
@@ -292,6 +297,8 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
 const MENU_ICON_SLUG_MAP: Record<string, LucideIcon> = {
   services: Wrench,
   service: ShieldCheck,
+  cooperation: Handshake,
+  partnership: Handshake,
   "service-centre": Wrench,
   "service-center": Wrench,
   "repair-services": Wrench,

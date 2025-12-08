@@ -1414,6 +1414,158 @@
       "mapLink": "https://maps.google.com/?q=Prosta+51,+Warsaw"
     }
   },
+  "cooperation": {
+    "meta": {
+      "title": "Partnership for schools and kindergartens",
+      "description": "A complete CCTV solution for education: audit, design, installation, upgrades, staff training, and ongoing support."
+    },
+    "hero": {
+      "badge": "Partnership",
+      "title": "Video surveillance for schools and kindergartens",
+      "subtitle": "An end-to-end rollout with audit, design, installation, equipment upgrades, staff training, and technical support. Every commitment is reflected in the agreement.",
+      "primaryCta": "Book a consultation",
+      "secondaryCta": "Call us"
+    },
+    "heroPoints": [
+      "Project kicks off 7 days after the contract is signed.",
+      "Special offer: free security audit and 6 months of cloud storage when you sign this month."
+    ],
+    "highlights": {
+      "title": "Key advantages",
+      "items": [
+        {
+          "title": "Safety first",
+          "description": "Cameras as prevention and control.",
+          "bullets": [
+            "Lower risk of vandalism and theft.",
+            "Fast response to emergencies.",
+            "Incidents are recorded for objective review."
+          ]
+        },
+        {
+          "title": "Transparent learning process",
+          "description": "Trust from parents and teachers through clear facts.",
+          "bullets": [
+            "Online visibility of a child’s stay.",
+            "Clarify incidents without extra emotions.",
+            "Openness strengthens the institution’s reputation."
+          ]
+        },
+        {
+          "title": "Operational efficiency",
+          "description": "Data-driven management decisions.",
+          "bullets": [
+            "Balanced workload across staff.",
+            "Insights into how space is used.",
+            "Debriefs rely on facts rather than assumptions."
+          ]
+        }
+      ]
+    },
+    "features": {
+      "title": "What makes the solution unique",
+      "items": [
+        {
+          "title": "Intelligent functions",
+          "bullets": [
+            "Facial recognition — access only for authorized people.",
+            "Motion detection in designated zones.",
+            "Automatic alerts for abnormal situations."
+          ]
+        },
+        {
+          "title": "Flexible and scalable",
+          "bullets": [
+            "From 4 cameras to a network with central monitoring.",
+            "Phased rollout without interrupting classes."
+          ]
+        },
+        {
+          "title": "Convenient access",
+          "bullets": [
+            "Cloud storage for up to 60 days.",
+            "Mobile app for administration and trusted parents.",
+            "Role-based access: principal, facilities, parents."
+          ]
+        }
+      ]
+    },
+    "economics": {
+      "title": "Financial impact",
+      "subtitle": "The system works for safety and for the budget.",
+      "items": [
+        "Lower security spend by optimizing staffing.",
+        "Prevent material losses and keep property safe.",
+        "Legal protection from unfounded claims."
+      ]
+    },
+    "timeline": {
+      "title": "Implementation steps",
+      "items": [
+        {
+          "title": "Site audit",
+          "description": "Risk analysis and camera placement plan."
+        },
+        {
+          "title": "Design",
+          "description": "Selecting equipment for your budget and needs."
+        },
+        {
+          "title": "Installation",
+          "description": "Weekend/holiday work to avoid disrupting classes."
+        },
+        {
+          "title": "Training",
+          "description": "Staff onboarding and clear instructions."
+        },
+        {
+          "title": "Support",
+          "description": "24/7 warranty service and quick responses."
+        }
+      ]
+    },
+    "parents": {
+      "title": "Messages for parents",
+      "items": [
+        {
+          "title": "“I see, so I’m calm.”",
+          "description": "Trusted online access to groups and key zones."
+        },
+        {
+          "title": "“No speculation.”",
+          "description": "Video helps resolve disputes without emotion."
+        },
+        {
+          "title": "“Investing in trust.”",
+          "description": "Transparency grows the institution’s reputation."
+        }
+      ]
+    },
+    "offer": {
+      "title": "Terms and special offer",
+      "start": "Project starts 7 days after signing the contract.",
+      "special": [
+        "Free security audit of the site.",
+        "6 months of cloud storage included when you sign this month."
+      ],
+      "ctaLabel": "Schedule a meeting"
+    },
+    "contact": {
+      "title": "Contact our team",
+      "description": "We’ll share details, prepare a cost estimate, and tailor the agreement to your site.",
+      "emailLabel": "Email us",
+      "siteLabel": "Company website"
+    },
+    "download": {
+      "title": "Download the agreement",
+      "description": "Full proposal in .docx format — ready to send to leadership or partners.",
+      "cta": "Download agreement",
+      "secondary": "Open in new tab",
+      "size": "DOCX, ~1 MB",
+      "badge": "Document"
+    },
+    "whatsappMessage": "Hello! I’d like to discuss cooperation and the CCTV agreement for our school."
+  },
   "newsletter": {
     "email-required-newsletter": "Email is required to subscribe to the newsletter.",
     "subscribe-title": "Subscribe to Newsletter",
