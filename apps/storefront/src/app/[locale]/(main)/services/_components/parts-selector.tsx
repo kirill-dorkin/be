@@ -254,7 +254,7 @@ export const PartsSelector = ({
                 ariaLabel={labels.resultsCaption}
               >
                 {filteredOptions.map((option) => (
-                  <ComboboxItem key={option.id}>
+                  <ComboboxItem key={option.id} isSelected={false}>
                     <div className="flex items-center gap-3 px-2 py-2">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium leading-tight text-foreground">
