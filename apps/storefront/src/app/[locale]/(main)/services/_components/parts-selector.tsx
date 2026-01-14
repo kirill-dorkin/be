@@ -236,10 +236,10 @@ export const PartsSelector = ({
         <div className="relative">
           <Combobox>
             <ComboboxInput
-              value={query}
               inputProps={{
                 placeholder: labels.placeholder,
                 onChange: (event) => setQuery(event.target.value),
+                value: query,
               }}
               endAdornment={
                 loading ? (
