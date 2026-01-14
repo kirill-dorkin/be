@@ -128,14 +128,14 @@ export const updateRepairWorkerStatus = async ({
 
   const groupResult = await client.execute(
     `
-    query WorkerGroupId($search: String!) {
+    query WorkerGroupIdQuery($search: String!) {
       permissionGroups(first: 1, filter: { search: $search }) {
         edges { node { id name } }
       }
     }
   `,
     {
-      operationName: "WorkerGroupId",
+      operationName: "WorkerGroupIdQuery",
       variables: { search: workerGroupName },
       options: { cache: "no-store" },
     },
