@@ -992,12 +992,17 @@ export const ServicesEstimator = ({
                       hint: t("calculator.parts.subtitle"),
                       inputLabel: t("calculator.parts.inputLabel"),
                       placeholder: t("calculator.parts.placeholder"),
+                      suggestionsTitle: t("calculator.parts.suggestionsTitle"),
+                      suggestionsEmpty: t("calculator.parts.suggestionsEmpty"),
                       resultsCaption: t("calculator.parts.resultsCaption"),
                       add: t("calculator.parts.add"),
                       empty: t("calculator.parts.empty"),
                       badge: t("calculator.parts.badge"),
+                      useSuggestion: t("calculator.parts.useSuggestion"),
                       subtotalLabel: (total: string) =>
                         t("calculator.parts.subtotal", { total }),
+                      quantityLabel: (count: number) =>
+                        t("calculator.parts.quantityLabel", { count }),
                     }}
                   />
                 </FormItem>
