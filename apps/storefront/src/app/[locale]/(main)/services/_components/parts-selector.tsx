@@ -57,6 +57,8 @@ type PartsSelectorProps = {
 };
 
 type PartOption = SelectedPart & { formattedPrice: string };
+type PartsResponse = { data?: PartOption[] };
+type SuggestionsResponse = { data?: Record<string, PartOption[]> };
 
 const MIN_QUERY = 2;
 const MAX_RESULTS = 12;
@@ -97,9 +99,9 @@ export const PartsSelector = ({
       },
       body: JSON.stringify({ query: debouncedQuery }),
     })
-      .then((res) => res.json())
+      .then((res) => res.json() as Promise<PartsResponse>)
       .then((json) => {
-        const parts = json?.data as PartOption[] | undefined;
+        const parts = json.data;
         setOptions(
           (parts ?? [])
             .filter((option) => option.currency === currency)
@@ -134,9 +136,9 @@ export const PartsSelector = ({
       },
       body: JSON.stringify({ services: slugs.map((slug) => ({ slug })) }),
     })
-      .then((res) => res.json())
+      .then((res) => res.json() as Promise<SuggestionsResponse>)
       .then((json) => {
-        const map = json?.data as Record<string, PartOption[]> | undefined;
+        const map = json.data;
         if (!map) {
           setSuggestions([]);
           return;
