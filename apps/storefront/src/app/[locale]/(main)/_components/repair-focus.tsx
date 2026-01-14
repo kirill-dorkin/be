@@ -31,7 +31,23 @@ const cards = [
     icon: ClipboardCheck,
     key: "tracking",
   },
-];
+] as const;
+
+const cardTitleKeyMap = {
+  diagnostics: "repairFocus.cards.diagnostics.title",
+  speed: "repairFocus.cards.speed.title",
+  warranty: "repairFocus.cards.warranty.title",
+  delivery: "repairFocus.cards.delivery.title",
+  tracking: "repairFocus.cards.tracking.title",
+} as const;
+
+const cardDescriptionKeyMap = {
+  diagnostics: "repairFocus.cards.diagnostics.description",
+  speed: "repairFocus.cards.speed.description",
+  warranty: "repairFocus.cards.warranty.description",
+  delivery: "repairFocus.cards.delivery.description",
+  tracking: "repairFocus.cards.tracking.description",
+} as const;
 
 export async function RepairFocus() {
   const t = await getTranslations("home");
@@ -69,10 +85,10 @@ export async function RepairFocus() {
                 <card.icon className="h-5 w-5" />
               </div>
               <h3 className="text-foreground text-lg font-semibold">
-                {t(`repairFocus.cards.${card.key}.title`)}
+                {t(cardTitleKeyMap[card.key])}
               </h3>
               <p className="text-muted-foreground mt-2 text-sm">
-                {t(`repairFocus.cards.${card.key}.description`)}
+                {t(cardDescriptionKeyMap[card.key])}
               </p>
             </div>
           ))}
