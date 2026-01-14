@@ -5,6 +5,25 @@
     "description": "BestElectronics is a flexible headless storefront built on Saleor. Quick to deploy, easy to integrate, with an intuitive UI for management and customization.",
     "homepage-preview": "Homepage preview",
     "hero-banner-alt": "BestElectronics hero banner",
+    "hero": {
+      "badge": "Next-generation electronics",
+      "title": {
+        "part1": "Technology of",
+        "highlight": "tomorrow",
+        "part2": "available today"
+      },
+      "subtitle": "Quality electronics, professional repairs, and attentive support for every customer.",
+      "cta": {
+        "primary": "Book a repair",
+        "secondary": "Browse catalogue"
+      },
+      "stats": {
+        "customers": "Happy customers",
+        "products": "Products in catalogue",
+        "satisfaction": "Satisfaction rate",
+        "support": "Customer support"
+      }
+    },
     "repairBanner": {
       "badge": "Service offer",
       "titleGuest": "Registered customers get 20% off repairs",
@@ -46,6 +65,154 @@
           "description": "Bundle repairs, accessories, and service plans to save up to 25% annually."
         }
       }
+    },
+    "features": {
+      "heading": "Everything you need",
+      "subheading": "A complete range of services for your tech in one place",
+      "catalog": {
+        "title": "Large catalogue",
+        "description": "Thousands of products from leading brands. Computers, components, peripherals, and accessories."
+      },
+      "repair": {
+        "title": "Professional repair",
+        "description": "Service centre with experienced technicians. Diagnostics, repair, and maintenance of any equipment."
+      },
+      "membership": {
+        "title": "Loyalty programme",
+        "description": "Exclusive 10% discount on products and 20% on repairs. Free shipping for Community members."
+      },
+      "delivery": {
+        "title": "Fast delivery",
+        "description": "Same-day delivery within the city. Free shipping for Community members."
+      },
+      "warranty": {
+        "title": "Official warranty",
+        "description": "All products come with manufacturer warranty. Support and service after purchase."
+      },
+      "quality": {
+        "title": "Proven quality",
+        "description": "We work only with official suppliers. Every product passes quality control."
+      }
+    },
+    "membershipBanner": {
+      "badge": "Premium Membership",
+      "titleGuest": "Join the BestElectronics Community for 199 som/month",
+      "titleMember": "Thank you for being a Community member!",
+      "descriptionGuest": "Get 10% off all products, 20% off repairs, free shipping, and priority support. Save on every purchase.",
+      "descriptionMember": "You're already enjoying all the benefits: discounts on products and repairs, free shipping, and priority support.",
+      "primaryCtaGuest": "Become a Member",
+      "primaryCtaMember": "Learn More",
+      "secondaryGuest": "Create account",
+      "secondaryMember": "My Profile",
+      "card": {
+        "title": "Community Membership",
+        "subtitle": "Maximum savings on every purchase"
+      },
+      "perks": {
+        "discount": "10% off products and 20% off repairs",
+        "shipping": "Free delivery on all orders",
+        "exclusive": "Early access to new releases and exclusives"
+      }
+    },
+    "repairFocus": {
+      "overline": "Service centre",
+      "title": "Professional repair and maintenance",
+      "subtitle": "Precision diagnostics, warranty-backed work, and convenient service for every device.",
+      "cta": "View services",
+      "cards": {
+        "diagnostics": {
+          "title": "Diagnostics and repair",
+          "description": "We fix smartphones, laptops, appliances, and more."
+        },
+        "speed": {
+          "title": "Fast turnaround",
+          "description": "Same-day diagnostics with clear timelines and pricing."
+        },
+        "warranty": {
+          "title": "Warranty coverage",
+          "description": "Warranty on labour and the parts we install."
+        },
+        "delivery": {
+          "title": "Pickup and delivery",
+          "description": "We can collect your device and return it after the repair."
+        },
+        "tracking": {
+          "title": "Status online",
+          "description": "Track every repair stage in your account."
+        }
+      }
+    },
+    "repairProcess": {
+      "overline": "How we work",
+      "title": "Transparent repair process",
+      "subtitle": "From request to delivery, you always know the status and price.",
+      "steps": {
+        "request": {
+          "title": "Request and diagnostics",
+          "description": "Submit online or by phone, and we run an initial assessment."
+        },
+        "repair": {
+          "title": "Repair and parts",
+          "description": "Original parts and experienced technicians. Pricing agreed upfront."
+        },
+        "quality": {
+          "title": "Testing and warranty",
+          "description": "We verify the device after repair and provide a work guarantee."
+        },
+        "delivery": {
+          "title": "Pickup or delivery",
+          "description": "Collection or courier — your choice. Updates at every step."
+        }
+      }
+    },
+    "repairStats": {
+      "items": {
+        "monthly": {
+          "label": "Repairs per month",
+          "value": "500+"
+        },
+        "technicians": {
+          "label": "In-house technicians",
+          "value": "30"
+        },
+        "turnaround": {
+          "label": "Average repair time",
+          "value": "1.5 days"
+        },
+        "warranty": {
+          "label": "Warranty on work",
+          "value": "up to 6 mo."
+        }
+      }
+    },
+    "serviceCta": {
+      "overline": "Service 7 days a week",
+      "title": "Need help with your tech? Send a repair request",
+      "subtitle": "Fast diagnostics, transparent pricing, and a warranty on our work.",
+      "primaryCta": "View services",
+      "secondaryCta": "Call us"
+    },
+    "testimonials": {
+      "overline": "Testimonials",
+      "title": "What customers say about our service",
+      "items": {
+        "dmitry": {
+          "name": "Dmitry P.",
+          "text": "Laptop broke — they diagnosed it the same day, replaced the keyboard, and cleaned it. I appreciate that they call to confirm the price."
+        },
+        "aigul": {
+          "name": "Aigul S.",
+          "text": "They replaced my phone screen and chose a protector. The technician visit was convenient; everything took under an hour."
+        },
+        "rustam": {
+          "name": "Rustam T.",
+          "text": "I use the service to maintain office equipment. They always respond quickly, with discounts and a warranty on work."
+        }
+      }
+    },
+    "products": {
+      "title": "Popular products",
+      "subtitle": "Top picks for your tech"
     }
   },
   "navigation": {
@@ -428,6 +595,21 @@
       "discountAppliedVip": "{percent}% discount for VIP customers applied.",
       "vipBadgeLabel": "VIP",
       "discountSavings": "You save {amount}",
+      "parts": {
+        "title": "Parts from catalogue",
+        "subtitle": "Pick spare parts from the Saleor catalogue to include them in the estimate.",
+        "inputLabel": "Search parts",
+        "placeholder": "Name, SKU or model",
+        "resultsCaption": "Catalogue matches",
+        "add": "Add",
+        "empty": "No parts selected yet.",
+        "badge": "Parts",
+        "subtotal": "Parts: {total}",
+        "quantityLabel": "{count, plural, one {# unit} other {# units}}",
+        "suggestionsTitle": "Suggested for selected services",
+        "suggestionsEmpty": "Choose a service to see suggested parts.",
+        "useSuggestion": "Suggested"
+      },
       "membershipPromo": {
         "title": "Save with community membership",
         "subtitle": "You could save {amount} on this repair",

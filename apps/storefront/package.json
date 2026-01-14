@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "SENTRY_SUPPRESS_TURBOPACK_WARNING=1 next dev --turbopack",
+    "dev": "dotenv -e ../../.env -- env SENTRY_SUPPRESS_TURBOPACK_WARNING=1 next dev --turbopack",
     "dev:inspect": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",

@@ -74,16 +74,23 @@ export default async function StaffLayout({ children, params }: LayoutProps) {
   };
 
   const repairGroupName = serverEnvs.SERVICE_WORKER_GROUP_NAME;
+  const leadGroupName = serverEnvs.SERVICE_LEAD_WORKER_GROUP_NAME;
   const belongsToRepairGroup = Boolean(
     user?.isStaff &&
       user.permissionGroups?.some((group) => group.name === repairGroupName),
   );
+  const belongsToLeadGroup = Boolean(
+    user?.isStaff &&
+      leadGroupName &&
+      user.permissionGroups?.some((group) => group.name === leadGroupName),
+  );
+  const belongsToAnyWorkerGroup = belongsToRepairGroup || belongsToLeadGroup;
 
   const metadata = user?.metadata;
   const isApprovedWorker = isApprovedRepairWorker(metadata);
   const isPendingWorker = isPendingRepairWorker(metadata);
 
-  if (!belongsToRepairGroup && !isApprovedWorker && !isPendingWorker) {
+  if (!belongsToAnyWorkerGroup && !isApprovedWorker && !isPendingWorker) {
     nextRedirect(buildLocalizedPath(locale, paths.home.asPath()));
   }
 
@@ -106,7 +113,7 @@ export default async function StaffLayout({ children, params }: LayoutProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            {belongsToRepairGroup && (
+            {belongsToAnyWorkerGroup && (
               <nav className="hidden gap-3 md:flex">
                 <LocalizedLink
                   href={paths.staff.orders.asPath()}
@@ -141,7 +148,7 @@ export default async function StaffLayout({ children, params }: LayoutProps) {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-4 py-8">
-        {isPendingWorker && !belongsToRepairGroup ? (
+        {isPendingWorker && !belongsToAnyWorkerGroup ? (
           <div className="border-primary/50 bg-primary/5 text-primary border border-dashed p-6 text-sm">
             {t("pending-message")}
           </div>

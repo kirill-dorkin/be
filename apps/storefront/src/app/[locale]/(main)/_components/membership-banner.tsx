@@ -14,13 +14,16 @@ type MembershipBannerProps = {
 export const MembershipBanner = async ({ user }: MembershipBannerProps) => {
   const t = await getTranslations("home.membershipBanner");
 
-  const title = user ? t("titleMember") : t("titleGuest");
-  const description = user
-    ? "VIP-сервис: приедем, починим, скидки на работы и запчасти."
-    : "Станьте VIP: если что-то сломается, мастер приедет и починит, плюс скидки и приоритет.";
-  const primaryCta = user ? "Мой VIP-статус" : "Стать VIP-клиентом";
-  const secondaryLabel = user ? "История сервисов" : "Узнать о льготах";
-  const secondaryHref = user
+  const isMember = Boolean(user);
+  const title = isMember ? t("titleMember") : t("titleGuest");
+  const description = isMember
+    ? t("descriptionMember")
+    : t("descriptionGuest");
+  const primaryCta = isMember ? t("primaryCtaMember") : t("primaryCtaGuest");
+  const secondaryLabel = isMember
+    ? t("secondaryMember")
+    : t("secondaryGuest");
+  const secondaryHref = isMember
     ? paths.account.profile.asPath()
     : paths.createAccount.asPath();
 
@@ -31,7 +34,7 @@ export const MembershipBanner = async ({ user }: MembershipBannerProps) => {
           <div className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-800">
               <Crown className="h-3.5 w-3.5 text-amber-600" />
-              VIP сервис
+              {t("badge")}
             </span>
             <h2 className="hyphens-auto break-words text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               {title}
@@ -60,39 +63,39 @@ export const MembershipBanner = async ({ user }: MembershipBannerProps) => {
               </Button>
             </div>
           </div>
-          <div className="relative hidden items-center justify-center lg:flex">
-            <div className="relative w-full max-w-md rounded-2xl border border-amber-200 bg-amber-50 p-8 shadow-inner">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 shadow-lg">
-                  <Crown className="h-7 w-7 text-white" />
+            <div className="relative hidden items-center justify-center lg:flex">
+              <div className="relative w-full max-w-md rounded-2xl border border-amber-200 bg-amber-50 p-8 shadow-inner">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 shadow-lg">
+                    <Crown className="h-7 w-7 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-foreground hyphens-auto break-words text-lg font-semibold">
+                      {t("card.title")}
+                    </p>
+                    <p className="hyphens-auto break-words text-sm text-neutral-600">
+                      {t("card.subtitle")}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-foreground hyphens-auto break-words text-lg font-semibold">
-                    VIP-клиент нашего сервиса
-                  </p>
-                  <p className="hyphens-auto break-words text-sm text-neutral-600">
-                    Приезжаем, чиним, предоставляем льготные условия.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-8 space-y-4 text-sm text-neutral-700">
-                <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3">
-                  <TrendingDown className="mt-1 h-5 w-5 text-amber-600 dark:text-amber-400" />
-                  <span className="hyphens-auto break-words">
-                    Скидки на ремонт и запчасти для VIP.
-                  </span>
-                </div>
-                <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3">
-                  <Truck className="mt-1 h-5 w-5 text-amber-600" />
-                  <span className="hyphens-auto break-words">
-                    Выезд мастера и приоритетные сроки.
-                  </span>
-                </div>
-                <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3">
-                  <ShieldCheck className="mt-1 h-5 w-5 text-amber-600" />
-                  <span className="hyphens-auto break-words">
-                    Прозрачные работы с гарантией для VIP-клиентов.
-                  </span>
+                <div className="mt-8 space-y-4 text-sm text-neutral-700">
+                  <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3">
+                    <TrendingDown className="mt-1 h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    <span className="hyphens-auto break-words">
+                      {t("perks.discount")}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3">
+                    <Truck className="mt-1 h-5 w-5 text-amber-600" />
+                    <span className="hyphens-auto break-words">
+                      {t("perks.shipping")}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3">
+                    <ShieldCheck className="mt-1 h-5 w-5 text-amber-600" />
+                    <span className="hyphens-auto break-words">
+                      {t("perks.exclusive")}
+                    </span>
                 </div>
               </div>
             </div>

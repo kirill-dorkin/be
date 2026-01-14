@@ -1,9 +1,9 @@
 import { secureSaleorClient } from "@/graphql/client";
 
-const activateCustomerMutation = {
+const activateStaffMutation = {
   toString: () => `
     mutation RepairWorkerActivateMutation($id: ID!, $isActive: Boolean) {
-      customerUpdate(id: $id, input: { isActive: $isActive }) {
+      staffUpdate(id: $id, input: { isActive: $isActive }) {
         errors {
           field
           message
@@ -17,7 +17,7 @@ const activateCustomerMutation = {
 export const activateRepairWorker = async (id: string) => {
   const client = secureSaleorClient();
 
-  const result = await client.execute(activateCustomerMutation, {
+  const result = await client.execute(activateStaffMutation, {
     operationName: "RepairWorkerActivateMutation",
     variables: {
       id,
@@ -33,8 +33,8 @@ export const activateRepairWorker = async (id: string) => {
   }
 
   const errors = (
-    result.data as { customerUpdate?: { errors?: Array<{ message?: string }> } }
-  ).customerUpdate?.errors;
+    result.data as { staffUpdate?: { errors?: Array<{ message?: string }> } }
+  ).staffUpdate?.errors;
 
   if (errors && errors.length) {
     throw new Error("Failed to activate worker");

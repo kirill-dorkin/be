@@ -2,15 +2,29 @@
 
 import { useEffect, useRef } from "react";
 
-const stats = [
-  { label: "Ремонтов в месяц", value: "500+" },
-  { label: "Мастеров в штате", value: "30" },
-  { label: "Средний срок ремонта", value: "1.5 дня" },
-  { label: "Гарантия на работы", value: "до 6 мес." },
-];
+import { useTranslations } from "next-intl";
 
 export const RepairStats = () => {
+  const t = useTranslations("home.repairStats");
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const stats = [
+    {
+      label: t("items.monthly.label"),
+      value: t("items.monthly.value"),
+    },
+    {
+      label: t("items.technicians.label"),
+      value: t("items.technicians.value"),
+    },
+    {
+      label: t("items.turnaround.label"),
+      value: t("items.turnaround.value"),
+    },
+    {
+      label: t("items.warranty.label"),
+      value: t("items.warranty.value"),
+    },
+  ];
 
   useEffect(() => {
     const node = containerRef.current;

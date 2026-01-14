@@ -57,6 +57,8 @@ export type StaffRepairOrder = {
   totalAmount?: number | null;
   totalCurrency?: string | null;
   urgent: boolean;
+  leadGroup?: string;
+  leadPriorityUntil?: string;
   workerEmail?: string;
   workerId?: string;
   workerName?: string;
@@ -123,6 +125,8 @@ export const fetchRepairOrders = async ({
         metadata,
         stage,
         stageUpdatedAt: metadata[SERVICE_METADATA_KEYS.stageUpdatedAt],
+        leadGroup: metadata[SERVICE_METADATA_KEYS.leadGroup],
+        leadPriorityUntil: metadata[SERVICE_METADATA_KEYS.leadPriorityUntil],
         workerId: metadata[SERVICE_METADATA_KEYS.workerId],
         workerEmail: metadata[SERVICE_METADATA_KEYS.workerEmail],
         workerName: metadata[SERVICE_METADATA_KEYS.workerName],

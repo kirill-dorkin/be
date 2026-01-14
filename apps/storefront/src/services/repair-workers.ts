@@ -4,22 +4,20 @@ import {
   REPAIR_ROLE,
   REPAIR_STATUS,
 } from "@/lib/repair/metadata";
+import { serverEnvs } from "@/envs/server";
 
-type WorkerEdge = {
-  cursor: string;
-  node: {
-    dateJoined: string;
-    email: string;
-    firstName: string;
-    id: string;
-    isActive: boolean | null;
-    lastName: string;
-    metadata: Array<{ key: string; value: string | null }> | null;
-  };
+type WorkerNode = {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateJoined: string;
+  isActive: boolean | null;
+  metadata: Array<{ key: string; value: string | null }> | null;
 };
 
 const toMetadataRecord = (
-  metadata: WorkerEdge["node"]["metadata"],
+  metadata: WorkerNode["metadata"],
 ): Record<string, string> => {
   const record: Record<string, string> = {};
 
@@ -34,26 +32,25 @@ const toMetadataRecord = (
 
 const repairWorkersQuery = {
   toString: () => `
-    query RepairWorkersQuery($first: Int!, $after: String, $metadataKey: String!, $metadataValue: String!) {
-      customers(first: $first, after: $after, filter: { metadata: [{ key: $metadataKey, value: $metadataValue }] }) {
+    query RepairWorkersQuery($first: Int!, $groupName: String!) {
+      permissionGroups(first: $first, filter: { search: $groupName }) {
         edges {
-          cursor
           node {
             id
-            email
-            firstName
-            lastName
-            isActive
-            dateJoined
-            metadata {
-              key
-              value
+            name
+            users {
+              id
+              email
+              firstName
+              lastName
+              isActive
+              dateJoined
+              metadata {
+                key
+                value
+              }
             }
           }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
         }
       }
     }
@@ -62,8 +59,8 @@ const repairWorkersQuery = {
 
 const repairWorkerUpdateMutation = {
   toString: () => `
-    mutation RepairWorkerUpdateMutation($id: ID!, $metadata: [MetadataInput!]!) {
-      customerUpdate(id: $id, input: { metadata: $metadata }) {
+    mutation RepairWorkerUpdateMutation($id: ID!, $metadata: [MetadataInput!]!, $addGroups: [ID!]) {
+      staffUpdate(id: $id, input: { metadata: $metadata, addGroups: $addGroups }) {
         errors {
           field
           message
@@ -87,9 +84,8 @@ export const fetchRepairWorkers = async () => {
   const result = await client.execute(repairWorkersQuery, {
     operationName: "RepairWorkersQuery",
     variables: {
-      first: 100,
-      metadataKey: REPAIR_METADATA_KEYS.role,
-      metadataValue: REPAIR_ROLE.worker,
+      first: 3,
+      groupName: serverEnvs.SERVICE_WORKER_GROUP_NAME,
     },
     options: {
       cache: "no-store",
@@ -100,29 +96,24 @@ export const fetchRepairWorkers = async () => {
     throw new Error("Failed to fetch repair workers");
   }
 
-  const data = result.data as {
-    customers?: {
-      edges?: WorkerEdge[];
+  const groups = (result.data as any).permissionGroups?.edges ?? [];
+  const users: WorkerNode[] = groups.flatMap(
+    (edge: { node?: { users?: WorkerNode[] } }) => edge?.node?.users ?? [],
+  );
+
+  return users.map((user) => {
+    const metadata = toMetadataRecord(user.metadata);
+
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dateJoined: user.dateJoined,
+      status: metadata[REPAIR_METADATA_KEYS.status] ?? REPAIR_STATUS.pending,
+      phone: metadata[REPAIR_METADATA_KEYS.phone] ?? "",
     };
-  };
-
-  const edges = data.customers?.edges ?? [];
-
-  return edges
-    .filter((edge): edge is WorkerEdge => Boolean(edge?.node))
-    .map((edge) => {
-      const metadata = toMetadataRecord(edge.node.metadata);
-
-      return {
-        id: edge.node.id,
-        email: edge.node.email,
-        firstName: edge.node.firstName,
-        lastName: edge.node.lastName,
-        dateJoined: edge.node.dateJoined,
-        status: metadata[REPAIR_METADATA_KEYS.status] ?? REPAIR_STATUS.pending,
-        phone: metadata[REPAIR_METADATA_KEYS.phone] ?? "",
-      };
-    });
+  });
 };
 
 export const updateRepairWorkerStatus = async ({
@@ -133,6 +124,28 @@ export const updateRepairWorkerStatus = async ({
   status: string;
 }) => {
   const client = secureSaleorClient();
+  const workerGroupName = serverEnvs.SERVICE_WORKER_GROUP_NAME;
+
+  const groupResult = await client.execute(
+    `
+    query WorkerGroupId($search: String!) {
+      permissionGroups(first: 1, filter: { search: $search }) {
+        edges { node { id name } }
+      }
+    }
+  `,
+    {
+      operationName: "WorkerGroupId",
+      variables: { search: workerGroupName },
+      options: { cache: "no-store" },
+    },
+  );
+
+  const groupId =
+    groupResult.ok &&
+    groupResult.data.permissionGroups?.edges?.[0]?.node?.id
+      ? groupResult.data.permissionGroups.edges[0].node.id
+      : null;
 
   const result = await client.execute(repairWorkerUpdateMutation, {
     operationName: "RepairWorkerUpdateMutation",
@@ -142,6 +155,7 @@ export const updateRepairWorkerStatus = async ({
         { key: REPAIR_METADATA_KEYS.role, value: REPAIR_ROLE.worker },
         { key: REPAIR_METADATA_KEYS.status, value: status },
       ],
+      addGroups: groupId ? [groupId] : [],
     },
     options: {
       cache: "no-store",
@@ -153,7 +167,7 @@ export const updateRepairWorkerStatus = async ({
   }
 
   const updatePayload = result.data as {
-    customerUpdate?: {
+    staffUpdate?: {
       errors: Array<{ message?: string }>;
       user?: {
         metadata?: Array<{ key: string; value: string | null }>;
@@ -161,13 +175,12 @@ export const updateRepairWorkerStatus = async ({
     };
   };
 
-  if (updatePayload.customerUpdate?.errors.length) {
+  if (updatePayload.staffUpdate?.errors.length) {
     throw new Error("Failed to update worker status");
   }
 
   const metadata = toMetadataRecord(
-    (updatePayload.customerUpdate?.user?.metadata ??
-      []) as WorkerEdge["node"]["metadata"],
+    (updatePayload.staffUpdate?.user?.metadata ?? []) as WorkerNode["metadata"],
   );
 
   return metadata[REPAIR_METADATA_KEYS.status] ?? REPAIR_STATUS.pending;

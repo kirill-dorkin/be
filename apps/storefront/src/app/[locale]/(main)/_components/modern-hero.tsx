@@ -37,10 +37,7 @@ export async function ModernHero({ user }: ModernHeroProps) {
           </h1>
 
           <p className="text-muted-foreground mx-auto mb-10 max-w-2xl text-base leading-relaxed sm:text-lg">
-            <span className="hidden sm:inline">{t("hero.subtitle")}</span>
-            <span className="sm:hidden">
-              Качественная техника и профессиональный сервис
-            </span>
+            {t("hero.subtitle")}
           </p>
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -50,7 +47,7 @@ export async function ModernHero({ user }: ModernHeroProps) {
               className="group min-w-[200px] bg-gradient-to-r from-amber-500 via-yellow-500 to-orange-500 text-base font-semibold text-white shadow-lg shadow-amber-500/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:from-amber-600 hover:via-yellow-600 hover:to-orange-600 hover:shadow-xl hover:shadow-amber-500/40"
             >
               <LocalizedLink href={paths.services.asPath()}>
-                Заказать ремонт
+                {t("hero.cta.primary")}
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </LocalizedLink>
             </Button>
@@ -61,7 +58,7 @@ export async function ModernHero({ user }: ModernHeroProps) {
               className="bg-background/70 hover:bg-muted min-w-[200px] border-2 text-base font-semibold backdrop-blur-sm transition-all hover:scale-105"
             >
               <LocalizedLink href={paths.search.asPath()}>
-                Каталог товаров
+                {t("hero.cta.secondary")}
               </LocalizedLink>
             </Button>
           </div>

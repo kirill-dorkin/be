@@ -24,6 +24,18 @@ describe("sendWorkerApplicationToTelegram", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    delete process.env.TELEGRAM_THREAD_ID;
+  });
+
+  it("fails when Telegram envs are missing", async () => {
+    delete process.env.TELEGRAM_BOT_TOKEN;
+    delete process.env.TELEGRAM_CHAT_ID;
+
+    const send = await loadService();
+    const result = await send(validPayload);
+
+    expect(result.ok).toBe(false);
+    expect(result.error?.[0].code).toBe("TELEGRAM_CONFIG_MISSING");
   });
 
   it("returns ok when Telegram responds 200", async () => {

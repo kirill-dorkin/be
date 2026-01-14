@@ -39,6 +39,7 @@ import {
   type DeviceSelection,
   DeviceServiceSelector,
 } from "./device-service-selector";
+import { PartsSelector, type SelectedPart } from "./parts-selector";
 import { RepairMembershipPromo } from "./repair-membership-promo";
 
 const URGENCY_MULTIPLIER = 1.25;
@@ -87,6 +88,15 @@ type MembershipPromoData =
 type Translator = ReturnType<typeof useTranslations>;
 
 const buildSchema = (t: Translator) => {
+  const partSchema = z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    slug: z.string().min(1),
+    currency: z.string().min(1),
+    price: z.number().nonnegative(),
+    quantity: z.number().int().min(1),
+  });
+
   const serviceSelectionSchema = z.object({
     deviceType: z.string().min(1, t("calculator.errors.deviceType")).max(40),
     serviceSlugs: z
@@ -99,6 +109,7 @@ const buildSchema = (t: Translator) => {
       serviceSelections: z
         .array(serviceSelectionSchema)
         .min(1, t("calculator.errors.deviceSelection")),
+      parts: z.array(partSchema).default([]),
       fullName: z
         .string()
         .min(2, t("calculator.errors.fullNameMin"))
@@ -416,6 +427,7 @@ export const ServicesEstimator = ({
     resolver: zodResolver(schema) as Resolver<FormSchema>,
     defaultValues: {
       serviceSelections: defaultServiceSelections,
+      parts: [],
       fullName: "",
       phone: "",
       email: "",
@@ -436,6 +448,7 @@ export const ServicesEstimator = ({
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const serviceSelections = watch("serviceSelections") ?? [];
+  const selectedParts = (watch("parts") ?? []) as SelectedPart[];
   const urgent = watch("urgent") ?? false;
   const needsPickup = watch("needsPickup") ?? false;
 
@@ -526,7 +539,16 @@ export const ServicesEstimator = ({
     });
   }, [selectedServices, needsPickup, urgent, discountRate]);
 
-  const aggregatedTotals = useMemo(() => {
+  const partsSubtotal = useMemo(
+    () =>
+      selectedParts.reduce(
+        (sum, part) => sum + part.price * Math.max(1, part.quantity),
+        0,
+      ),
+    [selectedParts],
+  );
+
+  const serviceTotals = useMemo(() => {
     if (selectedServiceEstimates.length === 0) {
       return null;
     }
@@ -578,6 +600,40 @@ export const ServicesEstimator = ({
       savings,
     };
   }, [selectedServiceEstimates]);
+
+  const aggregatedTotals = useMemo(() => {
+    if (!serviceTotals) {
+      return null;
+    }
+
+    const addParts = (amount: number | null) =>
+      amount === null ? null : currencyMath.toCurrency(amount + partsSubtotal);
+
+    const base = {
+      min: addParts(serviceTotals.base.min)!,
+      max: addParts(serviceTotals.base.max),
+    };
+
+    const discounted = {
+      min: addParts(serviceTotals.discounted.min)!,
+      max: addParts(serviceTotals.discounted.max),
+    };
+
+    const savings: EstimateRange = {
+      min: currencyMath.toCurrency(base.min - discounted.min),
+      max:
+        base.max !== null && discounted.max !== null
+          ? currencyMath.toCurrency(base.max - discounted.max)
+          : null,
+    };
+
+    return {
+      base,
+      discounted,
+      savings,
+      partsSubtotal,
+    };
+  }, [serviceTotals, partsSubtotal]);
 
   const priceLabelStrings = useMemo(() => {
     const tr = t;
@@ -650,7 +706,7 @@ export const ServicesEstimator = ({
 
   // Calculate potential membership savings for guests and registered users
   const membershipPromoData = useMemo<MembershipPromoData | null>(() => {
-    if (!aggregatedTotals || aggregatedTotals.base.min <= 0) {
+    if (!aggregatedTotals || !serviceTotals || serviceTotals.base.min <= 0) {
       return null;
     }
 
@@ -658,7 +714,7 @@ export const ServicesEstimator = ({
       return null;
     }
 
-    const baseAmount = aggregatedTotals.base.min;
+    const baseAmount = serviceTotals.base.min;
     const vipSavingsAmount = currencyMath.toCurrency(
       baseAmount * VIP_REPAIR_DISCOUNT_RATE,
     );
@@ -698,6 +754,7 @@ export const ServicesEstimator = ({
     };
   }, [
     aggregatedTotals,
+    serviceTotals,
     currency,
     activeLocale,
     hasDiscount,
@@ -811,6 +868,16 @@ export const ServicesEstimator = ({
       preferredContact,
       consent: values.consent ?? false,
       serviceSelections: selectionsPayload,
+      parts: selectedParts.map((part) => ({
+        id: part.id,
+        name: part.name,
+        slug: part.slug,
+        quantity: Math.max(1, part.quantity),
+        price: {
+          amount: part.price,
+          currency: part.currency,
+        },
+      })),
       totalEstimate: {
         min: aggregatedTotals.discounted.min,
         max: aggregatedTotals.discounted.max,
@@ -843,6 +910,7 @@ export const ServicesEstimator = ({
         urgent: isUrgent,
         needsPickup: requiresPickup,
         preferredContact,
+        parts: selectedParts,
         fullName: "",
         phone: "",
         email: "",
@@ -897,6 +965,40 @@ export const ServicesEstimator = ({
                       removeDeviceLabel: t("calculator.removeDevice"),
                     }}
                     error={serviceSelectionsError}
+                  />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="parts"
+              render={({ field }) => (
+                <FormItem>
+                  <PartsSelector
+                    currency={currency}
+                    locale={activeLocale}
+                    selectedServices={selectedServices.map((entry) => ({
+                      name:
+                        getRepairServiceLabel(entry.service.name, activeLocale) ??
+                        entry.service.name,
+                      slug: entry.service.slug,
+                      tags: entry.service.tags,
+                    }))}
+                    value={(field.value ?? []) as SelectedPart[]}
+                    onChange={field.onChange}
+                    labels={{
+                      selectedLabel: t("calculator.parts.title"),
+                      hint: t("calculator.parts.subtitle"),
+                      inputLabel: t("calculator.parts.inputLabel"),
+                      placeholder: t("calculator.parts.placeholder"),
+                      resultsCaption: t("calculator.parts.resultsCaption"),
+                      add: t("calculator.parts.add"),
+                      empty: t("calculator.parts.empty"),
+                      badge: t("calculator.parts.badge"),
+                      subtotalLabel: (total: string) =>
+                        t("calculator.parts.subtotal", { total }),
+                    }}
                   />
                 </FormItem>
               )}
@@ -1091,6 +1193,50 @@ export const ServicesEstimator = ({
                     </span>
                   </div>
                 ))}
+              </div>
+            )}
+            {selectedParts.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Badge variant="secondary">
+                    {t("calculator.parts.badge")}
+                  </Badge>
+                  <span className="text-sm font-semibold text-foreground">
+                    {t("calculator.parts.subtotal", {
+                      total: formatAsPrice({
+                        amount: partsSubtotal,
+                        currency,
+                        locale: activeLocale,
+                      }),
+                    })}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {selectedParts.map((part) => (
+                    <div
+                      key={part.id}
+                      className="bg-muted/40 text-muted-foreground border-border/60 flex items-center justify-between gap-3 rounded-lg border p-2.5"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-foreground text-sm font-semibold">
+                          {part.name}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          {t("calculator.parts.quantityLabel", {
+                            count: Math.max(1, part.quantity),
+                          })}
+                        </p>
+                      </div>
+                      <div className="text-sm font-semibold text-foreground">
+                        {formatAsPrice({
+                          amount: Math.max(1, part.quantity) * part.price,
+                          currency: part.currency,
+                          locale: activeLocale,
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             <p className="text-muted-foreground text-xs">

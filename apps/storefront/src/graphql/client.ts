@@ -8,11 +8,12 @@ import { serverEnvs } from "@/envs/server";
 export const saleorClient = () =>
   graphqlClient(clientEnvs.NEXT_PUBLIC_SALEOR_API_URL);
 
-export const secureSaleorClient = () => {
+export const secureSaleorClient = (tokenOverride?: string) => {
   const client = saleorClient();
+  const authToken = tokenOverride ?? serverEnvs.SALEOR_APP_TOKEN;
 
   invariant(
-    serverEnvs.SALEOR_APP_TOKEN,
+    authToken,
     "Please set SALEOR_APP_TOKEN in order to ue secureSaleorClient.",
   );
 
@@ -22,7 +23,7 @@ export const secureSaleorClient = () => {
       ...{
         options: {
           ...opts?.options,
-          headers: { authorization: `Bearer ${serverEnvs.SALEOR_APP_TOKEN}` },
+          headers: { authorization: `Bearer ${authToken}` },
         },
       },
     });

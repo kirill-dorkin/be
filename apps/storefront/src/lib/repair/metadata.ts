@@ -6,6 +6,7 @@ export const REPAIR_METADATA_KEYS = {
 
 export const REPAIR_ROLE = {
   worker: "WORKER",
+  lead: "LEAD_WORKER",
   courier: "COURIER",
 } as const;
 
@@ -16,7 +17,12 @@ export const REPAIR_STATUS = {
 } as const;
 
 export const isRepairWorker = (metadata: Record<string, string> | undefined) =>
-  metadata?.[REPAIR_METADATA_KEYS.role] === REPAIR_ROLE.worker;
+  metadata?.[REPAIR_METADATA_KEYS.role] === REPAIR_ROLE.worker ||
+  metadata?.[REPAIR_METADATA_KEYS.role] === REPAIR_ROLE.lead;
+
+export const isLeadRepairWorker = (
+  metadata: Record<string, string> | undefined,
+) => metadata?.[REPAIR_METADATA_KEYS.role] === REPAIR_ROLE.lead;
 
 export const getRepairWorkerStatus = (
   metadata: Record<string, string> | undefined,

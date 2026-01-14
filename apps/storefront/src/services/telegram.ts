@@ -1,5 +1,8 @@
 import { serverEnvs } from "@/envs/server";
 import { storefrontLogger } from "@/services/logging";
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
 type TelegramResult =
   | { ok: true }
@@ -21,6 +24,28 @@ type SellerListingPayload = {
   photoUrl?: string;
   price: number;
   title: string;
+};
+
+let envLoaded = false;
+
+const tryLoadEnv = () => {
+  if (process.env.NODE_ENV === "test") {
+    return;
+  }
+  if (envLoaded) return;
+  envLoaded = true;
+
+  const candidates = [
+    path.resolve(process.cwd(), ".env"),
+    path.resolve(process.cwd(), "../../.env"),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      dotenv.config({ path: candidate });
+      break;
+    }
+  }
 };
 
 const escapeMarkdownV2 = (text: string): string =>
@@ -91,8 +116,15 @@ export const sendWorkerApplicationToTelegram = async (
   payload: WorkerApplicationPayload,
 ): Promise<TelegramResult> => {
   // TODO: Persist applications locally (DB/file/queue) to avoid loss during Telegram downtime.
-  const token = serverEnvs.TELEGRAM_BOT_TOKEN;
-  const chatId = serverEnvs.TELEGRAM_CHAT_ID;
+  let token =
+    serverEnvs.TELEGRAM_BOT_TOKEN ?? process.env.TELEGRAM_BOT_TOKEN;
+  let chatId = serverEnvs.TELEGRAM_CHAT_ID ?? process.env.TELEGRAM_CHAT_ID;
+
+  if (!token || !chatId) {
+    tryLoadEnv();
+    token = token ?? process.env.TELEGRAM_BOT_TOKEN;
+    chatId = chatId ?? process.env.TELEGRAM_CHAT_ID;
+  }
 
   if (!token || !chatId) {
     storefrontLogger.error("[Telegram] Missing bot token or chat id", {
@@ -105,7 +137,8 @@ export const sendWorkerApplicationToTelegram = async (
       error: [
         {
           code: "TELEGRAM_CONFIG_MISSING",
-          message: "Telegram bot token or chat id is not configured.",
+          message:
+            "Telegram bot token или chat id не заданы. Сообщение не отправлено.",
         },
       ],
     };
@@ -121,8 +154,11 @@ export const sendWorkerApplicationToTelegram = async (
     disable_web_page_preview: "true",
   };
 
-  if (serverEnvs.TELEGRAM_THREAD_ID) {
-    body.message_thread_id = serverEnvs.TELEGRAM_THREAD_ID;
+  const threadId =
+    serverEnvs.TELEGRAM_THREAD_ID ?? process.env.TELEGRAM_THREAD_ID;
+
+  if (threadId) {
+    body.message_thread_id = threadId;
   }
 
   const maxAttempts = 2;

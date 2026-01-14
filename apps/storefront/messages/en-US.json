@@ -113,6 +113,106 @@
           "description": "Bundle repairs, accessories, and service plans to save up to 25% annually."
         }
       }
+    },
+    "repairFocus": {
+      "overline": "Service center",
+      "title": "Professional repair and maintenance",
+      "subtitle": "Precision diagnostics, warranty-backed work, and convenient service for every device.",
+      "cta": "View services",
+      "cards": {
+        "diagnostics": {
+          "title": "Diagnostics and repair",
+          "description": "We fix smartphones, laptops, appliances, and more."
+        },
+        "speed": {
+          "title": "Fast turnaround",
+          "description": "Same-day diagnostics with clear timelines and pricing."
+        },
+        "warranty": {
+          "title": "Warranty coverage",
+          "description": "Warranty on labor and the parts we install."
+        },
+        "delivery": {
+          "title": "Pickup and delivery",
+          "description": "We can collect your device and return it after repair."
+        },
+        "tracking": {
+          "title": "Status online",
+          "description": "Track every repair stage in your account."
+        }
+      }
+    },
+    "repairProcess": {
+      "overline": "How we work",
+      "title": "Transparent repair process",
+      "subtitle": "From request to delivery, you always know the status and price.",
+      "steps": {
+        "request": {
+          "title": "Request and diagnostics",
+          "description": "Submit online or by phone, and we run an initial assessment."
+        },
+        "repair": {
+          "title": "Repair and parts",
+          "description": "Original parts and experienced technicians. Pricing agreed upfront."
+        },
+        "quality": {
+          "title": "Testing and warranty",
+          "description": "We verify the device after repair and provide a work guarantee."
+        },
+        "delivery": {
+          "title": "Pickup or delivery",
+          "description": "Collection or courier — your choice. Updates at every step."
+        }
+      }
+    },
+    "repairStats": {
+      "items": {
+        "monthly": {
+          "label": "Repairs per month",
+          "value": "500+"
+        },
+        "technicians": {
+          "label": "In-house technicians",
+          "value": "30"
+        },
+        "turnaround": {
+          "label": "Average repair time",
+          "value": "1.5 days"
+        },
+        "warranty": {
+          "label": "Warranty on work",
+          "value": "up to 6 mo."
+        }
+      }
+    },
+    "serviceCta": {
+      "overline": "Service 7 days a week",
+      "title": "Need help with your tech? Send a repair request",
+      "subtitle": "Fast diagnostics, transparent pricing, and a warranty on our work.",
+      "primaryCta": "View services",
+      "secondaryCta": "Call us"
+    },
+    "testimonials": {
+      "overline": "Testimonials",
+      "title": "What customers say about our service",
+      "items": {
+        "dmitry": {
+          "name": "Dmitry P.",
+          "text": "Laptop broke — they diagnosed it the same day, replaced the keyboard, and cleaned it. I appreciate that they call to confirm the price."
+        },
+        "aigul": {
+          "name": "Aigul S.",
+          "text": "They replaced my phone screen and chose a protector. The technician visit was convenient; everything took under an hour."
+        },
+        "rustam": {
+          "name": "Rustam T.",
+          "text": "I use the service to maintain office equipment. They always respond quickly, with discounts and a warranty on work."
+        }
+      }
+    },
+    "products": {
+      "title": "Popular products",
+      "subtitle": "Top offers for your tech"
     }
   },
   "navigation": {
@@ -495,6 +595,21 @@
       "discountAppliedVip": "{percent}% discount for VIP customers applied.",
       "vipBadgeLabel": "VIP",
       "discountSavings": "You save {amount}",
+      "parts": {
+        "title": "Parts from catalogue",
+        "subtitle": "Add spare parts from the catalogue so we include them in the estimate.",
+        "inputLabel": "Search parts",
+        "placeholder": "Name, SKU or model",
+        "resultsCaption": "Catalogue matches",
+        "add": "Add",
+        "empty": "No parts selected yet.",
+        "badge": "Parts",
+        "subtotal": "Parts: {total}",
+        "quantityLabel": "{count, plural, one {# unit} other {# units}}",
+        "suggestionsTitle": "Suggested for selected services",
+        "suggestionsEmpty": "Pick a service to see suggested parts.",
+        "useSuggestion": "Suggested"
+      },
       "membershipPromo": {
         "title": "Save with community membership",
         "subtitle": "You could save {amount} on this repair",

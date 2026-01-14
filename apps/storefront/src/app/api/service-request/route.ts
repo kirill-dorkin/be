@@ -15,6 +15,17 @@ const priceEstimateSchema = z.object({
 
 const modifiersSchema = z.record(z.string(), z.number()).optional().default({});
 
+const partSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  quantity: z.number().int().min(1),
+  price: z.object({
+    amount: z.number().nonnegative(),
+    currency: z.string().min(3).max(3),
+  }),
+});
+
 const serviceSelectionSchema = z.object({
   deviceType: z.string().min(2).max(40),
   serviceSlug: z.string().min(2).max(120),
@@ -43,6 +54,7 @@ const legacySchema = baseSchema.extend({
 
 const multiSchema = baseSchema.extend({
   serviceSelections: z.array(serviceSelectionSchema).min(1),
+  parts: z.array(partSchema).default([]),
   totalEstimate: priceEstimateSchema.optional(),
 });
 
@@ -75,6 +87,21 @@ const extractNormalizedEmail = (email: string | undefined) => {
   const trimmed = email.trim();
 
   return trimmed.length ? trimmed : undefined;
+};
+
+const formatPartsNote = (
+  parts: MultiRequestPayload["parts"] | undefined,
+): string | null => {
+  if (!parts?.length) {
+    return null;
+  }
+
+  const lines = parts.map(
+    (part) =>
+      `- ${part.name} ×${part.quantity} (${part.price.amount} ${part.price.currency})`,
+  );
+
+  return `Selected parts:\n${lines.join("\n")}`;
 };
 
 export async function POST(request: Request) {
@@ -121,11 +148,18 @@ export async function POST(request: Request) {
 
   if ("serviceSelections" in payload) {
     const multiPayload = payload;
+    const partsNote = formatPartsNote(multiPayload.parts);
     const baseRequest = {
       consent: multiPayload.consent ?? false,
       email: normalizedEmail,
       fullName: multiPayload.fullName,
-      message: multiPayload.message,
+      message:
+        [
+          multiPayload.message?.trim(),
+          partsNote ? partsNote.trim() : null,
+        ]
+          .filter(Boolean)
+          .join("\n\n") || undefined,
       needsPickup: multiPayload.needsPickup ?? false,
       phone: multiPayload.phone,
       preferredContact: multiPayload.preferredContact,

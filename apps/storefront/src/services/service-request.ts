@@ -24,6 +24,8 @@ export const getServiceRequestService =
       appToken: serverEnvs.SALEOR_APP_TOKEN,
       channelSlug: serverEnvs.SERVICE_CHANNEL_SLUG,
       courierGroupName: serverEnvs.SERVICE_COURIER_GROUP_NAME,
+      leadPriorityMinutes: serverEnvs.SERVICE_LEAD_PRIORITY_MINUTES,
+      leadWorkerGroupName: serverEnvs.SERVICE_LEAD_WORKER_GROUP_NAME,
       workerGroupName: serverEnvs.SERVICE_WORKER_GROUP_NAME,
       logger: storefrontLogger,
     });

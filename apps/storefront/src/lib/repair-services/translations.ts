@@ -108,6 +108,12 @@ const serviceTranslations: TranslationMap = {
   "Замена корпуса": {
     en: "Case replacement",
   },
+  "Ремонт блока питания": {
+    en: "Power supply repair",
+  },
+  "Ремонт монитора": {
+    en: "Monitor repair",
+  },
   "Ремонт или замена кнопки включения": {
     en: "Power button repair or replacement",
   },
@@ -220,6 +226,9 @@ const serviceTranslations: TranslationMap = {
   "Разборка-сборка всего ноутбука": {
     en: "Full laptop disassembly/assembly",
   },
+  "Разборка-сборка ноутбука": {
+    en: "Laptop disassembly and assembly",
+  },
   "Разборка-сборка неполная": {
     en: "Partial disassembly",
   },
@@ -231,6 +240,9 @@ const serviceTranslations: TranslationMap = {
   },
   "Не держит заряд, замена аккумулятора": {
     en: "Battery not holding charge – replacement",
+  },
+  "Проблемы питания ноутбука": {
+    en: "Laptop power issues",
   },
   "Ремонт/замена разъема питания": {
     en: "DC jack repair or replacement",

@@ -49,15 +49,21 @@ const assertRepairStaff = async () => {
   };
 
   const repairGroupName = serverEnvs.SERVICE_WORKER_GROUP_NAME;
+  const leadGroupName = serverEnvs.SERVICE_LEAD_WORKER_GROUP_NAME;
   const belongsToRepairGroup = Boolean(
     user?.isStaff &&
       user.permissionGroups?.some((group) => group.name === repairGroupName),
+  );
+  const belongsToLeadGroup = Boolean(
+    user?.isStaff &&
+      leadGroupName &&
+      user.permissionGroups?.some((group) => group.name === leadGroupName),
   );
 
   const metadata = user?.metadata;
   const approvedWorker = isApprovedRepairWorker(metadata);
 
-  if (!belongsToRepairGroup && !approvedWorker) {
+  if (!belongsToRepairGroup && !belongsToLeadGroup && !approvedWorker) {
     return null;
   }
 

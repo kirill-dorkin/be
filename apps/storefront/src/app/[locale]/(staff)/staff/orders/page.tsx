@@ -6,6 +6,7 @@ import { serverEnvs } from "@/envs/server";
 import { localePrefixes } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import { REPAIR_STAGE_FLOW } from "@/lib/repair/stages";
+import { isLeadRepairWorker } from "@/lib/repair/metadata";
 import { DEFAULT_LOCALE, type SupportedLocale } from "@/regions/types";
 import {
   fetchRepairOrders,
@@ -48,7 +49,10 @@ export default async function StaffOrdersPage({ params }: PageProps) {
     email: string;
     firstName: string;
     id: string;
+    isStaff?: boolean;
     lastName: string;
+    metadata?: Record<string, string>;
+    permissionGroups?: Array<{ id: string; name: string }>;
   };
 
   const accessToken = await getAccessToken();
@@ -64,6 +68,16 @@ export default async function StaffOrdersPage({ params }: PageProps) {
     );
   }
 
+  const leadGroupName = serverEnvs.SERVICE_LEAD_WORKER_GROUP_NAME;
+  const belongsToLeadGroup = Boolean(
+    user?.isStaff &&
+      leadGroupName &&
+      user.permissionGroups?.some((group) => group.name === leadGroupName),
+  );
+  const isLeadWorker =
+    belongsToLeadGroup || isLeadRepairWorker(user?.metadata);
+  const now = Date.now();
+
   const orders = await fetchRepairOrders({
     accessToken: accessToken,
     workerGroupName: serverEnvs.SERVICE_WORKER_GROUP_NAME,
@@ -76,12 +90,32 @@ export default async function StaffOrdersPage({ params }: PageProps) {
     label: t(`stages.${stage}` as const),
   }));
 
+  const visibleOrders = orders.filter((order) => {
+    if (order.workerId === user.id) {
+      return true;
+    }
+
+    if (isLeadWorker) {
+      return true;
+    }
+
+    const priorityUntil = order.leadPriorityUntil
+      ? Date.parse(order.leadPriorityUntil)
+      : NaN;
+
+    if (!Number.isFinite(priorityUntil)) {
+      return true;
+    }
+
+    return priorityUntil <= now;
+  });
+
   const annotatedOrders: Array<
     StaffRepairOrder & {
       isMine: boolean;
       isUnassigned: boolean;
     }
-  > = orders.map((order) => ({
+  > = visibleOrders.map((order) => ({
     ...order,
     isMine: order.workerId === user.id,
     isUnassigned: !order.workerId,

@@ -13,28 +13,23 @@ import { paths } from "@/lib/paths";
 const cards = [
   {
     icon: Wrench,
-    title: "Диагностика и ремонт",
-    desc: "Ремонтируем технику, смартфоны, ноутбуки, бытовую электронику.",
+    key: "diagnostics",
   },
   {
     icon: Clock,
-    title: "Быстрые сроки",
-    desc: "Диагностика в день обращения, прозрачные сроки и стоимость.",
+    key: "speed",
   },
   {
     icon: ShieldCheck,
-    title: "Гарантия",
-    desc: "Гарантия на работы и использованные запчасти.",
+    key: "warranty",
   },
   {
     icon: Truck,
-    title: "Забор и доставка",
-    desc: "Можем забрать устройство и вернуть после ремонта.",
+    key: "delivery",
   },
   {
     icon: ClipboardCheck,
-    title: "Статус онлайн",
-    desc: "Отслеживайте этапы ремонта в личном кабинете.",
+    key: "tracking",
   },
 ];
 
@@ -47,37 +42,38 @@ export async function RepairFocus() {
         <div className="flex flex-col gap-3 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-amber-600">
-              Сервисный центр
+              {t("repairFocus.overline")}
             </p>
             <h2 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-              {t("features.repair.title")}
+              {t("repairFocus.title")}
             </h2>
             <p className="text-muted-foreground mt-2 max-w-2xl text-base">
-              Отремонтируем и обслужим технику: точная диагностика, гарантия на
-              работы, удобный сервис.
+              {t("repairFocus.subtitle")}
             </p>
           </div>
           <LocalizedLink
             href={paths.services.asPath()}
             className="text-primary text-sm font-semibold underline-offset-4 transition hover:underline"
           >
-            Перейти к услугам
+            {t("repairFocus.cta")}
           </LocalizedLink>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => (
             <div
-              key={card.title}
+              key={card.key}
               className="border-border/60 bg-card/70 group rounded-2xl border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
             >
               <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700 ring-1 ring-amber-200">
                 <card.icon className="h-5 w-5" />
               </div>
               <h3 className="text-foreground text-lg font-semibold">
-                {card.title}
+                {t(`repairFocus.cards.${card.key}.title`)}
               </h3>
-              <p className="text-muted-foreground mt-2 text-sm">{card.desc}</p>
+              <p className="text-muted-foreground mt-2 text-sm">
+                {t(`repairFocus.cards.${card.key}.description`)}
+              </p>
             </div>
           ))}
         </div>

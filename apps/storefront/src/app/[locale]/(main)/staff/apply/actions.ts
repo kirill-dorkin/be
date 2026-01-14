@@ -2,6 +2,7 @@
 
 import { REPAIR_ROLE } from "@/lib/repair/metadata";
 import { sendWorkerApplicationToTelegram } from "@/services/telegram";
+import { storefrontLogger } from "@/services/logging";
 
 import { applyFormSchema, type ApplyFormValues } from "./schema";
 
@@ -17,7 +18,12 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
 
   const { firstName, lastName, email, password, phone, role } = parsed.data;
 
-  const throttled = await sendWorkerApplicationToTelegram({
+  storefrontLogger.info("[WorkerApply] Submitting application (Telegram only)", {
+    email,
+    role,
+  });
+
+  const telegramResult = await sendWorkerApplicationToTelegram({
     firstName,
     lastName,
     email,
@@ -27,8 +33,8 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
     passwordLength: password.length,
   });
 
-  if (!throttled.ok && Array.isArray(throttled.error)) {
-    const hasThrottle = throttled.error.some(
+  if (!telegramResult.ok && Array.isArray(telegramResult.error)) {
+    const hasThrottle = telegramResult.error.some(
       (err) =>
         (err.code === "TELEGRAM_REQUEST_ERROR" &&
           err.message.toLowerCase().includes("too many")) ||
@@ -48,10 +54,10 @@ export const submitWorkerApplication = async (values: ApplyFormValues) => {
     }
   }
 
-  return throttled.ok
+  return telegramResult.ok
     ? { ok: true as const }
     : {
         ok: false as const,
-        error: throttled.error,
+        error: telegramResult.error,
       };
 };

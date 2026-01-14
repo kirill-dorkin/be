@@ -19,13 +19,14 @@ import { applyFormSchema, type ApplyFormValues } from "./schema";
 
 const SUBMISSION_LOCK_KEY = "worker-apply-last-submitted";
 const LOCK_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const ERROR_STORAGE_KEY = "worker-apply-last-errors";
 
 export const WorkerApplyForm = () => {
   const t = useTranslations("staff-apply");
   const tc = useTranslations("common");
   const ta = useTranslations("auth");
 
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [statusMessages, setStatusMessages] = useState<string[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
@@ -59,6 +60,19 @@ export const WorkerApplyForm = () => {
       setShowSuccess(true);
       setIsLocked(true);
     }
+
+    const persistedErrors = window.localStorage.getItem(ERROR_STORAGE_KEY);
+    if (persistedErrors) {
+      try {
+        const parsed = JSON.parse(persistedErrors);
+
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setStatusMessages(parsed.filter((msg): msg is string => !!msg));
+        }
+      } catch {
+        window.localStorage.removeItem(ERROR_STORAGE_KEY);
+      }
+    }
   }, []);
 
   const handleSubmit = async (values: ApplyFormValues) => {
@@ -67,7 +81,6 @@ export const WorkerApplyForm = () => {
     }
 
     setShowSuccess(false);
-    setStatusMessage(null);
 
     try {
       const result = await submitWorkerApplication(values);
@@ -75,8 +88,10 @@ export const WorkerApplyForm = () => {
       if (result.ok) {
         setShowSuccess(true);
         setIsLocked(true);
+        setStatusMessages([]);
         if (typeof window !== "undefined") {
           window.localStorage.setItem(SUBMISSION_LOCK_KEY, String(Date.now()));
+          window.localStorage.removeItem(ERROR_STORAGE_KEY);
         }
 
         const currentRole = form.getValues("role");
@@ -113,7 +128,7 @@ export const WorkerApplyForm = () => {
 
         if (formErrors.length) {
           form.setError("email", { message: formErrors[0] });
-          setStatusMessage(formErrors[0]);
+          setStatusMessages(formErrors);
         }
 
         console.error("[WorkerApply] Validation errors", result.error);
@@ -122,27 +137,28 @@ export const WorkerApplyForm = () => {
       }
 
       if (Array.isArray(result.error)) {
-        const messages: string[] = [];
-
-        result.error.forEach((error, index) => {
-          const fallbackMessage =
-            error.message && error.message.trim().length > 0
-              ? error.message
-              : t("submit-error-general");
-
-          if (index === 0) {
-            setStatusMessage(fallbackMessage);
+        const messages = result.error.map((error) => {
+          if (error.message && error.message.trim().length > 0) {
+            return error.message;
+          }
+          if ("code" in error && typeof error.code === "string") {
+            return `${t("submit-error-general")} (${error.code})`;
           }
 
-          messages.push(fallbackMessage);
+          return t("submit-error-general");
         });
+
+        setStatusMessages(messages);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(ERROR_STORAGE_KEY, JSON.stringify(messages));
+        }
 
         console.error("[WorkerApply] Submit errors", messages);
 
         return;
       }
 
-      setStatusMessage(t("submit-error-general"));
+      setStatusMessages([t("submit-error-general")]);
       console.error("[WorkerApply] Unknown error", result.error);
 
       return;
@@ -150,7 +166,7 @@ export const WorkerApplyForm = () => {
       const message =
         error instanceof Error ? error.message : t("submit-error-general");
 
-      setStatusMessage(message);
+      setStatusMessages([message]);
       console.error("[WorkerApply] Unexpected failure", error);
     }
   };
@@ -243,9 +259,21 @@ export const WorkerApplyForm = () => {
             </p>
           </div>
         )}
-        {statusMessage && (
-          <div className="text-destructive text-sm" role="alert">
-            {statusMessage}
+        {statusMessages.length > 0 && (
+          <div
+            className="text-destructive space-y-1 rounded-md border border-destructive/50 bg-destructive/5 p-3 text-sm"
+            role="alert"
+            aria-live="assertive"
+          >
+            {statusMessages.length === 1 ? (
+              <p>{statusMessages[0]}</p>
+            ) : (
+              <ul className="list-disc space-y-1 pl-4">
+                {statusMessages.map((msg, index) => (
+                  <li key={`${msg}-${index}`}>{msg}</li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
         {!isLocked && (

@@ -87,10 +87,11 @@ export async function generateMetadata(_params: PageProps): Promise<Metadata> {
 
 export default async function Page() {
   // Параллельная загрузка всех данных для максимальной производительности
-  const [accessToken, region, userService] = await Promise.all([
+  const [accessToken, region, userService, t] = await Promise.all([
     getAccessToken(),
     getCurrentRegion(),
     getUserService(),
+    getTranslations("home"),
   ]);
 
   const [resultPage, resultUserGet] = await Promise.all([
@@ -145,10 +146,10 @@ export default async function Page() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="text-foreground mb-6 text-4xl font-bold tracking-tight sm:text-5xl">
-              Популярные товары
+              {t("products.title")}
             </h2>
             <p className="text-muted-foreground text-base sm:text-lg">
-              Лучшие предложения для вашей техники
+              {t("products.subtitle")}
             </p>
           </div>
           <Suspense fallback={<ProductsGridSkeleton />}>

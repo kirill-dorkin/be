@@ -1,6 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { REPAIR_ROLE } from "@/lib/repair/metadata";
+
+const sendWorkerApplicationToTelegramMock = vi.hoisted(() => vi.fn());
+const storefrontLoggerMock = vi.hoisted(() => ({
+  error: vi.fn(),
+  info: vi.fn(),
+  warning: vi.fn(),
+}));
+
+vi.mock("@/services/telegram", () => ({
+  sendWorkerApplicationToTelegram: (...args: any[]) =>
+    sendWorkerApplicationToTelegramMock(...args),
+}));
+vi.mock("@/services/logging", () => ({
+  storefrontLogger: storefrontLoggerMock,
+}));
 
 const validPayload = {
   firstName: "Ivan",
@@ -11,42 +26,109 @@ const validPayload = {
   role: REPAIR_ROLE.worker,
 };
 
-describe("submitWorkerApplication", () => {
-  beforeEach(() => {
-    vi.resetModules();
-    vi.restoreAllMocks();
-    process.env.SALEOR_APP_TOKEN = "test-saleor-token";
-    process.env.TELEGRAM_BOT_TOKEN = "test-token";
-    process.env.TELEGRAM_CHAT_ID = "test-chat";
-    delete process.env.TELEGRAM_THREAD_ID;
+const loadAction = async () => {
+  const { submitWorkerApplication } = await import("../actions");
+
+  return submitWorkerApplication;
+};
+
+beforeEach(() => {
+  vi.resetModules();
+  sendWorkerApplicationToTelegramMock.mockReset();
+  storefrontLoggerMock.error.mockReset();
+  storefrontLoggerMock.info.mockReset();
+  sendWorkerApplicationToTelegramMock.mockResolvedValue({ ok: true });
+});
+
+describe("submitWorkerApplication (Telegram only)", () => {
+  it("returns validation errors for invalid payload", async () => {
+    const submitWorkerApplication = await loadAction();
+    const result = await submitWorkerApplication({
+      ...validPayload,
+      email: "invalid-email",
+    });
+
+    if (result.ok) {
+      throw new Error("Expected validation failure");
+    }
+
+    expect(result.error.fieldErrors.email?.[0]).toBe("errors.email.invalid");
+    expect(sendWorkerApplicationToTelegramMock).not.toHaveBeenCalled();
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it("returns ok true when Telegram accepts the request", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response("{}", { status: 200 }),
-    );
-
-    const { submitWorkerApplication } = await import("../actions");
+  it("succeeds when Telegram returns ok", async () => {
+    const submitWorkerApplication = await loadAction();
     const result = await submitWorkerApplication(validPayload);
 
     expect(result.ok).toBe(true);
+    expect(sendWorkerApplicationToTelegramMock).toHaveBeenCalledWith({
+      email: validPayload.email,
+      firstName: validPayload.firstName,
+      lastName: validPayload.lastName,
+      phone: validPayload.phone,
+      role: "Мастер по ремонту",
+      passwordLength: validPayload.password.length,
+    });
   });
 
-  it("propagates Telegram errors", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ description: "Bad chat id" }), {
-        status: 400,
-      }),
-    );
+  it("uses courier label when role is courier", async () => {
+    const courierPayload = { ...validPayload, role: REPAIR_ROLE.courier };
+    const submitWorkerApplication = await loadAction();
+    const result = await submitWorkerApplication(courierPayload);
 
-    const { submitWorkerApplication } = await import("../actions");
+    expect(result.ok).toBe(true);
+    expect(sendWorkerApplicationToTelegramMock).toHaveBeenCalledWith({
+      email: courierPayload.email,
+      firstName: courierPayload.firstName,
+      lastName: courierPayload.lastName,
+      phone: courierPayload.phone,
+      role: "Курьер-доставщик",
+      passwordLength: courierPayload.password.length,
+    });
+  });
+
+  it("maps Telegram rate limits to a friendly message", async () => {
+    sendWorkerApplicationToTelegramMock.mockResolvedValueOnce({
+      ok: false,
+      error: [
+        {
+          code: "RATE_LIMITED",
+          message: "Too many requests",
+        },
+      ],
+    });
+
+    const submitWorkerApplication = await loadAction();
     const result = await submitWorkerApplication(validPayload);
 
-    expect(result.ok).toBe(false);
-    expect(result.error?.[0].message).toContain("Bad chat id");
+    if (result.ok) {
+      throw new Error("Expected rate limit error");
+    }
+
+    expect(result.error[0]).toEqual({
+      code: "RATE_LIMITED",
+      message: "Вы уже отправили заявку недавно. Попробуйте позже.",
+    });
+  });
+
+  it("surfaces unexpected Telegram errors", async () => {
+    sendWorkerApplicationToTelegramMock.mockResolvedValueOnce({
+      ok: false,
+      error: [
+        {
+          code: "TELEGRAM_REQUEST_ERROR",
+          message: "Bad chat id",
+        },
+      ],
+    });
+
+    const submitWorkerApplication = await loadAction();
+    const result = await submitWorkerApplication(validPayload);
+
+    if (result.ok) {
+      throw new Error("Expected Telegram error");
+    }
+
+    expect(result.error[0].message).toBe("Bad chat id");
   });
 });

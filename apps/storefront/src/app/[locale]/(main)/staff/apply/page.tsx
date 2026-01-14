@@ -1,9 +1,52 @@
 import { getTranslations } from "next-intl/server";
 
+import { auth } from "@/auth";
+import { serverEnvs } from "@/envs/server";
+import { redirect } from "@/i18n/routing";
+import { paths } from "@/lib/paths";
+import {
+  isApprovedRepairWorker,
+  isPendingRepairWorker,
+} from "@/lib/repair/metadata";
+import type { SupportedLocale } from "@/regions/types";
 import { WorkerApplyForm } from "./form";
 
-export default async function StaffApplyPage() {
-  const t = await getTranslations("staff-apply");
+type PageProps = {
+  params: Promise<{ locale: SupportedLocale }>;
+};
+
+export default async function StaffApplyPage({ params }: PageProps) {
+  const [{ locale }, t, session] = await Promise.all([
+    params,
+    getTranslations("staff-apply"),
+    auth(),
+  ]);
+
+  const user = session?.user as
+    | undefined
+    | {
+        isStaff?: boolean;
+        metadata?: Record<string, string>;
+        permissionGroups?: Array<{ name: string }>;
+      };
+
+  const repairGroupName = serverEnvs.SERVICE_WORKER_GROUP_NAME;
+  const leadGroupName = serverEnvs.SERVICE_LEAD_WORKER_GROUP_NAME;
+  const belongsToWorkerGroup = Boolean(
+    user?.isStaff &&
+      user.permissionGroups?.some(
+        (group) =>
+          group.name === repairGroupName ||
+          (leadGroupName && group.name === leadGroupName),
+      ),
+  );
+
+  const approvedWorker = isApprovedRepairWorker(user?.metadata);
+  const pendingWorker = isPendingRepairWorker(user?.metadata);
+
+  if (belongsToWorkerGroup || approvedWorker || pendingWorker) {
+    redirect({ href: paths.staff.orders.asPath(), locale });
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
