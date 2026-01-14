@@ -21,6 +21,8 @@ export const SERVICE_METADATA_KEYS = {
   workerEmail: "repair:worker_email",
   workerName: "repair:worker_name",
   workerGroup: "repair:worker_group",
+  leadGroup: "repair:lead_group",
+  leadPriorityUntil: "repair:lead_priority_until",
   stage: "repair:stage",
   stageUpdatedAt: "repair:stage_updated_at",
 };
