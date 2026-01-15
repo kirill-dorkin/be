@@ -2,7 +2,7 @@
   "name": "@nimara/codegen",
   "version": "1.0.0",
   "scripts": {
-    "codegen:saleor": "graphql-codegen --config ./codegen.ts --project saleor",
+    "codegen:saleor": "node ./scripts/run-codegen.mjs",
     "codegen": "pnpm codegen:saleor"
   },
   "devDependencies": {
