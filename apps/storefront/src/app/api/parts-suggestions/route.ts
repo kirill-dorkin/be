@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { getSuggestionQueriesForService } from "@/lib/repair-services/parts-suggestions";
-import type { SupportedLocale } from "@/regions/types";
 import { getCurrentRegion } from "@/regions/server";
+import type { SupportedLocale } from "@/regions/types";
 import { getSearchService } from "@/services/search";
 
 type SelectedPart = {

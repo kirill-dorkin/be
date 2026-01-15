@@ -7,11 +7,10 @@ import { localePrefixes } from "@/i18n/routing";
 import { paths } from "@/lib/paths";
 import { isLeadRepairWorker } from "@/lib/repair/metadata";
 import { REPAIR_STAGE_FLOW } from "@/lib/repair/stages";
-import { DEFAULT_LOCALE, type SupportedLocale } from "@/regions/types";
-import {
-  fetchRepairOrders,
-  type StaffRepairOrder,
-} from "@/services/repair-orders-dashboard";
+import { DEFAULT_LOCALE } from "@/regions/types";
+import type { SupportedLocale } from "@/regions/types";
+import { fetchRepairOrders } from "@/services/repair-orders-dashboard";
+import type { StaffRepairOrder } from "@/services/repair-orders-dashboard";
 
 import { StaffOrdersBoard } from "./staff-orders-board";
 
