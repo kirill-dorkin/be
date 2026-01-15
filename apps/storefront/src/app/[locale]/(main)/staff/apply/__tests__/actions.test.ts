@@ -1,8 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { REPAIR_ROLE } from "@/lib/repair/metadata";
+import type { sendWorkerApplicationToTelegram } from "@/services/telegram";
 
-const sendWorkerApplicationToTelegramMock = vi.hoisted(() => vi.fn());
+const sendWorkerApplicationToTelegramMock = vi.hoisted(() =>
+  vi.fn<
+    Parameters<typeof sendWorkerApplicationToTelegram>,
+    ReturnType<typeof sendWorkerApplicationToTelegram>
+  >(),
+);
 const storefrontLoggerMock = vi.hoisted(() => ({
   error: vi.fn(),
   info: vi.fn(),
@@ -10,7 +16,7 @@ const storefrontLoggerMock = vi.hoisted(() => ({
 }));
 
 vi.mock("@/services/telegram", () => ({
-  sendWorkerApplicationToTelegram: (...args: any[]) =>
+  sendWorkerApplicationToTelegram: (...args) =>
     sendWorkerApplicationToTelegramMock(...args),
 }));
 vi.mock("@/services/logging", () => ({

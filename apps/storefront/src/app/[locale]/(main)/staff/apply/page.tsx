@@ -9,6 +9,7 @@ import {
   isPendingRepairWorker,
 } from "@/lib/repair/metadata";
 import type { SupportedLocale } from "@/regions/types";
+
 import { WorkerApplyForm } from "./form";
 
 type PageProps = {

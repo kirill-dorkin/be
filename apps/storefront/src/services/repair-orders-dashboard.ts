@@ -46,6 +46,8 @@ export type StaffRepairOrder = {
   customerPhone?: string;
   deviceType?: string;
   id: string;
+  leadGroup?: string;
+  leadPriorityUntil?: string;
   metadata: MetadataMap;
   needsPickup: boolean;
   number: string | null;
@@ -57,8 +59,6 @@ export type StaffRepairOrder = {
   totalAmount?: number | null;
   totalCurrency?: string | null;
   urgent: boolean;
-  leadGroup?: string;
-  leadPriorityUntil?: string;
   workerEmail?: string;
   workerId?: string;
   workerName?: string;

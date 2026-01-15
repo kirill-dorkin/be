@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 import { useTranslations } from "next-intl";
+import { useEffect, useRef } from "react";
 
 export const RepairStats = () => {
   const t = useTranslations("home.repairStats");

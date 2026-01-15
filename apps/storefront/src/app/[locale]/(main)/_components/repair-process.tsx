@@ -1,5 +1,10 @@
-import { ClipboardList, ShieldCheck, Truck, Wrench } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import {
+  ClipboardList,
+  type LucideIcon,
+  ShieldCheck,
+  Truck,
+  Wrench,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 const steps = [
@@ -48,20 +53,20 @@ export const RepairProcess = async () => {
               `repairProcess.steps.${step.key}.description` as const;
 
             return (
-            <div
-              key={step.key}
-              className="border-border/60 bg-card/70 group rounded-2xl border p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <div className="bg-primary/10 text-primary ring-primary/15 mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl ring-1">
-                <step.icon className="h-5 w-5" />
+              <div
+                key={step.key}
+                className="border-border/60 bg-card/70 group rounded-2xl border p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="bg-primary/10 text-primary ring-primary/15 mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl ring-1">
+                  <step.icon className="h-5 w-5" />
+                </div>
+                <h3 className="text-foreground text-lg font-semibold">
+                  {t(titleKey)}
+                </h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                  {t(descriptionKey)}
+                </p>
               </div>
-              <h3 className="text-foreground text-lg font-semibold">
-                {t(titleKey)}
-              </h3>
-              <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                {t(descriptionKey)}
-              </p>
-            </div>
             );
           })}
         </div>
