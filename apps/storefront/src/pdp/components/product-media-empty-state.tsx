@@ -26,7 +26,7 @@ const ProductMediaEmptyStateComponent = ({
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top_left,theme(colors.primary/45),transparent_55%),radial-gradient(circle_at_bottom_right,theme(colors.secondary/45),transparent_55%)] opacity-70"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.45),transparent_55%),radial-gradient(circle_at_bottom_right,hsl(var(--secondary)/0.45),transparent_55%)] opacity-70"
       />
 
       <div className="relative flex w-full max-w-md flex-col items-center justify-center gap-5 px-2">
