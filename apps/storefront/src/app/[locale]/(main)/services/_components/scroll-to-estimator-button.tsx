@@ -69,7 +69,7 @@ export function ScrollToEstimatorButton() {
     <div
       className={cn(
         "fixed bottom-6 right-6 z-50",
-        "transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+        "transition-all duration-700 ease-spring",
         isVisible
           ? "translate-y-0 scale-100 opacity-100"
           : "pointer-events-none translate-y-16 scale-90 opacity-0",

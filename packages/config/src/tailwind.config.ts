@@ -112,6 +112,11 @@ export default function config(app?: "storefront" | "stripe") {
           "accordion-up": "accordion-up 0.2s ease-out",
           shimmer: "shimmer 2s infinite",
         },
+        transitionTimingFunction: {
+          spring: "cubic-bezier(0.34,1.56,0.64,1)",
+          standard: "cubic-bezier(0.4,0,0.2,1)",
+          swift: "cubic-bezier(0.23,1,0.32,1)",
+        },
       },
     },
     plugins: [

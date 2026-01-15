@@ -199,7 +199,7 @@ const NavigationComponent = ({ menu }: { menu: Maybe<Menu> }) => {
                 className={cn(
                   "origin-top",
                   "motion-safe:transition-all motion-safe:duration-300",
-                  "motion-safe:ease-[cubic-bezier(0.23,1,0.32,1)]",
+                  "motion-safe:ease-swift",
                   "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-90 data-[state=open]:slide-in-from-top-3",
                   "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-top-2",
                   "data-[state=closed]:pointer-events-none motion-reduce:transition-none",
