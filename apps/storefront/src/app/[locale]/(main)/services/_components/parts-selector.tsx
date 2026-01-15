@@ -42,18 +42,18 @@ type PartsSelectorProps = {
     hint: string;
     inputLabel: string;
     placeholder: string;
-    suggestionsTitle: string;
-    suggestionsEmpty: string;
+    quantityLabel: (count: number) => string;
     resultsCaption: string;
     selectedLabel: string;
     subtotalLabel: (total: string) => string;
+    suggestionsEmpty: string;
+    suggestionsTitle: string;
     useSuggestion: string;
-    quantityLabel: (count: number) => string;
   };
   locale: SupportedLocale;
+  onChange: (parts: SelectedPart[]) => void;
   selectedServices: SelectedService[];
   value: SelectedPart[];
-  onChange: (parts: SelectedPart[]) => void;
 };
 
 type PartOption = SelectedPart & { formattedPrice: string };
@@ -61,14 +61,13 @@ type PartsResponse = { data?: PartOption[] };
 type SuggestionsResponse = { data?: Record<string, PartOption[]> };
 
 const MIN_QUERY = 2;
-const MAX_RESULTS = 12;
 
 export const PartsSelector = ({
   currency,
   labels,
   locale,
-  selectedServices,
   onChange,
+  selectedServices,
   value,
 }: PartsSelectorProps) => {
   const [query, setQuery] = useState("");
@@ -124,6 +123,7 @@ export const PartsSelector = ({
 
     if (!slugs.length) {
       setSuggestions([]);
+
       return;
     }
 
@@ -139,20 +139,27 @@ export const PartsSelector = ({
       .then((res) => res.json() as Promise<SuggestionsResponse>)
       .then((json) => {
         const map = json.data;
+
         if (!map) {
           setSuggestions([]);
+
           return;
         }
 
         const collected: PartOption[] = [];
+
         for (const slug of slugs) {
           const items = map[slug] ?? [];
           items.forEach((item) => collected.push(item));
         }
 
         const deduped = new Map<string, PartOption>();
+
         collected.forEach((item) => {
-          if (item.currency !== currency) return;
+          if (item.currency !== currency) {
+            return;
+          }
+
           if (!deduped.has(item.id)) {
             deduped.set(item.id, {
               ...item,

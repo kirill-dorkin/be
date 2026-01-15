@@ -1,8 +1,9 @@
-import { serverEnvs } from "@/envs/server";
-import { storefrontLogger } from "@/services/logging";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
+
+import { serverEnvs } from "@/envs/server";
+import { storefrontLogger } from "@/services/logging";
 
 type TelegramResult =
   | { ok: true }
@@ -32,7 +33,11 @@ const tryLoadEnv = () => {
   if (process.env.NODE_ENV === "test") {
     return;
   }
-  if (envLoaded) return;
+
+  if (envLoaded) {
+    return;
+  }
+
   envLoaded = true;
 
   const candidates = [

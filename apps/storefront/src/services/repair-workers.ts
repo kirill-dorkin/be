@@ -1,23 +1,23 @@
+import { serverEnvs } from "@/envs/server";
 import { secureSaleorClient } from "@/graphql/client";
 import {
   REPAIR_METADATA_KEYS,
   REPAIR_ROLE,
   REPAIR_STATUS,
 } from "@/lib/repair/metadata";
-import { serverEnvs } from "@/envs/server";
 
 type WorkerNode = {
-  id: string;
+  dateJoined: string;
   email: string;
   firstName: string;
-  lastName: string;
-  dateJoined: string;
+  id: string;
   isActive: boolean | null;
+  lastName: string;
   metadata: Array<{ key: string; value: string | null }> | null;
 };
 
 const toMetadataRecord = (
-  metadata: WorkerNode["metadata"],
+  metadata: WorkerNode["metadata"] | Array<{ key: string; value: string | null }>,
 ): Record<string, string> => {
   const record: Record<string, string> = {};
 
@@ -180,7 +180,7 @@ export const updateRepairWorkerStatus = async ({
   }
 
   const metadata = toMetadataRecord(
-    (updatePayload.staffUpdate?.user?.metadata ?? []) as WorkerNode["metadata"],
+    updatePayload.staffUpdate?.user?.metadata ?? [],
   );
 
   return metadata[REPAIR_METADATA_KEYS.status] ?? REPAIR_STATUS.pending;

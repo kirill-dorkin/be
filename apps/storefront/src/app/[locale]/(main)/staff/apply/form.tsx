@@ -62,6 +62,7 @@ export const WorkerApplyForm = () => {
     }
 
     const persistedErrors = window.localStorage.getItem(ERROR_STORAGE_KEY);
+
     if (persistedErrors) {
       try {
         const parsed = JSON.parse(persistedErrors);

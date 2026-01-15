@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
 
+import { getSuggestionQueriesForService } from "@/lib/repair-services/parts-suggestions";
 import type { SupportedLocale } from "@/regions/types";
 import { getCurrentRegion } from "@/regions/server";
 import { getSearchService } from "@/services/search";
 
-import { getSuggestionQueriesForService } from "@/lib/repair-services/parts-suggestions";
-
 type SelectedPart = {
+  currency: string;
   id: string;
   name: string;
-  slug: string;
   price: number;
-  currency: string;
+  slug: string;
 };
 
 type RequestBody =
   | { query: string; services?: never }
-  | { services: { slug: string }[]; query?: string };
+  | { query?: string; services: { slug: string }[] };
 
 const MAX_RESULTS_PER_SERVICE = 6;
 
@@ -40,6 +39,7 @@ export async function POST(request: Request) {
   // Direct query mode (manual search)
   if ("query" in body) {
     const query = body.query?.trim() ?? "";
+
     if (query.length < 2) {
       return NextResponse.json({ ok: true, data: [], locale });
     }
@@ -74,11 +74,15 @@ export async function POST(request: Request) {
   const response: Record<string, SelectedPart[]> = {};
 
   for (const entry of body.services) {
-    if (!entry?.slug) continue;
+    if (!entry?.slug) {
+      continue;
+    }
 
     const queries = getSuggestionQueriesForService(entry.slug);
 
-    if (!queries.length) continue;
+    if (!queries.length) {
+      continue;
+    }
 
     const collected = new Map<string, SelectedPart>();
 
@@ -93,7 +97,9 @@ export async function POST(request: Request) {
       }
 
       for (const product of result.data.results) {
-        if (collected.has(product.id)) continue;
+        if (collected.has(product.id)) {
+          continue;
+        }
 
         collected.set(product.id, {
           id: product.id,
