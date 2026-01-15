@@ -96,7 +96,7 @@ export const fetchRepairWorkers = async () => {
     throw new Error("Failed to fetch repair workers");
   }
 
-  const groups = (result.data as any).permissionGroups?.edges ?? [];
+  const groups = result.data.permissionGroups?.edges ?? [];
   const users: WorkerNode[] = groups.flatMap(
     (edge: { node?: { users?: WorkerNode[] } }) => edge?.node?.users ?? [],
   );

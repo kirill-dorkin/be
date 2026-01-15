@@ -16,8 +16,9 @@ const storefrontLoggerMock = vi.hoisted(() => ({
 }));
 
 vi.mock("@/services/telegram", () => ({
-  sendWorkerApplicationToTelegram: (...args) =>
-    sendWorkerApplicationToTelegramMock(...args),
+  sendWorkerApplicationToTelegram: (
+    ...args: Parameters<typeof sendWorkerApplicationToTelegram>
+  ) => sendWorkerApplicationToTelegramMock(...args),
 }));
 vi.mock("@/services/logging", () => ({
   storefrontLogger: storefrontLoggerMock,

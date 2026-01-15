@@ -101,6 +101,7 @@ export const PartsSelector = ({
       .then((res) => res.json() as Promise<PartsResponse>)
       .then((json) => {
         const parts = json.data;
+
         setOptions(
           (parts ?? [])
             .filter((option) => option.currency === currency)
@@ -150,6 +151,7 @@ export const PartsSelector = ({
 
         for (const slug of slugs) {
           const items = map[slug] ?? [];
+
           items.forEach((item) => collected.push(item));
         }
 
