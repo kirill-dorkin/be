@@ -1,5 +1,5 @@
-import { getTranslations } from "next-intl/server";
 import { redirect as nextRedirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { auth, getAccessToken } from "@/auth";
 import { serverEnvs } from "@/envs/server";
